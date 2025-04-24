@@ -1,0 +1,291 @@
+import 'package:quickdrop_app/core/widgets/iconTextField.dart';
+import 'package:quickdrop_app/features/auth/signup_screen.dart';
+import 'package:quickdrop_app/core/widgets/login_button.dart';
+import 'package:quickdrop_app/core/widgets/auth_button.dart';
+import 'package:quickdrop_app/core/widgets/gestureDetector.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:provider/provider.dart';
+import 'package:quickdrop_app/core/utils/imports.dart';
+
+class LoginPage extends StatefulWidget {
+  const LoginPage({Key? key}) : super(key: key);
+
+  @override
+  State<LoginPage> createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
+  // final UserData? _user;
+
+  bool _isEmailLoading = false;
+  bool _isGoogleLoading = false;
+
+  void setUserData(userCredential) {
+    UserData user = UserData(
+      uid: userCredential.user.uid,
+      email: userCredential.user!.email,
+      displayName: userCredential.user!.displayName,
+      photoUrl: userCredential.user!.photoURL,
+    );
+
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
+    userProvider.setUser(user);
+  }
+
+  void _signInWithGoogle() async {
+    if (_isGoogleLoading) return;
+    setState(
+      () {
+        _isGoogleLoading = true;
+      },
+    );
+
+    try {
+      final GoogleSignIn googleSignIn = GoogleSignIn(
+        scopes: ['email'],
+      );
+
+      await googleSignIn.signOut();
+
+      GoogleSignInAccount? googleUser = await googleSignIn.signIn();
+      if (googleUser == null) {
+        AppUtils.showError(context, 'Google Sign-In failed');
+        return;
+      }
+
+      final GoogleSignInAuthentication googleAuth =
+          await googleUser.authentication;
+
+      final AuthCredential credential = GoogleAuthProvider.credential(
+          accessToken: googleAuth.accessToken, idToken: googleAuth.idToken);
+
+      UserCredential userCredential =
+          await FirebaseAuth.instance.signInWithCredential(credential);
+
+      await FirebaseService().saveUserToFirestore(userCredential.user!);
+
+      setUserData(userCredential);
+
+      if (mounted) {
+        final authUser = FirebaseAuth.instance.currentUser;
+        if (authUser != null) {
+          final userProvider =
+              Provider.of<UserProvider>(context, listen: false);
+          userProvider.setUser(UserData(
+            uid: authUser.uid,
+            email: authUser.email,
+            displayName: authUser.displayName,
+            photoUrl: authUser.photoURL,
+          ));
+        }
+        Provider.of<NavigationProvider>(context, listen: false).changeTab(0);
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => BottomNavScreen()),
+        );
+      }
+
+      if (mounted) {
+        setState(() {
+          _isGoogleLoading = false;
+        });
+      }
+    } on FirebaseAuthException catch (e) {
+      AppUtils.showError(context, 'Google Sign-In failed: ${e.message}');
+    } catch (e) {
+      AppUtils.showError(context, 'An unexpected error occurred: $e');
+    } finally {
+      setState(() {
+        _isGoogleLoading = false;
+      });
+    }
+  }
+
+  void _signInUserWithEmail() async {
+    if (_isEmailLoading) return;
+
+    // Validate the form
+    if (_formKey.currentState!.validate()) {
+      setState(() => _isEmailLoading = true);
+      try {
+        final email = emailController.text.trim();
+        final password = passwordController.text.trim();
+        UserCredential userCredential =
+            await FirebaseAuth.instance.signInWithEmailAndPassword(
+          email: email,
+          password: password,
+        );
+
+        setUserData(userCredential);
+
+        if (mounted) {
+          Provider.of<NavigationProvider>(context, listen: false).changeTab(0);
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => BottomNavScreen()),
+          );
+        }
+      } on FirebaseAuthException catch (e) {
+        String errorMessage;
+        switch (e.code) {
+          case 'user-not-found':
+            errorMessage = AppTheme.loginErrorMessage;
+            break;
+          case 'wrong-password':
+            errorMessage = AppTheme.loginErrorMessage;
+            break;
+          case 'invalid-email':
+            errorMessage = 'Invalid email format.';
+            break;
+          case 'invalid-credential':
+            errorMessage = AppTheme.loginErrorMessage;
+            break;
+          default:
+            errorMessage = e.message ?? 'An error occurred during login.';
+        }
+        AppUtils.showError(context, errorMessage);
+      } finally {
+        setState(() => _isEmailLoading = false);
+      }
+    }
+  }
+
+  @override
+  void dispose() {
+    emailController.dispose();
+    passwordController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        backgroundColor: AppColors.cardBackground,
+        body: Padding(
+            padding: const EdgeInsets.all(AppTheme.homeScreenPadding),
+            child: Center(
+                child: Column(
+              children: [
+                Expanded(
+                  child: Center(
+                      child: SingleChildScrollView(child: _buildLogInScreen())),
+                ),
+              ],
+            ))));
+  }
+
+  Widget _buildLogInScreen() {
+    return Form(
+        key: _formKey,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            const Text(
+              "QuickDrop",
+              style: TextStyle(
+                  color: AppColors.blue,
+                  fontSize: 30,
+                  fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(
+              height: 20,
+            ),
+            const Text(
+              "Welcome Back!",
+              style: TextStyle(
+                  color: AppColors.headingText,
+                  fontSize: 18,
+                  fontWeight: FontWeight.normal),
+            ),
+            const SizedBox(height: 25),
+            IconTextField(
+                controller: emailController,
+                hintText: 'Email',
+                obsecureText: false,
+                iconPath: "assets/icon/email.svg",
+                validator: Validators.email),
+            const SizedBox(height: 25),
+            IconTextField(
+              controller: passwordController,
+              hintText: 'Password',
+              obsecureText: true,
+              iconPath: "assets/icon/lock.svg",
+              validator: Validators.notEmpty,
+            ),
+            const SizedBox(
+              height: 25,
+            ),
+            LoginButton(
+              hintText: "Log in",
+              onPressed: _signInUserWithEmail,
+              isLoading: _isEmailLoading,
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                GestureDetectorWidget(
+                  onPressed: () => {},
+                  hintText: "Forget password?",
+                ),
+                GestureDetectorWidget(
+                  onPressed: () => {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const SignUpScreen()),
+                    )
+                  },
+                  hintText: "Sign up",
+                )
+              ],
+            ),
+            const SizedBox(
+              height: 25,
+            ),
+            const Row(
+              children: [
+                Expanded(
+                  child: Divider(
+                    color: AppColors.lessImportant,
+                    thickness: 0.4,
+                  ),
+                ),
+                SizedBox(
+                  width: 8,
+                ),
+                Text(
+                  "or",
+                  style:
+                      TextStyle(color: AppColors.lessImportant, fontSize: 12),
+                ),
+                SizedBox(
+                  width: 8,
+                ),
+                Expanded(
+                  child: Divider(
+                    color: AppColors.lessImportant,
+                    thickness: 0.4,
+                  ),
+                )
+              ],
+            ),
+            const SizedBox(
+              height: 20,
+            ),
+            AuthButton(
+              hintText: "Continue with Google",
+              onPressed: _signInWithGoogle,
+              imagePath: "assets/images/google.png",
+              isLoading: _isGoogleLoading,
+            ),
+          ],
+        ));
+  }
+}
