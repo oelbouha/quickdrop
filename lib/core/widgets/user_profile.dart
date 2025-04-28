@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:quickdrop_app/theme/colors.dart';
+import 'package:quickdrop_app/core/utils/appUtils.dart';
 
 class UserProfileCard extends StatelessWidget {
   final String header;
@@ -9,9 +10,11 @@ class UserProfileCard extends StatelessWidget {
   final double headerFontSize;
   final double subHeaderFontSize;
   final double avatarSize;
+  final Color subHeaderColor;
+  final Color headerColor;
 
   const UserProfileCard({
-    Key? key,
+    super.key,
     required this.header,
     required this.onPressed,
     required this.photoUrl,
@@ -19,7 +22,9 @@ class UserProfileCard extends StatelessWidget {
     required this.headerFontSize,
     required this.subHeaderFontSize,
     required this.avatarSize,
-  }) : super(key: key);
+    this.subHeaderColor = AppColors.lessImportant,
+    this.headerColor = AppColors.headingText,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -29,6 +34,7 @@ class UserProfileCard extends StatelessWidget {
     } else {
       imageProvider = AssetImage(photoUrl);
     }
+    
     return Row(
       children: [
         CircleAvatar(
@@ -40,16 +46,27 @@ class UserProfileCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              header,
+              header.length > 30 ? 
+                "${header.substring(0, 30)}..." :
+                header,
               style: TextStyle(
                   fontSize: headerFontSize,
                   fontWeight: FontWeight.bold,
-                  color: AppColors.headingText),
+                  color: headerColor
+              ),
+              overflow: TextOverflow.ellipsis,
+              maxLines: 1,
             ),
+
             if (subHeader != "") Text(
-              subHeader,
+              subHeader.length > 30
+                  ? "${subHeader.substring(0, 30)}..."
+                  : subHeader,
               style: TextStyle(
-                  color: AppColors.lessImportant, fontSize: subHeaderFontSize),
+                  color: subHeaderColor, fontSize: subHeaderFontSize, fontWeight: FontWeight.bold
+              ),
+              overflow: TextOverflow.ellipsis,
+              maxLines: 1,
             ),
           ],
         ),

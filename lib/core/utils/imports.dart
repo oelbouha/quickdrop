@@ -1,4 +1,5 @@
 export 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 export 'package:quickdrop_app/theme/colors.dart';
 export 'package:quickdrop_app/theme/AppTheme.dart';
@@ -23,6 +24,8 @@ export 'package:quickdrop_app/features/home/filter_button.dart';
 export 'package:quickdrop_app/features/home/shipment_card.dart';
 export 'package:quickdrop_app/features/home/trip_card.dart';
 export 'package:quickdrop_app/features/auth/auth_page.dart';
+export 'package:quickdrop_app/features/help/help_screen.dart';
+export 'package:quickdrop_app/features/notification/notification_screen.dart';
 
 export  'package:quickdrop_app/features/trip/add_trip_screen.dart';
 
@@ -59,5 +62,6 @@ import 'package:quickdrop_app/core/widgets/item_details.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 
+export 'package:quickdrop_app/routes/routes.dart';
 
 export 'package:quickdrop_app/core/utils/delivery_status.dart';

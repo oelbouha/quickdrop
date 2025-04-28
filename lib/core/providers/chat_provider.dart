@@ -10,11 +10,12 @@ class ChatProvider with ChangeNotifier {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
-  final Map<String, UserData> _users = {}; 
-  
+  final Map<String, UserData> _users = {};
+
   Future<void> addMessage(ChatModel message) async {
     if (message.receiverId == _auth.currentUser?.uid) {
-      throw Exception("Invalid sender ID: you cannot send message to your self");
+      throw Exception(
+          "Invalid sender ID: you cannot send message to your self");
     }
     final chatId = getChatId(message.senderId, message.receiverId);
     final chatRef = FirebaseFirestore.instance.collection('chats').doc(chatId);
@@ -26,8 +27,10 @@ class ChatProvider with ChangeNotifier {
       await chatRef.set({
         'participants': [message.senderId, message.receiverId],
         'lastMessage': message.text,
+        'lastMessageSeen': message.seen,
         'timestamp': message.timestamp,
         'lastMessageTimestamp': message.timestamp,
+        'lastMessageSender': message.senderId,
       }, SetOptions(merge: true));
       notifyListeners();
     } catch (e) {
@@ -36,9 +39,43 @@ class ChatProvider with ChangeNotifier {
     }
   }
 
-  
+  Future<void> markMessageAsSeen(String chatId) async {
+    try {
+      final userId = _auth.currentUser?.uid;
+      if (userId == null) return Future.value();
 
-Stream<List<ChatModel>> getMessages(String chatId) {
+      final doc = _firestore.collection('chats').doc(chatId);
+      final snapshot = await doc.get();
+      if (snapshot.exists) {
+        final data = snapshot.data()!;
+        if (data['lastMessageSender'] != userId) {
+          // print("Sender is the same as  the current user");
+          doc.update({
+            'lastMessageSeen': true,
+            // 'lastMessageTimestamp': DateTime.now().toString(),
+          });
+          notifyListeners();
+        }
+      }
+
+      return _firestore
+          .collection('chats')
+          .doc(chatId)
+          .collection('messages')
+          .where('receiverId', isEqualTo: userId)
+          .where('seen', isEqualTo: false)
+          .get()
+          .then((snapshot) {
+        for (var doc in snapshot.docs) {
+          doc.reference.update({'seen': true});
+        }
+      });
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Stream<List<ChatModel>> getMessages(String chatId) {
     return _firestore
         .collection('chats')
         .doc(chatId)
@@ -50,7 +87,7 @@ Stream<List<ChatModel>> getMessages(String chatId) {
             .toList());
   }
 
-   Future<void> fetchUsersData(List<String> ids) async {
+  Future<void> fetchUsersData(List<String> ids) async {
     for (final id in ids) {
       if (!_users.containsKey(id)) {
         final data =
@@ -62,73 +99,80 @@ Stream<List<ChatModel>> getMessages(String chatId) {
     }
   }
 
-  Stream<List<Map<String, dynamic>>> getConversations()  {
-    print("Fetching conversations");
+  Stream<List<Map<String, dynamic>>> getConversations() {
+    // print("Fetching conversations");
     final userId = _auth.currentUser?.uid;
     if (userId == null) return Stream.value([]);
 
-    print("User ID: $userId");
+    // print("User ID: $userId");
     return _firestore
         .collection('chats')
         .where('participants', arrayContains: userId)
         // .orderBy('lastMessageTimestamp', descending: true)
         .snapshots()
-        .asyncMap((snapshot)  async {
+        .asyncMap((snapshot) async {
+      final conversations = snapshot.docs.map((doc) {
+        final data = doc.data();
+        final chatId = doc.id;
+        final lastMessage = data['lastMessage'] ?? '';
+        final lastMessageSender = data['lastMessageSender'] ?? '';
+        final lastMessageSeen = data['lastMessageSeen'] ?? false;
+        final lastMessageTimestamp = data['lastMessageTimestamp'] ?? '';
+        final participants = List<String>.from(data['participants'] ?? []);
+        return {
+          'chatId': chatId,
+          'lastMessage': lastMessage,
+          'lastMessageSeen': lastMessageSeen,
+          'lastMessageSender': lastMessageSender,
+          'lastMessageTimestamp': lastMessageTimestamp,
+          'participants': participants,
+        };
+      }).toList();
 
-          final conversations = snapshot.docs.map((doc) {
-            final data = doc.data();
-            final chatId = doc.id;
-            final lastMessage = data['lastMessage'] ?? '';
-            final lastMessageTimestamp = data['lastMessageTimestamp'] ?? '';
-            final participants = List<String>.from(data['participants'] ?? []);
-            return {
-              'chatId': chatId,
-              'lastMessage': lastMessage,
-              'lastMessageTimestamp': lastMessageTimestamp,
-              'participants': participants,
-            };
-          }).toList();
-          
-          print("Conversations: $conversations");
-          if (conversations.isEmpty) return [];
+      // print("Conversations: $conversations");
+      if (conversations.isEmpty) return [];
 
-          print("Fetching users data");
+      // print("Fetching users data");
 
-          final userIds = conversations
-              .expand((conversation) => conversation['participants'] as List<String>)
-              .where((id) => id != userId)
-              .toSet()
-              .toList();
-          print("uasers length: ${userIds.length}");
-          print("User IDs: $userIds");
-         if (userIds.isNotEmpty) {
-            final userDocs = await Future.wait(
-              userIds.map((id) => _firestore.collection('users').doc(id).get()),
-            );
-            for (var doc in userDocs) {
-              if (doc.exists) {
-                _users[doc.id] = UserData.fromMap(doc.data()!);
-              }
-            }
+      final userIds = conversations
+          .expand(
+              (conversation) => conversation['participants'] as List<String>)
+          .where((id) => id != userId)
+          .toSet()
+          .toList();
+
+      // print("uasers length: ${userIds.length}");
+      // print("User IDs: $userIds");
+
+      if (userIds.isNotEmpty) {
+        final userDocs = await Future.wait(
+          userIds.map((id) => _firestore.collection('users').doc(id).get()),
+        );
+        for (var doc in userDocs) {
+          if (doc.exists) {
+            _users[doc.id] = UserData.fromMap(doc.data()!);
           }
+        }
+      }
 
-        print("Fetched users: ${_users.length}");
+      // print("Fetched users: ${_users.length}");
 
-        return conversations.map((conversation) {
-            final userId = conversation['participants'].firstWhere(
-                (id) => id != _auth.currentUser?.uid,
-                orElse: () => '');
-            final user = _users[userId];
-            return {
-              'chatId': conversation['chatId'],
-              'lastMessage': conversation['lastMessage'],
-              'lastMessageTimestamp': conversation['lastMessageTimestamp'],
-              'userName': user?.displayName,
-              'photoUrl': user?.photoUrl,
-              'userId': user?.uid,
-            };
-          }).toList();
-    }); 
+      return conversations.map((conversation) {
+        final userId = conversation['participants']
+            .firstWhere((id) => id != _auth.currentUser?.uid, orElse: () => '');
+        final user = _users[userId];
+        return {
+          'chatId': conversation['chatId'],
+          'lastMessage': conversation['lastMessage'],
+          'lastMessageSeen': conversation['lastMessageSeen'],
+          'lastMessageSender': conversation['lastMessageSender'],
+          'lastMessageTimestamp': conversation['lastMessageTimestamp'],
+          'userName': user?.displayName,
+          'photoUrl': user?.photoUrl,
+          'userId': user?.uid,
+        };
+      }).toList();
+    });
   }
 }
 

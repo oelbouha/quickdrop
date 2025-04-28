@@ -6,6 +6,7 @@ import 'package:quickdrop_app/core/widgets/gestureDetector.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:provider/provider.dart';
 import 'package:quickdrop_app/core/utils/imports.dart';
+import 'package:go_router/go_router.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -81,11 +82,7 @@ class _LoginPageState extends State<LoginPage> {
             photoUrl: authUser.photoURL,
           ));
         }
-        Provider.of<NavigationProvider>(context, listen: false).changeTab(0);
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => BottomNavScreen()),
-        );
+        context.go('/home');
       }
 
       if (mounted) {
@@ -94,9 +91,9 @@ class _LoginPageState extends State<LoginPage> {
         });
       }
     } on FirebaseAuthException catch (e) {
-      AppUtils.showError(context, 'Google Sign-In failed: ${e.message}');
+      if (mounted) AppUtils.showError(context, 'Google Sign-In failed: ${e.message}');
     } catch (e) {
-      AppUtils.showError(context, 'An unexpected error occurred: $e');
+      if(mounted) AppUtils.showError(context, 'An unexpected error occurred: $e');
     } finally {
       setState(() {
         _isGoogleLoading = false;
@@ -121,13 +118,8 @@ class _LoginPageState extends State<LoginPage> {
 
         setUserData(userCredential);
 
-        if (mounted) {
-          Provider.of<NavigationProvider>(context, listen: false).changeTab(0);
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (context) => BottomNavScreen()),
-          );
-        }
+        if (mounted) context.go('/home');
+
       } on FirebaseAuthException catch (e) {
         String errorMessage;
         switch (e.code) {

@@ -1,4 +1,6 @@
 import 'package:quickdrop_app/core/utils/imports.dart';
+import 'package:quickdrop_app/core/widgets/app_header.dart';
+
 
 class TripScreen extends StatefulWidget {
   const TripScreen({Key? key}) : super(key: key);
@@ -70,10 +72,15 @@ class _TripScreenState extends State<TripScreen> {
       appBar: AppBar(
         backgroundColor: AppColors.barColor,
         // centerTitle: true,
-        title: const Text("Trips",
-            style: TextStyle(color: AppColors.headingText, fontSize: 16)),
+        toolbarHeight: 80,
+        titleSpacing: 0,
+       title:  buildHomePageHeader(
+            context,
+            'Shipments',
+            true,
+          ),
         bottom: CustomTabBar(
-          tabs: const ['Pending', 'Ongoing', 'Completed'],
+          tabs: const ['Active', 'Ongoing', 'Completed'],
           selectedIndex: selectedIndex,
           onTabSelected: (index) {
             setState(() {
@@ -107,20 +114,35 @@ class _TripScreenState extends State<TripScreen> {
               // print("trips");
               // print(activeTrips.length);
 
-              return Padding(
-                 padding: const EdgeInsets.only(
-                    left: AppTheme.homeScreenPadding,
-                    right: AppTheme.homeScreenPadding,
-                    top: AppTheme.homeScreenPadding,
-                    ),
-                child: IndexedStack(
+            return Padding(
+              padding: const EdgeInsets.only(
+                left: AppTheme.homeScreenPadding,
+                right: AppTheme.homeScreenPadding,
+              ),
+              child: IndexedStack(
                 index: selectedIndex,
                 children: [
-                  _buildActiveTrips(activeTrips),
-                  _buildOngoingTrips(ongoingTrips),
-                  _buildOPastTrips(completedTrips),
+                  Column(
+                    children: [
+                      const SizedBox(height: 16), // <-- This is your top space!
+                      Expanded(child: _buildActiveTrips(activeTrips)),
+                    ],
+                  ),
+                  Column(
+                    children: [
+                      const SizedBox(height: 16),
+                      Expanded(child: _buildOngoingTrips(ongoingTrips)),
+                    ],
+                  ),
+                  Column(
+                    children: [
+                      const SizedBox(height: 16),
+                      Expanded(child: _buildOPastTrips(completedTrips)),
+                    ],
+                  ),
                 ],
-              ));
+              ),
+            );
             }),
       floatingActionButton: FloatButton(
         onTap: () => {

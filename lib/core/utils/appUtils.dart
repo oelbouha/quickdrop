@@ -97,7 +97,7 @@ static void showSuccess(BuildContext context, String message) {
             ),
           ],
         ),
-        backgroundColor: AppColors.cardBackground,
+        backgroundColor: AppColors.succes,
         behavior: SnackBarBehavior.floating, // Allows custom positioning
         margin: const EdgeInsets.only(
           top: 60,
@@ -106,7 +106,7 @@ static void showSuccess(BuildContext context, String message) {
           bottom: 16
         ), // Position at top with margins
         // padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 12),
-        duration: const Duration(seconds: 3), // Auto-dismiss after 3 seconds
+        duration: const Duration(seconds: 4), // Auto-dismiss after 3 seconds
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12),
         ),
