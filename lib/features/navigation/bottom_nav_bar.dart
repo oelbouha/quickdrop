@@ -8,101 +8,87 @@ import 'package:quickdrop_app/theme/colors.dart';
 import 'package:quickdrop_app/core/widgets/custom_svg.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/services.dart';
-
-
-class NavigationProvider extends ChangeNotifier {
-  int _currentIndex = 0;
-
-  int get currentIndex => _currentIndex;
-
-  void changeTab(int index) {
-    _currentIndex = index;
-    notifyListeners();
-  }
-}
+import 'package:go_router/go_router.dart';
 
 class BottomNavScreen extends StatelessWidget {
-  BottomNavScreen({Key? key}) : super(key: key);
-
-  final List<Widget> _pages = [
-    const HomeScreen(),
-    const TripScreen(),
-    const ShipmentScreen(),
-    const ChatScreen(),
-    const ProfileScreen(),
-  ];
+  int _curentIndex = 0;
+  final Widget child;
+  BottomNavScreen({
+    Key? key,
+    required this.child,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    
-     SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-      systemNavigationBarColor: AppColors.cardBackground, // Set the color of the phone's bottom bar
-      systemNavigationBarIconBrightness: Brightness.light, // Make icons light if the background is dark
+    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+      systemNavigationBarColor:
+          AppColors.cardBackground, // Set the color of the phone's bottom bar
+      systemNavigationBarIconBrightness:
+          Brightness.light, // Make icons light if the background is dark
     ));
-    return Consumer<NavigationProvider>(
-        builder: (context, navigationProvider, child) {
-      return Scaffold(
-          body: _pages[navigationProvider.currentIndex],
-          bottomNavigationBar: Theme(
-            data: Theme.of(context).copyWith(
-              splashColor: AppColors.cardBackground, // ✅ Removes white ripple effect
-              highlightColor: AppColors.cardBackground, // ✅ Disables highlight animation
-            ),
-            child: BottomNavigationBar(
+    return Scaffold(
+        body: child,
+        bottomNavigationBar: Theme(
+          data: Theme.of(context).copyWith(
+            splashColor:
+                AppColors.cardBackground, // ✅ Removes white ripple effect
+            highlightColor:
+                AppColors.cardBackground, // ✅ Disables highlight animation
+          ),
+          child: BottomNavigationBar(
             type: BottomNavigationBarType.fixed,
-            currentIndex: navigationProvider._currentIndex,
-            onTap: (index) => navigationProvider.changeTab(index),
+            currentIndex: _calculateIndex(context),
+            onTap: (index) => _onTap(index, context),
             showSelectedLabels: true,
             selectedItemColor: AppColors.blue,
             showUnselectedLabels: true,
             selectedLabelStyle: const TextStyle(
-              fontSize: 12,
+              fontSize: 14,
               fontWeight: FontWeight.bold,
             ),
             unselectedLabelStyle:
-                const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+                const TextStyle(fontSize: 14 , fontWeight: FontWeight.bold),
             backgroundColor: AppColors.cardBackground,
             unselectedItemColor: AppColors.lessImportant,
             items: <BottomNavigationBarItem>[
               BottomNavigationBarItem(
                 icon: _buildIconWithBackground(
                   iconPath: "assets/icon/magnifer.svg",
-                  isSelected: navigationProvider.currentIndex == 0,
+                  isSelected: _calculateIndex(context) == 0,
                 ),
                 label: 'Search',
               ),
               BottomNavigationBarItem(
                 icon: _buildIconWithBackground(
                   iconPath: "assets/icon/trip.svg",
-                  isSelected: navigationProvider.currentIndex == 1,
+                  isSelected: _calculateIndex(context) == 1,
                 ),
                 label: 'Trip',
               ),
               BottomNavigationBarItem(
                 icon: _buildIconWithBackground(
                   iconPath: "assets/icon/package.svg",
-                  isSelected: navigationProvider.currentIndex == 2,
+                  isSelected: _calculateIndex(context) == 2,
                 ),
                 label: 'Shipment',
               ),
               BottomNavigationBarItem(
                 icon: _buildIconWithBackground(
                   iconPath: "assets/icon/chat-round.svg",
-                  isSelected: navigationProvider.currentIndex == 3,
+                  isSelected: _calculateIndex(context) == 3,
                 ),
                 label: 'Chat',
               ),
-              BottomNavigationBarItem(
-                icon: _buildIconWithBackground(
-                  iconPath: "assets/icon/user.svg",
-                  isSelected: navigationProvider.currentIndex == 4,
-                ),
-                label: 'Profile',
-              ),
+              // BottomNavigationBarItem(
+              //   icon: _buildIconWithBackground(
+              //     iconPath: "assets/icon/user.svg",
+              //     isSelected: navigationProvider.currentIndex == 4,
+              //   ),
+              //   label: 'Profile',
+              // ),
             ],
           ),
-      ));
-    });
+        ));
   }
 
   Widget _buildIconWithBackground({
@@ -123,5 +109,30 @@ class BottomNavScreen extends StatelessWidget {
         color: isSelected ? AppColors.blue : AppColors.lessImportant,
       ),
     );
+  }
+
+  int _calculateIndex(BuildContext context) {
+    final location = GoRouterState.of(context).uri;
+    if (location.path == '/trip')  return 1;
+    if (location.path == "/shipment") return 2;
+    if (location.path == '/chat') return 3;
+    return 0;
+  }
+
+  void _onTap(int index, BuildContext context) {
+    switch (index) {
+      case 0:
+        context.go('/home');
+        break;
+      case 1:
+        context.go('/trip');
+        break;
+      case 2:
+        context.go('/shipment');
+        break;
+      case 3:
+        context.go('/chat');
+        break;
+    }
   }
 }

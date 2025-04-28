@@ -1,12 +1,5 @@
-import 'package:flutter/material.dart';
-import 'package:quickdrop_app/theme/colors.dart';
+
 import 'package:quickdrop_app/features/profile/settings_card.dart';
-import 'package:quickdrop_app/theme/AppTheme.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:provider/provider.dart';
-import 'package:quickdrop_app/features/models/user_model.dart';
-import 'package:quickdrop_app/core/utils/appUtils.dart';
-import 'package:quickdrop_app/features/auth/login_screen.dart';
 import 'package:quickdrop_app/core/utils/imports.dart';
 
 class ProfileScreen extends StatefulWidget {

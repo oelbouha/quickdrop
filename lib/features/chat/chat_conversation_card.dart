@@ -1,24 +1,29 @@
-import 'package:flutter/material.dart';
-import 'package:quickdrop_app/theme/colors.dart';
-import 'package:quickdrop_app/theme/AppTheme.dart';
+
 // import 'package:quickdrop_app/core/widgets/custom_svg.dart';
 import 'package:quickdrop_app/core/widgets/destination.dart';
 import 'package:quickdrop_app/core/widgets/button.dart';
 import 'package:quickdrop_app/core/widgets/item_details.dart';
-import 'package:quickdrop_app/core/widgets/user_profile.dart';
 import 'package:quickdrop_app/features/chat/convo_screen.dart';
+import 'package:quickdrop_app/core/utils/imports.dart';
 
 class ChatConversationCard extends StatefulWidget {
+  /// A card that displays a chat conversation with a user.
+  ///
   final String? photoUrl;
   final String? header;
   final String? subHeader;
   final String? userId;
+  final String? messageSender;
+  final bool isMessageSeen;
+
   const ChatConversationCard({
     super.key,
     required this.photoUrl,
+    required this.messageSender,
     required this.header,
     required this.subHeader,
     required this.userId,
+    this.isMessageSeen = false,
   });
 
   @override
@@ -33,7 +38,8 @@ class ChatConversationCardState extends State<ChatConversationCard> {
           Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) => ConversationScreen(
+                builder: (context) => 
+                ConversationScreen(
                       user: {
                         'uid': widget.userId,
                         'displayName': widget.header,
@@ -63,11 +69,18 @@ class ChatConversationCardState extends State<ChatConversationCard> {
                 photoUrl: widget.photoUrl!,
                 header: widget.header!,
                 onPressed: () => print("user profile  Clicked"),
-                subHeader: widget.subHeader!,
-                headerFontSize: 14,
-                subHeaderFontSize: 10,
-                avatarSize: 18,
-              )
+                headerFontSize: 16,
+                subHeaderFontSize: 12,
+                avatarSize: 20,
+                subHeader: widget.subHeader! ,
+                subHeaderColor:  AppColors.lessImportant,
+              ),
+              if (widget.isMessageSeen == false && widget.messageSender == widget.userId)
+                const Icon(
+                  Icons.circle,
+                  size: 12,
+                  color: AppColors.blue,
+                ),
             ],
           ),
         ));

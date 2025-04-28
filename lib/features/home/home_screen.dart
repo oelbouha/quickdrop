@@ -1,8 +1,9 @@
 import 'package:quickdrop_app/core/utils/imports.dart';
-
-import 'package:quickdrop_app/core/widgets/custom_tab_bar.dart';
+import 'package:go_router/go_router.dart';
 import 'package:quickdrop_app/features/shipment/listing_card_details_screen.dart';
+import 'package:quickdrop_app/features/profile/profile_screen.dart';
 import 'package:skeletonizer/skeletonizer.dart';
+import 'package:quickdrop_app/core/widgets/app_header.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -22,13 +23,13 @@ class _HomeScreenState extends State<HomeScreen> {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       try {
         await Provider.of<ShipmentProvider>(context, listen: false)
-          .fetchShipments();
-        await Provider.of<TripProvider>(context, listen: false)
-          .fetchTrips();
+            .fetchShipments();
+        await Provider.of<TripProvider>(context, listen: false).fetchTrips();
       } catch (e) {
-        if (mounted) AppUtils.showError(context, 'Error fetching shipments: $e');
-      }
-      finally {
+        if (mounted) {
+          AppUtils.showError(context, 'Error fetching shipments: $e');
+        }
+      } finally {
         setState(() {
           _isLoading = false;
         });
@@ -42,7 +43,9 @@ class _HomeScreenState extends State<HomeScreen> {
         backgroundColor: AppColors.background,
         appBar: AppBar(
             backgroundColor: AppColors.barColor,
-            title: _buildHomePageHeader(),
+            titleSpacing: 0,
+            title: buildHomePageHeader(context, "QuickDrop", true),
+            toolbarHeight: 80,
             bottom: CustomTabBar(
               selectedIndex: selectedIndex,
               tabs: const ['Packages', 'Trips'],
@@ -74,36 +77,6 @@ class _HomeScreenState extends State<HomeScreen> {
                     );
                   }))
                 ]))));
-  }
-
-  Widget _buildHomePageHeader() {
-    return Row(
-      mainAxisSize: MainAxisSize.max, // Takes full width
-      children: [
-        const Expanded(
-          // App Name
-          child: Text(
-            "QuickDrop",
-            style: TextStyle(
-              color: AppColors.headingText,
-              fontWeight: FontWeight.bold,
-              fontSize: 18,
-            ),
-            // textAlign: TextAlign.center,
-          ),
-        ),
-        IconButton(
-          icon: const CustomIcon(
-              iconPath: "assets/icon/notification.svg",
-              size: 24,
-              color: AppColors.white),
-          onPressed: () {
-            // Navigate to notifications page or show a dialog
-            print("Notifications clicked!");
-          },
-        )
-      ],
-    );
   }
 
   Widget _buildTripListings(List<Trip> activeTrips) {
@@ -150,11 +123,12 @@ class _HomeScreenState extends State<HomeScreen> {
                           shipment: shipment,
                           userData: userData,
                           onPressed: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => ListingCardDetails(
-                                        shipment: shipment, user: userData)));
+                            // Navigator.push(
+                            //     context,
+                            //     MaterialPageRoute(
+                            //         builder: (context) => ListingCardDetails(
+                            //             shipment: shipment, user: userData)));
+                            context.push("/help");
                           },
                         ),
                         const SizedBox(height: AppTheme.gapBetweenCards),

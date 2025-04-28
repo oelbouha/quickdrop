@@ -2,6 +2,7 @@ import 'package:quickdrop_app/features/chat/request.dart';
 import 'package:quickdrop_app/features/chat/chat_conversation_card.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
+import 'package:quickdrop_app/core/widgets/app_header.dart';
 import 'package:quickdrop_app/core/utils/imports.dart';
 
 class ChatScreen extends StatefulWidget {
@@ -28,7 +29,7 @@ class _ChatScreenState extends State<ChatScreen> {
             final deliveryProvider =
                 Provider.of<DeliveryRequestProvider>(context, listen: false);
             await deliveryProvider.fetchRequests(user.uid);
-            print("Fetched requests: ${deliveryProvider.requests.length}");
+            // print("Fetched requests: ${deliveryProvider.requests.length}");
 
             // Extract all senderIds and fetch user data at once
             final userIds = deliveryProvider.requests
@@ -39,7 +40,8 @@ class _ChatScreenState extends State<ChatScreen> {
                 .fetchUsersData(userIds);
           }
         } catch (e) {
-          print('Error fetching requests: $e');
+          // print('Error fetching requests: $e');
+          if (mounted) AppUtils.showError(context, "Failed to fetch requests: ${e.toString()}");
         } finally {
           setState(() {
             _isLoading = false;
@@ -56,8 +58,13 @@ class _ChatScreenState extends State<ChatScreen> {
       appBar: AppBar(
         backgroundColor: AppColors.barColor,
         // centerTitle: true,
-        title: const Text("Chats",
-            style: TextStyle(color: AppColors.headingText, fontSize: 16)),
+          toolbarHeight: 80,
+          titleSpacing: 0,
+       title:  buildHomePageHeader(
+            context,
+            'Shipments',
+            true,
+          ),
         bottom: CustomTabBar(
           tabs: const ['Chats', 'Requested Deliveries'],
           icons: const ['chat-round.svg', 'request-delivery.svg'],
@@ -115,6 +122,8 @@ class _ChatScreenState extends State<ChatScreen> {
                           subHeader: conversation['lastMessage'],
                           photoUrl: conversation['photoUrl'],
                           userId: conversation['userId'],
+                          isMessageSeen: conversation['lastMessageSeen'],
+                          messageSender: conversation['lastMessageSender'],
                         );
                       },
                     )

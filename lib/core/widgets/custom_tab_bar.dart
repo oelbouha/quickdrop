@@ -27,7 +27,12 @@ class CustomTabBar extends StatelessWidget implements PreferredSizeWidget {
       preferredSize: const Size.fromHeight(40),
       child: Container(
         alignment: Alignment.centerLeft,
-        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12),
+        padding: const EdgeInsets.only(
+          top: 0,
+          left: 10,
+          bottom: 10, 
+          right: 0,
+        ),
         child: SingleChildScrollView(
           scrollDirection: Axis.horizontal,
           child: Row(
@@ -62,7 +67,7 @@ class CustomTabBar extends StatelessWidget implements PreferredSizeWidget {
       },
       child: Container(
         height: 40,
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
         decoration: BoxDecoration(
           color: isSelected ? AppColors.blue : AppColors.cardBackground,
           borderRadius: BorderRadius.circular(AppTheme.tabBarRadius),

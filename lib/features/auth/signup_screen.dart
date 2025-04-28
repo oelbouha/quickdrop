@@ -6,6 +6,8 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:provider/provider.dart';
 import 'package:quickdrop_app/core/utils/imports.dart';
 
+import 'package:go_router/go_router.dart';
+
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({Key? key}) : super(key: key);
 
@@ -67,17 +69,12 @@ class _SingupPageState extends State<SignUpScreen> {
       await FirebaseService().saveUserToFirestore(userCredential.user!);
       setUserData(userCredential);
 
-      if (mounted) {
-        // Navigator.pop(context);
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => BottomNavScreen()),
-        );
-      }
+      if (mounted) context.go('/home');
+
     } on FirebaseAuthException catch (e) {
-      AppUtils.showError(context, 'Google Sign-In failed: ${e.message}');
+      if (mounted) AppUtils.showError(context, 'Google Sign-In failed: ${e.message}');
     } catch (e) {
-      AppUtils.showError(context, 'An unexpected error occurred: $e');
+       if (mounted) AppUtils.showError(context, 'An unexpected error occurred: $e');
     } finally {
       setState(() {
         _isGoogleLoading = false;
@@ -111,13 +108,8 @@ class _SingupPageState extends State<SignUpScreen> {
         await FirebaseAuth.instance.currentUser
             ?.updateDisplayName(fullNameController.text.trim());
 
-        if (mounted) {
-          Navigator.pop(context);
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (context) => BottomNavScreen()),
-          );
-        }
+        if (mounted) context.go('/home');
+
       } on FirebaseAuthException catch (e) {
         String errorMessage;
         switch (e.code) {
@@ -127,7 +119,7 @@ class _SingupPageState extends State<SignUpScreen> {
           default:
             errorMessage = e.message ?? 'An error occurred during singup.';
         }
-        AppUtils.showError(context, errorMessage);
+        if (mounted) AppUtils.showError(context, errorMessage);
       } finally {
           setState(() {
             _isEmailLoading = false;

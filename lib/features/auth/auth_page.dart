@@ -22,7 +22,7 @@ class _AuthPageState extends State<AuthPage> {
     final user = Provider.of<UserProvider>(context, listen: false).user;
 
     if (user != null) {
-      return BottomNavScreen();
+      return LoginPage();
     } else {
       return const LoginPage();
     }

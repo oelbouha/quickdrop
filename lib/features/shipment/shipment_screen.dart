@@ -1,5 +1,7 @@
 import 'package:quickdrop_app/core/utils/imports.dart';
 
+import 'package:quickdrop_app/core/widgets/app_header.dart';
+
 class ShipmentScreen extends StatefulWidget {
   const ShipmentScreen({Key? key}) : super(key: key);
 
@@ -72,11 +74,17 @@ class _ShipmentScreenState extends State<ShipmentScreen> {
       appBar: AppBar(
         backgroundColor: AppColors.barColor,
         // centerTitle: true,
-        title: const Text("Shipments",
-            style: TextStyle(color: AppColors.headingText, fontSize: 16)),
+        toolbarHeight: 80,
+        titleSpacing: 0,
+       title:  buildHomePageHeader(
+            context,
+            'Shipments',
+            true,
+          ),
+
         bottom: CustomTabBar(
           selectedIndex: selectedIndex,
-          tabs: const ['Pending', 'Ongoing', 'Completed'],
+          tabs: const ['Active', 'Ongoing', 'Completed'],
           onTabSelected: (index) {
             setState(() {
               selectedIndex = index;

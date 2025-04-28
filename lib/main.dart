@@ -1,6 +1,7 @@
 import 'firebase_options.dart';
 import 'package:quickdrop_app/core/utils/imports.dart';
 import 'package:skeletonizer/skeletonizer.dart';
+import 'package:quickdrop_app/routes/routes.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -10,7 +11,6 @@ void main() async {
       providers: [
         ChangeNotifierProvider(create: (context) => ShipmentProvider()),
         ChangeNotifierProvider(create: (context) => TripProvider()),
-        ChangeNotifierProvider(create: (context) => NavigationProvider()),
         ChangeNotifierProvider(create: (context) => UserProvider()),
         ChangeNotifierProvider(create: (context) => DeliveryRequestProvider()),
         ChangeNotifierProvider(create: (context) => ChatProvider()),
@@ -25,6 +25,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+     final router = AppRouter.createRouter(context);
     return  SkeletonizerConfig(
       data: const SkeletonizerConfigData(
         effect: ShimmerEffect(
@@ -32,7 +33,7 @@ class MyApp extends StatelessWidget {
           highlightColor: Color.fromARGB(255, 95, 94, 94),
         ),
       ),
-    child: MaterialApp(
+    child: MaterialApp.router(
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
           fontFamily: 'Roboto',
@@ -41,6 +42,7 @@ class MyApp extends StatelessWidget {
             iconTheme: IconThemeData(color: Colors.white), // Makes the back arrow white
           ),
         ),
-        home: AuthPage()));
+        routerConfig: router,
+        ));
   }
 }
