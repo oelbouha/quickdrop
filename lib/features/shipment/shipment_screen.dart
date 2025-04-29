@@ -1,5 +1,6 @@
 import 'package:quickdrop_app/core/utils/imports.dart';
 
+import 'package:go_router/go_router.dart';
 import 'package:quickdrop_app/core/widgets/app_header.dart';
 
 class ShipmentScreen extends StatefulWidget {
@@ -9,14 +10,19 @@ class ShipmentScreen extends StatefulWidget {
   State<ShipmentScreen> createState() => _ShipmentScreenState();
 }
 
-class _ShipmentScreenState extends State<ShipmentScreen> {
+class _ShipmentScreenState extends State<ShipmentScreen> with SingleTickerProviderStateMixin{
   int selectedIndex = 0;
   bool _isLoading = true;
+  String? userPhotoUrl;
+  late TabController _tabController;
+
 
   @override
   void initState() {
     super.initState();
     // Fetch shipments when the screen loads
+    _tabController = TabController(length: 3, vsync: this);
+    userPhotoUrl = Provider.of<UserProvider>(context, listen: false).user?.photoUrl;
     WidgetsBinding.instance.addPostFrameCallback((_) async{
       try {
         final shipmentProvider =  Provider.of<ShipmentProvider>(context, listen: false);
@@ -67,6 +73,12 @@ class _ShipmentScreenState extends State<ShipmentScreen> {
    
   }
 
+    @override
+    void dispose() {
+      _tabController.dispose();
+      super.dispose();
+    }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -74,22 +86,33 @@ class _ShipmentScreenState extends State<ShipmentScreen> {
       appBar: AppBar(
         backgroundColor: AppColors.barColor,
         // centerTitle: true,
-        toolbarHeight: 80,
-        titleSpacing: 0,
-       title:  buildHomePageHeader(
-            context,
-            'Shipments',
-            true,
+        // toolbarHeight: 40,
+       title:  const Text(
+          "Shipments", 
+          style: TextStyle(color: AppColors.white, fontWeight: FontWeight.bold)),
+       actions: [
+          IconButton(
+            icon: const Icon(Icons.notifications, color: AppColors.white),
+            tooltip: 'notification',
+            onPressed: () {context.push("/notification");},
           ),
+          GestureDetector(
+            onTap: () {context.push("/profile");},
+  
+            child:  CircleAvatar(
+              radius: 18,
+              backgroundColor: AppColors.blue,
+              backgroundImage: userPhotoUrl!.startsWith("http")
+                  ? NetworkImage(userPhotoUrl!)
+                  : AssetImage(userPhotoUrl!) as ImageProvider,
+            ),
+          ),
+          const SizedBox(width: 10,),
+      ],
 
-        bottom: CustomTabBar(
-          selectedIndex: selectedIndex,
+        bottom: customTabBar(
           tabs: const ['Active', 'Ongoing', 'Completed'],
-          onTabSelected: (index) {
-            setState(() {
-              selectedIndex = index;
-            });
-          },
+          tabController: _tabController
         ),
       ),
       body: _isLoading
@@ -120,13 +143,13 @@ class _ShipmentScreenState extends State<ShipmentScreen> {
                     right: AppTheme.homeScreenPadding,
                     top: AppTheme.homeScreenPadding,
                     ),
-                child: IndexedStack(
-                index: selectedIndex,
-                children: [
-                  _buildActiveShipment(activeShipments),
-                  _buildOngoingShipment(ongoingShipments),
-                  _buildOPastShipment(pastShipments),
-                ],
+                child: TabBarView(
+                    controller: _tabController,
+                  children: [
+                    _buildActiveShipment(activeShipments),
+                    _buildOngoingShipment(ongoingShipments),
+                    _buildOPastShipment(pastShipments),
+                  ],
               ));
             }),
       floatingActionButton: FloatButton(

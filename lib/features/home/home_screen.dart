@@ -15,11 +15,17 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   int selectedIndex = 0;
   bool _isLoading = true;
+  String?  userPhotoUrl;
+
 
   @override
   void initState() {
     super.initState();
 
+    userPhotoUrl = Provider.of<UserProvider>(context, listen: false).user?.photoUrl;
+    if (userPhotoUrl == null || userPhotoUrl!.isEmpty) {
+      userPhotoUrl = "assets/images/profile.png"; // Default image
+    }
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       try {
         await Provider.of<ShipmentProvider>(context, listen: false)
@@ -43,19 +49,29 @@ class _HomeScreenState extends State<HomeScreen> {
         backgroundColor: AppColors.background,
         appBar: AppBar(
             backgroundColor: AppColors.barColor,
-            titleSpacing: 0,
-            title: buildHomePageHeader(context, "QuickDrop", true),
-            toolbarHeight: 80,
-            bottom: CustomTabBar(
-              selectedIndex: selectedIndex,
-              tabs: const ['Packages', 'Trips'],
-              icons: const ['package.svg', 'map-point.svg'],
-              onTabSelected: (index) {
-                setState(() {
-                  selectedIndex = index;
-                });
-              },
-            )),
+            title: const Text(
+              "QuickDrop", 
+              style: TextStyle(color: AppColors.white, fontWeight: FontWeight.bold)),
+              actions: [
+                  IconButton(
+                    icon: const Icon(Icons.notifications, color: AppColors.white),
+                    tooltip: 'notification',
+                    onPressed: () {context.push("/notification");},
+                  ),
+                  GestureDetector(
+                    onTap: () {context.push("/profile");},
+          
+                    child:  CircleAvatar(
+                      radius: 18,
+                      backgroundColor: AppColors.blue,
+                      backgroundImage: userPhotoUrl!.startsWith("http")
+                          ? NetworkImage(userPhotoUrl!)
+                          : AssetImage(userPhotoUrl!) as ImageProvider,
+                    ),
+                  ),
+                  const SizedBox(width: 10,),
+              ],
+          ),
         body: Skeletonizer(
             enabled: _isLoading,
             child: Padding(

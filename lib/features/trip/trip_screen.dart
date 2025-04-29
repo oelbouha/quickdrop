@@ -49,11 +49,7 @@ class _TripScreenState extends State<TripScreen> with SingleTickerProviderStateM
       userPhotoUrl = "assets/images/profile.png"; // Default image
     }
 
-     @override
-    void dispose() {
-      _tabController.dispose();
-      super.dispose();
-    }
+  
 
 
     // Fetch trips when the screen loads
@@ -83,13 +79,18 @@ class _TripScreenState extends State<TripScreen> with SingleTickerProviderStateM
     });
   }
 
+     @override
+    void dispose() {
+      _tabController.dispose();
+      super.dispose();
+    }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
         backgroundColor: AppColors.barColor,
-        toolbarHeight: 40,
+        // toolbarHeight: 40,
        title: const Text(
           "Trips", 
           style: TextStyle(color: AppColors.white, fontWeight: FontWeight.bold)),
@@ -112,31 +113,10 @@ class _TripScreenState extends State<TripScreen> with SingleTickerProviderStateM
           ),
           const SizedBox(width: 10,),
       ],
-      bottom: TabBar(
-          controller: _tabController,
-          labelColor: AppColors.blue,
-          unselectedLabelColor: AppColors.white,
-          indicatorColor: AppColors.blue,
-          tabAlignment: TabAlignment.fill,
-          indicatorWeight: 2,
-          dividerColor: AppColors.lessImportant,
-          dividerHeight: 0.1,
-          labelStyle: const TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 16,
-          ),
-          unselectedLabelStyle: const TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 16,
-          ),
-          indicatorSize: TabBarIndicatorSize.tab,
-          tabs: const [
-            Tab(text: "Pending"),
-            Tab(text: "Ongoing"),
-            Tab(text: "Completed"),
-          ],
+      bottom: customTabBar(
+          tabs: const ['Active', 'Ongoing', 'Completed'],
+          tabController: _tabController
         ),
-      
       ),
       body: _isLoading
           ? const Center(
