@@ -35,24 +35,27 @@ class CompletedItemCardState extends State<CompletedItemCard> {
           ),
         ],
       ),
-      child:  Padding(
-              padding: const EdgeInsets.all(AppTheme.historyCardPadding),
-              child: Column(
+      child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  _buildHeader(),
-                  const SizedBox(height: 10,),
                   _buildBody(),
-                   const SizedBox(height: 10,),
+                  const SizedBox(height: 10,),
+                  
                   _buildFooter(),
                 ],
-        )));
+        ));
   }
 
 
 
-  Widget _buildHeader() {
-    return Row(
+  Widget _buildUserCard() {
+    return Container(
+      padding: const EdgeInsets.all(10),
+        decoration:  BoxDecoration(
+          color: AppColors.input,
+          borderRadius: BorderRadius.circular(AppTheme.cardRadius),
+      ),
+      child: Row(
       children: [
         UserProfileCard(
           header: widget.user['displayName'],
@@ -64,6 +67,31 @@ class CompletedItemCardState extends State<CompletedItemCard> {
           avatarSize: 18,
         ),
           const Spacer(),
+          Container(
+             padding: const EdgeInsets.all(8),
+            decoration:  BoxDecoration(
+                color: AppColors.succes,
+                borderRadius: BorderRadius.circular(30),
+            ),
+            child: const Text("Completed", style: TextStyle(fontSize: 10),)
+          )
+      ],
+    ));
+  }
+
+ Widget _buildBody() {
+    return Padding(
+       padding: const EdgeInsets.only(
+        left: 8,
+        right: 8,
+        top: 4,
+        bottom: 4,
+      ),
+      child: Column(
+      children: [
+          Row(children: [
+          Destination(from: widget.item.from, to: widget.item.to),
+          const Spacer(),
           IconButton(
             icon: const CustomIcon(
                 iconPath: "assets/icon/trash-bin.svg",
@@ -71,17 +99,7 @@ class CompletedItemCardState extends State<CompletedItemCard> {
                 color: AppColors.error),
             onPressed: widget.onPressed,
           )
-      ],
-    );
-  }
-
- Widget _buildBody() {
-    return Column(
-      children: [
-          Destination(from: widget.item.from, to: widget.item.to),
-        const SizedBox(
-          height: 3,
-        ),
+        ]),
         buildIconWithText(
           iconPath: "calendar.svg", 
           text: 'Departure time ${widget.item.date}'
@@ -94,16 +112,31 @@ class CompletedItemCardState extends State<CompletedItemCard> {
           text: 'Weight ${widget.item.weight} kg'
         ),
         const SizedBox(
-          height: 3,
+          height: 8,
         ),
+        _buildUserCard()
       ],
-    );
+    ));
   }
 
   Widget _buildFooter() {
-    return  Row(
+    return  Container(
+       padding: const EdgeInsets.only(
+        left: 8,
+        right: 8,
+        top: 4,
+        bottom: 4,
+      ),
+      decoration: const BoxDecoration(
+        color: AppColors.lessImportant,
+        borderRadius:  BorderRadius.only(
+          bottomRight: Radius.circular(AppTheme.cardRadius),
+          bottomLeft: Radius.circular(AppTheme.cardRadius),
+        ),
+      ),
+      child: Row(
       children: [
-         Text('Price:  ${widget.item.price}dh',
+         Text('${widget.item.price}dh',
             style: const TextStyle(
                 color: AppColors.blue,
                 fontSize: 14,
@@ -111,7 +144,7 @@ class CompletedItemCardState extends State<CompletedItemCard> {
         const Spacer(),
           _buildButtons(),
           ],
-    );
+    ));
   }
 
   Widget _buildButtons() {
@@ -124,7 +157,7 @@ class CompletedItemCardState extends State<CompletedItemCard> {
         size: 20,
         color: Colors.white,
       ),
-      label: const Text("Leave review", style: TextStyle(color: AppColors.white),),
+      label: const Text("Rate trip", style: TextStyle(color: AppColors.white),),
       style: ElevatedButton.styleFrom(
         backgroundColor: AppColors.blue,
         shape: RoundedRectangleBorder(

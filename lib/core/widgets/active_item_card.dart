@@ -50,7 +50,7 @@ class ActiveListing extends State<ActiveItemCard> {
        padding: const EdgeInsets.only(
         left: 8,
         top: 4,
-        bottom: 4,
+        bottom: 8,
       ),
       child: Column(
       children: [
