@@ -35,7 +35,7 @@ class ActiveListing extends State<ActiveItemCard> {
         ),
         child: Padding(
             padding: const EdgeInsets.only(
-              left: AppTheme.historyCardPadding,
+              left: AppTheme.historyCardPadding * 0,
             ),
             child: Column(
               children: [
@@ -46,7 +46,13 @@ class ActiveListing extends State<ActiveItemCard> {
   }
 
   Widget _buildBody() {
-    return Column(
+    return Padding(
+       padding: const EdgeInsets.only(
+        left: 8,
+        top: 4,
+        bottom: 4,
+      ),
+      child: Column(
       children: [
         Row(children: [
           Destination(from: widget.item.from, to: widget.item.to),
@@ -78,11 +84,24 @@ class ActiveListing extends State<ActiveItemCard> {
         ),
         _buildType(),
       ],
-    );
+    ));
   }
 
   Widget _buildFooter() {
-    return Row(
+    return Container(
+      padding: const EdgeInsets.only(
+        left: 8,
+        top: 4,
+        bottom: 4,
+      ),
+      decoration: const BoxDecoration(
+        color: AppColors.lessImportant,
+        borderRadius:  BorderRadius.only(
+          bottomRight: Radius.circular(AppTheme.cardRadius),
+          bottomLeft: Radius.circular(AppTheme.cardRadius),
+        ),
+      ),
+      child: Row(
       children: [
         Text(' ${widget.item.price}dh',
             style: const TextStyle(
@@ -97,14 +116,14 @@ class ActiveListing extends State<ActiveItemCard> {
           icon: const CustomIcon(
               iconPath: "assets/icon/edit.svg",
               size: 20,
-              color: AppColors.lessImportant),
+              color: AppColors.cardBackground),
           onPressed: () {
             // Navigate to notifications page or show a dialog
             print("Notifications clicked!");
           },
         )
       ],
-    );
+    ));
   }
 
   Widget _buildType() {

@@ -111,7 +111,7 @@ class _TripScreenState extends State<TripScreen> with SingleTickerProviderStateM
           GestureDetector(
             onTap: () {context.push("/profile");},
             child:  CircleAvatar(
-              radius: 20,
+              radius: 18,
               backgroundColor: AppColors.blue,
               backgroundImage: userPhotoUrl!.startsWith("http")
                   ? NetworkImage(userPhotoUrl!)
@@ -120,6 +120,29 @@ class _TripScreenState extends State<TripScreen> with SingleTickerProviderStateM
           ),
           const SizedBox(width: 10,),
       ],
+      bottom: TabBar(
+                    controller: _tabController,
+                    labelColor: AppColors.blue,
+                    unselectedLabelColor: AppColors.white,
+                    indicatorColor: AppColors.blue,
+                    tabAlignment: TabAlignment.fill,
+                    indicatorWeight: 2,
+                    dividerColor: AppColors.barColor,
+                    labelStyle: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                    ),
+                    unselectedLabelStyle: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                    ),
+                    indicatorSize: TabBarIndicatorSize.tab,
+                    tabs: const [
+                      Tab(text: "Pending"),
+                      Tab(text: "Ongoing"),
+                      Tab(text: "Completed"),
+                    ],
+                  ),
       
       ),
       body: _isLoading
@@ -153,64 +176,14 @@ class _TripScreenState extends State<TripScreen> with SingleTickerProviderStateM
                 right: AppTheme.homeScreenPadding,
                 top: AppTheme.homeScreenPadding,
               ),
-              child: Column(
-                mainAxisSize: MainAxisSize.max,
-                children: [
-                  Container(
-                     width: double.infinity,
-                    decoration: const BoxDecoration(
-                      color: AppColors.background,
-                    ),
-                    child: TabBar(
-                    controller: _tabController,
-                    labelColor: AppColors.white,
-                    unselectedLabelColor: AppColors.white,
-                    indicatorColor: AppColors.blue,
-                    tabAlignment: TabAlignment.fill,
-                    // indicatorWeight: 3,
-                    // dividerColor: AppColors.background,
-                    dividerHeight: 0,
-                    indicator: BoxDecoration(
-                      color: AppColors.background,
-                      borderRadius: BorderRadius.circular(30),
-                      border: Border.all(
-                        color: AppColors.blue,
-                        width: 1,
-                      ),
-                    ),
-                      labelStyle: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16,
-                    ),
-                    unselectedLabelStyle: const TextStyle(
-                      fontWeight: FontWeight.normal,
-                      fontSize: 16,
-                    ),
-                    // isScrollable: true,
-                    indicatorSize: TabBarIndicatorSize.tab,
-                    labelPadding: const EdgeInsets.symmetric(
-                      horizontal: 10,
-                      vertical: 0,
-                    ),
-                    tabs: const [
-                      Tab(text: "Pending"),
-                      Tab(text: "Ongoing"),
-                      Tab(text: "Completed"),
-                    ],
-                  )),
-                  
-                  const SizedBox(height: 20),
-                  Expanded(
-                    child: TabBarView(
+              child: TabBarView(
                     controller: _tabController,
                     children: [
                       _buildActiveTrips(activeTrips),
                       _buildOngoingTrips(ongoingTrips),
                       _buildOPastTrips(completedTrips)
                     ],
-                  )),
-                ],
-              ),
+                  )
             );
             }),
       floatingActionButton: FloatButton(
@@ -218,8 +191,8 @@ class _TripScreenState extends State<TripScreen> with SingleTickerProviderStateM
           Navigator.push(context,
               MaterialPageRoute(builder: (context) => const AddTripScreen()))
         },
-        hintText: "New trip",
-        iconPath: "assets/icon/map-point.svg",
+        hintText: "Add trip",
+        iconPath: "assets/icon/add.svg",
       ),
     );
   }

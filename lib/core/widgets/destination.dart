@@ -46,10 +46,11 @@ class Destination extends StatelessWidget {
   Widget _buildFromDestination() {
     return Row(
       children: [
-           CustomIcon(
-            iconPath: "assets/icon/map-point.svg",
-            size: iconSize,
-            color: AppColors.blue),
+           const Icon(
+                  Icons.circle,
+                  size: 12,
+                  color: AppColors.blue,
+                ),
         const SizedBox(width: 5,),
         Text(
             truncateText(from),
@@ -67,10 +68,11 @@ class Destination extends StatelessWidget {
   Widget _buildToDestination() {
     return Row(
       children: [
-          CustomIcon(
-            iconPath: "assets/icon/map-point.svg",
-            size: iconSize,
-            color: AppColors.error),
+         const Icon(
+                  Icons.circle,
+                  size: 12,
+                  color: AppColors.blue,
+                ),
         const SizedBox(
           width: 5,
         ),
