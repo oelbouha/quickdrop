@@ -1,17 +1,22 @@
 import 'package:quickdrop_app/core/utils/imports.dart';
 import 'package:quickdrop_app/core/widgets/app_header.dart';
 
+import 'package:go_router/go_router.dart';
+
 
 class TripScreen extends StatefulWidget {
+ 
   const TripScreen({Key? key}) : super(key: key);
 
   @override
   State<TripScreen> createState() => _TripScreenState();
 }
 
-class _TripScreenState extends State<TripScreen> {
+class _TripScreenState extends State<TripScreen> with SingleTickerProviderStateMixin{
   int selectedIndex = 0;
+  String? userPhotoUrl;
   bool _isLoading = true;
+  late TabController _tabController;
 
   void removeTrip(String id) async {
     showDialog(
@@ -38,6 +43,19 @@ class _TripScreenState extends State<TripScreen> {
   @override
   void initState() {
     super.initState();
+     _tabController = TabController(length: 3, vsync: this);
+    userPhotoUrl = Provider.of<UserProvider>(context, listen: false).user?.photoUrl;
+    if (userPhotoUrl == null || userPhotoUrl!.isEmpty) {
+      userPhotoUrl = "assets/images/profile.png"; // Default image
+    }
+
+     @override
+    void dispose() {
+      _tabController.dispose();
+      super.dispose();
+    }
+
+
     // Fetch trips when the screen loads
     WidgetsBinding.instance.addPostFrameCallback((_) async{
       try {
@@ -72,22 +90,37 @@ class _TripScreenState extends State<TripScreen> {
       appBar: AppBar(
         backgroundColor: AppColors.barColor,
         // centerTitle: true,
-        toolbarHeight: 80,
-        titleSpacing: 0,
-       title:  buildHomePageHeader(
-            context,
-            'Shipments',
-            true,
+        // toolbarHeight: 80,
+        // titleSpacing: 0,
+        leadingWidth: 46,
+        // shape: const RoundedRectangleBorder(
+        //   borderRadius: BorderRadius.only(
+        //     bottomLeft: Radius.circular(AppTheme.cardRadius),
+        //     bottomRight: Radius.circular(AppTheme.cardRadius),
+        //   ),
+        // ),
+       title: const Text(
+          "Trips", 
+          style: TextStyle(color: AppColors.white, fontWeight: FontWeight.bold)),
+       actions: [
+          IconButton(
+            icon: const Icon(Icons.notifications, color: AppColors.white),
+            tooltip: 'notification',
+            onPressed: () {context.push("/notification");},
           ),
-        bottom: CustomTabBar(
-          tabs: const ['Active', 'Ongoing', 'Completed'],
-          selectedIndex: selectedIndex,
-          onTabSelected: (index) {
-            setState(() {
-              selectedIndex = index;
-            });
-          },
-        ),
+          GestureDetector(
+            onTap: () {context.push("/profile");},
+            child:  CircleAvatar(
+              radius: 20,
+              backgroundColor: AppColors.blue,
+              backgroundImage: userPhotoUrl!.startsWith("http")
+                  ? NetworkImage(userPhotoUrl!)
+                  : AssetImage(userPhotoUrl!) as ImageProvider,
+            ),
+          ),
+          const SizedBox(width: 10,),
+      ],
+      
       ),
       body: _isLoading
           ? const Center(
@@ -118,28 +151,64 @@ class _TripScreenState extends State<TripScreen> {
               padding: const EdgeInsets.only(
                 left: AppTheme.homeScreenPadding,
                 right: AppTheme.homeScreenPadding,
+                top: AppTheme.homeScreenPadding,
               ),
-              child: IndexedStack(
-                index: selectedIndex,
+              child: Column(
+                mainAxisSize: MainAxisSize.max,
                 children: [
-                  Column(
-                    children: [
-                      const SizedBox(height: 16), // <-- This is your top space!
-                      Expanded(child: _buildActiveTrips(activeTrips)),
+                  Container(
+                     width: double.infinity,
+                    decoration: const BoxDecoration(
+                      color: AppColors.background,
+                    ),
+                    child: TabBar(
+                    controller: _tabController,
+                    labelColor: AppColors.white,
+                    unselectedLabelColor: AppColors.white,
+                    indicatorColor: AppColors.blue,
+                    tabAlignment: TabAlignment.fill,
+                    // indicatorWeight: 3,
+                    // dividerColor: AppColors.background,
+                    dividerHeight: 0,
+                    indicator: BoxDecoration(
+                      color: AppColors.background,
+                      borderRadius: BorderRadius.circular(30),
+                      border: Border.all(
+                        color: AppColors.blue,
+                        width: 1,
+                      ),
+                    ),
+                      labelStyle: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                    ),
+                    unselectedLabelStyle: const TextStyle(
+                      fontWeight: FontWeight.normal,
+                      fontSize: 16,
+                    ),
+                    // isScrollable: true,
+                    indicatorSize: TabBarIndicatorSize.tab,
+                    labelPadding: const EdgeInsets.symmetric(
+                      horizontal: 10,
+                      vertical: 0,
+                    ),
+                    tabs: const [
+                      Tab(text: "Pending"),
+                      Tab(text: "Ongoing"),
+                      Tab(text: "Completed"),
                     ],
-                  ),
-                  Column(
+                  )),
+                  
+                  const SizedBox(height: 20),
+                  Expanded(
+                    child: TabBarView(
+                    controller: _tabController,
                     children: [
-                      const SizedBox(height: 16),
-                      Expanded(child: _buildOngoingTrips(ongoingTrips)),
+                      _buildActiveTrips(activeTrips),
+                      _buildOngoingTrips(ongoingTrips),
+                      _buildOPastTrips(completedTrips)
                     ],
-                  ),
-                  Column(
-                    children: [
-                      const SizedBox(height: 16),
-                      Expanded(child: _buildOPastTrips(completedTrips)),
-                    ],
-                  ),
+                  )),
                 ],
               ),
             );
