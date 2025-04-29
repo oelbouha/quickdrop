@@ -89,16 +89,7 @@ class _TripScreenState extends State<TripScreen> with SingleTickerProviderStateM
       backgroundColor: AppColors.background,
       appBar: AppBar(
         backgroundColor: AppColors.barColor,
-        // centerTitle: true,
-        // toolbarHeight: 80,
-        // titleSpacing: 0,
-        leadingWidth: 46,
-        // shape: const RoundedRectangleBorder(
-        //   borderRadius: BorderRadius.only(
-        //     bottomLeft: Radius.circular(AppTheme.cardRadius),
-        //     bottomRight: Radius.circular(AppTheme.cardRadius),
-        //   ),
-        // ),
+        toolbarHeight: 40,
        title: const Text(
           "Trips", 
           style: TextStyle(color: AppColors.white, fontWeight: FontWeight.bold)),
@@ -110,6 +101,7 @@ class _TripScreenState extends State<TripScreen> with SingleTickerProviderStateM
           ),
           GestureDetector(
             onTap: () {context.push("/profile");},
+  
             child:  CircleAvatar(
               radius: 18,
               backgroundColor: AppColors.blue,
@@ -121,28 +113,29 @@ class _TripScreenState extends State<TripScreen> with SingleTickerProviderStateM
           const SizedBox(width: 10,),
       ],
       bottom: TabBar(
-                    controller: _tabController,
-                    labelColor: AppColors.blue,
-                    unselectedLabelColor: AppColors.white,
-                    indicatorColor: AppColors.blue,
-                    tabAlignment: TabAlignment.fill,
-                    indicatorWeight: 2,
-                    dividerColor: AppColors.barColor,
-                    labelStyle: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16,
-                    ),
-                    unselectedLabelStyle: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16,
-                    ),
-                    indicatorSize: TabBarIndicatorSize.tab,
-                    tabs: const [
-                      Tab(text: "Pending"),
-                      Tab(text: "Ongoing"),
-                      Tab(text: "Completed"),
-                    ],
-                  ),
+          controller: _tabController,
+          labelColor: AppColors.blue,
+          unselectedLabelColor: AppColors.white,
+          indicatorColor: AppColors.blue,
+          tabAlignment: TabAlignment.fill,
+          indicatorWeight: 2,
+          dividerColor: AppColors.lessImportant,
+          dividerHeight: 0.1,
+          labelStyle: const TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 16,
+          ),
+          unselectedLabelStyle: const TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 16,
+          ),
+          indicatorSize: TabBarIndicatorSize.tab,
+          tabs: const [
+            Tab(text: "Pending"),
+            Tab(text: "Ongoing"),
+            Tab(text: "Completed"),
+          ],
+        ),
       
       ),
       body: _isLoading

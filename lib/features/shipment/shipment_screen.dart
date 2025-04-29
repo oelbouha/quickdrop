@@ -136,8 +136,8 @@ class _ShipmentScreenState extends State<ShipmentScreen> {
               MaterialPageRoute(
                   builder: (context) => const AddShipmentScreen()));
         },
-        hintText: "New package",
-        iconPath: "assets/icon/package.svg",
+        hintText: "Add package",
+        iconPath: "assets/icon/add.svg",
       ),
     );
   }
