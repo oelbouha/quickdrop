@@ -2,6 +2,7 @@ import 'package:quickdrop_app/features/chat/request.dart';
 import 'package:quickdrop_app/features/chat/chat_conversation_card.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
+import 'package:go_router/go_router.dart';
 import 'package:quickdrop_app/core/widgets/app_header.dart';
 import 'package:quickdrop_app/core/utils/imports.dart';
 
@@ -12,14 +13,21 @@ class ChatScreen extends StatefulWidget {
   State<ChatScreen> createState() => _ChatScreenState();
 }
 
-class _ChatScreenState extends State<ChatScreen> {
+class _ChatScreenState extends State<ChatScreen> with SingleTickerProviderStateMixin {
   int selectedIndex = 0;
   bool _isLoading = true;
+  late TabController _tabController;
+  String? userPhotoUrl;
 
   @override
   void initState() {
     super.initState();
+      userPhotoUrl = Provider.of<UserProvider>(context, listen: false).user?.photoUrl;
+      if (userPhotoUrl == null || userPhotoUrl!.isEmpty) {
+        userPhotoUrl = "assets/images/profile.png";
+      }
 
+     _tabController = TabController(length: 3, vsync: this);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Future.microtask(() async {
         try {
@@ -51,6 +59,12 @@ class _ChatScreenState extends State<ChatScreen> {
     });
   }
 
+   @override
+    void dispose() {
+      _tabController.dispose();
+      super.dispose();
+    }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -58,22 +72,32 @@ class _ChatScreenState extends State<ChatScreen> {
       appBar: AppBar(
         backgroundColor: AppColors.barColor,
         // centerTitle: true,
-          toolbarHeight: 80,
-          titleSpacing: 0,
-       title:  buildHomePageHeader(
-            context,
-            'Shipments',
-            true,
-          ),
-        bottom: CustomTabBar(
-          tabs: const ['Chats', 'Requested Deliveries'],
-          icons: const ['chat-round.svg', 'request-delivery.svg'],
-          selectedIndex: selectedIndex,
-          onTabSelected: (index) {
-            setState(() {
-              selectedIndex = index;
-            });
-          },
+          // toolbarHeight: 50,
+       title:   const Text(
+              "Chat", 
+              style: TextStyle(color: AppColors.white, fontWeight: FontWeight.bold)),
+          actions: [
+              IconButton(
+                icon: const Icon(Icons.notifications, color: AppColors.white),
+                tooltip: 'notification',
+                onPressed: () {context.push("/notification");},
+              ),
+              GestureDetector(
+                onTap: () {context.push("/profile");},
+      
+                child:  CircleAvatar(
+                  radius: 18,
+                  backgroundColor: AppColors.blue,
+                  backgroundImage: userPhotoUrl!.startsWith("http")
+                      ? NetworkImage(userPhotoUrl!)
+                      : AssetImage(userPhotoUrl!) as ImageProvider,
+                ),
+              ),
+              const SizedBox(width: 10,),
+          ],
+        bottom: customTabBar(
+          tabs: const ['chat', 'Requests'],
+          tabController: _tabController
         ),
       ),
       body: Skeletonizer(
@@ -84,8 +108,8 @@ class _ChatScreenState extends State<ChatScreen> {
                 right: AppTheme.homeScreenPadding,
                 top: AppTheme.homeScreenPadding,
                 ),
-              child: IndexedStack(
-                index: selectedIndex,
+              child: TabBarView(
+                  controller: _tabController,
                 children: [
                   _buildChatConversations(),
                   _buildDeliveryRequests(),

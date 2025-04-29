@@ -17,34 +17,26 @@ class FloatButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 50, 
+      height: 60,
+      width: 60, 
       child: FloatingActionButton.extended(
         onPressed: onTap,
         backgroundColor: backgroundColor,
         elevation: 6,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(30),
         ),
         extendedIconLabelSpacing: 10,
         extendedPadding: const EdgeInsets.all(12),
-        icon: CustomIcon(
+        // icon: CustomIcon(
+        //   iconPath: iconPath, 
+        //   size: 28 , 
+        //   color: AppColors.white,
+        // ),
+        label:  CustomIcon(
           iconPath: iconPath, 
-          size: 28 , 
+          size: 30 , 
           color: AppColors.white,
-        ),
-        label: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 0),
-          child: Text(
-            hintText,
-            style: const TextStyle(
-              color: AppColors.white,
-              fontSize: 14,
-              fontWeight: FontWeight.bold
-            ),
-            overflow: TextOverflow.ellipsis,
-            maxLines: 1,
-          ),
-          
         ),
       ),
     );
