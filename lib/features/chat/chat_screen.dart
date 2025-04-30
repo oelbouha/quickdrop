@@ -80,26 +80,22 @@ class _ChatScreenState extends State<ChatScreen> with SingleTickerProviderStateM
       ),
       body: Skeletonizer(
             enabled: _isLoading,
-            child: Padding(
-              padding: const EdgeInsets.only(
-                left: AppTheme.homeScreenPadding,
-                right: AppTheme.homeScreenPadding,
-                top: AppTheme.homeScreenPadding,
-                ),
-              child: TabBarView(
+            child: TabBarView(
                   controller: _tabController,
                 children: [
                   _buildChatConversations(),
                   _buildDeliveryRequests(),
                 ],
-              )),
+              ),
     ));
   }
 
   Widget _buildChatConversations() {
     final chatProvider = Provider.of<ChatProvider>(context);
 
-    return StreamBuilder(
+    return Container(
+      margin: const EdgeInsets.only(left: AppTheme.cardPadding, right: AppTheme.cardPadding),
+      child: StreamBuilder(
       stream: chatProvider.getConversations(),
       
       builder: (context, snapshot) => snapshot.connectionState == ConnectionState.waiting
@@ -119,18 +115,24 @@ class _ChatScreenState extends State<ChatScreen> with SingleTickerProviderStateM
                         // List<Map<String, dynamic>> user = conversation['user'];
                         // print("user data: ${user}");
                         // print("sender id: ${conversation['participants'][0]}");
-                        return ChatConversationCard(
-                          header: conversation['userName'],
-                          subHeader: conversation['lastMessage'],
-                          photoUrl: conversation['photoUrl'],
-                          userId: conversation['userId'],
-                          isMessageSeen: conversation['lastMessageSeen'],
-                          messageSender: conversation['lastMessageSender'],
-                        );
+                        return Column(
+                          children : [
+                            if (index == 0) const SizedBox(height: AppTheme.gapBetweenCards),
+                            ChatConversationCard(
+                              header: conversation['userName'],
+                              subHeader: conversation['lastMessage'],
+                              photoUrl: conversation['photoUrl'],
+                              userId: conversation['userId'],
+                              isMessageSeen: conversation['lastMessageSeen'],
+                              messageSender: conversation['lastMessageSender'],
+                            ),
+                            const SizedBox(height: AppTheme.gapBetweenCards),
+                          ]
+                          );
                       },
                     )
                   : Center(child: Message(context, "No conversations yet")),
-    );
+    ));
   }
 
   Widget _buildDeliveryRequests() {
@@ -141,7 +143,9 @@ class _ChatScreenState extends State<ChatScreen> with SingleTickerProviderStateM
       return Center(child: Message(context, "No delivery requests yet"));
     }
     return Consumer<UserProvider>(builder: (context, userProvider, _) {
-      return ListView.builder(
+      return Container(
+        margin: const EdgeInsets.only(left: AppTheme.cardPadding, right: AppTheme.cardPadding),
+        child: ListView.builder(
           itemCount: requests.length,
           itemBuilder: (context, index) {
             final request = requests[index];
@@ -164,11 +168,12 @@ class _ChatScreenState extends State<ChatScreen> with SingleTickerProviderStateM
             
             return Column(
               children: [
+                if (index == 0) const SizedBox(height: AppTheme.gapBetweenCards),
                 Request(request: request, userData: userData.toMap(), shipment: shipment,),
                 const SizedBox(height: AppTheme.gapBetweenCards),
               ],
             );
-          });
+          }));
     });
   }
 }

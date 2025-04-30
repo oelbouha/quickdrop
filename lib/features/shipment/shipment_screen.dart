@@ -115,20 +115,14 @@ class _ShipmentScreenState extends State<ShipmentScreen> with SingleTickerProvid
                   .where((s) => s.userId == user.uid && s.status == DeliveryStatus.completed)
                   .toList();
 
-              return Padding(
-                 padding: const EdgeInsets.only(
-                    left: AppTheme.homeScreenPadding,
-                    right: AppTheme.homeScreenPadding,
-                    top: AppTheme.homeScreenPadding,
-                    ),
-                child: TabBarView(
+              return  TabBarView(
                     controller: _tabController,
                   children: [
                     _buildActiveShipment(activeShipments),
                     _buildOngoingShipment(ongoingShipments),
                     _buildOPastShipment(pastShipments),
                   ],
-              ));
+              );
             }),
       floatingActionButton: FloatButton(
         onTap: () {
@@ -147,6 +141,7 @@ class _ShipmentScreenState extends State<ShipmentScreen> with SingleTickerProvid
     return Consumer<ShipmentProvider>(
         builder: (context, shipmentProvider, child) {
       return Container(
+         margin: const EdgeInsets.only(left: AppTheme.cardPadding, right: AppTheme.cardPadding),
         color: AppColors.background,
         child: activeShipments.isEmpty
             ? Center(child: Message(context, 'No active shipments'))
@@ -156,6 +151,7 @@ class _ShipmentScreenState extends State<ShipmentScreen> with SingleTickerProvid
                   final shipment = activeShipments[index];
                   return Column(
                     children: [
+                       if (index == 0) const SizedBox(height: AppTheme.gapBetweenCards),
                       ActiveItemCard(
                           item: shipment,
                           onPressed: () {
@@ -174,6 +170,7 @@ class _ShipmentScreenState extends State<ShipmentScreen> with SingleTickerProvid
     return Consumer<ShipmentProvider>(
         builder: (context, shipmentProvider, child) {
       return Container(
+         margin: const EdgeInsets.only(left: AppTheme.cardPadding, right: AppTheme.cardPadding),
         color: AppColors.background,
         child: ongoingShipments.isEmpty
             ? Center(child: Message(context, 'No ongoing shipments'))
@@ -193,6 +190,7 @@ class _ShipmentScreenState extends State<ShipmentScreen> with SingleTickerProvid
                   }
                   return Column(
                     children: [
+                       if (index == 0) const SizedBox(height: AppTheme.gapBetweenCards),
                       OngoingItemCard(
                           item: ongoingShipments[index], user: userData.toMap()),
                       const SizedBox(height: AppTheme.gapBetweenCards),
@@ -208,6 +206,7 @@ class _ShipmentScreenState extends State<ShipmentScreen> with SingleTickerProvid
     return Consumer<ShipmentProvider>(
         builder: (context, shipmentProvider, child) {
       return Container(
+         margin: const EdgeInsets.only(left: AppTheme.cardPadding, right: AppTheme.cardPadding),
         color: AppColors.background,
         child: pastShipments.isEmpty
             ? Center(child: Message(context, 'No completed shipments'))
@@ -228,6 +227,7 @@ class _ShipmentScreenState extends State<ShipmentScreen> with SingleTickerProvid
                   }
                   return Column(
                     children: [
+                       if (index == 0) const SizedBox(height: AppTheme.gapBetweenCards),
                       CompletedItemCard(
                           item: pastShipments[index], 
                           user: userData.toMap(),
