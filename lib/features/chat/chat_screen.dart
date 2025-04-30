@@ -27,7 +27,7 @@ class _ChatScreenState extends State<ChatScreen> with SingleTickerProviderStateM
         userPhotoUrl = "assets/images/profile.png";
       }
 
-     _tabController = TabController(length: 3, vsync: this);
+     _tabController = TabController(length: 2, vsync: this);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Future.microtask(() async {
         try {
@@ -69,36 +69,14 @@ class _ChatScreenState extends State<ChatScreen> with SingleTickerProviderStateM
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.background,
-      appBar: AppBar(
-        backgroundColor: AppColors.barColor,
-        // centerTitle: true,
-          // toolbarHeight: 50,
-       title:   const Text(
-              "Chat", 
-              style: TextStyle(color: AppColors.white, fontWeight: FontWeight.bold)),
-          actions: [
-              IconButton(
-                icon: const Icon(Icons.notifications, color: AppColors.white),
-                tooltip: 'notification',
-                onPressed: () {context.push("/notification");},
-              ),
-              GestureDetector(
-                onTap: () {context.push("/profile");},
-      
-                child:  CircleAvatar(
-                  radius: 18,
-                  backgroundColor: AppColors.blue,
-                  backgroundImage: userPhotoUrl!.startsWith("http")
-                      ? NetworkImage(userPhotoUrl!)
-                      : AssetImage(userPhotoUrl!) as ImageProvider,
-                ),
-              ),
-              const SizedBox(width: 10,),
-          ],
-        bottom: customTabBar(
-          tabs: const ['chat', 'Requests'],
-          tabController: _tabController
-        ),
+       appBar: CustomAppBar(
+        userPhotoUrl: userPhotoUrl!,
+        tabController: _tabController,
+        tabs: const [
+          "Chat",
+          "Requests",
+        ],
+        title: "Chats",
       ),
       body: Skeletonizer(
             enabled: _isLoading,

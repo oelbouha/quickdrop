@@ -83,37 +83,15 @@ class _ShipmentScreenState extends State<ShipmentScreen> with SingleTickerProvid
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.background,
-      appBar: AppBar(
-        backgroundColor: AppColors.barColor,
-        // centerTitle: true,
-        // toolbarHeight: 40,
-       title:  const Text(
-          "Shipments", 
-          style: TextStyle(color: AppColors.white, fontWeight: FontWeight.bold)),
-       actions: [
-          IconButton(
-            icon: const Icon(Icons.notifications, color: AppColors.white),
-            tooltip: 'notification',
-            onPressed: () {context.push("/notification");},
-          ),
-          GestureDetector(
-            onTap: () {context.push("/profile");},
-  
-            child:  CircleAvatar(
-              radius: 18,
-              backgroundColor: AppColors.blue,
-              backgroundImage: userPhotoUrl!.startsWith("http")
-                  ? NetworkImage(userPhotoUrl!)
-                  : AssetImage(userPhotoUrl!) as ImageProvider,
-            ),
-          ),
-          const SizedBox(width: 10,),
-      ],
-
-        bottom: customTabBar(
-          tabs: const ['Active', 'Ongoing', 'Completed'],
-          tabController: _tabController
-        ),
+       appBar:CustomAppBar(
+        userPhotoUrl: userPhotoUrl!,
+        tabController: _tabController,
+        tabs: const [
+          "Active",
+          "Ongoing",
+          "Completed",
+        ],
+        title: "Shipments",
       ),
       body: _isLoading
           ? const Center(

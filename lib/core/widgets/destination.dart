@@ -30,7 +30,7 @@ class Destination extends StatelessWidget {
           width: 5,
         ),
          CustomIcon(
-            iconPath: "assets/icon/arrow-right.svg",
+            iconPath: "assets/icon/arrow-up-right.svg",
             size: iconSize,
             color: AppColors.lessImportant),
         // Spacer(),
