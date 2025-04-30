@@ -123,20 +123,13 @@ class _TripScreenState extends State<TripScreen> with SingleTickerProviderStateM
               // print("trips");
               // print(activeTrips.length);
 
-            return Padding(
-              padding: const EdgeInsets.only(
-                left: AppTheme.homeScreenPadding,
-                right: AppTheme.homeScreenPadding,
-                top: AppTheme.homeScreenPadding,
-              ),
-              child: TabBarView(
-                    controller: _tabController,
-                    children: [
-                      _buildActiveTrips(activeTrips),
-                      _buildOngoingTrips(ongoingTrips),
-                      _buildOPastTrips(completedTrips)
-                    ],
-                  )
+            return TabBarView(
+              controller: _tabController,
+              children: [
+                _buildActiveTrips(activeTrips),
+                _buildOngoingTrips(ongoingTrips),
+                _buildOPastTrips(completedTrips)
+              ],
             );
             }),
       floatingActionButton: FloatButton(
@@ -152,6 +145,7 @@ class _TripScreenState extends State<TripScreen> with SingleTickerProviderStateM
 
   Widget _buildActiveTrips(List<Trip> activeTrips) {
     return Container(
+      margin: const EdgeInsets.only(left: AppTheme.cardPadding, right: AppTheme.cardPadding),
       color: AppColors.background,
       child: activeTrips.isEmpty
           ? Center(child: Message(context, 'No active trips'))
@@ -160,6 +154,7 @@ class _TripScreenState extends State<TripScreen> with SingleTickerProviderStateM
               itemBuilder: (context, index) {
                 return Column(
                   children: [
+                    if (index == 0) const SizedBox(height: AppTheme.gapBetweenCards),
                     ActiveItemCard(
                       item: activeTrips[index],
                       onPressed: () => {removeTrip(activeTrips[index].id!)},
@@ -175,6 +170,7 @@ class _TripScreenState extends State<TripScreen> with SingleTickerProviderStateM
   Widget _buildOngoingTrips(List<Trip> ongoingTrips) {
     return Consumer<TripProvider>(builder: (context, tripProvider, child) {
       return Container(
+         margin: const EdgeInsets.only(left: AppTheme.cardPadding, right: AppTheme.cardPadding),
         color: AppColors.background,
         child: ongoingTrips.isEmpty
             ? Center(child: Message(context, 'No ongoing trips'))
@@ -194,6 +190,7 @@ class _TripScreenState extends State<TripScreen> with SingleTickerProviderStateM
                   }
                   return Column(
                     children: [
+                       if (index == 0) const SizedBox(height: AppTheme.gapBetweenCards),
                       OngoingItemCard(
                           item: ongoingTrips[index], user: userData.toMap()),
                       const SizedBox(height: AppTheme.gapBetweenCards),
@@ -208,6 +205,7 @@ class _TripScreenState extends State<TripScreen> with SingleTickerProviderStateM
   Widget _buildOPastTrips(List<Trip> completedTrips) {
     return Consumer<TripProvider>(builder: (context, tripProvider, child) {
       return Container(
+         margin: const EdgeInsets.only(left: AppTheme.cardPadding, right: AppTheme.cardPadding),
         color: AppColors.background,
         child: completedTrips.isEmpty
             ? Center(child: Message(context, 'No completed trips'))
@@ -229,6 +227,7 @@ class _TripScreenState extends State<TripScreen> with SingleTickerProviderStateM
                   }
                   return Column(
                     children: [
+                     if (index == 0) const SizedBox(height: AppTheme.gapBetweenCards),
                       CompletedItemCard(
                           item: completedTrips[index],
                           user: userData.toMap(),

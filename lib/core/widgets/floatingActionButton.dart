@@ -36,7 +36,7 @@ class FloatButton extends StatelessWidget {
         label:  CustomIcon(
           iconPath: iconPath, 
           size: 30 , 
-          color: AppColors.white,
+          color: Colors.white,
         ),
       ),
     );
