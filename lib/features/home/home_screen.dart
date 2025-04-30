@@ -15,14 +15,14 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   int selectedIndex = 0;
   bool _isLoading = true;
-  String?  userPhotoUrl;
-
+  String? userPhotoUrl;
 
   @override
   void initState() {
     super.initState();
 
-    userPhotoUrl = Provider.of<UserProvider>(context, listen: false).user?.photoUrl;
+    userPhotoUrl =
+        Provider.of<UserProvider>(context, listen: false).user?.photoUrl;
     if (userPhotoUrl == null || userPhotoUrl!.isEmpty) {
       userPhotoUrl = "assets/images/profile.png"; // Default image
     }
@@ -48,34 +48,39 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
         backgroundColor: AppColors.background,
         appBar: AppBar(
-            backgroundColor: AppColors.barColor,
-            title: const Text(
-              "QuickDrop", 
-              style: TextStyle(color: AppColors.white, fontWeight: FontWeight.bold)),
-              actions: [
-                  IconButton(
-                    icon: const CustomIcon(
-                      iconPath: "assets/icon/notification.svg",
-                      size: 22,
-                      color: AppColors.white,
-                    ),
-                    tooltip: 'notification',
-                    onPressed: () {context.push("/notification");},
-                  ),
-                  GestureDetector(
-                    onTap: () {context.push("/profile");},
-          
-                    child:  CircleAvatar(
-                      radius: 18,
-                      backgroundColor: AppColors.blue,
-                      backgroundImage: userPhotoUrl!.startsWith("http")
-                          ? NetworkImage(userPhotoUrl!)
-                          : AssetImage(userPhotoUrl!) as ImageProvider,
-                    ),
-                  ),
-                  const SizedBox(width: 10,),
-              ],
-          ),
+          backgroundColor: AppColors.appBarBackground,
+          title: const Text("QuickDrop",
+              style: TextStyle(
+                  color: AppColors.appBarText, fontWeight: FontWeight.bold)),
+          actions: [
+            IconButton(
+              icon: const CustomIcon(
+                iconPath: "assets/icon/notification.svg",
+                size: 22,
+                color: AppColors.appBarIcons,
+              ),
+              tooltip: 'notification',
+              onPressed: () {
+                context.push("/notification");
+              },
+            ),
+            GestureDetector(
+              onTap: () {
+                context.push("/profile");
+              },
+              child: CircleAvatar(
+                radius: 18,
+                backgroundColor: AppColors.blue,
+                backgroundImage: userPhotoUrl!.startsWith("http")
+                    ? NetworkImage(userPhotoUrl!)
+                    : AssetImage(userPhotoUrl!) as ImageProvider,
+              ),
+            ),
+            const SizedBox(
+              width: 10,
+            ),
+          ],
+        ),
         body: Skeletonizer(
             enabled: _isLoading,
             child: Padding(
@@ -143,12 +148,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           shipment: shipment,
                           userData: userData,
                           onPressed: () {
-                            // Navigator.push(
-                            //     context,
-                            //     MaterialPageRoute(
-                            //         builder: (context) => ListingCardDetails(
-                            //             shipment: shipment, user: userData)));
-                            context.push("/help");
+                            context.push('/shipment-details?shipmentId=${shipment.id}&userId=${shipment.userId}');
                           },
                         ),
                         const SizedBox(height: AppTheme.gapBetweenCards),

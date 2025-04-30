@@ -69,6 +69,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
             headerFontSize: 14,
             subHeaderFontSize: 10,
             avatarSize: 18,
+            headerColor: AppColors.appBarText,
           ),
           backgroundColor: AppColors.barColor,
         ),

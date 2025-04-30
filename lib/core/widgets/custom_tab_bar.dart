@@ -23,11 +23,11 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      backgroundColor: AppColors.barColor,
+      backgroundColor: AppColors.appBarBackground,
       title: Text(
         title!,
         style: const TextStyle(
-          color: AppColors.white,
+          color: AppColors.appBarText,
           fontWeight: FontWeight.bold,
         ),
       ),
@@ -37,7 +37,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
           icon: const CustomIcon(
             iconPath: "assets/icon/notification.svg",
             size: 22,
-            color: AppColors.white,
+            color: AppColors.appBarIcons,
           ),
           tooltip: 'notification',
           onPressed: () => context.push("/notification"),
@@ -46,7 +46,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
           onTap: () => context.push("/profile"),
           child: CircleAvatar(
             radius: 18,
-            backgroundColor: Colors.blue,
+            backgroundColor: AppColors.blue,
             backgroundImage: userPhotoUrl.startsWith("http")
                 ? NetworkImage(userPhotoUrl)
                 : AssetImage(userPhotoUrl) as ImageProvider,
@@ -56,13 +56,13 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       ],
       bottom: TabBar(
           controller: tabController,
-          labelColor: AppColors.blue,
-          unselectedLabelColor: AppColors.white,
-          indicatorColor: AppColors.blue,
+          labelColor: AppColors.tabTextActive,
+          unselectedLabelColor: AppColors.tabTextInactive,
+          indicatorColor: AppColors.tabIndicator,
           tabAlignment: TabAlignment.fill,
           indicatorWeight: 2,
           indicatorSize: TabBarIndicatorSize.label,
-          dividerColor: AppColors.lessImportant,
+          dividerColor: AppColors.tabBarBorderColor,
           dividerHeight: 0.1,
           labelStyle: const TextStyle(
             fontWeight: FontWeight.bold,

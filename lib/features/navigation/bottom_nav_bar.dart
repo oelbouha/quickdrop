@@ -20,12 +20,12 @@ class BottomNavScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-      systemNavigationBarColor:
-          AppColors.cardBackground, // Set the color of the phone's bottom bar
-      systemNavigationBarIconBrightness:
-          Brightness.light, // Make icons light if the background is dark
-    ));
+    // SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+    //   systemNavigationBarColor:
+    //       AppColors.cardBackground, // Set the color of the phone's bottom bar
+    //   systemNavigationBarIconBrightness:
+    //       Brightness.light, // Make icons light if the background is dark
+    // ));
     return Scaffold(
         body: child,
         bottomNavigationBar: Theme(

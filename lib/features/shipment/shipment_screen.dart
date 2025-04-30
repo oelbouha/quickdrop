@@ -1,8 +1,5 @@
 import 'package:quickdrop_app/core/utils/imports.dart';
 
-import 'package:go_router/go_router.dart';
-import 'package:quickdrop_app/core/widgets/app_header.dart';
-
 class ShipmentScreen extends StatefulWidget {
   const ShipmentScreen({Key? key}) : super(key: key);
 
@@ -125,12 +122,7 @@ class _ShipmentScreenState extends State<ShipmentScreen> with SingleTickerProvid
               );
             }),
       floatingActionButton: FloatButton(
-        onTap: () {
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => const AddShipmentScreen()));
-        },
+        onTap: () {context.push("/add-shipment");},
         hintText: "Add package",
         iconPath: "assets/icon/add.svg",
       ),

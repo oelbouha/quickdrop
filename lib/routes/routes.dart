@@ -1,5 +1,4 @@
-import 'package:go_router/go_router.dart';
-import 'package:provider/provider.dart';
+
 
 import 'package:quickdrop_app/core/utils/imports.dart';
 import 'package:quickdrop_app/features/home/home_screen.dart';
@@ -7,6 +6,9 @@ import 'package:quickdrop_app/features/chat/chat_screen.dart';
 import 'package:quickdrop_app/features/profile/profile_screen.dart';
 import 'package:quickdrop_app/features/shipment/shipment_screen.dart';
 import 'package:quickdrop_app/features/trip/trip_screen.dart';
+import 'package:quickdrop_app/features/chat/convo_screen.dart';
+
+import 'package:quickdrop_app/features/shipment/listing_card_details_screen.dart';
 
 class AppRouter {
   static GoRouter createRouter(BuildContext context) {
@@ -83,6 +85,42 @@ class AppRouter {
           name: "help",
           path: "/help",
           builder: (context, state) => const HelpScreen(),
+        ),
+         GoRoute(
+          name: "add-shipment",
+          path: "/add-shipment",
+          builder: (context, state) => const AddShipmentScreen(),
+        ),
+         GoRoute(
+          name: "add-trip",
+          path: "/add-trip",
+          builder: (context, state) => const AddTripScreen(),
+        ),
+        GoRoute(
+          name: "convo-screen",
+          path: "/convo-screen",
+          builder: (context, state)  {
+              Map<String, dynamic> user = state.extra as Map<String, dynamic>;
+              return ConversationScreen(
+                user: user,
+            );
+          }
+        ),
+         GoRoute(
+          name: "shipment-details",
+          path: "/shipment-details",
+          builder: (context, state)  {
+              final shipmentId = state.uri.queryParameters['shipmentId'];
+              final userId = state.uri.queryParameters['userId'];
+               final userData = Provider.of<ShipmentProvider>(context, listen:false).getUserData(userId);
+
+               final shipment = Provider.of<ShipmentProvider>(context, listen:false).getShipment(shipmentId!);
+              
+              return ListingCardDetails(
+                user: userData,
+                shipment: shipment,
+            );
+          }
         ),
       ],
     );

@@ -133,10 +133,7 @@ class _TripScreenState extends State<TripScreen> with SingleTickerProviderStateM
             );
             }),
       floatingActionButton: FloatButton(
-        onTap: () => {
-          Navigator.push(context,
-              MaterialPageRoute(builder: (context) => const AddTripScreen()))
-        },
+        onTap: () => {context.push("/add-trip")},
         hintText: "Add trip",
         iconPath: "assets/icon/add.svg",
       ),
