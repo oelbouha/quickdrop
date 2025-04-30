@@ -60,7 +60,7 @@ class BottomNavScreen extends StatelessWidget {
               ),
               BottomNavigationBarItem(
                 icon: _buildIconWithBackground(
-                  iconPath: "assets/icon/trip.svg",
+                  iconPath: "assets/icon/car.svg",
                   isSelected: _calculateIndex(context) == 1,
                 ),
                 label: 'Trip',

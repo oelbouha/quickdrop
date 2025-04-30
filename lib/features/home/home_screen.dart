@@ -54,7 +54,11 @@ class _HomeScreenState extends State<HomeScreen> {
               style: TextStyle(color: AppColors.white, fontWeight: FontWeight.bold)),
               actions: [
                   IconButton(
-                    icon: const Icon(Icons.notifications, color: AppColors.white),
+                    icon: const CustomIcon(
+                      iconPath: "assets/icon/notification.svg",
+                      size: 22,
+                      color: AppColors.white,
+                    ),
                     tooltip: 'notification',
                     onPressed: () {context.push("/notification");},
                   ),
