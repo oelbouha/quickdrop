@@ -79,7 +79,7 @@ class _AddTripScreenState extends State<AddTripScreen> {
     return Scaffold(
         backgroundColor: AppColors.background,
         appBar: AppBar(
-          backgroundColor: AppColors.barColor,
+          backgroundColor: AppColors.appBarBackground,
           title: const Text(
             "Add your trip",
             style: TextStyle(color: AppColors.white),

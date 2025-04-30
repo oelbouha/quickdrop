@@ -15,8 +15,13 @@ class OngoingItemCard extends StatefulWidget {
 
 class OngoingItemCardState extends State<OngoingItemCard> {
   void _contactCourier()  async {
-      // UserData  user = await Provider.of<UserProvider>(context, listen: false).getUserData("uid");
-      Navigator.push(context, MaterialPageRoute(builder: (context) =>  ConversationScreen(user: widget.user)));
+        context.push("/convo-screen",
+            extra: {
+              'uid': widget.user['uid'],
+              'displayName': widget.user['displayName'],
+              'photoUrl': widget.user['photoUrl'],
+            },
+          );
   }
 
   void markShipmentAsDelivered(String id) async {

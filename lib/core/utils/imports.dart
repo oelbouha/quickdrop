@@ -1,5 +1,4 @@
 export 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 
 export 'package:quickdrop_app/theme/colors.dart';
 export 'package:quickdrop_app/theme/AppTheme.dart';
@@ -35,7 +34,6 @@ export '/features/auth/login_screen.dart';
 export 'package:quickdrop_app/features/navigation/bottom_nav_bar.dart';
 
 export  'package:firebase_core/firebase_core.dart';
-export  'package:firebase_core/firebase_core.dart';
 export 'package:firebase_auth/firebase_auth.dart';
 // export  'package:firebase_options.dart';
 
@@ -57,11 +55,14 @@ export 'package:quickdrop_app/core/widgets/floatingActionButton.dart';
 export 'package:quickdrop_app/core/widgets/confirmation_dialog.dart';
 
 
-import 'package:quickdrop_app/core/widgets/item_details.dart';
+export 'package:quickdrop_app/core/widgets/item_details.dart';
 
-import 'package:skeletonizer/skeletonizer.dart';
+export 'package:skeletonizer/skeletonizer.dart';
 
 
 export 'package:quickdrop_app/routes/routes.dart';
 
 export 'package:quickdrop_app/core/utils/delivery_status.dart';
+
+
+export 'package:go_router/go_router.dart';

@@ -1,4 +1,5 @@
 
+import 'package:go_router/go_router.dart';
 // import 'package:quickdrop_app/core/widgets/custom_svg.dart';
 import 'package:quickdrop_app/core/widgets/destination.dart';
 import 'package:quickdrop_app/core/widgets/button.dart';
@@ -35,17 +36,12 @@ class ChatConversationCardState extends State<ChatConversationCard> {
   Widget build(BuildContext context) {
     return GestureDetector(
         onTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => 
-                ConversationScreen(
-                      user: {
-                        'uid': widget.userId,
-                        'displayName': widget.header,
-                        'photoUrl': widget.photoUrl,
-                      },
-                    )),
+          context.push("/convo-screen",
+            extra: {
+              'uid': widget.userId,
+              'displayName': widget.header,
+              'photoUrl': widget.photoUrl,
+            },
           );
         },
         child: Container(

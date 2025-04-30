@@ -1,6 +1,5 @@
 import 'package:quickdrop_app/features/chat/request.dart';
 import 'package:quickdrop_app/features/chat/chat_conversation_card.dart';
-import 'package:skeletonizer/skeletonizer.dart';
 
 import 'package:go_router/go_router.dart';
 import 'package:quickdrop_app/core/widgets/app_header.dart';

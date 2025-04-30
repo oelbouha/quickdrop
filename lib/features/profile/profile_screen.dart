@@ -1,4 +1,3 @@
-
 import 'package:quickdrop_app/features/profile/settings_card.dart';
 import 'package:quickdrop_app/core/utils/imports.dart';
 
@@ -13,7 +12,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   bool _isSignoutLoading = false;
 
   void _singOutUser() async {
-     showDialog(
+    showDialog(
         context: context,
         builder: (context) => ConfirmationDialog(
             message: "Are you sure you want to log out",
@@ -29,22 +28,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 await FirebaseAuth.instance.signOut();
                 if (mounted) {
                   Provider.of<UserProvider>(context, listen: false).clearUser();
-                  Navigator.pop(context);
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(builder: (context) => const LoginPage()),
-                  );
+                  context.go("/login");
                 }
               } on FirebaseException catch (e) {
-                AppUtils.showError(context, 'Error signing out: $e');           
+                AppUtils.showError(context, 'Error signing out: $e');
               } finally {
                 setState(() {
                   _isSignoutLoading = false;
                 });
               }
-      }
-    ));
-   
+            }));
   }
 
   @override
@@ -52,7 +45,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return Scaffold(
         backgroundColor: AppColors.background,
         appBar: AppBar(
-          title: const Text('Profile', style: TextStyle(color: AppColors.white),),
+          title: const Text(
+            'Profile',
+            style: TextStyle(color: AppColors.white),
+          ),
           backgroundColor: AppColors.barColor,
           centerTitle: true,
         ),
@@ -130,13 +126,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-              Text(
-                user != null ? (user.displayName ?? 'Guest') : 'Guest',
-                style: const TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    color: AppColors.headingText),
-              ),
+            Text(
+              user != null ? (user.displayName ?? 'Guest') : 'Guest',
+              style: const TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: AppColors.headingText),
+            ),
           ],
         ),
       ],

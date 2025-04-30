@@ -84,11 +84,11 @@ class _AddShipmentScreenState extends State<AddShipmentScreen> {
     return Scaffold(
         backgroundColor: AppColors.background,
         appBar: AppBar(
-          backgroundColor: AppColors.barColor,
+          backgroundColor: AppColors.appBarBackground,
           title: const Text(
             "Add your Shipment",
             style: TextStyle(
-                color: AppColors.headingText,
+                color: AppColors.appBarText,
                 fontWeight: FontWeight.bold,
                 fontSize: 18),
           ),

@@ -1,5 +1,4 @@
 import 'package:quickdrop_app/core/utils/imports.dart';
-import 'package:quickdrop_app/core/utils/delivery_status.dart';
 import 'package:quickdrop_app/core/widgets/destination.dart';
 
 class ListingCardDetails extends StatefulWidget {
@@ -155,7 +154,7 @@ class _ListingCardDetailsState extends State<ListingCardDetails> {
           children: [
             const Text("Package Details",
                 style: TextStyle(
-                    color: AppColors.white,
+                    color: AppColors.headingText,
                     fontWeight: FontWeight.bold,
                     fontSize: 26)),
             const SizedBox(
@@ -172,7 +171,7 @@ class _ListingCardDetailsState extends State<ListingCardDetails> {
                   width: 10,
                 ),
                 Text("Destination",
-                    style: TextStyle(color: AppColors.white, fontSize: 20)),
+                    style: TextStyle(color: AppColors.headingText, fontSize: 20)),
               ],
             ),
             Row(
@@ -202,7 +201,7 @@ class _ListingCardDetailsState extends State<ListingCardDetails> {
                   width: 10,
                 ),
                 Text("Estimated Delivery",
-                    style: TextStyle(color: AppColors.white, fontSize: 20)),
+                    style: TextStyle(color: AppColors.headingText, fontSize: 20)),
               ],
             ),
             Row(
@@ -212,7 +211,7 @@ class _ListingCardDetailsState extends State<ListingCardDetails> {
                 ),
                 Text(widget.shipment.date,
                     style:
-                        const TextStyle(color: AppColors.white, fontSize: 18)),
+                        const TextStyle(color: AppColors.headingText, fontSize: 18)),
               ],
             ),
             const SizedBox(
@@ -229,7 +228,7 @@ class _ListingCardDetailsState extends State<ListingCardDetails> {
                   width: 10,
                 ),
                 Text("Weight",
-                    style: TextStyle(color: AppColors.white, fontSize: 20)),
+                    style: TextStyle(color: AppColors.headingText, fontSize: 20)),
               ],
             ),
             Row(
@@ -239,7 +238,7 @@ class _ListingCardDetailsState extends State<ListingCardDetails> {
                 ),
                 Text('${widget.shipment.weight} kg',
                     style:
-                        const TextStyle(color: AppColors.white, fontSize: 18)),
+                        const TextStyle(color: AppColors.headingText, fontSize: 18)),
               ],
             ),
             const SizedBox(
@@ -256,7 +255,7 @@ class _ListingCardDetailsState extends State<ListingCardDetails> {
                   width: 10,
                 ),
                 Text("Quantity & Type",
-                    style: TextStyle(color: AppColors.white, fontSize: 20)),
+                    style: TextStyle(color: AppColors.headingText, fontSize: 20)),
               ],
             ),
             Row(
@@ -266,7 +265,7 @@ class _ListingCardDetailsState extends State<ListingCardDetails> {
                 ),
                 Text('${widget.shipment.weight} x ${widget.shipment.type}',
                     style:
-                        const TextStyle(color: AppColors.white, fontSize: 18)),
+                        const TextStyle(color: AppColors.headingText, fontSize: 18)),
               ],
             ),
             const SizedBox(
@@ -282,8 +281,8 @@ class _ListingCardDetailsState extends State<ListingCardDetails> {
                 SizedBox(
                   width: 10,
                 ),
-                Text("Starting price",
-                    style: TextStyle(color: AppColors.white, fontSize: 20)),
+                // Text("Starting price",
+                //     style: TextStyle(color: AppColors.headingText, fontSize: 20)),
               ],
             ),
             Row(
@@ -327,17 +326,17 @@ class _ListingCardDetailsState extends State<ListingCardDetails> {
           Text(widget.shipment.packageName,
               style: const TextStyle(
                   fontSize: 26,
-                  color: AppColors.white,
+                  color: AppColors.headingText,
                   fontWeight: FontWeight.bold)),
           const Text("Package Description",
               style: TextStyle(
-                  color: AppColors.white,
+                  color: AppColors.headingText,
                   fontWeight: FontWeight.bold,
                   fontSize: 26)),
           Text(widget.shipment.description,
               style: const TextStyle(
                 fontSize: 20,
-                color: AppColors.white,
+                color: AppColors.headingText,
               )),
         ],
       ),
@@ -420,7 +419,7 @@ class _ListingCardDetailsState extends State<ListingCardDetails> {
                 ),
                 const Text(
                   "Select a Trip",
-                  style: TextStyle(color: AppColors.white, fontSize: 16),
+                  style: TextStyle(color: AppColors.headingText, fontSize: 16),
                 ),
                 const SizedBox(height: 10),
                 activeTrips.isEmpty
@@ -440,14 +439,14 @@ class _ListingCardDetailsState extends State<ListingCardDetails> {
                         dropdownColor: AppColors.background,
                         hint: const Text(
                           "Choose a trip",
-                          style: TextStyle(color: AppColors.white),
+                          style: TextStyle(color: AppColors.headingText),
                         ),
                         items: activeTrips.map((trip) {
                           return DropdownMenuItem<Trip>(
                             value: trip,
                             child: Text(
                               "${trip.from} to ${trip.to} - ${trip.date}",
-                              style: const TextStyle(color: AppColors.white),
+                              style: const TextStyle(color: AppColors.headingText),
                             ),
                           );
                         }).toList(),
@@ -460,7 +459,7 @@ class _ListingCardDetailsState extends State<ListingCardDetails> {
                 const SizedBox(height: 20),
                 const Text(
                   "Add a note",
-                  style: TextStyle(color: AppColors.white, fontSize: 16),
+                  style: TextStyle(color: AppColors.headingText, fontSize: 16),
                 ),
                 const SizedBox(height: 10),
                 CustomTextField(
@@ -471,7 +470,7 @@ class _ListingCardDetailsState extends State<ListingCardDetails> {
                 ),
                 const Text(
                   "Price",
-                  style: TextStyle(color: AppColors.white, fontSize: 16),
+                  style: TextStyle(color: AppColors.headingText, fontSize: 16),
                 ),
                 const SizedBox(height: 10),
                 NumberField(
