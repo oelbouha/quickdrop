@@ -143,7 +143,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
                                   const Text(
                                     "Seen",
                                     style: TextStyle(
-                                        color: AppColors.lessImportant, fontSize: 10),
+                                        color: AppColors.headingText, fontSize: 10),
                                         textAlign: TextAlign.end,
                                   )]
                             ]
@@ -168,47 +168,60 @@ class _ConversationScreenState extends State<ConversationScreen> {
               child: Row(children: [
                 Expanded(
                     child: TextFormField(
-                  controller: messageController,
-                  onChanged: (text) {
-                    // Handle text input
-                    // print("Text input: $text");
-                  },
-                  style: const TextStyle(
-                    color: AppColors.lessImportant,
-                    fontSize: 14,
-                  ),
-                  decoration:  InputDecoration(
-                    // borderRadius: BorderRadius.all(Radius.circular(20)),
-                    suffixIcon: IconButton(
-                      icon:  const Icon(
-                         Icons.send,
-                        size: 36, color: AppColors.blue),
-                      onPressed: _sendMessage
+
+                      controller: messageController,
+                      onChanged: (text) {
+                        // Handle text input
+                        // print("Text input: $text");
+                      },
+                      style: const TextStyle(
+                        color: AppColors.headingText,
+                        fontSize: 14,
+                      ),
+                      decoration:  InputDecoration(
+                        
+                      suffixIcon: Padding (
+
+                        padding: const EdgeInsets.only(
+                          right: 8.0,
+                          top: 4.0,
+                          bottom: 4.0,
+                        ),
+                        child: Container(
+                        // color: AppColors.blue,
+                        // padding: const EdgeInsets.all(4.0),
+                        decoration: BoxDecoration(
+                          color: AppColors.blue,
+                          borderRadius: BorderRadius.circular(30),
+                        ),
+                        child: IconButton(
+                        icon:  const CustomIcon(
+                          iconPath: "assets/icon/send.svg",
+                          color: AppColors.white,
+                          size: 30,
+                        ),
+                        onPressed: _sendMessage
+                      ))),
+                      filled: true,
+                      fillColor: AppColors.chatMessageInput,
+                      hintText: 'Message...',
+                      border: const OutlineInputBorder(
+                        // borderSide: BorderSide.none, // Removes visible border
+                        borderRadius: BorderRadius.all(Radius.circular(
+                            AppTheme.chatInputRadius)), // Adds border radius
+                      ),
+                      enabledBorder: const OutlineInputBorder(
+                        borderSide:  BorderSide(color: AppColors.lessImportant, width: 1.0),
+                        borderRadius: BorderRadius.all(
+                            Radius.circular(AppTheme.chatInputRadius)),
+                      ),
+                      focusedBorder: const OutlineInputBorder(
+                        borderSide:  BorderSide(color: AppColors.lessImportant, width: 1.0),
+                        borderRadius: BorderRadius.all(
+                            Radius.circular(AppTheme.chatInputRadius)),
+                      ),
                     ),
-                    filled: true,
-                    fillColor: AppColors.chatMessageInput,
-                    hintText: 'Message...',
-                    border: const OutlineInputBorder(
-                      // borderSide: BorderSide.none, // Removes visible border
-                      borderRadius: BorderRadius.all(Radius.circular(
-                          AppTheme.chatInputRadius)), // Adds border radius
-                    ),
-                    enabledBorder: const OutlineInputBorder(
-                      borderSide: BorderSide.none,
-                      borderRadius: BorderRadius.all(
-                          Radius.circular(AppTheme.chatInputRadius)),
-                    ),
-                    focusedBorder: const OutlineInputBorder(
-                      borderSide: BorderSide.none,
-                      borderRadius: BorderRadius.all(
-                          Radius.circular(AppTheme.chatInputRadius)),
-                    ),
-                  ),
-                )),
-                // IconButton(
-                //   icon: const Icon(Icons.send, size: 36, color: AppColors.blue),
-                //   onPressed: _sendMessage,
-                // )
+                  )),
               ]))
         ]
         )
