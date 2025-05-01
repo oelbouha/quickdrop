@@ -7,6 +7,8 @@ import 'package:quickdrop_app/features/profile/profile_screen.dart';
 import 'package:quickdrop_app/features/shipment/shipment_screen.dart';
 import 'package:quickdrop_app/features/trip/trip_screen.dart';
 import 'package:quickdrop_app/features/chat/convo_screen.dart';
+import 'package:quickdrop_app/features/profile/update_user_info_screen.dart';
+import 'package:quickdrop_app/features/profile/profile_statistics.dart';
 import 'package:quickdrop_app/features/shipment/listing_card_details_screen.dart';
 
 
@@ -84,6 +86,16 @@ class AppRouter {
             context,
             const ProfileScreen(),
           ),
+        ),
+        GoRoute(
+          name: "profile-statistics",
+          path: "/profile/statistics",
+          pageBuilder: (context, state) => buildCustomTransitionPage(context, const ProfileStatistics(),)
+        ),
+        GoRoute(
+          name: "profile-info",
+          path: "/profile/info",
+          pageBuilder: (context, state) => buildCustomTransitionPage(context, const UpdateUserInfoScreen(),)
         ),
         GoRoute(
           name: "trip",
