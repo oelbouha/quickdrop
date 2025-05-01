@@ -7,9 +7,25 @@ import 'package:quickdrop_app/features/profile/profile_screen.dart';
 import 'package:quickdrop_app/features/shipment/shipment_screen.dart';
 import 'package:quickdrop_app/features/trip/trip_screen.dart';
 import 'package:quickdrop_app/features/chat/convo_screen.dart';
-
 import 'package:quickdrop_app/features/shipment/listing_card_details_screen.dart';
 
+
+CustomTransitionPage buildCustomTransitionPage(
+    BuildContext context,
+    Widget child,
+  ) {
+    return CustomTransitionPage(
+      key: ValueKey(child),
+      child: child,
+      transitionsBuilder: (context, animation, secondaryAnimation, child) {
+        return FadeTransition(
+          opacity: animation,
+          child: child,
+        );
+      },
+     
+    );
+  } 
 class AppRouter {
   static GoRouter createRouter(BuildContext context) {
     return GoRouter(
@@ -64,7 +80,10 @@ class AppRouter {
         GoRoute(
           name: "profile",
           path: "/profile",
-          builder: (context, state) => const ProfileScreen(),
+          pageBuilder: (context, state) => buildCustomTransitionPage(
+            context,
+            const ProfileScreen(),
+          ),
         ),
         GoRoute(
           name: "trip",
@@ -79,47 +98,47 @@ class AppRouter {
         GoRoute(
           name: "notification",
           path: "/notification",
-          builder: (context, state) => const NotificationScreen(),
+          pageBuilder: (context, state) => buildCustomTransitionPage(context, const NotificationScreen()),
         ),
         GoRoute(
           name: "help",
           path: "/help",
-          builder: (context, state) => const HelpScreen(),
+          pageBuilder: (context, state) => buildCustomTransitionPage(context, const HelpScreen()),
         ),
          GoRoute(
           name: "add-shipment",
           path: "/add-shipment",
-          builder: (context, state) => const AddShipmentScreen(),
+          pageBuilder: (context, state) => buildCustomTransitionPage(context, const AddShipmentScreen(),)
         ),
          GoRoute(
           name: "add-trip",
           path: "/add-trip",
-          builder: (context, state) => const AddTripScreen(),
+          pageBuilder: (context, state) => buildCustomTransitionPage(context, const AddTripScreen(),)
         ),
         GoRoute(
           name: "convo-screen",
           path: "/convo-screen",
-          builder: (context, state)  {
+          pageBuilder: (context, state)  {
               Map<String, dynamic> user = state.extra as Map<String, dynamic>;
-              return ConversationScreen(
+              return buildCustomTransitionPage(context, ConversationScreen(
                 user: user,
-            );
+            ));
           }
         ),
          GoRoute(
           name: "shipment-details",
           path: "/shipment-details",
-          builder: (context, state)  {
+          pageBuilder: (context, state)  {
               final shipmentId = state.uri.queryParameters['shipmentId'];
               final userId = state.uri.queryParameters['userId'];
                final userData = Provider.of<ShipmentProvider>(context, listen:false).getUserData(userId);
 
                final shipment = Provider.of<ShipmentProvider>(context, listen:false).getShipment(shipmentId!);
               
-              return ListingCardDetails(
+              return buildCustomTransitionPage(context, ListingCardDetails(
                 user: userData,
                 shipment: shipment,
-            );
+              ));
           }
         ),
       ],
