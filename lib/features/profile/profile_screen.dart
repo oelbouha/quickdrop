@@ -18,7 +18,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             message: "Are you sure you want to log out",
             hintText: "Confirm",
             onPressed: () async {
-              Navigator.pop(context);
+              // Navigator.pop(context);
               if (_isSignoutLoading) return;
               setState(() {
                 _isSignoutLoading = true;
@@ -47,44 +47,113 @@ class _ProfileScreenState extends State<ProfileScreen> {
         appBar: AppBar(
           title: const Text(
             'Profile',
-            style: TextStyle(color: AppColors.white),
+            style: TextStyle(color: AppColors.appBarText),
           ),
-          backgroundColor: AppColors.barColor,
+          backgroundColor: AppColors.appBarBackground,
           centerTitle: true,
         ),
         body: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: _buildUserProfileSettings(),
-          ),
-        ));
+          child: Column(
+            children: [
+              // const SizedBox(height: AppTheme.cardPadding),
+              _buildUserStatus(),
+              const SizedBox(height: AppTheme.cardPadding),
+              Container(
+                margin: const EdgeInsets.only(
+                    left: AppTheme.homeScreenPadding,
+                    right: AppTheme.homeScreenPadding
+                ),
+                child: Column(
+                  children: [
+                    _buildUserProfileSettings(),
+                    // const SizedBox(height: AppTheme.cardPadding),
+                    const Text(
+                      "Version 1.0.0 - 2025",
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w400,
+                        color: AppColors.headingText,
+                      ),
+                    ),
+                    const SizedBox(height: AppTheme.cardPadding),
+                  ]
+              ))
+            ]
+        )));
   }
 
   Widget _buildUserProfileSettings() {
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _buildUserStatus(),
-        const SizedBox(height: AppTheme.cardPadding),
+        const Text(
+          "Profile Settings",
+          style: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+            color: AppColors.headingText,
+          ),
+        ),
         SettingsCard(
           onTap: () {},
-          hintText: "Change password",
-          iconPath: "assets/icon/lock.svg",
+          hintText: "Update my profile picture",
+          iconPath: "assets/icon/camera-add.svg",
         ),
-        const SizedBox(height: AppTheme.cardPadding),
+        SettingsCard(
+          onTap: () {context.push("/profile/info");},
+          hintText: "Update my personal information",
+          iconPath: "assets/icon/edit-user.svg",
+        ),
+          SettingsCard(
+          onTap: () {},
+          hintText: "Notifications",
+          iconPath: "assets/icon/notification.svg",
+        ),
         SettingsCard(
           onTap: () {},
-          hintText: "Profile Settings",
-          iconPath: "assets/icon/user.svg",
+          hintText: "Payment methods",
+          iconPath: "assets/icon/money.svg",
         ),
+        // SettingsCard(
+        //   onTap: () {},
+        //   hintText: "Verify my identity",
+        //   iconPath: "assets/icon/user.svg",
+        // ),
         const SizedBox(height: AppTheme.cardPadding),
-        SettingsCard(
+         const Text(
+          "Resources",
+          style: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+            color: AppColors.headingText,
+          ),
+        ),
+         SettingsCard(
           onTap: () {},
-          hintText: "Profile Settings",
-          iconPath: "assets/icon/user.svg",
+          hintText: "Contact suport",
+          iconPath: "assets/icon/suport.svg",
         ),
-        const SizedBox(height: AppTheme.cardPadding),
+         SettingsCard(
+          onTap: () {},
+          hintText: "Terms and Conditions",
+          iconPath: "assets/icon/condition.svg",
+        ),
+         SettingsCard(
+          onTap: () {},
+          hintText: "Privacy Policy",
+          iconPath: "assets/icon/privacy.svg",
+        ),
+          SettingsCard(
+          onTap: () {},
+          hintText: "Refer to your friends",
+          iconPath: "assets/icon/share.svg",
+        ),
+         SettingsCard(
+          onTap: () {},
+          hintText: "Become a driver",
+          iconPath: "assets/icon/driver.svg",
+        ),
         SettingsCard(
           onTap: () {
             _singOutUser();
@@ -92,7 +161,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           hintText: "LogOut",
           backgroundColor: Colors.red,
           iconPath: "assets/icon/logout.svg",
-          hintTextColor: AppColors.white,
+          hintTextColor: AppColors.headingText,
           iconColor: AppColors.error,
         ),
         const SizedBox(height: AppTheme.cardPadding),
@@ -103,39 +172,50 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget _buildUserStatus() {
     final userProvider = Provider.of<UserProvider>(context);
     final user = userProvider.user;
-    return Column(
-      children: [
-        Container(
-          width: 110, // Diameter of the avatar + border
-          height: 110,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            border: Border.all(
-              color: AppColors.blue, // Border color
-              width: 1.0, // Border width
-            ),
-          ),
-          child: CircleAvatar(
-            radius: 50, // Avatar size
+    return GestureDetector(
+      onTap: () {
+        context.push("/profile/statistics");
+      },
+       child: Container(
+        width: double.infinity,
+       padding: const EdgeInsets.only(
+          left: AppTheme.cardPadding,
+          right: AppTheme.cardPadding,
+          top: AppTheme.cardPadding,
+          bottom: AppTheme.cardPadding,
+       ),
+          decoration: const BoxDecoration(color: AppColors.blue),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+          children:[
+            CircleAvatar(
+            radius: 50,
             backgroundImage: user != null && user.photoUrl != null
                 ? NetworkImage(user.photoUrl!)
                 : AssetImage('assets/images/profile.png') as ImageProvider,
           ),
-        ),
-        const SizedBox(width: 10),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              user != null ? (user.displayName ?? 'Guest') : 'Guest',
-              style: const TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: AppColors.headingText),
-            ),
+            const SizedBox(width: 15),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  user != null ? (user.displayName ?? 'Guest') : 'Guest',
+                  style: const TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: AppColors.white),
+                ),
+                const Text(
+                  "Member since 2025",
+                  style:  TextStyle(
+                      fontSize: 14,
+                      color: AppColors.lessImportant),
+                ),
           ],
         ),
-      ],
-    );
+    ]
+      )
+    ));
   }
 }

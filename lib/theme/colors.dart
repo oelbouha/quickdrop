@@ -37,26 +37,3 @@ class AppColors {
   static const Color tabTextInactive = lessImportant;
   static const Color tabIndicator = blue;
 }
-
-
-// - Background Colors:
-//   - Primary Background: bg-gray-900 (#111827)
-//   - Card Background: bg-gray-800 (#1F2937)
-//   - Secondary Background: bg-gray-700 (#374151)
-//   - Input Background: bg-gray-800 (#1F2937)
-//   - Button Background: bg-gray-600 (#4B5563)
-
-// - Text Colors:
-//   - Primary Text: text-gray-100 (#F3F4F6)
-//   - Secondary Text: text-gray-400 (#9CA3AF)
-//   - Accent Text: text-blue-400 (#60A5FA)
-
-// - Accent Colors:
-//   - Primary Accent: bg-blue-600 (#2563EB)
-//   - Success/Completed: bg-green-600 (#059669)
-//   - Warning/Ongoing: bg-yellow-600 (#D97706)
-//   - Error/Delete: text-red-400 (#F87171)
-
-// - Border Colors:
-//   - Border: border-gray-700 (#374151)
-//   - Active Tab: border-blue-400 (#60A5FA)

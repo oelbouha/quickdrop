@@ -23,34 +23,33 @@ class SettingsCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-        width: double.infinity, // Full width
-        child: InkWell(
-          onTap: onTap,
-          child: Container(
-            padding: const EdgeInsets.all(AppTheme.cardPadding),
-            decoration: BoxDecoration(
-              color: backgroundColor,
-              borderRadius: BorderRadius.circular(AppTheme.cardRadius),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.1),
-                  spreadRadius: 0.2,
-                  blurRadius: 2,
-                  offset: const Offset(0, 1),
-                ),
-              ],
-            ),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                _buildText(),
-                CustomIcon(iconPath: "assets/icon/alt-arrow-right.svg", size: 20, color: iconColor),
-              ],
-            ),
-          ),
-        ));
+    return InkWell(
+      onTap: onTap,
+      child:  Container(
+        
+        padding: const EdgeInsets.only(
+          top: AppTheme.homeScreenPadding,
+          bottom: AppTheme.homeScreenPadding,
+        ),
+        child: Row(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        CustomIcon(
+          iconPath: iconPath,
+          size: 22,
+          color: iconColor,
+        ),
+        const SizedBox(
+          width: 8,
+        ),
+        Text(
+          hintText,
+          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+        ),
+      ],
+)
+
+    ));
   }
 
   Widget _buildText() {
