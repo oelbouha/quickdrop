@@ -26,26 +26,25 @@ class SettingsCard extends StatelessWidget {
     return InkWell(
       onTap: onTap,
       child:  Container(
-        
         padding: const EdgeInsets.only(
           top: AppTheme.homeScreenPadding,
           bottom: AppTheme.homeScreenPadding,
         ),
         child: Row(
-      mainAxisAlignment: MainAxisAlignment.start,
-      children: [
-        CustomIcon(
-          iconPath: iconPath,
-          size: 22,
-          color: iconColor,
-        ),
-        const SizedBox(
-          width: 8,
-        ),
-        Text(
-          hintText,
-          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
-        ),
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            CustomIcon(
+              iconPath: iconPath,
+              size: 22,
+              color: iconColor,
+            ),
+            const SizedBox(
+              width: 10,
+            ),
+            Text(
+              hintText,
+              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+            ),
       ],
 )
 

@@ -40,7 +40,7 @@ class BottomNavScreen extends StatelessWidget {
             currentIndex: _calculateIndex(context),
             onTap: (index) => _onTap(index, context),
             showSelectedLabels: true,
-            selectedItemColor: AppColors.blue,
+            selectedItemColor: AppColors.navTextActive,
             showUnselectedLabels: true,
             selectedLabelStyle: const TextStyle(
               fontSize: 14,
@@ -48,8 +48,8 @@ class BottomNavScreen extends StatelessWidget {
             ),
             unselectedLabelStyle:
                 const TextStyle(fontSize: 14 , fontWeight: FontWeight.bold),
-            backgroundColor: AppColors.cardBackground,
-            unselectedItemColor: AppColors.lessImportant,
+            backgroundColor: AppColors.navBackground,
+            unselectedItemColor: AppColors.navTextInactive,
             items: <BottomNavigationBarItem>[
               BottomNavigationBarItem(
                 icon: _buildIconWithBackground(
@@ -101,12 +101,12 @@ class BottomNavScreen extends StatelessWidget {
       height: 30,
       decoration: BoxDecoration(
           color:
-              isSelected ? AppColors.blue.withOpacity(0.2) : Colors.transparent,
+              isSelected ? AppColors.navTextActive.withOpacity(0.2) : Colors.transparent,
           borderRadius: BorderRadius.circular(20)),
       child: CustomIcon(
         iconPath: iconPath,
         size: 24,
-        color: isSelected ? AppColors.blue : AppColors.lessImportant,
+        color: isSelected ? AppColors.navTextActive : AppColors.navTextInactive,
       ),
     );
   }

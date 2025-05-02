@@ -170,7 +170,7 @@ Widget searchTextField({
 }) {
   return (TextFormField(
       style: const TextStyle(
-          color: AppColors.lessImportant,
+          color: AppColors.input,
           fontSize: 12,
           fontWeight: FontWeight.normal),
       controller: controller,

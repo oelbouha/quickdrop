@@ -54,7 +54,11 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
         ),
         const SizedBox(width: 10),
       ],
-      bottom: TabBar(
+      bottom: PreferredSize(
+      preferredSize: const Size.fromHeight(48),
+      child: Container(
+        color: AppColors.background,
+        child: TabBar(
           controller: tabController,
           labelColor: AppColors.tabTextActive,
           unselectedLabelColor: AppColors.tabTextInactive,
@@ -62,8 +66,8 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
           tabAlignment: TabAlignment.fill,
           indicatorWeight: 2,
           indicatorSize: TabBarIndicatorSize.label,
-          dividerColor: AppColors.tabBarBorderColor,
-          dividerHeight: 0.1,
+          dividerColor: AppColors.lessImportant,
+          dividerHeight: 0.2,
           labelStyle: const TextStyle(
             fontWeight: FontWeight.bold,
             fontSize: 16,
@@ -72,8 +76,10 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
             fontWeight: FontWeight.bold,
             fontSize: 16,
           ),
-          // indicatorSize: TabBarIndicatorSize.tab,
-          tabs: tabs.map((tab) => Tab(text: tab)).toList()),
+          tabs: tabs.map((tab) => Tab(text: tab)).toList(),
+        ),
+      ),
+    ),
     );
   }
 
