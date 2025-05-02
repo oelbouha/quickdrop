@@ -48,23 +48,42 @@ class ActiveListing extends State<ActiveItemCard> {
   Widget _buildBody() {
     return Padding(
        padding: const EdgeInsets.only(
-        left: 8,
-        top: 4,
-        bottom: 8,
+         left: 10,
+        right: 10,
+        top: 10,
+        bottom: 4,
       ),
       child: Column(
       children: [
-        Row(children: [
-          Destination(from: widget.item.from, to: widget.item.to),
-          // const Spacer(),
-          // IconButton(
-          //   icon: const CustomIcon(
-          //       iconPath: "assets/icon/trash-bin.svg",
-          //       size: 20,
-          //       color: AppColors.error),
-          //   onPressed: widget.onPressed,
-          // )
-        ]),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+        Destination(from: widget.item.from, to: widget.item.to),
+        Container(
+            padding: const EdgeInsets.only(
+                left: 5,
+                right: 5,
+                top: 3,
+                bottom: 3
+            ),
+            decoration:  BoxDecoration(
+                color: AppColors.contactBackground,
+                borderRadius: BorderRadius.circular(30),
+            ),
+            child: const  Row(
+              children: [
+                CustomIcon(
+                  iconPath: "assets/icon/pending.svg",
+                  size: 10,
+                  color: AppColors.blue,
+                ),
+                SizedBox(width: 5,),
+                Text("Pending", style: TextStyle(fontSize: 8, color: AppColors.blue), )
+            ]
+        ), 
+        ),
+        ],),
         const SizedBox(
           height: 3,
         ),
