@@ -12,6 +12,11 @@ import 'package:quickdrop_app/core/widgets/textFeild.dart';
 import 'package:quickdrop_app/features/models/shipment_modeel.dart';
 import 'package:quickdrop_app/features/models/user_model.dart';
 import 'package:quickdrop_app/features/shipment/listing_card_details_screen.dart';
+import 'package:flutter/material.dart';
+import 'package:quickdrop_app/theme/colors.dart';
+import 'package:quickdrop_app/core/widgets/custom_svg.dart';
+import 'package:quickdrop_app/core/utils/appUtils.dart';
+
 
 class ShipmentCard extends StatefulWidget {
   final Shipment shipment;
@@ -127,6 +132,70 @@ class ShipmentCardState extends State<ShipmentCard> {
     );
   }
 
+ Widget _buildDestination() {
+    return Row(
+      // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        _buildFromDestination(),
+        const SizedBox(
+          width: 5,
+        ),
+         const CustomIcon(
+            iconPath: "assets/icon/arrow-up-right.svg",
+            size: 14,
+            color: AppColors.lessImportant),
+        // Spacer(),
+         const SizedBox(
+          width: 5,
+        ),
+        _buildToDestination(),
+        
+      ],
+    );
+  }
+
+  Widget _buildFromDestination() {
+    return Row(
+      children: [
+           const Icon(
+                  Icons.circle,
+                  size: 12,
+                  color: AppColors.blue,
+                ),
+        const SizedBox(width: 5,),
+        Text(
+            truncateText(widget.shipment.from),
+            style: const TextStyle(
+                color: AppColors.headingText,
+                fontSize: 14,
+                fontWeight: FontWeight.bold
+                )
+          ),
+      ],
+    );
+  }
+
+
+  Widget _buildToDestination() {
+    return Row(
+      children: [
+         const Icon(
+                  Icons.circle,
+                  size: 12,
+                  color: AppColors.succes,
+                ),
+        const SizedBox(
+          width: 5,
+        ),
+        Text(truncateText(widget.shipment.to),
+            style: const TextStyle(
+                color: AppColors.headingText,
+                fontSize: 14,
+                fontWeight: FontWeight.bold)),
+      ],
+    );
+  }
+
   Widget _buildListingDetails() {
     return Expanded(
         child: Padding(
@@ -136,7 +205,7 @@ class ShipmentCardState extends State<ShipmentCard> {
               children: [
                 _buildUserProfile(),
                 const SizedBox(height: AppTheme.cardGap),
-                Destination(from: widget.shipment.from, to: widget.shipment.to),
+                _buildDestination(),
                 const SizedBox(height: AppTheme.cardGap),
                 ItemDetail(
                   iconPath: "assets/icon/calendar.svg",

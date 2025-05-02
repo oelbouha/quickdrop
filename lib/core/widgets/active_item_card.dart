@@ -56,14 +56,14 @@ class ActiveListing extends State<ActiveItemCard> {
       children: [
         Row(children: [
           Destination(from: widget.item.from, to: widget.item.to),
-          const Spacer(),
-          IconButton(
-            icon: const CustomIcon(
-                iconPath: "assets/icon/trash-bin.svg",
-                size: 20,
-                color: AppColors.error),
-            onPressed: widget.onPressed,
-          )
+          // const Spacer(),
+          // IconButton(
+          //   icon: const CustomIcon(
+          //       iconPath: "assets/icon/trash-bin.svg",
+          //       size: 20,
+          //       color: AppColors.error),
+          //   onPressed: widget.onPressed,
+          // )
         ]),
         const SizedBox(
           height: 3,
@@ -91,11 +91,12 @@ class ActiveListing extends State<ActiveItemCard> {
     return Container(
       padding: const EdgeInsets.only(
         left: 8,
+        right: 8,
         top: 4,
         bottom: 4,
       ),
       decoration: const BoxDecoration(
-        color: AppColors.lessImportant,
+        color: AppColors.cardFooterBackground,
         borderRadius:  BorderRadius.only(
           bottomRight: Radius.circular(AppTheme.cardRadius),
           bottomLeft: Radius.circular(AppTheme.cardRadius),
@@ -112,16 +113,47 @@ class ActiveListing extends State<ActiveItemCard> {
           width: 10,
         ),
         const Spacer(),
-        IconButton(
+         ElevatedButton.icon(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: AppColors.error,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8),
+            ),
+             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+          ),
+          onPressed: widget.onPressed,
+          icon: const CustomIcon(
+              iconPath: "assets/icon/trash-bin.svg",
+              size: 20,
+              color: AppColors.cardBackground),
+            label: const Text('Delete', 
+              style: TextStyle(
+                color: AppColors.cardBackground,
+                fontSize: 14,
+              )),
+        ),
+        const SizedBox(width: 10,),
+        ElevatedButton.icon(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: AppColors.blue,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8),
+            ),
+             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+          ),
+          onPressed: () {
+            print("edit clicked!");
+          },
           icon: const CustomIcon(
               iconPath: "assets/icon/edit.svg",
               size: 20,
               color: AppColors.cardBackground),
-          onPressed: () {
-            // Navigate to notifications page or show a dialog
-            print("Notifications clicked!");
-          },
-        )
+            label: const Text('Edit', 
+              style: TextStyle(
+                color: AppColors.cardBackground,
+                fontSize: 14,
+              )),
+        ),
       ],
     ));
   }
@@ -134,11 +166,11 @@ class ActiveListing extends State<ActiveItemCard> {
           const CustomIcon(
             iconPath: "assets/icon/package.svg",
             size: 12,
-            color: AppColors.lessImportant,
+            color: AppColors.shipmentText,
           ),
-          Text('  ${shipment.type}', // Now using `shipment.type`
+          Text(' ${shipment.type}', // Now using `shipment.type`
               style:
-                  const TextStyle(color: AppColors.headingText, fontSize: 10)),
+                  const TextStyle(color: AppColors.shipmentText, fontSize: 10)),
         ],
       );
     }

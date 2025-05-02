@@ -129,7 +129,7 @@ static void showSuccess(BuildContext context, String message) {
 
 
 Widget Message(BuildContext context, String message) {
-  return Text(message, style: TextStyle(color: AppColors.white),);
+  return Text(message, style: TextStyle(color: AppColors.headingText),);
 }
 
 String truncateText(String text, {int maxLength = 10}) {
@@ -141,8 +141,8 @@ Widget buildIconWithText({
   required String text,
   double iconSize = 10,
   double textSize = 9,
-  Color iconColor = AppColors.lessImportant,
-  Color textColor = AppColors.headingText,
+  Color iconColor = AppColors.shipmentText,
+  Color textColor = AppColors.shipmentText,
 }) {
   return Row(
     children: [

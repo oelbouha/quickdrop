@@ -52,7 +52,7 @@ class CompletedItemCardState extends State<CompletedItemCard> {
     return Container(
       padding: const EdgeInsets.all(10),
         decoration:  BoxDecoration(
-          color: AppColors.input,
+          color: AppColors.courierInfoBackground,
           borderRadius: BorderRadius.circular(AppTheme.cardRadius),
       ),
       child: Row(
@@ -67,14 +67,28 @@ class CompletedItemCardState extends State<CompletedItemCard> {
           avatarSize: 18,
         ),
           const Spacer(),
-          Container(
-             padding: const EdgeInsets.all(8),
+         Container(
+            padding: const EdgeInsets.only(
+                left: 5,
+                right: 5,
+                top: 3,
+                bottom: 3
+            ),
             decoration:  BoxDecoration(
-                color: AppColors.succes,
+                color: AppColors.completedstatusBackground,
                 borderRadius: BorderRadius.circular(30),
             ),
-            child: const Text("Completed", style: TextStyle(fontSize: 10),)
-          )
+            child: const  Row(
+              children: [
+                CustomIcon(
+                  iconPath: "assets/icon/check-circle.svg",
+                  size: 10,
+                  color: AppColors.completedStatusText,
+                ),
+                SizedBox(width: 5,),
+                Text("Completed", style: TextStyle(fontSize: 8, color: AppColors.completedStatusText), )
+              ]
+          )),
       ],
     ));
   }
@@ -82,23 +96,16 @@ class CompletedItemCardState extends State<CompletedItemCard> {
  Widget _buildBody() {
     return Padding(
        padding: const EdgeInsets.only(
-        left: 8,
-        right: 8,
-        top: 4,
+        left: 10,
+        right: 10,
+        top: 10,
         bottom: 4,
       ),
       child: Column(
       children: [
           Row(children: [
           Destination(from: widget.item.from, to: widget.item.to),
-          const Spacer(),
-          IconButton(
-            icon: const CustomIcon(
-                iconPath: "assets/icon/trash-bin.svg",
-                size: 20,
-                color: AppColors.error),
-            onPressed: widget.onPressed,
-          )
+         
         ]),
         buildIconWithText(
           iconPath: "calendar.svg", 
@@ -122,13 +129,13 @@ class CompletedItemCardState extends State<CompletedItemCard> {
   Widget _buildFooter() {
     return  Container(
        padding: const EdgeInsets.only(
-        left: 8,
-        right: 8,
+        left: 10,
+        right: 10,
         top: 4,
         bottom: 4,
       ),
       decoration: const BoxDecoration(
-        color: AppColors.lessImportant,
+        color: AppColors.cardFooterBackground,
         borderRadius:  BorderRadius.only(
           bottomRight: Radius.circular(AppTheme.cardRadius),
           bottomLeft: Radius.circular(AppTheme.cardRadius),
@@ -159,11 +166,11 @@ class CompletedItemCardState extends State<CompletedItemCard> {
       ),
       label: const Text("Rate trip", style: TextStyle(color: AppColors.white),),
       style: ElevatedButton.styleFrom(
-        backgroundColor: AppColors.blue,
+        backgroundColor: AppColors.rateBackground,
         shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(AppTheme.cardButtonRadius),
+            borderRadius: BorderRadius.circular(8),
         ),
-        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
       ),
     );
   }

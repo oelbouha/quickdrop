@@ -22,26 +22,60 @@ class Destination extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        _buildFromDestination(),
-        const SizedBox(
-          width: 5,
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          const Icon(
+            Icons.circle,
+            size: 12,
+            color: AppColors.blue,
+          ),
+          const SizedBox(width: 10),
+          Text(
+            truncateText(from),
+            style: TextStyle(
+              color: AppColors.headingText,
+              fontSize: fontSize,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ],
+      ),
+      Container(
+        margin: const EdgeInsets.symmetric(horizontal: 5),
+        width: 2,
+        height: 20,
+        decoration: BoxDecoration(
+          color: Color(0xFFd1d5db),
+          borderRadius: BorderRadius.circular(5),
         ),
-         CustomIcon(
-            iconPath: "assets/icon/arrow-up-right.svg",
-            size: iconSize,
-            color: AppColors.lessImportant),
-        // Spacer(),
-         const SizedBox(
-          width: 5,
-        ),
-        _buildToDestination(),
-        
-      ],
-    );
-  }
+      ),
+      Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          const Icon(
+            Icons.circle,
+            size: 12,
+            color: AppColors.succes,
+          ),
+          const SizedBox(width: 10),
+          Text(
+            truncateText(to),
+            style: TextStyle(
+              color: AppColors.headingText,
+              fontSize: fontSize,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ],
+      ),
+    ],
+  );
+}
+
 
   Widget _buildFromDestination() {
     return Row(
@@ -71,7 +105,7 @@ class Destination extends StatelessWidget {
          const Icon(
                   Icons.circle,
                   size: 12,
-                  color: AppColors.blue,
+                  color: AppColors.succes,
                 ),
         const SizedBox(
           width: 5,

@@ -115,11 +115,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
           hintText: "Payment methods",
           iconPath: "assets/icon/money.svg",
         ),
-        // SettingsCard(
-        //   onTap: () {},
-        //   hintText: "Verify my identity",
-        //   iconPath: "assets/icon/user.svg",
-        // ),
         const SizedBox(height: AppTheme.cardPadding),
          const Text(
           "Resources",
