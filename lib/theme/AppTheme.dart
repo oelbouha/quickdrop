@@ -17,7 +17,7 @@ class AppTheme {
   static const double textFeildRadius = 8;
   static const double textFieldBorderWidth = 0.4;
   static const double addShipmentPadding = 16;
-  static const double cardButtonRadius = 20;
+  static const double cardButtonRadius = 8;
   static const double inputTextHeight = 50;
   static const double chatInputRadius = 50;
   static const String loginErrorMessage =

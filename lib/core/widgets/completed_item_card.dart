@@ -66,29 +66,6 @@ class CompletedItemCardState extends State<CompletedItemCard> {
           subHeaderFontSize: 10,
           avatarSize: 18,
         ),
-          const Spacer(),
-         Container(
-            padding: const EdgeInsets.only(
-                left: 5,
-                right: 5,
-                top: 3,
-                bottom: 3
-            ),
-            decoration:  BoxDecoration(
-                color: AppColors.completedstatusBackground,
-                borderRadius: BorderRadius.circular(30),
-            ),
-            child: const  Row(
-              children: [
-                CustomIcon(
-                  iconPath: "assets/icon/check-circle.svg",
-                  size: 10,
-                  color: AppColors.completedStatusText,
-                ),
-                SizedBox(width: 5,),
-                Text("Completed", style: TextStyle(fontSize: 8, color: AppColors.completedStatusText), )
-              ]
-          )),
       ],
     ));
   }
@@ -103,8 +80,33 @@ class CompletedItemCardState extends State<CompletedItemCard> {
       ),
       child: Column(
       children: [
-          Row(children: [
-          Destination(from: widget.item.from, to: widget.item.to),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Destination(from: widget.item.from, to: widget.item.to),
+               Container(
+                padding: const EdgeInsets.only(
+                    left: 5,
+                    right: 5,
+                    top: 3,
+                    bottom: 3
+                ),
+                decoration:  BoxDecoration(
+                    color: AppColors.completedstatusBackground,
+                    borderRadius: BorderRadius.circular(30),
+                ),
+                child: const  Row(
+                  children: [
+                    CustomIcon(
+                      iconPath: "assets/icon/check-circle.svg",
+                      size: 10,
+                      color: AppColors.completedStatusText,
+                    ),
+                    SizedBox(width: 5,),
+                    Text("Completed", style: TextStyle(fontSize: 8, color: AppColors.completedStatusText), )
+              ]
+          )),
          
         ]),
         buildIconWithText(
