@@ -88,28 +88,23 @@ class DeliveryRequestState extends State<Request> {
             ),
           ],
         ),
-        child: Padding(
-            padding: const EdgeInsets.all(AppTheme.historyCardPadding),
-            child: Column(
+        child: Column(
               // mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 _buildHeader(),
-                const SizedBox(
-                  height: 10,
-                ),
                 _buildBody(),
                 const SizedBox(
                   height: 10,
                 ),
                 _buildFooter(),
               ],
-            )));
+            ));
   }
 
   Widget _buildHeader() {
-    return Row(
-      children: [
-        UserProfileCard(
+    return Padding(
+      padding: const EdgeInsets.all(8),
+        child: UserProfileCard(
           photoUrl: widget.userData['photoUrl'],
           header: widget.userData['displayName'],
           onPressed: () => print("user profile  Clicked"),
@@ -118,12 +113,13 @@ class DeliveryRequestState extends State<Request> {
           subHeaderFontSize: 10,
           avatarSize: 18,
         )
-      ],
     );
   }
 
   Widget _buildBody() {
-    return Column(
+    return Padding(
+      padding: const EdgeInsets.all(8),
+      child: Column(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
         Destination(from: widget.shipment.from, to: widget.shipment.to),
@@ -132,16 +128,30 @@ class DeliveryRequestState extends State<Request> {
         ),
         _buildRequestPrice(),
       ],
-    );
+    ));
   }
 
   Widget _buildFooter() {
-    return Row(
+    return Container(
+      padding:  const EdgeInsets.only(
+        top: 2,
+        left: 10,
+        right: 10,
+        bottom: 2,
+      ),
+      decoration: const BoxDecoration(
+        color:  AppColors.cardFooterBackground,
+        borderRadius: BorderRadius.only(
+          bottomLeft: Radius.circular(AppTheme.cardRadius),
+          bottomRight: Radius.circular(AppTheme.cardRadius),
+        ),
+      ),
+      child: Row(
       children: [
         const Spacer(),
         _buildButtons(),
       ],
-    );
+    ));
   }
 
   Widget _buildButtons() {
@@ -202,11 +212,18 @@ class DeliveryRequestState extends State<Request> {
   Widget _buildRequestPrice() {
     return Row(
       children: [
-        Text('Starting Price: ${widget.request.price} dh',
+        const Text('Price: ',
             style: const TextStyle(
                 color: AppColors.headingText,
                 fontSize: 14,
-                fontWeight: FontWeight.bold)),
+                fontWeight: FontWeight.bold)
+          ),
+          Text('${widget.request.price} dh',
+            style: const TextStyle(
+                color: AppColors.blue,
+                fontSize: 14,
+                fontWeight: FontWeight.bold)
+          ),
       ],
     );
   }

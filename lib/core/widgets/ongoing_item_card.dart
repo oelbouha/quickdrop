@@ -97,7 +97,7 @@ class OngoingItemCardState extends State<OngoingItemCard> {
           icon: const CustomIcon(
             iconPath: "assets/icon/chat-round-line.svg",
             size: 20,
-            color: Colors.blue,
+            color: AppColors.blue,
           ),
           label: const Text(
             "Contact",
