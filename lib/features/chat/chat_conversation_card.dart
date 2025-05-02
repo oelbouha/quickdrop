@@ -69,13 +69,15 @@ class ChatConversationCardState extends State<ChatConversationCard> {
                 subHeaderFontSize: 12,
                 avatarSize: 20,
                 subHeader: widget.subHeader! ,
-                subHeaderColor:  AppColors.lessImportant,
+                subHeaderColor: widget.isMessageSeen == false && widget.messageSender == widget.userId
+                    ? AppColors.shipmentText:
+                     AppColors.lessImportant,
               ),
               if (widget.isMessageSeen == false && widget.messageSender == widget.userId)
                 const Icon(
                   Icons.circle,
                   size: 12,
-                  color: AppColors.blue,
+                  color: AppColors.succes,
                 ),
             ],
           ),
