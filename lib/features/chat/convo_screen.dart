@@ -143,7 +143,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
                                   const Text(
                                     "Seen",
                                     style: TextStyle(
-                                        color: AppColors.headingText, fontSize: 10),
+                                        color: AppColors.headingText, fontSize: 10, fontWeight: FontWeight.bold),
                                         textAlign: TextAlign.end,
                                   )]
                             ]
