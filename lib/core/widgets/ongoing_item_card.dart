@@ -59,47 +59,104 @@ class OngoingItemCardState extends State<OngoingItemCard> {
             ),
           ],
         ),
-        child: Padding(
-            padding: const EdgeInsets.all(AppTheme.historyCardPadding),
-            child: Column(
+        child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                _buildHeader(),
-                const SizedBox(
-                  height: 10,
-                ),
                 _buildBody(),
                 const SizedBox(
                   height: 10,
                 ),
                 _buildFooter(),
               ],
-            )));
+            ));
   }
 
-  Widget _buildHeader() {
-    return Row(
+  Widget _buildHUserCard() {
+    return Container(
+      padding: const EdgeInsets.all(10),
+        decoration:  BoxDecoration(
+          color: AppColors.courierInfoBackground,
+          borderRadius: BorderRadius.circular(AppTheme.cardRadius),
+      ),
+      child: Row(
       children: [
         UserProfileCard(
           header: widget.user['displayName'],
           onPressed: () => print("user profile  Clicked"),
-          subHeader:
-              widget.item is Shipment ? "Package Carrier" : "Package owner",
+          subHeader: widget.item is Shipment ?  "Package Carrier" : "Package owner", 
           photoUrl: widget.user['photoUrl'],
           headerFontSize: 14,
           subHeaderFontSize: 10,
           avatarSize: 18,
-        )
+        ),
+          const Spacer(),
+          ElevatedButton.icon(
+          onPressed: () {
+            _contactCourier();
+          },
+          icon: const CustomIcon(
+            iconPath: "assets/icon/chat-round-line.svg",
+            size: 20,
+            color: Colors.blue,
+          ),
+          label: const Text(
+            "Contact",
+            style: TextStyle(color: AppColors.blue, fontSize: 14),
+          ),
+          style: ElevatedButton.styleFrom(
+            elevation: 0,
+            backgroundColor: AppColors.contactBackground,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(AppTheme.cardButtonRadius),
+            ),
+            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+          ),
+        ),
       ],
-    );
+    ));
   }
 
   Widget _buildBody() {
-    return Column(
+    return  Padding(
+       padding: const EdgeInsets.only(
+        left: 10,
+        right: 10,
+        top: 10,
+        bottom: 4,
+      ),
+      child: Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+       Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
         Destination(from: widget.item.from, to: widget.item.to),
+        Container(
+            padding: const EdgeInsets.only(
+                left: 5,
+                right: 5,
+                top: 3,
+                bottom: 3
+            ),
+            decoration:  BoxDecoration(
+                color: AppColors.ongoingstatusBackground,
+                borderRadius: BorderRadius.circular(30),
+            ),
+            child: const  Row(
+              children: [
+                CustomIcon(
+                  iconPath: "assets/icon/ongoing.svg",
+                  size: 10,
+                  color: AppColors.ongoingStatusText,
+                ),
+                SizedBox(width: 5,),
+                Text("Ongoing", style: TextStyle(fontSize: 8, color: AppColors.ongoingStatusText), )
+              ]
+          ), 
+        ),
+       ],),
         const SizedBox(
           height: 3,
         ),
@@ -114,16 +171,41 @@ class OngoingItemCardState extends State<OngoingItemCard> {
         const SizedBox(
           height: 3,
         ),
-        Text('Price:  ${widget.item.price}dh',
+        _buildHUserCard()
+      ],
+    ));
+  }
+
+  Widget _buildFooter() {
+     return  Container(
+       padding: const EdgeInsets.only(
+        left: 10,
+        right: 10,
+        top: 4,
+        bottom: 4,
+      ),
+      decoration: const BoxDecoration(
+        color: AppColors.cardFooterBackground,
+        borderRadius:  BorderRadius.only(
+          bottomRight: Radius.circular(AppTheme.cardRadius),
+          bottomLeft: Radius.circular(AppTheme.cardRadius),
+        ),
+      ),
+      child: Row(
+      children: [
+         Text('${widget.item.price}dh',
             style: const TextStyle(
                 color: AppColors.blue,
                 fontSize: 14,
                 fontWeight: FontWeight.bold)),
-      ],
-    );
+        const Spacer(),
+          _buildButtons(),
+          ],
+    ));
   }
 
-  Widget _buildFooter() {
+
+  Widget _buildButtons() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -137,41 +219,46 @@ class OngoingItemCardState extends State<OngoingItemCard> {
             color: Colors.white,
           ),
           label: const Text(
-            "Mark as delivered",
-            style: TextStyle(color: AppColors.white),
+            "Delivered",
+            style: TextStyle(color: AppColors.white, fontSize: 14),
           ),
           style: ElevatedButton.styleFrom(
             backgroundColor: AppColors.succes,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(AppTheme.cardButtonRadius),
             ),
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
           ),
         ),
-      
+        const SizedBox(
+          width: 10,
+        ),
       
         ElevatedButton.icon(
           onPressed: () {
             _contactCourier();
           },
           icon: const CustomIcon(
-            iconPath: "assets/icon/chat-round-dots.svg",
+            iconPath: "assets/icon/cancel.svg",
             size: 20,
             color: Colors.white,
           ),
           label: const Text(
-            "Contact",
-            style: TextStyle(color: AppColors.white),
+            "Cancel",
+            style: TextStyle(color: AppColors.white, fontSize: 14),
           ),
           style: ElevatedButton.styleFrom(
-            backgroundColor: AppColors.blue,
+            backgroundColor: AppColors.error,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(AppTheme.cardButtonRadius),
             ),
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
           ),
         ),
       ],
     );
   }
 }
+
+
+

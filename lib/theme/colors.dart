@@ -21,10 +21,11 @@ class AppColors {
   static const Color courierInfoBackground = gray;
   static const Color cardFooterBackground = Color(0xFFeff6ff);
   static const Color rateBackground = Color(0xFFeab308);
-  static const Color ongoingstatusBackground = Color(0xFFb45309);
   static const Color completedstatusBackground = Color(0xFFdcfce7);
   static const Color completedStatusText = Color(0xFF15803d);
+  static const Color ongoingstatusBackground = Color(0xFFfef3c7);
   static const Color ongoingStatusText = Color(0xFFb45309);
+  static const Color contactBackground = Color(0xFFdbeafe);
 
   static const Color shipmentText = lightGray;
   static const Color white = Color(0xFFFFFFFF);
