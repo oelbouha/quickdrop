@@ -97,6 +97,70 @@ class TripCardState extends State<TripCard> {
     );
   }
 
+ Widget _buildDestination() {
+    return Row(
+      // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        _buildFromDestination(),
+        const SizedBox(
+          width: 5,
+        ),
+         const CustomIcon(
+            iconPath: "assets/icon/arrow-up-right.svg",
+            size: 14,
+            color: AppColors.lessImportant),
+        // Spacer(),
+         const SizedBox(
+          width: 5,
+        ),
+        _buildToDestination(),
+        
+      ],
+    );
+  }
+
+  Widget _buildFromDestination() {
+    return Row(
+      children: [
+           const Icon(
+                  Icons.circle,
+                  size: 12,
+                  color: AppColors.blue,
+                ),
+        const SizedBox(width: 5,),
+        Text(
+            truncateText(widget.trip.from),
+            style: const TextStyle(
+                color: AppColors.headingText,
+                fontSize: 14,
+                fontWeight: FontWeight.bold
+                )
+          ),
+      ],
+    );
+  }
+
+
+  Widget _buildToDestination() {
+    return Row(
+      children: [
+         const Icon(
+                  Icons.circle,
+                  size: 12,
+                  color: AppColors.succes,
+                ),
+        const SizedBox(
+          width: 5,
+        ),
+        Text(truncateText(widget.trip.to),
+            style: const TextStyle(
+                color: AppColors.headingText,
+                fontSize: 14,
+                fontWeight: FontWeight.bold)),
+      ],
+    );
+  }
+
   Widget _buildListingDetails() {
     return Padding(
             padding: const EdgeInsets.all(10),
@@ -105,9 +169,7 @@ class TripCardState extends State<TripCard> {
               children: [
                 _buildUserProfile(),
                 const SizedBox(height: AppTheme.cardGap),
-                Destination(
-                    from: truncateText(widget.trip.from),
-                    to: truncateText(widget.trip.to)),
+                _buildDestination(),
                 const SizedBox(height: AppTheme.cardGap),
                 ItemDetail(
                   iconPath: "assets/icon/calendar.svg",
