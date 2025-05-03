@@ -16,7 +16,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
         context: context,
         builder: (context) => ConfirmationDialog(
             message: "Are you sure you want to log out",
-            hintText: "Confirm",
+            buttonHintText: "Confirm",
+            iconPath: "assets/icon/logout.svg",
+            header: "Log Out",
             onPressed: () async {
               // Navigator.pop(context);
               if (_isSignoutLoading) return;

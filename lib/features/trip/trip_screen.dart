@@ -22,8 +22,8 @@ class _TripScreenState extends State<TripScreen> with SingleTickerProviderStateM
     showDialog(
         context: context,
         builder: (context) => ConfirmationDialog(
-            message: "Are you sure you want to delete trip",
-            hintText: "Confirm",
+            message: AppTheme.deleteTripText,
+            header: "Delete trip",
             onPressed: () async {
               try {
                 await Provider.of<TripProvider>(context, listen: false).deleteTrip(id);
