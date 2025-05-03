@@ -71,6 +71,19 @@ class _ConversationScreenState extends State<ConversationScreen> {
             avatarSize: 18,
             headerColor: AppColors.appBarText,
           ),
+          actions: [
+            IconButton(
+              icon: const CustomIcon(
+                iconPath: "assets/icon/dots.svg",
+                size: 22,
+                color: AppColors.appBarIcons,
+              ),
+              tooltip: 'delete chat',
+              onPressed: () {
+                context.push("/notification");
+              },
+            ),
+          ],
           backgroundColor: AppColors.barColor,
         ),
         body: Column(
@@ -188,8 +201,6 @@ class _ConversationScreenState extends State<ConversationScreen> {
                           bottom: 4.0,
                         ),
                         child: Container(
-                        // color: AppColors.blue,
-                        // padding: const EdgeInsets.all(4.0),
                         decoration: BoxDecoration(
                           color: AppColors.blue,
                           borderRadius: BorderRadius.circular(30),
@@ -203,21 +214,21 @@ class _ConversationScreenState extends State<ConversationScreen> {
                         onPressed: _sendMessage
                       ))),
                       filled: true,
-                      fillColor: AppColors.chatMessageInput,
+                      fillColor: AppColors.blue.withOpacity(0.2),
                       hintText: 'Message...',
                       border: const OutlineInputBorder(
                         // borderSide: BorderSide.none, // Removes visible border
                         borderRadius: BorderRadius.all(Radius.circular(
                             AppTheme.chatInputRadius)), // Adds border radius
                       ),
-                      enabledBorder: const OutlineInputBorder(
-                        borderSide:  BorderSide(color: AppColors.lessImportant, width: 1.0),
-                        borderRadius: BorderRadius.all(
+                      enabledBorder:  OutlineInputBorder(
+                        borderSide:  BorderSide(color: AppColors.blue.withOpacity(0.1), width: 1.0),
+                        borderRadius: const BorderRadius.all(
                             Radius.circular(AppTheme.chatInputRadius)),
                       ),
-                      focusedBorder: const OutlineInputBorder(
-                        borderSide:  BorderSide(color: AppColors.lessImportant, width: 1.0),
-                        borderRadius: BorderRadius.all(
+                      focusedBorder:  OutlineInputBorder(
+                        borderSide:  BorderSide(color: AppColors.blue.withOpacity(0.1), width: 1.0),
+                        borderRadius: const BorderRadius.all(
                             Radius.circular(AppTheme.chatInputRadius)),
                       ),
                     ),
