@@ -1,8 +1,6 @@
 import 'package:quickdrop_app/core/utils/imports.dart';
-import 'package:go_router/go_router.dart';
 import 'package:quickdrop_app/features/shipment/listing_card_details_screen.dart';
 import 'package:quickdrop_app/features/profile/profile_screen.dart';
-import 'package:skeletonizer/skeletonizer.dart';
 import 'package:quickdrop_app/core/widgets/app_header.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -84,12 +82,20 @@ class _HomeScreenState extends State<HomeScreen> {
         body: Skeletonizer(
             enabled: _isLoading,
             child: Padding(
-                padding: const EdgeInsets.all(AppTheme.homeScreenPadding),
-                child: Column(children: [
-                  const SizedBox(height: 15),
+                padding: const EdgeInsets.only(
+                    left: AppTheme.homeScreenPadding,
+                    right: AppTheme.homeScreenPadding,
+                ),
+                child: SingleChildScrollView (
+                  child: Column(
+                  children: [
+                    const SizedBox(height: 10),
+                   
                   SearchForm(),
+                  const SizedBox(height: 10),
+                  _buildTogleButtons(),
                   const SizedBox(height: 15),
-                  Expanded(child: Consumer2<ShipmentProvider, TripProvider>(
+                    Consumer2<ShipmentProvider, TripProvider>(
                       builder:
                           (context, shipmentProvider, tripProvider, child) {
                     return IndexedStack(
@@ -100,8 +106,74 @@ class _HomeScreenState extends State<HomeScreen> {
                         _buildTripListings(tripProvider.activeTrips),
                       ],
                     );
-                  }))
-                ]))));
+                  })
+                  
+                ]
+                ))
+              )
+          )
+  );
+  }
+
+  Widget toggleButton({
+    required String text,
+    required bool isSelected,
+    required String iconPath,
+    required VoidCallback onPressed,
+  }) {
+    return Expanded(
+      child: TextButton.icon(
+        onPressed: onPressed,
+        icon: CustomIcon(
+          iconPath: iconPath,
+          size: 20,
+          color: isSelected ? AppColors.white : AppColors.blue,
+        ),
+        style: TextButton.styleFrom(
+          backgroundColor:
+              isSelected ? AppColors.blue : AppColors.cardBackground,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(AppTheme.buttonRadius),
+          ),
+        ),
+        label: Text(
+          text,
+          style: TextStyle(
+            color: isSelected ? AppColors.white : AppColors.blue,
+            fontSize: 16,
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTogleButtons() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        toggleButton(
+          text: "Shipments",
+          isSelected: selectedIndex == 0,
+          iconPath: "assets/icon/package.svg",
+          onPressed: () {
+            setState(() {
+              selectedIndex = 0;
+            });
+          },
+        ),
+        const SizedBox(width: 10),
+        toggleButton(
+          text: "Trips",
+          iconPath: "assets/icon/car.svg",
+          isSelected: selectedIndex == 1,
+          onPressed: () {
+            setState(() {
+              selectedIndex = 1;
+            });
+          },
+        ),
+      ],
+    );
   }
 
   Widget _buildTripListings(List<Trip> activeTrips) {
@@ -112,6 +184,8 @@ class _HomeScreenState extends State<HomeScreen> {
           child: activeTrips.isEmpty
               ? Center(child: Message(context, 'No active Trips'))
               : ListView.builder(
+                  physics: NeverScrollableScrollPhysics(),
+                  shrinkWrap: true, 
                   itemCount: activeTrips.length,
                   itemBuilder: (context, index) {
                     final trip = activeTrips[index];
@@ -137,6 +211,8 @@ class _HomeScreenState extends State<HomeScreen> {
           child: activeShipments.isEmpty
               ? Center(child: Message(context, 'No active shipments'))
               : ListView.builder(
+                  physics: NeverScrollableScrollPhysics(),
+                  shrinkWrap: true, 
                   itemCount: activeShipments.length,
                   itemBuilder: (context, index) {
                     final shipment = activeShipments[index];
