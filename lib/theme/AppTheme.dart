@@ -20,6 +20,8 @@ class AppTheme {
   static const double cardButtonRadius = 8;
   static const double inputTextHeight = 50;
   static const double chatInputRadius = 50;
+  static const String deleteShipmentText = 'Are you sure you want to delete this shipment? This action cannot be undone.';
+  static const String deleteTripText = 'Are you sure you want to delete this Trip? This action cannot be undone.';
   static const String loginErrorMessage =
       'Your password is incorrect or this account doesn’t exist. Please check and try again';
 }

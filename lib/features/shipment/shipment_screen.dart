@@ -50,8 +50,8 @@ class _ShipmentScreenState extends State<ShipmentScreen> with SingleTickerProvid
        showDialog(
             context: context,
             builder: (context) => ConfirmationDialog(
-              message: "Are you sure you want to delete shipment",
-              hintText: "Confirm",
+              message: AppTheme.deleteShipmentText,
+              iconPath: "assets/icon/trash-bin.svg",
               onPressed: () async {
                  try {
                     await Provider.of<ShipmentProvider>(context, listen: false)

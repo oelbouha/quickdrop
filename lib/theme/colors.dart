@@ -26,6 +26,7 @@ class AppColors {
   static const Color ongoingstatusBackground = Color(0xFFfef3c7);
   static const Color ongoingStatusText = Color(0xFFb45309);
   static const Color contactBackground = Color(0xFFdbeafe);
+  static const Color deleteBackground = Color(0xFFfef3c7);
 
   static const Color shipmentText = lightGray;
   static const Color white = Color(0xFFFFFFFF);
