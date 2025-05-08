@@ -55,33 +55,28 @@ class _ProfileScreenState extends State<ProfileScreen> {
           centerTitle: true,
         ),
         body: SingleChildScrollView(
-          child: Column(
-            children: [
-              // const SizedBox(height: AppTheme.cardPadding),
-              _buildUserStatus(),
-              const SizedBox(height: AppTheme.cardPadding),
-              Container(
-                margin: const EdgeInsets.only(
-                    left: AppTheme.homeScreenPadding,
-                    right: AppTheme.homeScreenPadding
+            child: Column(children: [
+          // const SizedBox(height: AppTheme.cardPadding),
+          _buildUserStatus(),
+          const SizedBox(height: AppTheme.cardPadding),
+          Container(
+              margin: const EdgeInsets.only(
+                  left: AppTheme.homeScreenPadding,
+                  right: AppTheme.homeScreenPadding),
+              child: Column(children: [
+                _buildUserProfileSettings(),
+                // const SizedBox(height: AppTheme.cardPadding),
+                const Text(
+                  "Version 1.0.0 - 2025",
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w400,
+                    color: AppColors.lightGray,
+                  ),
                 ),
-                child: Column(
-                  children: [
-                    _buildUserProfileSettings(),
-                    // const SizedBox(height: AppTheme.cardPadding),
-                    const Text(
-                      "Version 1.0.0 - 2025",
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w400,
-                        color: AppColors.lightGray,
-                      ),
-                    ),
-                    const SizedBox(height: AppTheme.cardPadding),
-                  ]
-              ))
-            ]
-        )));
+                const SizedBox(height: AppTheme.cardPadding),
+              ]))
+        ])));
   }
 
   Widget _buildUserProfileSettings() {
@@ -103,11 +98,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
           iconPath: "assets/icon/camera-add.svg",
         ),
         SettingsCard(
-          onTap: () {context.push("/profile/info");},
+          onTap: () {
+            context.push("/profile/info");
+          },
           hintText: "Update my personal information",
           iconPath: "assets/icon/edit-user.svg",
         ),
-          SettingsCard(
+        SettingsCard(
           onTap: () {},
           hintText: "Notifications",
           iconPath: "assets/icon/notification.svg",
@@ -118,7 +115,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           iconPath: "assets/icon/money.svg",
         ),
         const SizedBox(height: AppTheme.cardPadding),
-         const Text(
+        const Text(
           "Resources",
           style: TextStyle(
             fontSize: 18,
@@ -126,27 +123,27 @@ class _ProfileScreenState extends State<ProfileScreen> {
             color: AppColors.lightGray,
           ),
         ),
-         SettingsCard(
+        SettingsCard(
           onTap: () {},
           hintText: "Contact suport",
           iconPath: "assets/icon/suport.svg",
         ),
-         SettingsCard(
+        SettingsCard(
           onTap: () {},
           hintText: "Terms and Conditions",
           iconPath: "assets/icon/condition.svg",
         ),
-         SettingsCard(
+        SettingsCard(
           onTap: () {},
           hintText: "Privacy Policy",
           iconPath: "assets/icon/privacy.svg",
         ),
-          SettingsCard(
+        SettingsCard(
           onTap: () {},
           hintText: "Refer to your friends",
           iconPath: "assets/icon/share.svg",
         ),
-         SettingsCard(
+        SettingsCard(
           onTap: () {},
           hintText: "Become a driver",
           iconPath: "assets/icon/driver.svg",
@@ -169,50 +166,48 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget _buildUserStatus() {
     final userProvider = Provider.of<UserProvider>(context);
     final user = userProvider.user;
+    // print("photo ${user!.photoUrl}");
     return GestureDetector(
-      onTap: () {
-        context.push("/profile/statistics");
-      },
-       child: Container(
-        width: double.infinity,
-       padding: const EdgeInsets.only(
-          left: AppTheme.cardPadding,
-          right: AppTheme.cardPadding,
-          top: AppTheme.cardPadding,
-          bottom: AppTheme.cardPadding,
-       ),
-          decoration: const BoxDecoration(color: AppColors.blue),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-          children:[
-            CircleAvatar(
-            radius: 50,
-            backgroundImage: user != null && user.photoUrl != null
-                ? NetworkImage(user.photoUrl!)
-                : AssetImage('assets/images/profile.png') as ImageProvider,
-          ),
-            const SizedBox(width: 15),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  user != null ? (user.displayName ?? 'Guest') : 'Guest',
-                  style: const TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                      color: AppColors.white),
-                ),
-                const Text(
-                  "Member since 2025",
-                  style:  TextStyle(
-                      fontSize: 14,
-                      color: AppColors.lessImportant),
-                ),
-          ],
-        ),
-    ]
-      )
-    ));
+        onTap: () {
+          context.push("/profile/statistics");
+        },
+        child: Container(
+            width: double.infinity,
+            padding: const EdgeInsets.only(
+              left: AppTheme.cardPadding,
+              right: AppTheme.cardPadding,
+              top: AppTheme.cardPadding,
+              bottom: AppTheme.cardPadding,
+            ),
+            decoration: const BoxDecoration(color: AppColors.blue),
+            child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  CircleAvatar(
+                    radius: 50,
+                    backgroundImage: user != null && user.photoUrl != null
+                        ? NetworkImage(user.photoUrl!)
+                        : AssetImage('assets/images/profile.png')
+                            as ImageProvider,
+                  ),
+                  const SizedBox(width: 15),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(user?.displayName ?? 'Guest',
+                        style: const TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            color: AppColors.white),
+                      ),
+                       Text(
+                       "Member since ${user?.createdAt!}",
+                        style: const TextStyle(
+                            fontSize: 14, color: AppColors.lessImportant),
+                      ),
+                    ],
+                  ),
+                ])));
   }
 }

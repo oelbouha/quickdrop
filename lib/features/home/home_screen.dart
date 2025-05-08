@@ -22,13 +22,14 @@ class _HomeScreenState extends State<HomeScreen> {
     userPhotoUrl =
         Provider.of<UserProvider>(context, listen: false).user?.photoUrl;
     if (userPhotoUrl == null || userPhotoUrl!.isEmpty) {
-      userPhotoUrl = "assets/images/profile.png"; // Default image
+      userPhotoUrl = AppTheme.defaultProfileImage;
     }
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       try {
         await Provider.of<ShipmentProvider>(context, listen: false)
             .fetchShipments();
         await Provider.of<TripProvider>(context, listen: false).fetchTrips();
+      
       } catch (e) {
         if (mounted) {
           AppUtils.showError(context, 'Error fetching shipments: $e');
@@ -83,36 +84,29 @@ class _HomeScreenState extends State<HomeScreen> {
             enabled: _isLoading,
             child: Padding(
                 padding: const EdgeInsets.only(
-                    left: AppTheme.homeScreenPadding,
-                    right: AppTheme.homeScreenPadding,
+                  left: AppTheme.homeScreenPadding,
+                  right: AppTheme.homeScreenPadding,
                 ),
-                child: SingleChildScrollView (
-                  child: Column(
-                  children: [
-                    const SizedBox(height: 10),
-                   
+                child: SingleChildScrollView(
+                    child: Column(children: [
+                  const SizedBox(height: 10),
                   SearchForm(),
                   const SizedBox(height: 10),
                   _buildTogleButtons(),
                   const SizedBox(height: 15),
-                    Consumer2<ShipmentProvider, TripProvider>(
-                      builder:
-                          (context, shipmentProvider, tripProvider, child) {
-                        return IndexedStack(
-                          index: selectedIndex,
-                          children: [
-                            _buildShipmentListings(
-                                shipmentProvider.activeShipments),
-                            _buildTripListings(tripProvider.activeTrips),
-                          ],
+                  Consumer3<ShipmentProvider, TripProvider, UserProvider>(
+                      builder: (context, shipmentProvider, tripProvider,
+                          userProvider, child) {
+                    return IndexedStack(
+                      index: selectedIndex,
+                      children: [
+                        _buildShipmentListings(
+                            shipmentProvider.activeShipments),
+                        _buildTripListings(tripProvider.activeTrips),
+                      ],
                     );
                   })
-                  
-                ]
-                ))
-              )
-          )
-  );
+                ])))));
   }
 
   Widget toggleButton({
@@ -177,22 +171,22 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildTripListings(List<Trip> activeTrips) {
-    return Consumer<TripProvider>(
-      builder: (context, tripProvider, child) {
+    return Consumer2<TripProvider, UserProvider>(
+      builder: (context, tripProvider, userProvider, child) {
         return Container(
           color: AppColors.background,
           child: activeTrips.isEmpty
               ? Center(child: Message(context, 'No active Trips'))
               : ListView.builder(
                   physics: const NeverScrollableScrollPhysics(),
-                  shrinkWrap: true, 
+                  shrinkWrap: true,
                   itemCount: activeTrips.length,
                   itemBuilder: (context, index) {
                     final trip = activeTrips[index];
-                    final userData = tripProvider.getUserData(trip.userId);
+                    final userData = userProvider.getUserById(trip.userId);
                     return Column(
                       children: [
-                        TripCard(trip: trip, userData: userData),
+                        TripCard(trip: trip, userData: userData!),
                         const SizedBox(height: AppTheme.gapBetweenCards),
                       ],
                     );
@@ -204,27 +198,27 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildShipmentListings(List<Shipment> activeShipments) {
-    return Consumer<ShipmentProvider>(
-      builder: (context, shipmentProvider, child) {
+    return Consumer2<ShipmentProvider, UserProvider>(
+      builder: (context, shipmentProvider, userProvider, child) {
         return Container(
           color: AppColors.background,
           child: activeShipments.isEmpty
               ? Center(child: Message(context, 'No active shipments'))
               : ListView.builder(
                   physics: const NeverScrollableScrollPhysics(),
-                  shrinkWrap: true, 
+                  shrinkWrap: true,
                   itemCount: activeShipments.length,
                   itemBuilder: (context, index) {
                     final shipment = activeShipments[index];
-                    final userData =
-                        shipmentProvider.getUserData(shipment.userId);
+                    final userData = userProvider.getUserById(shipment.userId);
                     return Column(
                       children: [
                         ShipmentCard(
                           shipment: shipment,
-                          userData: userData,
+                          userData: userData!,
                           onPressed: () {
-                            context.push('/shipment-details?shipmentId=${shipment.id}&userId=${shipment.userId}');
+                            context.push(
+                                '/shipment-details?shipmentId=${shipment.id}&userId=${shipment.userId}');
                           },
                         ),
                         const SizedBox(height: AppTheme.gapBetweenCards),
@@ -246,9 +240,7 @@ Widget searchTextField({
 }) {
   return (TextFormField(
       style: const TextStyle(
-          color: AppColors.input,
-          fontSize: 12,
-          fontWeight: FontWeight.normal),
+          color: AppColors.input, fontSize: 12, fontWeight: FontWeight.normal),
       controller: controller,
       decoration: InputDecoration(
         enabledBorder: OutlineInputBorder(

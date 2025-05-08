@@ -9,36 +9,38 @@ class UserData {
   final String? displayName;
   final String? photoUrl;
   String? createdAt;
+  String status = "normal";
 
-  UserData({
-    required this.uid,
-    this.email,
-    this.displayName,
-    this.photoUrl,
-  });
+  UserData(
+      {required this.uid,
+      this.email,
+      this.displayName,
+      this.photoUrl,
+      this.createdAt});
   Map<String, dynamic> toMap() {
     return {
       'uid': uid,
       'email': email,
       'displayName': displayName,
       'photoUrl': photoUrl,
-      'createdAt': FieldValue.serverTimestamp(), // Add timestamp for new users
+      'createdAt': createdAt,
+      'status': status
     };
   }
 
   factory UserData.fromMap(Map<String, dynamic> map) {
     return UserData(
-      uid: map['uid'],
-      email: map['email'],
-      displayName: map['displayName'],
-      photoUrl: map['photoUrl'],
-    );
+        uid: map['uid'],
+        email: map['email'],
+        displayName: map['displayName'],
+        photoUrl: map['photoUrl'],
+        createdAt: map["createdAt"]);
   }
 }
 
 class UserProvider with ChangeNotifier {
   UserData? _user;
-  final Map<String, UserData> _users = {}; 
+  final Map<String, UserData> _users = {};
 
   UserData? get user => _user;
 
@@ -54,6 +56,42 @@ class UserProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> updateUserInfo(UserData updatedUser) async {
+    final userDocRef =
+        FirebaseFirestore.instance.collection('users').doc(updatedUser.uid);
+    // final docSnapshot = await userDocRef.get();
+
+    final updateMap = {
+      if (updatedUser.email != null) 'email': updatedUser.email,
+      if (updatedUser.displayName != null)
+        'displayName': updatedUser.displayName,
+      if (updatedUser.photoUrl != null) 'photoUrl': updatedUser.photoUrl,
+    };
+    userDocRef.update(updateMap);
+    await fetchUser(updatedUser.uid);
+    _users[updatedUser.uid] = _user!;
+    notifyListeners();
+  }
+
+  Future<void> saveUserToFirestore(UserData user) async {
+    try {
+      final userDocRef =
+          FirebaseFirestore.instance.collection('users').doc(user.uid);
+      final docSnapshot = await userDocRef.get();
+
+      final userMap = user.toMap();
+
+      if (!docSnapshot.exists) {
+        await userDocRef.set(userMap);
+        _users[user.uid] = user;
+        _user = user;
+        notifyListeners();
+      }
+    } catch (e) {
+      rethrow;
+    }
+  }
+
   Future<void> fetchUsersData(List<String> ids) async {
     for (final id in ids) {
       if (!_users.containsKey(id)) {
@@ -67,11 +105,11 @@ class UserProvider with ChangeNotifier {
   }
 
   Future<void> fetchUser(String uid) async {
-     if (_users.containsKey(uid)) {
-      _user = _users[uid];
-      notifyListeners();
-      return;
-    }
+    // if (_users.containsKey(uid)) {
+    //   _user = _users[uid];
+    //   notifyListeners();
+    //   return;
+    // }
     try {
       final userDoc =
           await FirebaseFirestore.instance.collection('users').doc(uid).get();
@@ -83,5 +121,22 @@ class UserProvider with ChangeNotifier {
       print('Error fetching user data: $e');
     }
   }
+}
 
+extension on UserData {
+  UserData copyWith({
+    String? uid,
+    String? email,
+    String? displayName,
+    String? photoUrl,
+    String? createdAt,
+  }) {
+    return UserData(
+      uid: uid ?? this.uid,
+      displayName: displayName ?? this.displayName,
+      email: email ?? this.email,
+      photoUrl: photoUrl ?? this.photoUrl,
+      createdAt: createdAt ?? this.createdAt,
+    );
+  }
 }
