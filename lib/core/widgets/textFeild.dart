@@ -29,7 +29,7 @@ class CustomTextField extends StatelessWidget {
       child: TextFormField(
         controller: controller,
       
-        style: const TextStyle(color: AppColors.lessImportant, fontSize: 13),
+        style: const TextStyle(color: AppColors.shipmentText, fontSize: 13),
         maxLines: maxLines,
         obscureText: obscureText,
         keyboardType: maxLines == 1 ? TextInputType.text : TextInputType.multiline,

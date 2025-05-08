@@ -7,37 +7,39 @@ class ShipmentScreen extends StatefulWidget {
   State<ShipmentScreen> createState() => _ShipmentScreenState();
 }
 
-class _ShipmentScreenState extends State<ShipmentScreen> with SingleTickerProviderStateMixin{
+class _ShipmentScreenState extends State<ShipmentScreen>
+    with SingleTickerProviderStateMixin {
   int selectedIndex = 0;
   bool _isLoading = true;
+  UserData? user;
   String? userPhotoUrl;
   late TabController _tabController;
-
 
   @override
   void initState() {
     super.initState();
-    // Fetch shipments when the screen loads
-    _tabController = TabController(length: 3, vsync: this);
-    userPhotoUrl = Provider.of<UserProvider>(context, listen: false).user?.photoUrl;
-    WidgetsBinding.instance.addPostFrameCallback((_) async{
-      try {
-        final shipmentProvider =  Provider.of<ShipmentProvider>(context, listen: false);
-        shipmentProvider.fetchShipments();
-        final userIds = shipmentProvider.shipments
-              .where((r) => r.matchedDeliveryUserId != null)
-              .map((r) => r.matchedDeliveryUserId!)
-              .toSet()
-              .toList();
-          if (userIds.isNotEmpty) {
-             await Provider.of<UserProvider>(context, listen: false)
-              .fetchUsersData(userIds);
-          }
 
-        Future.delayed(Duration(milliseconds: 500), () {
-          setState(() {
-            _isLoading = false;
-          });
+    _tabController = TabController(length: 3, vsync: this);
+    userPhotoUrl =
+        Provider.of<UserProvider>(context, listen: false).user?.photoUrl;
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      try {
+        user = Provider.of<UserProvider>(context, listen: false).user;
+        final shipmentProvider =
+            Provider.of<ShipmentProvider>(context, listen: false);
+        shipmentProvider.fetchShipmentsByUserId(user!.uid);
+        final userIds = shipmentProvider.shipments
+            .where((r) => r.matchedDeliveryUserId != null)
+            .map((r) => r.matchedDeliveryUserId!)
+            .toSet()
+            .toList();
+        if (userIds.isNotEmpty) {
+          await Provider.of<UserProvider>(context, listen: false)
+              .fetchUsersData(userIds);
+        }
+
+        setState(() {
+          _isLoading = false;
         });
       } catch (e) {
         if (mounted) AppUtils.showError(context, "Failed to fetch Shipments");
@@ -46,41 +48,43 @@ class _ShipmentScreenState extends State<ShipmentScreen> with SingleTickerProvid
   }
 
   void removeShipment(String id) async {
-      //  print("Removing shipment with id: $id");
-       showDialog(
-            context: context,
-            builder: (context) => ConfirmationDialog(
-              message: AppTheme.deleteShipmentText,
-              iconPath: "assets/icon/trash-bin.svg",
-              onPressed: () async {
-                 try {
-                    await Provider.of<ShipmentProvider>(context, listen: false)
-                        .deleteShipment(id);
-                    await Provider.of<DeliveryRequestProvider>(context, listen: false)
-                        .deleteRequestsByShipmentId(id);
-                   AppUtils.showSuccess(context, 'Shipment deleted succusfully:');
-                  } catch (e) {
-                    if (mounted) AppUtils.showError(context, 'Failed to delete shipment: $e');
-                  } finally {
-                    Navigator.pop(context);
-                  } 
-              },
-            ),
-          );
-   
+    //  print("Removing shipment with id: $id");
+    showDialog(
+      context: context,
+      builder: (context) => ConfirmationDialog(
+        message: AppTheme.deleteShipmentText,
+        iconPath: "assets/icon/trash-bin.svg",
+        onPressed: () async {
+          try {
+            await Provider.of<ShipmentProvider>(context, listen: false)
+                .deleteShipment(id);
+            await Provider.of<DeliveryRequestProvider>(context, listen: false)
+                .deleteRequestsByShipmentId(id);
+            AppUtils.showSuccess(context, 'Shipment deleted succusfully');
+            Provider.of<StatisticsProvider>(context, listen: false)
+                .decrementField(user!.uid, "pendingShipments");
+          } catch (e) {
+            if (mounted)
+              AppUtils.showError(context, 'Failed to delete shipment: $e');
+          } finally {
+            Navigator.pop(context);
+          }
+        },
+      ),
+    );
   }
 
-    @override
-    void dispose() {
-      _tabController.dispose();
-      super.dispose();
-    }
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.background,
-       appBar:CustomAppBar(
+      appBar: CustomAppBar(
         userPhotoUrl: userPhotoUrl!,
         tabController: _tabController,
         tabs: const [
@@ -103,26 +107,33 @@ class _ShipmentScreenState extends State<ShipmentScreen> with SingleTickerProvid
               }
 
               final activeShipments = provider.shipments
-                  .where((s) => s.userId == user.uid && s.status == DeliveryStatus.active)
+                  .where((s) =>
+                      s.userId == user.uid && s.status == DeliveryStatus.active)
                   .toList();
               final ongoingShipments = provider.shipments
-                  .where((s) => s.userId == user.uid && s.status == DeliveryStatus.ongoing)
+                  .where((s) =>
+                      s.userId == user.uid &&
+                      s.status == DeliveryStatus.ongoing)
                   .toList();
               final pastShipments = provider.shipments
-                  .where((s) => s.userId == user.uid && s.status == DeliveryStatus.completed)
+                  .where((s) =>
+                      s.userId == user.uid &&
+                      s.status == DeliveryStatus.completed)
                   .toList();
 
-              return  TabBarView(
-                    controller: _tabController,
-                  children: [
-                    _buildActiveShipment(activeShipments),
-                    _buildOngoingShipment(ongoingShipments),
-                    _buildOPastShipment(pastShipments),
-                  ],
+              return TabBarView(
+                controller: _tabController,
+                children: [
+                  _buildActiveShipment(activeShipments),
+                  _buildOngoingShipment(ongoingShipments),
+                  _buildOPastShipment(pastShipments),
+                ],
               );
             }),
       floatingActionButton: FloatButton(
-        onTap: () {context.push("/add-shipment");},
+        onTap: () {
+          context.push("/add-shipment");
+        },
         hintText: "Add package",
         iconPath: "assets/icon/add.svg",
       ),
@@ -133,7 +144,8 @@ class _ShipmentScreenState extends State<ShipmentScreen> with SingleTickerProvid
     return Consumer<ShipmentProvider>(
         builder: (context, shipmentProvider, child) {
       return Container(
-         margin: const EdgeInsets.only(left: AppTheme.cardPadding, right: AppTheme.cardPadding),
+        margin: const EdgeInsets.only(
+            left: AppTheme.cardPadding, right: AppTheme.cardPadding),
         color: AppColors.background,
         child: activeShipments.isEmpty
             ? Center(child: Message(context, 'No active shipments'))
@@ -143,7 +155,8 @@ class _ShipmentScreenState extends State<ShipmentScreen> with SingleTickerProvid
                   final shipment = activeShipments[index];
                   return Column(
                     children: [
-                       if (index == 0) const SizedBox(height: AppTheme.gapBetweenCards),
+                      if (index == 0)
+                        const SizedBox(height: AppTheme.gapBetweenCards),
                       ActiveItemCard(
                           item: shipment,
                           onPressed: () {
@@ -162,7 +175,8 @@ class _ShipmentScreenState extends State<ShipmentScreen> with SingleTickerProvid
     return Consumer<ShipmentProvider>(
         builder: (context, shipmentProvider, child) {
       return Container(
-         margin: const EdgeInsets.only(left: AppTheme.cardPadding, right: AppTheme.cardPadding),
+        margin: const EdgeInsets.only(
+            left: AppTheme.cardPadding, right: AppTheme.cardPadding),
         color: AppColors.background,
         child: ongoingShipments.isEmpty
             ? Center(child: Message(context, 'No ongoing shipments'))
@@ -174,17 +188,20 @@ class _ShipmentScreenState extends State<ShipmentScreen> with SingleTickerProvid
                     return const SizedBox
                         .shrink(); // Skip this item if userData is null
                   }
-                  final userData = Provider.of<UserProvider>(context, listen: false)
-                      .getUserById(shipment.matchedDeliveryUserId!);
+                  final userData =
+                      Provider.of<UserProvider>(context, listen: false)
+                          .getUserById(shipment.matchedDeliveryUserId!);
                   if (userData == null) {
                     return const SizedBox
                         .shrink(); // Skip this item if userData is null
                   }
                   return Column(
                     children: [
-                       if (index == 0) const SizedBox(height: AppTheme.gapBetweenCards),
+                      if (index == 0)
+                        const SizedBox(height: AppTheme.gapBetweenCards),
                       OngoingItemCard(
-                          item: ongoingShipments[index], user: userData.toMap()),
+                          item: ongoingShipments[index],
+                          user: userData.toMap()),
                       const SizedBox(height: AppTheme.gapBetweenCards),
                     ],
                   );
@@ -198,7 +215,8 @@ class _ShipmentScreenState extends State<ShipmentScreen> with SingleTickerProvid
     return Consumer<ShipmentProvider>(
         builder: (context, shipmentProvider, child) {
       return Container(
-         margin: const EdgeInsets.only(left: AppTheme.cardPadding, right: AppTheme.cardPadding),
+        margin: const EdgeInsets.only(
+            left: AppTheme.cardPadding, right: AppTheme.cardPadding),
         color: AppColors.background,
         child: pastShipments.isEmpty
             ? Center(child: Message(context, 'No completed shipments'))
@@ -211,22 +229,23 @@ class _ShipmentScreenState extends State<ShipmentScreen> with SingleTickerProvid
                     return const SizedBox
                         .shrink(); // Skip this item if userData is null
                   }
-                  final userData = Provider.of<UserProvider>(context, listen: false)
-                      .getUserById(trip.matchedDeliveryUserId!);
+                  final userData =
+                      Provider.of<UserProvider>(context, listen: false)
+                          .getUserById(trip.matchedDeliveryUserId!);
                   if (userData == null) {
                     return const SizedBox
                         .shrink(); // Skip this item if userData is null
                   }
                   return Column(
                     children: [
-                       if (index == 0) const SizedBox(height: AppTheme.gapBetweenCards),
+                      if (index == 0)
+                        const SizedBox(height: AppTheme.gapBetweenCards),
                       CompletedItemCard(
-                          item: pastShipments[index], 
+                          item: pastShipments[index],
                           user: userData.toMap(),
                           onPressed: () {
                             removeShipment(pastShipments[index].id!);
-                          }
-                        ),
+                          }),
                       const SizedBox(height: AppTheme.gapBetweenCards),
                     ],
                   );

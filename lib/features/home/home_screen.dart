@@ -98,13 +98,13 @@ class _HomeScreenState extends State<HomeScreen> {
                     Consumer2<ShipmentProvider, TripProvider>(
                       builder:
                           (context, shipmentProvider, tripProvider, child) {
-                    return IndexedStack(
-                      index: selectedIndex,
-                      children: [
-                        _buildShipmentListings(
-                            shipmentProvider.activeShipments),
-                        _buildTripListings(tripProvider.activeTrips),
-                      ],
+                        return IndexedStack(
+                          index: selectedIndex,
+                          children: [
+                            _buildShipmentListings(
+                                shipmentProvider.activeShipments),
+                            _buildTripListings(tripProvider.activeTrips),
+                          ],
                     );
                   })
                   
@@ -184,7 +184,7 @@ class _HomeScreenState extends State<HomeScreen> {
           child: activeTrips.isEmpty
               ? Center(child: Message(context, 'No active Trips'))
               : ListView.builder(
-                  physics: NeverScrollableScrollPhysics(),
+                  physics: const NeverScrollableScrollPhysics(),
                   shrinkWrap: true, 
                   itemCount: activeTrips.length,
                   itemBuilder: (context, index) {
@@ -211,7 +211,7 @@ class _HomeScreenState extends State<HomeScreen> {
           child: activeShipments.isEmpty
               ? Center(child: Message(context, 'No active shipments'))
               : ListView.builder(
-                  physics: NeverScrollableScrollPhysics(),
+                  physics: const NeverScrollableScrollPhysics(),
                   shrinkWrap: true, 
                   itemCount: activeShipments.length,
                   itemBuilder: (context, index) {

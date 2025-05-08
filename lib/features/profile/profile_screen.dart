@@ -74,7 +74,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w400,
-                        color: AppColors.headingText,
+                        color: AppColors.lightGray,
                       ),
                     ),
                     const SizedBox(height: AppTheme.cardPadding),
@@ -94,7 +94,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           style: TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.bold,
-            color: AppColors.headingText,
+            color: AppColors.lightGray,
           ),
         ),
         SettingsCard(
@@ -123,7 +123,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           style: TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.bold,
-            color: AppColors.headingText,
+            color: AppColors.lightGray,
           ),
         ),
          SettingsCard(

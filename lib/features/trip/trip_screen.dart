@@ -3,18 +3,18 @@ import 'package:quickdrop_app/core/widgets/app_header.dart';
 
 import 'package:go_router/go_router.dart';
 
-
 class TripScreen extends StatefulWidget {
- 
   const TripScreen({Key? key}) : super(key: key);
 
   @override
   State<TripScreen> createState() => _TripScreenState();
 }
 
-class _TripScreenState extends State<TripScreen> with SingleTickerProviderStateMixin{
+class _TripScreenState extends State<TripScreen>
+    with SingleTickerProviderStateMixin {
   int selectedIndex = 0;
   String? userPhotoUrl;
+  UserData? user;
   bool _isLoading = true;
   late TabController _tabController;
 
@@ -26,52 +26,53 @@ class _TripScreenState extends State<TripScreen> with SingleTickerProviderStateM
             header: "Delete trip",
             onPressed: () async {
               try {
-                await Provider.of<TripProvider>(context, listen: false).deleteTrip(id);
-                await Provider.of<DeliveryRequestProvider>(context, listen: false)
-                      .deleteRequestsByTripId(id);
-                  AppUtils.showSuccess(context, 'Trip deleted succusfully!');
+                await Provider.of<TripProvider>(context, listen: false)
+                    .deleteTrip(id);
+                await Provider.of<DeliveryRequestProvider>(context,
+                        listen: false)
+                    .deleteRequestsByTripId(id);
+                AppUtils.showSuccess(context, 'Trip deleted succusfully!');
+                Provider.of<StatisticsProvider>(context, listen: false)
+                    .decrementField(user!.uid, "pendingTrips");
               } catch (e) {
-                if (mounted) AppUtils.showError(context, 'Failed to delete Trip: $e');
+                if (mounted) {
+                  AppUtils.showError(context, 'Failed to delete Trip: $e');
+                }
               } finally {
                 if (mounted) Navigator.pop(context);
               }
-      }
-    ));
-  
+            }));
   }
 
   @override
   void initState() {
     super.initState();
-     _tabController = TabController(length: 3, vsync: this);
-    userPhotoUrl = Provider.of<UserProvider>(context, listen: false).user?.photoUrl;
+    _tabController = TabController(length: 3, vsync: this);
+    userPhotoUrl =
+        Provider.of<UserProvider>(context, listen: false).user?.photoUrl;
     if (userPhotoUrl == null || userPhotoUrl!.isEmpty) {
       userPhotoUrl = "assets/images/profile.png"; // Default image
     }
 
-  
-
-
     // Fetch trips when the screen loads
-    WidgetsBinding.instance.addPostFrameCallback((_) async{
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
       try {
-          final tripProvider = Provider.of<TripProvider>(context, listen: false);
-          tripProvider.fetchTrips();
+        user = Provider.of<UserProvider>(context, listen: false).user;
+        final tripProvider = Provider.of<TripProvider>(context, listen: false);
+        tripProvider.fetchTripsBuUserId(user!.uid);
 
-          final userIds = tripProvider.trips
-              .where((r) => r.matchedDeliveryUserId != null)
-              .map((r) => r.matchedDeliveryUserId!)
-              .toSet()
-              .toList();
-          if (userIds.isNotEmpty) {
-             await Provider.of<UserProvider>(context, listen: false)
+        final userIds = tripProvider.trips
+            .where((r) => r.matchedDeliveryUserId != null)
+            .map((r) => r.matchedDeliveryUserId!)
+            .toSet()
+            .toList();
+        if (userIds.isNotEmpty) {
+          await Provider.of<UserProvider>(context, listen: false)
               .fetchUsersData(userIds);
-          }
-        
-        Future.delayed(Duration(milliseconds: 500), () {
-          setState(() {
-            _isLoading = false;
-          });
+        }
+
+        setState(() {
+          _isLoading = false;
         });
       } catch (e) {
         if (mounted) AppUtils.showError(context, "Failed to fetch Shipments");
@@ -79,16 +80,17 @@ class _TripScreenState extends State<TripScreen> with SingleTickerProviderStateM
     });
   }
 
-     @override
-    void dispose() {
-      _tabController.dispose();
-      super.dispose();
-    }
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.background,
-      appBar:CustomAppBar(
+      appBar: CustomAppBar(
         userPhotoUrl: userPhotoUrl!,
         tabController: _tabController,
         tabs: const [
@@ -111,26 +113,31 @@ class _TripScreenState extends State<TripScreen> with SingleTickerProviderStateM
               }
 
               final activeTrips = provider.trips
-                  .where((s) => s.userId == user.uid && s.status == DeliveryStatus.active)
+                  .where((s) =>
+                      s.userId == user.uid && s.status == DeliveryStatus.active)
                   .toList();
               final ongoingTrips = provider.trips
-                  .where((s) => s.userId == user.uid && s.status == DeliveryStatus.ongoing)
+                  .where((s) =>
+                      s.userId == user.uid &&
+                      s.status == DeliveryStatus.ongoing)
                   .toList();
               final completedTrips = provider.trips
-                  .where((s) => s.userId == user.uid && s.status == DeliveryStatus.completed)
+                  .where((s) =>
+                      s.userId == user.uid &&
+                      s.status == DeliveryStatus.completed)
                   .toList();
 
               // print("trips");
               // print(activeTrips.length);
 
-            return TabBarView(
-              controller: _tabController,
-              children: [
-                _buildActiveTrips(activeTrips),
-                _buildOngoingTrips(ongoingTrips),
-                _buildOPastTrips(completedTrips)
-              ],
-            );
+              return TabBarView(
+                controller: _tabController,
+                children: [
+                  _buildActiveTrips(activeTrips),
+                  _buildOngoingTrips(ongoingTrips),
+                  _buildOPastTrips(completedTrips)
+                ],
+              );
             }),
       floatingActionButton: FloatButton(
         onTap: () => {context.push("/add-trip")},
@@ -142,7 +149,8 @@ class _TripScreenState extends State<TripScreen> with SingleTickerProviderStateM
 
   Widget _buildActiveTrips(List<Trip> activeTrips) {
     return Container(
-      margin: const EdgeInsets.only(left: AppTheme.cardPadding, right: AppTheme.cardPadding),
+      margin: const EdgeInsets.only(
+          left: AppTheme.cardPadding, right: AppTheme.cardPadding),
       color: AppColors.background,
       child: activeTrips.isEmpty
           ? Center(child: Message(context, 'No active trips'))
@@ -151,7 +159,8 @@ class _TripScreenState extends State<TripScreen> with SingleTickerProviderStateM
               itemBuilder: (context, index) {
                 return Column(
                   children: [
-                    if (index == 0) const SizedBox(height: AppTheme.gapBetweenCards),
+                    if (index == 0)
+                      const SizedBox(height: AppTheme.gapBetweenCards),
                     ActiveItemCard(
                       item: activeTrips[index],
                       onPressed: () => {removeTrip(activeTrips[index].id!)},
@@ -167,7 +176,8 @@ class _TripScreenState extends State<TripScreen> with SingleTickerProviderStateM
   Widget _buildOngoingTrips(List<Trip> ongoingTrips) {
     return Consumer<TripProvider>(builder: (context, tripProvider, child) {
       return Container(
-         margin: const EdgeInsets.only(left: AppTheme.cardPadding, right: AppTheme.cardPadding),
+        margin: const EdgeInsets.only(
+            left: AppTheme.cardPadding, right: AppTheme.cardPadding),
         color: AppColors.background,
         child: ongoingTrips.isEmpty
             ? Center(child: Message(context, 'No ongoing trips'))
@@ -175,19 +185,20 @@ class _TripScreenState extends State<TripScreen> with SingleTickerProviderStateM
                 itemCount: ongoingTrips.length,
                 itemBuilder: (context, index) {
                   final trip = ongoingTrips[index];
-                 if (trip.matchedDeliveryUserId == null) {
-                    return const SizedBox
-                        .shrink(); 
+                  if (trip.matchedDeliveryUserId == null) {
+                    return const SizedBox.shrink();
                   }
-                  final userData = Provider.of<UserProvider>(context, listen: false)
-                      .getUserById(trip.matchedDeliveryUserId!);
+                  final userData =
+                      Provider.of<UserProvider>(context, listen: false)
+                          .getUserById(trip.matchedDeliveryUserId!);
                   if (userData == null) {
                     return const SizedBox
                         .shrink(); // Skip this item if userData is null
                   }
                   return Column(
                     children: [
-                       if (index == 0) const SizedBox(height: AppTheme.gapBetweenCards),
+                      if (index == 0)
+                        const SizedBox(height: AppTheme.gapBetweenCards),
                       OngoingItemCard(
                           item: ongoingTrips[index], user: userData.toMap()),
                       const SizedBox(height: AppTheme.gapBetweenCards),
@@ -202,7 +213,8 @@ class _TripScreenState extends State<TripScreen> with SingleTickerProviderStateM
   Widget _buildOPastTrips(List<Trip> completedTrips) {
     return Consumer<TripProvider>(builder: (context, tripProvider, child) {
       return Container(
-         margin: const EdgeInsets.only(left: AppTheme.cardPadding, right: AppTheme.cardPadding),
+        margin: const EdgeInsets.only(
+            left: AppTheme.cardPadding, right: AppTheme.cardPadding),
         color: AppColors.background,
         child: completedTrips.isEmpty
             ? Center(child: Message(context, 'No completed trips'))
@@ -210,21 +222,23 @@ class _TripScreenState extends State<TripScreen> with SingleTickerProviderStateM
                 itemCount: completedTrips.length,
                 itemBuilder: (context, index) {
                   final trip = completedTrips[index];
-                  
+
                   if (trip.matchedDeliveryUserId == null) {
                     return const SizedBox
                         .shrink(); // Skip this item if userData is null
                   }
 
-                  final userData = Provider.of<UserProvider>(context, listen: false)
-                      .getUserById(trip.matchedDeliveryUserId!);
+                  final userData =
+                      Provider.of<UserProvider>(context, listen: false)
+                          .getUserById(trip.matchedDeliveryUserId!);
                   if (userData == null) {
                     return const SizedBox
                         .shrink(); // Skip this item if userData is null
                   }
                   return Column(
                     children: [
-                     if (index == 0) const SizedBox(height: AppTheme.gapBetweenCards),
+                      if (index == 0)
+                        const SizedBox(height: AppTheme.gapBetweenCards),
                       CompletedItemCard(
                           item: completedTrips[index],
                           user: userData.toMap(),

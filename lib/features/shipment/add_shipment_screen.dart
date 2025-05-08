@@ -63,9 +63,13 @@ class _AddShipmentScreenState extends State<AddShipmentScreen> {
         if (mounted) {
           Navigator.pop(context);
           AppUtils.showSuccess(context, 'Shipment listed Successfully!');
+          Provider.of<StatisticsProvider>(context, listen: false)
+              .incrementField(user.uid, "pendingShipments");
         }
       } catch (e) {
-        if (mounted) AppUtils.showError(context, 'Failed to list shipment ${e}');
+        if (mounted) {
+          AppUtils.showError(context, 'Failed to list shipment ${e}');
+        }
       } finally {
         setState(() {
           _isListButtonLoading = false;

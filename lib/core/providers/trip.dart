@@ -44,6 +44,25 @@ Map<String, String> getUserData(userId) {
     }
   }
 
+    Future<void> fetchTripsBuUserId(String userId) async {
+    try{
+      final snapshot = await _firestore.collection('trips')
+        .where("userId", isEqualTo: userId)
+        .get();
+      _trips = snapshot.docs
+          .map((doc) => Trip.fromMap(doc.data(), doc.id))
+          .toList();
+        
+      if (_trips.isEmpty) {
+        return;
+      }
+      notifyListeners();
+    } catch (e) {
+      // print("Error fetching trips: $e");
+      rethrow;
+    }
+  }
+
   Future<void> addTrip(Trip trip) async {
     final docRef = await _firestore.collection('trips').add(trip.toMap());
     _trips.add(trip.copyWith(id: docRef.id));
