@@ -17,6 +17,16 @@ class Validators {
     }
     return null;
   }
+
+  static String? isEmail(String? value) {
+    if (value == null || value.trim().isEmpty) {
+      return null;
+    }
+    if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(value)) {
+      return 'Enter a valid email';
+    }
+    return null;
+  }
   
   static String? name(String? value) {
      if (value == null || value.trim().isEmpty) {

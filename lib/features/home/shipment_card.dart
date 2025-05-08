@@ -20,7 +20,7 @@ import 'package:quickdrop_app/core/utils/appUtils.dart';
 
 class ShipmentCard extends StatefulWidget {
   final Shipment shipment;
-  final Map<String, dynamic> userData;
+  final UserData userData;
 
   final VoidCallback onPressed;
   
@@ -107,9 +107,9 @@ class ShipmentCardState extends State<ShipmentCard> {
 
   Widget _buildUserProfile() {
     return UserProfileCard(
-      header: widget.userData['displayName'] ?? "Unknown user",
+      header: widget.userData.displayName ?? "Unknown user",
       onPressed: () => print("user profile  Clicked"),
-      photoUrl: widget.userData['photoUrl'],
+      photoUrl: widget.userData.photoUrl ?? AppTheme.defaultProfileImage,
       headerFontSize: 12,
       subHeaderFontSize: 8,
       avatarSize: 14,

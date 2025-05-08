@@ -279,9 +279,9 @@ class ProfileStatisticsState extends State<ProfileStatistics> {
                     fontWeight: FontWeight.bold,
                     color: AppColors.white),
               ),
-              const Text(
-                "Member since 2025",
-                style: TextStyle(fontSize: 14, color: AppColors.lessImportant),
+              Text(
+                "Member since ${user!.createdAt}",
+                style: const TextStyle(fontSize: 14, color: AppColors.lessImportant),
               ),
             ],
           ),

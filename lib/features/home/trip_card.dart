@@ -9,7 +9,7 @@ import 'package:quickdrop_app/core/utils/imports.dart';
 
 class TripCard extends StatefulWidget {
   final Trip trip;
-  final Map<String, dynamic> userData;
+  final UserData userData;
   const TripCard({super.key, required this.trip, required this.userData});
 
   @override
@@ -61,14 +61,14 @@ class TripCardState extends State<TripCard> {
       children: [
         CircleAvatar(
           radius: 14,
-          backgroundImage: NetworkImage(widget.userData['photoUrl']) as ImageProvider,
+          backgroundImage: NetworkImage(widget.userData.photoUrl  ?? AppTheme.defaultProfileImage) as ImageProvider,
         ),
         const SizedBox(width: 10),
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              widget.userData['displayName'],
+              widget.userData.displayName ?? "unknown user",
               style: const TextStyle(
                   fontSize: 12,
                   fontWeight: FontWeight.bold,

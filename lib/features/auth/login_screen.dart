@@ -6,6 +6,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:quickdrop_app/core/utils/imports.dart';
 import 'package:quickdrop_app/features/models/statictics_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:intl/intl.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -18,7 +19,7 @@ class _LoginPageState extends State<LoginPage> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
-  // final UserData? _user;
+  // final UserData? _usr;
 
   bool _isEmailLoading = false;
   bool _isGoogleLoading = false;
@@ -39,17 +40,26 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 
-  void setUserData(userCredential) {
+  void setUserData(userCredential) async {
     _createStatsIfNewUser(userCredential.user.uid);
     UserData user = UserData(
       uid: userCredential.user.uid,
       email: userCredential.user!.email,
       displayName: userCredential.user!.displayName,
       photoUrl: userCredential.user!.photoURL,
+      createdAt: DateFormat('dd/MM/yyyy').format(DateTime.now()).toString(),
     );
 
+    bool userExist = await doesUserExist(user.uid);
     final userProvider = Provider.of<UserProvider>(context, listen: false);
-    userProvider.setUser(user);
+    if (userExist == false) {
+      // print("user does not exist");
+      userProvider.setUser(user);
+      userProvider.saveUserToFirestore(user);
+    } else {
+      // print("user does  exist");
+      userProvider.fetchUser(user.uid);
+    }
   }
 
   Future<bool> doesUserExist(String uid) async {
@@ -88,30 +98,21 @@ class _LoginPageState extends State<LoginPage> {
       UserCredential userCredential =
           await FirebaseAuth.instance.signInWithCredential(credential);
 
-      await FirebaseService().saveUserToFirestore(userCredential.user!);
-      setUserData(userCredential);
+      // await FirebaseService().saveUserToFirestore(userCredential.user!);
+      try {
+        setUserData(userCredential);
+        
+      } catch (e) {
+        if (mounted) {
+          AppUtils.showError(context, "failed to log in user $e");
+          return;
+        }
+      }
 
       if (mounted) {
-        final authUser = FirebaseAuth.instance.currentUser;
-        if (authUser != null) {
-          final userProvider =
-              Provider.of<UserProvider>(context, listen: false);
-          userProvider.setUser(UserData(
-            uid: authUser.uid,
-            email: authUser.email,
-            displayName: authUser.displayName,
-            photoUrl: authUser.photoURL,
-          ));
-        }
-
         context.go('/home');
       }
 
-      if (mounted) {
-        setState(() {
-          _isGoogleLoading = false;
-        });
-      }
     } on FirebaseAuthException catch (e) {
       if (mounted) {
         AppUtils.showError(context, 'Google Sign-In failed: ${e.message}');
@@ -142,7 +143,15 @@ class _LoginPageState extends State<LoginPage> {
           password: password,
         );
 
+      try {
         setUserData(userCredential);
+        
+      } catch (e) {
+        if (mounted) {
+          AppUtils.showError(context, "failed to log in user $e");
+          return;
+        }
+      }
 
         if (mounted) context.go('/home');
       } on FirebaseAuthException catch (e) {
