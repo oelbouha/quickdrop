@@ -52,6 +52,24 @@ class ShipmentProvider with ChangeNotifier {
     }
   }
 
+
+  Future<void> fetchShipmentsByUserId(String userId) async {
+    try {
+        final snapshot = await _firestore.collection('shipments')
+        .where('userId', isEqualTo: userId)
+        .get();
+        _shipments = snapshot.docs
+            .map((doc) => Shipment.fromMap(doc.data(), doc.id))
+            .toList();
+        if (_shipments.isEmpty) {
+          return;
+        }
+        notifyListeners();
+    } catch (e) {
+      // print("Error fetching shipments: $e");
+      rethrow;
+    }
+  }
   Future<void> updateStatus(String id, String newStatus) async {
     await FirebaseFirestore.instance
         .collection("shipments")

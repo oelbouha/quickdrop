@@ -43,6 +43,8 @@ class _AddTripScreenState extends State<AddTripScreen> {
         if (mounted) {
           Navigator.pop(context);
           AppUtils.showSuccess(context, 'Trip listed Successfully!');
+           Provider.of<StatisticsProvider>(context, listen: false)
+              .incrementField(user.uid, "pendingTrips");
         }
       } catch (e) {
         if (mounted) AppUtils.showError(context, 'Failed to list Trip ${e}');

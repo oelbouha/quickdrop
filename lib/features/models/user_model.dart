@@ -8,6 +8,7 @@ class UserData {
   final String? email;
   final String? displayName;
   final String? photoUrl;
+  String? createdAt;
 
   UserData({
     required this.uid,

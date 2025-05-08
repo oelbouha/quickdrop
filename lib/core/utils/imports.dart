@@ -41,6 +41,7 @@ export 'package:quickdrop_app/core/providers/shipment.dart';
 export 'package:quickdrop_app/core/providers/trip.dart';
 export 'package:quickdrop_app/core/providers/delivery_request.dart';
 export 'package:quickdrop_app/core/providers/chat_provider.dart';
+export 'package:quickdrop_app/core/providers/statistics_provider.dart';
 
 export 'package:quickdrop_app/core/widgets/textFeild.dart';
 export 'package:quickdrop_app/core/widgets/numberField.dart';

@@ -16,7 +16,7 @@ class SettingsCard extends StatelessWidget {
     required this.hintText,
     this.hintTextColor = AppColors.headingText,
     this.backgroundColor = AppColors.cardBackground,
-    this.iconColor = AppColors.headingText,
+    this.iconColor = AppColors.lightGray,
     required this.onTap,
     Key? key,
   }) : super(key: key);
@@ -43,7 +43,7 @@ class SettingsCard extends StatelessWidget {
             ),
             Text(
               hintText,
-              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: AppColors.lightGray),
             ),
       ],
 )
@@ -51,29 +51,5 @@ class SettingsCard extends StatelessWidget {
     ));
   }
 
-  Widget _buildText() {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        CustomIcon(
-          iconPath: iconPath,
-          size: 22,
-          color: hintTextColor,
-        ),
-        const SizedBox(
-          width: 8,
-        ),
-        Text(
-          hintText,
-          style: TextStyle(
-            color: hintTextColor,
-            fontWeight: FontWeight.bold,
-            fontSize: 14,
-          ),
-          textAlign: TextAlign.left,
-        ),
-      ],
-    );
-  }
+ 
 }

@@ -1,7 +1,6 @@
 import 'firebase_options.dart';
 import 'package:quickdrop_app/core/utils/imports.dart';
-import 'package:skeletonizer/skeletonizer.dart';
-import 'package:quickdrop_app/routes/routes.dart';
+import 'package:quickdrop_app/core/providers/review_provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -10,6 +9,8 @@ void main() async {
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => ShipmentProvider()),
+        ChangeNotifierProvider(create: (context) => StatisticsProvider()),
+        ChangeNotifierProvider(create: (context) => ReviewProvider()),
         ChangeNotifierProvider(create: (context) => TripProvider()),
         ChangeNotifierProvider(create: (context) => UserProvider()),
         ChangeNotifierProvider(create: (context) => DeliveryRequestProvider()),

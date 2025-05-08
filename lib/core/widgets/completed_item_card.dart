@@ -2,6 +2,7 @@ import 'package:quickdrop_app/core/widgets/destination.dart';
 import 'package:quickdrop_app/core/utils/imports.dart';
 import 'package:quickdrop_app/features/models/base_transport.dart';
 export 'package:quickdrop_app/core/widgets/user_profile.dart';
+export 'package:quickdrop_app/core/widgets/review.dart';
 
 class CompletedItemCard extends StatefulWidget {
  final TransportItem item;
@@ -19,6 +20,19 @@ class CompletedItemCard extends StatefulWidget {
 }
 
 class CompletedItemCardState extends State<CompletedItemCard> {
+  final reviewController = TextEditingController();
+
+  void _submitReview() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return ReviewDialog(
+          recieverUser: widget.user,
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -158,9 +172,7 @@ class CompletedItemCardState extends State<CompletedItemCard> {
 
   Widget _buildButtons() {
     return  ElevatedButton.icon(
-      onPressed: () {
-        print("review  clicked!");
-      },
+      onPressed: _submitReview,
       icon: const CustomIcon(
         iconPath: "assets/icon/star.svg",
         size: 20,
