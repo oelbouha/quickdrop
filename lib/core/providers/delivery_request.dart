@@ -10,13 +10,8 @@ class DeliveryRequestProvider with ChangeNotifier {
 
   List<DeliveryRequest> get requests => _requests;
 
-  Map<String, String> getUserData(userId) {
-    var map = <String, String>{};
-    map["displayName"] = _userData[userId]?['displayName'] ?? "Unknown user";
-    map["photoUrl"] =
-        _userData[userId]?['photoUrl'] ?? 'assets/images/profile.png';
-    return map;
-  }
+  List<DeliveryRequest> get activeRequests =>
+      _requests.where((item) => item.status == DeliveryStatus.active).toList();
 
   Future<void> fetchRequests(String userId) async {
     final snapshot = await _firestore
@@ -30,16 +25,19 @@ class DeliveryRequestProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> deleteRequestsByShipmentId(String shipmentId) async{
+  Future<void> deleteRequestsByShipmentId(String shipmentId) async {
     try {
       _requests.removeWhere((request) => request.shipmentId == shipmentId);
-      final snapshot =  FirebaseFirestore.instance
+      final snapshot = FirebaseFirestore.instance
           .collection('requests')
           .where('shipmentId', isEqualTo: shipmentId)
           .get();
       snapshot.then((value) {
         for (var doc in value.docs) {
-          FirebaseFirestore.instance.collection('requests').doc(doc.id).delete();
+          FirebaseFirestore.instance
+              .collection('requests')
+              .doc(doc.id)
+              .delete();
         }
       });
       notifyListeners();
@@ -48,7 +46,31 @@ class DeliveryRequestProvider with ChangeNotifier {
     }
   }
 
-  Future<void>  deleteRequestsByTripId(String tripId) async {
+  Future<void> deleteActiveRequestsByShipmentId(String shipmentId, String requestId) async {
+    try {
+      print("removing requests from database");
+      _requests.removeWhere((request) => request.shipmentId == shipmentId);
+      final snapshot = FirebaseFirestore.instance
+          .collection('requests')
+          .where('shipmentId', isEqualTo: shipmentId)
+          .where('status', isEqualTo: DeliveryStatus.active)
+          .where('id', isNotEqualTo: requestId)
+          .get();
+      snapshot.then((value) {
+        for (var doc in value.docs) {
+          FirebaseFirestore.instance
+              .collection('requests')
+              .doc(doc.id)
+              .delete();
+        }
+      });
+      notifyListeners();
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<void> deleteRequestsByTripId(String tripId) async {
     try {
       _requests.removeWhere((request) => request.tripId == tripId);
       final snapshot = FirebaseFirestore.instance
@@ -57,7 +79,10 @@ class DeliveryRequestProvider with ChangeNotifier {
           .get();
       snapshot.then((value) {
         for (var doc in value.docs) {
-          FirebaseFirestore.instance.collection('requests').doc(doc.id).delete();
+          FirebaseFirestore.instance
+              .collection('requests')
+              .doc(doc.id)
+              .delete();
         }
       });
       notifyListeners();
@@ -69,8 +94,9 @@ class DeliveryRequestProvider with ChangeNotifier {
   void markRequestAsAccepted(String id) {
     final index = _requests.indexWhere((request) => request.id == id);
     if (index != -1) {
-      // _requests[index].status = DeliveryStatus.ongoing;
-      _requests.removeWhere((r) => r.id == id);
+      _requests[index].status = DeliveryStatus.accepted;
+      print("request is accepted ");
+      // _requests.removeWhere((r) => r.id == id);
       notifyListeners();
     }
   }
@@ -79,8 +105,9 @@ class DeliveryRequestProvider with ChangeNotifier {
     if (request.senderId == request.receiverId) {
       throw Exception("Sender and receiver cannot be the same");
     }
-    try{
-      final docRef = await _firestore.collection('requests').add(request.toMap());
+    try {
+      final docRef =
+          await _firestore.collection('requests').add(request.toMap());
       // Assign Firestore-generated ID
       final newRequest = request.copyWith(id: docRef.id);
 
