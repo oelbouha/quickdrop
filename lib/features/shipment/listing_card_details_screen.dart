@@ -3,7 +3,7 @@ import 'package:quickdrop_app/core/widgets/destination.dart';
 
 class ListingCardDetails extends StatefulWidget {
   final Shipment shipment;
-  final Map<String, dynamic> user;
+  final UserData user;
 
   const ListingCardDetails(
       {super.key, required this.shipment, required this.user});
@@ -347,9 +347,9 @@ class _ListingCardDetailsState extends State<ListingCardDetails> {
     return Container(
         padding: const EdgeInsets.all(16),
         child: UserProfileCard(
-          header: widget.user['displayName'] ?? "Unknown user",
+          header: widget.user.displayName ?? "unknow user",
           onPressed: () => print("user profile  Clicked"),
-          photoUrl: widget.user['photoUrl'],
+          photoUrl: widget.user.photoUrl ?? AppTheme.defaultProfileImage,
           headerFontSize: 16,
           subHeaderFontSize: 10,
           avatarSize: 22,

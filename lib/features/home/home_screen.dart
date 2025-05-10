@@ -26,10 +26,21 @@ class _HomeScreenState extends State<HomeScreen> {
     }
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       try {
-        await Provider.of<ShipmentProvider>(context, listen: false)
-            .fetchShipments();
-        await Provider.of<TripProvider>(context, listen: false).fetchTrips();
-      
+        final shipmentProvider =
+            Provider.of<ShipmentProvider>(context, listen: false);
+        final tripProvider = Provider.of<TripProvider>(context, listen: false);
+
+        await shipmentProvider.fetchShipments();
+        await tripProvider.fetchTrips();
+
+        final userIds =
+            shipmentProvider.shipments.map((r) => r.userId).toSet().toList();
+        final tripUserIds =
+            tripProvider.trips.map((r) => r.userId).toSet().toList();
+        await Provider.of<UserProvider>(context, listen: false)
+            .fetchUsersData(userIds);
+        await Provider.of<UserProvider>(context, listen: false)
+            .fetchUsersData(tripUserIds);
       } catch (e) {
         if (mounted) {
           AppUtils.showError(context, 'Error fetching shipments: $e');
@@ -184,9 +195,12 @@ class _HomeScreenState extends State<HomeScreen> {
                   itemBuilder: (context, index) {
                     final trip = activeTrips[index];
                     final userData = userProvider.getUserById(trip.userId);
+                    if (userData == null) {
+                      return const SizedBox.shrink();
+                    }
                     return Column(
                       children: [
-                        TripCard(trip: trip, userData: userData!),
+                        TripCard(trip: trip, userData: userData),
                         const SizedBox(height: AppTheme.gapBetweenCards),
                       ],
                     );
@@ -211,11 +225,14 @@ class _HomeScreenState extends State<HomeScreen> {
                   itemBuilder: (context, index) {
                     final shipment = activeShipments[index];
                     final userData = userProvider.getUserById(shipment.userId);
+                     if (userData == null) {
+                      return const SizedBox.shrink();
+                    }
                     return Column(
                       children: [
                         ShipmentCard(
                           shipment: shipment,
-                          userData: userData!,
+                          userData: userData,
                           onPressed: () {
                             context.push(
                                 '/shipment-details?shipmentId=${shipment.id}&userId=${shipment.userId}');

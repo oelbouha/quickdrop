@@ -14,29 +14,49 @@ class OngoingItemCard extends StatefulWidget {
 }
 
 class OngoingItemCardState extends State<OngoingItemCard> {
-  void _contactCourier()  async {
-        context.push("/convo-screen",
-            extra: {
-              'uid': widget.user['uid'],
-              'displayName': widget.user['displayName'],
-              'photoUrl': widget.user['photoUrl'],
-            },
-          );
+  void _submitReview() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return ReviewDialog(
+          recieverUser: widget.user,
+        );
+      },
+    );
+  }
+
+  void _contactCourier() async {
+    context.push(
+      "/convo-screen",
+      extra: {
+        'uid': widget.user['uid'],
+        'displayName': widget.user['displayName'],
+        'photoUrl': widget.user['photoUrl'],
+      },
+    );
   }
 
   void markShipmentAsDelivered(String id) async {
     try {
+      _submitReview();
       if (widget.item is Shipment) {
         await Provider.of<ShipmentProvider>(context, listen: false)
             .updateStatus(id, DeliveryStatus.completed);
-          
-        print("shipment updated succsfully");
+        Provider.of<StatisticsProvider>(context, listen: false)
+              .incrementField(widget.item.userId, "completedShipments");
+        Provider.of<StatisticsProvider>(context, listen: false)
+              .decrementField(widget.item.userId, "ongoingShipments");
+
+        // print("shipment updated succsfully");
       }
-       if (widget.item is Trip) {
+      if (widget.item is Trip) {
         await Provider.of<TripProvider>(context, listen: false)
             .updateStatus(id, DeliveryStatus.completed);
-          
-        print("shipment updated succsfully");
+         Provider.of<StatisticsProvider>(context, listen: false)
+              .incrementField(widget.item.userId, "completedTrips");
+        Provider.of<StatisticsProvider>(context, listen: false)
+              .decrementField(widget.item.userId, "ongoingTrips");
+        // print("shipment updated succsfully");
       }
     } catch (e) {
       if (mounted) AppUtils.showError(context, "Failed to update shipment");
@@ -60,156 +80,159 @@ class OngoingItemCardState extends State<OngoingItemCard> {
           ],
         ),
         child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                _buildBody(),
-                const SizedBox(
-                  height: 10,
-                ),
-                _buildFooter(),
-              ],
-            ));
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            _buildBody(),
+            const SizedBox(
+              height: 10,
+            ),
+            _buildFooter(),
+          ],
+        ));
   }
 
   Widget _buildHUserCard() {
     return Container(
-      padding: const EdgeInsets.all(10),
-        decoration:  BoxDecoration(
+        padding: const EdgeInsets.all(10),
+        decoration: BoxDecoration(
           color: AppColors.courierInfoBackground,
           borderRadius: BorderRadius.circular(AppTheme.cardRadius),
-      ),
-      child: Row(
-      children: [
-        UserProfileCard(
-          header: widget.user['displayName'],
-          onPressed: () => print("user profile  Clicked"),
-          subHeader: widget.item is Shipment ?  "Package Carrier" : "Package owner", 
-          photoUrl: widget.user['photoUrl'],
-          headerFontSize: 14,
-          subHeaderFontSize: 10,
-          avatarSize: 18,
         ),
-          const Spacer(),
-          ElevatedButton.icon(
-          onPressed: () {
-            _contactCourier();
-          },
-          icon: const CustomIcon(
-            iconPath: "assets/icon/chat-round-line.svg",
-            size: 20,
-            color: AppColors.blue,
-          ),
-          label: const Text(
-            "Contact",
-            style: TextStyle(color: AppColors.blue, fontSize: 14),
-          ),
-          style: ElevatedButton.styleFrom(
-            elevation: 0,
-            backgroundColor: AppColors.contactBackground,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(AppTheme.cardButtonRadius),
+        child: Row(
+          children: [
+            UserProfileCard(
+              header: widget.user['displayName'],
+              onPressed: () => print("user profile  Clicked"),
+              subHeader:
+                  widget.item is Shipment ? "Package Carrier" : "Package owner",
+              photoUrl: widget.user['photoUrl'],
+              headerFontSize: 14,
+              subHeaderFontSize: 10,
+              avatarSize: 18,
             ),
-            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-          ),
-        ),
-      ],
-    ));
+            const Spacer(),
+            ElevatedButton.icon(
+              onPressed: () {
+                _contactCourier();
+              },
+              icon: const CustomIcon(
+                iconPath: "assets/icon/chat-round-line.svg",
+                size: 20,
+                color: AppColors.blue,
+              ),
+              label: const Text(
+                "Contact",
+                style: TextStyle(color: AppColors.blue, fontSize: 14),
+              ),
+              style: ElevatedButton.styleFrom(
+                elevation: 0,
+                backgroundColor: AppColors.contactBackground,
+                shape: RoundedRectangleBorder(
+                  borderRadius:
+                      BorderRadius.circular(AppTheme.cardButtonRadius),
+                ),
+                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+              ),
+            ),
+          ],
+        ));
   }
 
   Widget _buildBody() {
-    return  Padding(
-       padding: const EdgeInsets.only(
-        left: 10,
-        right: 10,
-        top: 10,
-        bottom: 4,
-      ),
-      child: Column(
-      mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-       Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-        Destination(from: widget.item.from, to: widget.item.to),
-        Container(
-            padding: const EdgeInsets.only(
-                left: 5,
-                right: 5,
-                top: 3,
-                bottom: 3
-            ),
-            decoration:  BoxDecoration(
-                color: AppColors.ongoingstatusBackground,
-                borderRadius: BorderRadius.circular(30),
-            ),
-            child: const  Row(
+    return Padding(
+        padding: const EdgeInsets.only(
+          left: 10,
+          right: 10,
+          top: 10,
+          bottom: 4,
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                CustomIcon(
-                  iconPath: "assets/icon/ongoing.svg",
-                  size: 10,
-                  color: AppColors.ongoingStatusText,
+                Destination(from: widget.item.from, to: widget.item.to),
+                Container(
+                  padding: const EdgeInsets.only(
+                      left: 5, right: 5, top: 3, bottom: 3),
+                  decoration: BoxDecoration(
+                    color: AppColors.ongoingstatusBackground,
+                    borderRadius: BorderRadius.circular(30),
+                  ),
+                  child: const Row(children: [
+                    CustomIcon(
+                      iconPath: "assets/icon/ongoing.svg",
+                      size: 10,
+                      color: AppColors.ongoingStatusText,
+                    ),
+                    SizedBox(
+                      width: 5,
+                    ),
+                    Text(
+                      "Ongoing",
+                      style: TextStyle(
+                          fontSize: 8, color: AppColors.ongoingStatusText),
+                    )
+                  ]),
                 ),
-                SizedBox(width: 5,),
-                Text("Ongoing", style: TextStyle(fontSize: 8, color: AppColors.ongoingStatusText), )
-              ]
-          ), 
-        ),
-       ],),
-        const SizedBox(
-          height: 3,
-        ),
-        buildIconWithText(
-            iconPath: "calendar.svg",
-            text: 'Departure time ${widget.item.date}'),
-        const SizedBox(
-          height: 3,
-        ),
-        buildIconWithText(
-            iconPath: "weight.svg", text: 'Weight ${widget.item.weight} kg'),
-        const SizedBox(
-          height: 3,
-        ),
-        _buildHUserCard()
-      ],
-    ));
+              ],
+            ),
+            const SizedBox(
+              height: 3,
+            ),
+            buildIconWithText(
+                iconPath: "calendar.svg",
+                text: 'Departure time ${widget.item.date}'),
+            const SizedBox(
+              height: 3,
+            ),
+            buildIconWithText(
+                iconPath: "weight.svg",
+                text: 'Weight ${widget.item.weight} kg'),
+            const SizedBox(
+              height: 3,
+            ),
+            _buildHUserCard()
+          ],
+        ));
   }
 
   Widget _buildFooter() {
-     return  Container(
-       padding: const EdgeInsets.only(
-        left: 10,
-        right: 10,
-        top: 4,
-        bottom: 4,
-      ),
-      decoration: const BoxDecoration(
-        color: AppColors.cardFooterBackground,
-        borderRadius:  BorderRadius.only(
-          bottomRight: Radius.circular(AppTheme.cardRadius),
-          bottomLeft: Radius.circular(AppTheme.cardRadius),
+    return Container(
+        padding: const EdgeInsets.only(
+          left: 10,
+          right: 10,
+          top: 4,
+          bottom: 4,
         ),
-      ),
-      child: Row(
-      children: [
-         Text('${widget.item.price}dh',
-            style: const TextStyle(
-                color: AppColors.blue,
-                fontSize: 14,
-                fontWeight: FontWeight.bold)),
-        const Spacer(),
-          _buildButtons(),
+        decoration: const BoxDecoration(
+          color: AppColors.cardFooterBackground,
+          borderRadius: BorderRadius.only(
+            bottomRight: Radius.circular(AppTheme.cardRadius),
+            bottomLeft: Radius.circular(AppTheme.cardRadius),
+          ),
+        ),
+        child: Row(
+          children: [
+            Text('${widget.item.price}dh',
+                style: const TextStyle(
+                    color: AppColors.blue,
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold)),
+            const Spacer(),
+            _buildButtons(),
           ],
-    ));
+        ));
   }
-
 
   Widget _buildButtons() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-          ElevatedButton.icon(
+        ElevatedButton.icon(
           onPressed: () {
             markShipmentAsDelivered(widget.item.id!);
           },
@@ -233,7 +256,6 @@ class OngoingItemCardState extends State<OngoingItemCard> {
         const SizedBox(
           width: 10,
         ),
-      
         ElevatedButton.icon(
           onPressed: () {
             _contactCourier();
@@ -259,6 +281,3 @@ class OngoingItemCardState extends State<OngoingItemCard> {
     );
   }
 }
-
-
-

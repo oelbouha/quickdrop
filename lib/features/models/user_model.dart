@@ -92,6 +92,8 @@ class UserProvider with ChangeNotifier {
     }
   }
 
+
+
   Future<void> fetchUsersData(List<String> ids) async {
     for (final id in ids) {
       if (!_users.containsKey(id)) {
@@ -114,7 +116,9 @@ class UserProvider with ChangeNotifier {
       final userDoc =
           await FirebaseFirestore.instance.collection('users').doc(uid).get();
       if (userDoc.exists) {
+        // print("user exist ");
         _user = UserData.fromMap(userDoc.data()!);
+        // print(_user!.displayName);
         notifyListeners();
       }
     } catch (e) {

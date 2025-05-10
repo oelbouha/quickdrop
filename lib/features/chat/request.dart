@@ -20,7 +20,6 @@ class Request extends StatefulWidget {
 }
 
 class DeliveryRequestState extends State<Request> {
-
   void _refuseRequest() async {
     try {
       await Provider.of<DeliveryRequestProvider>(context, listen: false)
@@ -58,14 +57,22 @@ class DeliveryRequestState extends State<Request> {
         });
 
         // Update the request document
+        final requestProvider = Provider.of<DeliveryRequestProvider>(context, listen: false);
         transaction.update(requestRef, {'status': DeliveryStatus.accepted});
-        Provider.of<DeliveryRequestProvider>(context, listen: false)
-            .markRequestAsAccepted(widget.request.id!);
-        
+        requestProvider.markRequestAsAccepted(widget.request.id!);
+
         if (mounted) {
           AppUtils.showSuccess(context, "Request accepted successfully");
+          await requestProvider.deleteActiveRequestsByShipmentId(widget.request.shipmentId, widget.request.id!);
+            Provider.of<StatisticsProvider>(context, listen: false)
+              .incrementField(widget.request.receiverId, "ongoingShipments");
+          Provider.of<StatisticsProvider>(context, listen: false)
+                .decrementField(widget.request.receiverId, "pendingShipments");
+          Provider.of<StatisticsProvider>(context, listen: false)
+              .incrementField(widget.request.senderId, "ongoingTrips");
+          Provider.of<StatisticsProvider>(context, listen: false)
+                .decrementField(widget.request.senderId, "pendingTrips");
         }
-        
       });
     } catch (e) {
       if (mounted) AppUtils.showError(context, "Failed to accept request");
@@ -89,21 +96,21 @@ class DeliveryRequestState extends State<Request> {
           ],
         ),
         child: Column(
-              // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                _buildHeader(),
-                _buildBody(),
-                const SizedBox(
-                  height: 10,
-                ),
-                _buildFooter(),
-              ],
-            ));
+          // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            _buildHeader(),
+            _buildBody(),
+            const SizedBox(
+              height: 10,
+            ),
+            _buildFooter(),
+          ],
+        ));
   }
 
   Widget _buildHeader() {
     return Padding(
-      padding: const EdgeInsets.all(8),
+        padding: const EdgeInsets.all(8),
         child: UserProfileCard(
           photoUrl: widget.userData['photoUrl'],
           header: widget.userData['displayName'],
@@ -112,46 +119,45 @@ class DeliveryRequestState extends State<Request> {
           headerFontSize: 14,
           subHeaderFontSize: 10,
           avatarSize: 18,
-        )
-    );
+        ));
   }
 
   Widget _buildBody() {
     return Padding(
-      padding: const EdgeInsets.all(8),
-      child: Column(
-      mainAxisAlignment: MainAxisAlignment.start,
-      children: [
-        Destination(from: widget.shipment.from, to: widget.shipment.to),
-        const SizedBox(
-          height: 8,
-        ),
-        _buildRequestPrice(),
-      ],
-    ));
+        padding: const EdgeInsets.all(8),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Destination(from: widget.shipment.from, to: widget.shipment.to),
+            const SizedBox(
+              height: 8,
+            ),
+            _buildRequestPrice(),
+          ],
+        ));
   }
 
   Widget _buildFooter() {
     return Container(
-      padding:  const EdgeInsets.only(
-        top: 2,
-        left: 10,
-        right: 10,
-        bottom: 2,
-      ),
-      decoration: const BoxDecoration(
-        color:  AppColors.cardFooterBackground,
-        borderRadius: BorderRadius.only(
-          bottomLeft: Radius.circular(AppTheme.cardRadius),
-          bottomRight: Radius.circular(AppTheme.cardRadius),
+        padding: const EdgeInsets.only(
+          top: 2,
+          left: 10,
+          right: 10,
+          bottom: 2,
         ),
-      ),
-      child: Row(
-      children: [
-        const Spacer(),
-        _buildButtons(),
-      ],
-    ));
+        decoration: const BoxDecoration(
+          color: AppColors.cardFooterBackground,
+          borderRadius: BorderRadius.only(
+            bottomLeft: Radius.circular(AppTheme.cardRadius),
+            bottomRight: Radius.circular(AppTheme.cardRadius),
+          ),
+        ),
+        child: Row(
+          children: [
+            const Spacer(),
+            _buildButtons(),
+          ],
+        ));
   }
 
   Widget _buildButtons() {
@@ -216,14 +222,12 @@ class DeliveryRequestState extends State<Request> {
             style: const TextStyle(
                 color: AppColors.headingText,
                 fontSize: 14,
-                fontWeight: FontWeight.bold)
-          ),
-          Text('${widget.request.price} dh',
+                fontWeight: FontWeight.bold)),
+        Text('${widget.request.price} dh',
             style: const TextStyle(
                 color: AppColors.blue,
                 fontSize: 14,
-                fontWeight: FontWeight.bold)
-          ),
+                fontWeight: FontWeight.bold)),
       ],
     );
   }

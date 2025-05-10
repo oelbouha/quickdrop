@@ -41,6 +41,26 @@ class _AddShipmentScreenState extends State<AddShipmentScreen> {
         return;
       }
 
+      // if (_selectedImage == null) {
+      //   AppUtils.showError(context, "Please select a package image");
+      //   setState(() {
+      //     _isListButtonLoading = false;
+      //   });
+      //   return;
+      // }
+      // print("uploading file ${_selectedImage}");
+      // String? photoUrl =
+      //     await Provider.of<ShipmentProvider>(context, listen: false)
+      //         .uploadImageToFirebase(_selectedImage!);
+
+      // if (photoUrl == null) {
+      //   AppUtils.showError(context, "failed to upload image");
+      //   setState(() {
+      //     _isListButtonLoading = false;
+      //   });
+      //   return;
+      // }
+
       Shipment shipment = Shipment(
         price: priceController.text,
         type: typeController.text,
@@ -54,7 +74,7 @@ class _AddShipmentScreenState extends State<AddShipmentScreen> {
         height: heightController.text,
         packageName: packageNameController.text,
         packageQuantity: packageQuantityController.text,
-        imageUrl: null, // Add image upload logic if needed
+        imageUrl: null,
         userId: user.uid,
       );
       try {
@@ -78,9 +98,7 @@ class _AddShipmentScreenState extends State<AddShipmentScreen> {
     } else {
       AppUtils.showError(context, 'some fields are empty');
     }
-    setState(() {
-      _isListButtonLoading = false;
-    });
+   
   }
 
   @override

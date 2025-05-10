@@ -1,12 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:quickdrop_app/features/models/shipment_modeel.dart';
+import 'package:quickdrop_app/features/models/shipment_model.dart';
 import 'package:flutter/material.dart';
 import 'package:quickdrop_app/core/utils/delivery_status.dart';
+import 'dart:io'; // Import File class
+import 'package:firebase_storage/firebase_storage.dart';
 
 class ShipmentProvider with ChangeNotifier {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   List<Shipment> _shipments = [];
-  Map<String, Map<String, dynamic>> _userData = {};
 
   List<Shipment> get shipments => _shipments;
   List<Shipment> get activeShipments =>
@@ -17,37 +18,16 @@ class ShipmentProvider with ChangeNotifier {
         orElse: () => throw ("shipment not found"));
   }
 
-  String? getUserName(String userId) => _userData[userId]?['displayName'];
-  String? getUserPhotoUrl(String userId) => _userData[userId]?['photoUrl'];
 
-  Map<String, String> getUserData(userId) {
-    var map = <String, String>{};
-    map["displayName"] = _userData[userId]?['displayName'] ?? "Unknown user";
-    map["photoUrl"] =
-        _userData[userId]?['photoUrl'] ?? 'assets/images/profile.png';
-    return map;
-  }
-
+ 
   Future<void> fetchShipments() async {
     try {
         final snapshot = await _firestore.collection('shipments').get();
         _shipments = snapshot.docs
             .map((doc) => Shipment.fromMap(doc.data(), doc.id))
             .toList();
-        if (_shipments.isEmpty) {
-          return;
-        }
-        final userIds = _shipments.map((s) => s.userId).toSet().toList();
-
-        final userSnapshot = await FirebaseFirestore.instance
-            .collection('users')
-            .where(FieldPath.documentId, whereIn: userIds)
-            .get();
-        _userData = {for (var doc in userSnapshot.docs) doc.id: doc.data()};
-        // print(_userData.length);
         notifyListeners();
     } catch (e) {
-      // print("Error fetching shipments: $e");
       rethrow;
     }
   }
@@ -119,6 +99,19 @@ class ShipmentProvider with ChangeNotifier {
       rethrow;
     }
   }
+
+  Future<String?> uploadImageToFirebase(File image) async {
+    try {
+      String fileName = 'shipments/${DateTime.now().millisecondsSinceEpoch}.jpg';
+      final ref = FirebaseStorage.instance.ref().child(fileName);
+      await ref.putFile(image);
+      final downloadUrl = await ref.getDownloadURL();
+      return downloadUrl;
+    } catch (e) {
+      print('Image upload error: $e');
+      return null;
+    }
+}
 
   List<Shipment> getActiveShipments(String userId) {
     return _shipments

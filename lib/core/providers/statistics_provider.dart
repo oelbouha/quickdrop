@@ -33,17 +33,26 @@ class StatisticsProvider with ChangeNotifier {
     }
   }
 
-   Future<void> decrementField(String userId, String field) async {
-    try {
+ Future<void> decrementField(String userId, String field) async {
+  try {
+    final doc = await _firestore.collection('statistics').doc(userId).get();
+
+    if (!doc.exists) return;
+
+    final data = doc.data();
+    final currentValue = (data?[field] ?? 0) as int;
+
+    if (currentValue > 0) {
       await _firestore.collection('statistics').doc(userId).update({
         field: FieldValue.increment(-1),
       });
-
       await fetchStatictics(userId);
-    } catch (e) {
-      rethrow;
     }
+  } catch (e) {
+    rethrow;
   }
+}
+
 
 
   Future<void> addStatictics(String userId, StatisticsModel stats) async {

@@ -2,6 +2,7 @@ export 'package:flutter/material.dart';
 
 export 'package:quickdrop_app/theme/colors.dart';
 export 'package:quickdrop_app/theme/AppTheme.dart';
+export 'package:quickdrop_app/theme/error_page.dart';
 
 
 export 'package:quickdrop_app/core/widgets/completed_item_card.dart';
@@ -14,7 +15,7 @@ export 'package:quickdrop_app/features/shipment/add_shipment_screen.dart';
 export 'package:quickdrop_app/core/widgets/custom_svg.dart';
 export 'package:provider/provider.dart';
 
-export 'package:quickdrop_app/features/models/shipment_modeel.dart';
+export 'package:quickdrop_app/features/models/shipment_model.dart';
 export 'package:quickdrop_app/features/models/trip_model.dart';
 export 'package:quickdrop_app/features/models/user_model.dart';
 export 'package:quickdrop_app/features/models/delivery_request_model.dart';
