@@ -26,8 +26,7 @@ class _LoginPageState extends State<LoginPage> {
 
   Future<void> _createStatsIfNewUser(String userId) async {
     bool userExist = await doesUserExist(userId);
-    // print("")
-    if (userExist == true) {
+    if (userExist == false) {
       StatisticsModel stats = StatisticsModel(
           pendingShipments: 0,
           ongoingShipments: 0,
@@ -40,7 +39,7 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 
-  void setUserData(userCredential) async {
+  Future<void> setUserData(userCredential) async {
     _createStatsIfNewUser(userCredential.user.uid);
     UserData user = UserData(
       uid: userCredential.user.uid,
@@ -53,12 +52,10 @@ class _LoginPageState extends State<LoginPage> {
     bool userExist = await doesUserExist(user.uid);
     final userProvider = Provider.of<UserProvider>(context, listen: false);
     if (userExist == false) {
-      // print("user does not exist");
       userProvider.setUser(user);
       userProvider.saveUserToFirestore(user);
     } else {
-      // print("user does  exist");
-      userProvider.fetchUser(user.uid);
+      await userProvider.fetchUser(user.uid);
     }
   }
 
@@ -100,19 +97,17 @@ class _LoginPageState extends State<LoginPage> {
 
       // await FirebaseService().saveUserToFirestore(userCredential.user!);
       try {
-        setUserData(userCredential);
-        
+        await setUserData(userCredential);
+        if (mounted) {
+          // print("switching to home");
+          context.go('/home');
+        }
       } catch (e) {
         if (mounted) {
           AppUtils.showError(context, "failed to log in user $e");
           return;
         }
       }
-
-      if (mounted) {
-        context.go('/home');
-      }
-
     } on FirebaseAuthException catch (e) {
       if (mounted) {
         AppUtils.showError(context, 'Google Sign-In failed: ${e.message}');
@@ -143,15 +138,14 @@ class _LoginPageState extends State<LoginPage> {
           password: password,
         );
 
-      try {
-        setUserData(userCredential);
-        
-      } catch (e) {
-        if (mounted) {
-          AppUtils.showError(context, "failed to log in user $e");
-          return;
+        try {
+          setUserData(userCredential);
+        } catch (e) {
+          if (mounted) {
+            AppUtils.showError(context, "failed to log in user $e");
+            return;
+          }
         }
-      }
 
         if (mounted) context.go('/home');
       } on FirebaseAuthException catch (e) {
