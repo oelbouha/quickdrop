@@ -140,6 +140,7 @@ class _LoginPageState extends State<LoginPage> {
 
         try {
           setUserData(userCredential);
+          if (mounted) context.go('/home');
         } catch (e) {
           if (mounted) {
             AppUtils.showError(context, "failed to log in user $e");
@@ -147,7 +148,6 @@ class _LoginPageState extends State<LoginPage> {
           }
         }
 
-        if (mounted) context.go('/home');
       } on FirebaseAuthException catch (e) {
         String errorMessage;
         switch (e.code) {
