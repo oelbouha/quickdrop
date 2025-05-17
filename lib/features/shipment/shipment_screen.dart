@@ -20,8 +20,7 @@ class _ShipmentScreenState extends State<ShipmentScreen>
     super.initState();
 
     _tabController = TabController(length: 3, vsync: this);
-    userPhotoUrl =
-        Provider.of<UserProvider>(context, listen: false).user?.photoUrl;
+    userPhotoUrl = Provider.of<UserProvider>(context, listen: false).user?.photoUrl ?? AppTheme.defaultProfileImage;
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       try {
         user = Provider.of<UserProvider>(context, listen: false).user;
@@ -100,7 +99,7 @@ class _ShipmentScreenState extends State<ShipmentScreen>
               color: AppColors.blue,
             ))
           : Consumer<ShipmentProvider>(builder: (context, provider, child) {
-              final user = FirebaseAuth.instance.currentUser;
+              final user = Provider.of<UserProvider>(context, listen: false).user;
               if (user == null) {
                 return const Center(
                     child: Text('Please log in to view shipments'));
