@@ -8,6 +8,7 @@ class UserData {
   final String? email;
   final String? displayName;
   final String? photoUrl;
+  String? phoneNumber;
   String? createdAt;
   String status = "normal";
 
@@ -16,6 +17,7 @@ class UserData {
       this.email,
       this.displayName,
       this.photoUrl,
+      this.phoneNumber,
       this.createdAt});
   Map<String, dynamic> toMap() {
     return {
@@ -24,7 +26,8 @@ class UserData {
       'displayName': displayName,
       'photoUrl': photoUrl,
       'createdAt': createdAt,
-      'status': status
+      'status': status,
+      'phoneNumber': phoneNumber,
     };
   }
 
@@ -34,6 +37,7 @@ class UserData {
         email: map['email'],
         displayName: map['displayName'],
         photoUrl: map['photoUrl'],
+        phoneNumber: map['phoneNumber'],
         createdAt: map["createdAt"]);
   }
 }
@@ -91,8 +95,6 @@ class UserProvider with ChangeNotifier {
       rethrow;
     }
   }
-
-
 
   Future<void> fetchUsersData(List<String> ids) async {
     for (final id in ids) {
