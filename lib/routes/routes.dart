@@ -9,6 +9,8 @@ import 'package:quickdrop_app/features/profile/update_user_info_screen.dart';
 import 'package:quickdrop_app/features/profile/profile_statistics.dart';
 import 'package:quickdrop_app/features/shipment/listing_card_details_screen.dart';
 
+import 'package:quickdrop_app/features/auth/verify_email_screen.dart';
+
 CustomTransitionPage buildCustomTransitionPage(
   BuildContext context,
   Widget child,
@@ -28,18 +30,26 @@ CustomTransitionPage buildCustomTransitionPage(
 class AppRouter {
   static GoRouter createRouter(BuildContext context) {
     return GoRouter(
-      initialLocation: '/home',
+      // initialLocation: '/home',
       redirect: (context, state) {
-        final userProvider = Provider.of<UserProvider>(context, listen: false);
-        final user = userProvider.user;
-        // if (user == null) print("user is null");
-        final loggingIn = state.uri.path == '/';
+        final user = FirebaseAuth.instance.currentUser;
+        final currentPath = state.uri.path;
+        final isEmailVerified =
+            FirebaseAuth.instance.currentUser?.emailVerified;
+        final isLoggingIn = currentPath == '/';
 
-        if (user == null) {
-          return loggingIn ? null : '/';
-        } else {
-          return loggingIn ? '/home' : null;
+        if (user == null && !isLoggingIn) {
+          return '/';
         }
+        if (user != null && isEmailVerified == false) {
+          Provider.of<UserProvider>(context, listen: false).fetchUser(user.uid);
+          return '/verify-email';
+        }
+        if (user != null && isLoggingIn) {
+          Provider.of<UserProvider>(context, listen: false).fetchUser(user.uid);
+          return '/home';
+        }
+        return null;
       },
       routes: [
         ShellRoute(
@@ -78,6 +88,14 @@ class AppRouter {
           name: "chat",
           path: "/chat",
           builder: (context, state) => const ChatScreen(),
+        ),
+        GoRoute(
+          name: "verify-email",
+          path: "/verify-email",
+          pageBuilder: (context, state) => buildCustomTransitionPage(
+            context,
+            const VerifyEmailScreen(),
+          ),
         ),
         GoRoute(
           name: "profile",
@@ -155,8 +173,9 @@ class AppRouter {
               final shipmentId = state.uri.queryParameters['shipmentId'];
               final userId = state.uri.queryParameters['userId'];
               try {
-                final userData = Provider.of<UserProvider>(context, listen: false)
-                    .getUserById(userId!);
+                final userData =
+                    Provider.of<UserProvider>(context, listen: false)
+                        .getUserById(userId!);
                 if (userData == null) throw ("user is null");
                 final shipment =
                     Provider.of<ShipmentProvider>(context, listen: false)

@@ -111,11 +111,9 @@ class _SingupPageState extends State<SignUpScreen> {
         }
       }
     } on FirebaseAuthException catch (e) {
-      if (mounted)
-        AppUtils.showError(context, 'Google Sign-In failed: ${e.message}');
+      if (mounted) AppUtils.showError(context, 'Google Sign-In failed: ${e.message}');
     } catch (e) {
-      if (mounted)
-        AppUtils.showError(context, 'An unexpected error occurred: $e');
+      if (mounted) AppUtils.showError(context, 'An unexpected error occurred: $e');
     } finally {
       setState(() {
         _isGoogleLoading = false;
@@ -143,35 +141,31 @@ class _SingupPageState extends State<SignUpScreen> {
             .createUserWithEmailAndPassword(email: email, password: password);
 
         // await FirebaseService().saveUserToFirestore(userCredential.user!);
-        // setUserData(userCredential);
-        // Optionally set display name
 
         // await FirebaseAuth.instance.currentUser
         //     ?.updateDisplayName(fullNameController.text.trim());
+        // Send email verification
+        await userCredential.user?.sendEmailVerification();
 
         UserData user = UserData(
           uid: userCredential.user!.uid,
           email: userCredential.user!.email,
           displayName: fullNameController.text,
-          photoUrl: null,
+          photoUrl: AppTheme.defaultProfileImage,
           createdAt: DateFormat('dd/MM/yyyy').format(DateTime.now()).toString(),
         );
         try {
-          // await setUserData(user);
-          // _createStatsIfNewUser(user.uid);
+          _createStatsIfNewUser(user.uid);
           bool userExist = await doesUserExist(user.uid);
-          final userProvider =
-              Provider.of<UserProvider>(context, listen: false);
+          final userProvider = Provider.of<UserProvider>(context, listen: false);
           if (userExist == false) {
             userProvider.setUser(user);
-            print("user name ");
-            print(user.displayName);
             userProvider.saveUserToFirestore(user);
           } else {
             await userProvider.fetchUser(user.uid);
           }
           if (mounted) {
-            context.go('/home');
+            context.go('/verify-email');
           }
         } catch (e) {
           if (mounted) {
