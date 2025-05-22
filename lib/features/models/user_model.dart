@@ -7,23 +7,31 @@ class UserData {
   final String uid;
   final String? email;
   final String? displayName;
+  final String? firstName;
+  final String? lastName;
   final String? photoUrl;
   String? phoneNumber;
   String? createdAt;
-  String status = "normal";
+  String status;
 
   UserData(
       {required this.uid,
       this.email,
-      this.displayName,
+      this.displayName ,
+      this.firstName,
+      this.lastName,
       this.photoUrl,
       this.phoneNumber,
-      this.createdAt});
+      this.createdAt,
+      this.status = "normal"
+      });
   Map<String, dynamic> toMap() {
     return {
       'uid': uid,
       'email': email,
       'displayName': displayName,
+      'firstName': firstName,
+      'lastName': lastName,
       'photoUrl': photoUrl,
       'createdAt': createdAt,
       'status': status,
@@ -38,6 +46,9 @@ class UserData {
         displayName: map['displayName'],
         photoUrl: map['photoUrl'],
         phoneNumber: map['phoneNumber'],
+        firstName: map['firstName'],
+        lastName: map['lastName'],
+        status: map['status'] ?? "normal",
         createdAt: map["createdAt"]);
   }
 }

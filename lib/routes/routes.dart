@@ -1,5 +1,7 @@
 import 'package:quickdrop_app/core/utils/imports.dart';
 import 'package:quickdrop_app/features/home/home_screen.dart';
+
+import 'package:quickdrop_app/features/auth/signup_screen.dart';
 import 'package:quickdrop_app/features/chat/chat_screen.dart';
 import 'package:quickdrop_app/features/profile/profile_screen.dart';
 import 'package:quickdrop_app/features/shipment/shipment_screen.dart';
@@ -83,6 +85,11 @@ class AppRouter {
           path: '/',
           name: 'login',
           builder: (context, state) => const LoginPage(),
+        ),
+        GoRoute(
+          path: '/singup',
+          name: 'singup',
+          builder: (context, state) => const SignUpScreen(),
         ),
         GoRoute(
           name: "chat",

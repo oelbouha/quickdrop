@@ -8,8 +8,9 @@ class IconTextField extends StatelessWidget {
   final String hintText;
   final bool obsecureText;
   final String iconPath;
-   final String? Function(String?)? validator; // For form validation
-  final void Function(String)? onChanged; // Optional callback for text changes
+  final TextInputType keyboardType; 
+  final String? Function(String?)? validator;
+  final void Function(String)? onChanged;
 
 
   const IconTextField({
@@ -18,6 +19,7 @@ class IconTextField extends StatelessWidget {
     required this.hintText,
     required this.iconPath,
     required this.obsecureText,
+    this.keyboardType = TextInputType.text,
      this.validator,
     this.onChanged,
   });
@@ -29,11 +31,17 @@ class IconTextField extends StatelessWidget {
       obscureText: obsecureText,
       validator: validator,
       onChanged: onChanged,
+      
       style: const TextStyle(color: AppColors.lessImportant),
       decoration: InputDecoration(
+          hintStyle: const TextStyle(
+            color: AppColors.lessImportant,
+          ),
           hintText: hintText,
           filled: true,
-          prefixIcon: Padding(padding: const EdgeInsets.all(12), child: CustomIcon(iconPath: iconPath, size: 24, color: AppColors.lessImportant,)),
+          prefixIcon: Padding(
+            padding: const EdgeInsets.all(12), 
+            child: CustomIcon(iconPath: iconPath, size: 20, color: AppColors.lessImportant,)),
           fillColor: AppColors.cardBackground,
           enabledBorder: OutlineInputBorder(
             borderSide: const BorderSide(

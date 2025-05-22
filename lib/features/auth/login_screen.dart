@@ -1,5 +1,6 @@
 import 'package:quickdrop_app/core/widgets/iconTextField.dart';
 import 'package:quickdrop_app/features/auth/signup_screen.dart';
+import 'package:quickdrop_app/features/auth/signup.dart';
 import 'package:quickdrop_app/core/widgets/auth_button.dart';
 import 'package:quickdrop_app/core/widgets/gestureDetector.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -202,26 +203,70 @@ class _LoginPageState extends State<LoginPage> {
         key: _formKey,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // const Text(
+            //   "QuickDrop",
+            //   style: TextStyle(
+            //       color: AppColors.blue,
+            //       fontSize: 30,
+            //       fontWeight: FontWeight.bold),
+            // ),
+            // const SizedBox(
+            //   height: 20,
+            // ),
             const Text(
-              "QuickDrop",
+              "Sign in to QuickDrop",
               style: TextStyle(
-                  color: AppColors.blue,
-                  fontSize: 30,
-                  fontWeight: FontWeight.bold),
+                  color: AppColors.dark,
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold
+              ),
+              textAlign: TextAlign.start,
+            ),
+             const SizedBox(
+              height: 30,
+            ),
+            AuthButton(
+              hintText: "Continue with Google",
+              onPressed: _signInWithGoogle,
+              imagePath: "assets/images/google.png",
+              isLoading: _isGoogleLoading,
+            ),
+             const SizedBox(
+              height: 15,
+            ),
+            const Row(
+              children: [
+                Expanded(
+                  child: Divider(
+                    color: AppColors.lessImportant,
+                    thickness: 0.4,
+                  ),
+                ),
+                SizedBox(
+                  width: 8,
+                ),
+                Text(
+                  "or sign in with email",
+                  style:
+                      TextStyle(color: AppColors.shipmentText, fontSize: 12),
+                ),
+                SizedBox(
+                  width: 8,
+                ),
+                Expanded(
+                  child: Divider(
+                    color: AppColors.lessImportant,
+                    thickness: 0.4,
+                  ),
+                )
+              ],
             ),
             const SizedBox(
-              height: 20,
+              height: 30,
             ),
-            const Text(
-              "Welcome Back!",
-              style: TextStyle(
-                  color: AppColors.headingText,
-                  fontSize: 18,
-                  fontWeight: FontWeight.normal),
-            ),
-            const SizedBox(height: 25),
+            
             IconTextField(
                 controller: emailController,
                 hintText: 'Email',
@@ -248,63 +293,30 @@ class _LoginPageState extends State<LoginPage> {
               height: 10,
             ),
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                GestureDetectorWidget(
-                  onPressed: () => {},
-                  hintText: "Forget password?",
+                const Text(
+                  "Don't have an account?",
+                  style:  TextStyle(
+                      color: AppColors.shipmentText, fontSize: 14),
                 ),
+                // GestureDetectorWidget(
+                //   onPressed: () => {},
+                //   hintText: "Don't have an account? ",
+                // ),
                 GestureDetectorWidget(
                   onPressed: () => {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => const SignUpScreen()),
+                          builder: (context) => const Signup()),
                     )
                   },
                   hintText: "Sign up",
                 )
               ],
             ),
-            const SizedBox(
-              height: 25,
-            ),
-            const Row(
-              children: [
-                Expanded(
-                  child: Divider(
-                    color: AppColors.lessImportant,
-                    thickness: 0.4,
-                  ),
-                ),
-                SizedBox(
-                  width: 8,
-                ),
-                Text(
-                  "or",
-                  style:
-                      TextStyle(color: AppColors.lessImportant, fontSize: 12),
-                ),
-                SizedBox(
-                  width: 8,
-                ),
-                Expanded(
-                  child: Divider(
-                    color: AppColors.lessImportant,
-                    thickness: 0.4,
-                  ),
-                )
-              ],
-            ),
-            const SizedBox(
-              height: 20,
-            ),
-            AuthButton(
-              hintText: "Continue with Google",
-              onPressed: _signInWithGoogle,
-              imagePath: "assets/images/google.png",
-              isLoading: _isGoogleLoading,
-            ),
+           
           ],
         ));
   }

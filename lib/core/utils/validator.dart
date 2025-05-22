@@ -7,6 +7,15 @@ class Validators {
     return null;
   }
 
+  static String? phone(String? value) {
+    if (value == null || value.trim().isEmpty) {
+      return 'Phone number cannot be empty';
+    }
+    if (!RegExp(r'^\+?[0-9]{10,15}$').hasMatch(value)) {
+      return 'Enter a valid phone number';
+    }
+    return null;
+  }
   // Add more validators as needed
   static String? email(String? value) {
     if (value == null || value.trim().isEmpty) {
