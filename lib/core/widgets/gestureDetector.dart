@@ -19,7 +19,7 @@ class GestureDetectorWidget extends StatelessWidget {
       child: Text(
         hintText,
         style: const TextStyle(
-          color: AppColors.blue,
+          color: AppColors.shipmentText,
           fontSize: 14,
           fontWeight: FontWeight.bold,
         ),

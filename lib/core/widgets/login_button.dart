@@ -19,10 +19,10 @@ class LoginButton extends StatelessWidget {
     return GestureDetector(
       onTap: onPressed,
       child: Container(
-          padding: const EdgeInsets.all(12),
+          padding: const EdgeInsets.all(13),
           decoration: BoxDecoration(
-            color: AppColors.blue,
-            borderRadius: BorderRadius.circular(AppTheme.textFeildRadius),
+            color: AppColors.dark,
+            borderRadius: BorderRadius.circular(30),
           ),
           child: Center(
             child: isLoading?

@@ -17,7 +17,9 @@ class SignUpScreen extends StatefulWidget {
 }
 
 class _SingupPageState extends State<SignUpScreen> {
-  final fullNameController = TextEditingController();
+  final phoneNumberController = TextEditingController();
+  final lastNameController = TextEditingController();
+  final firstNameController = TextEditingController();
   final passwordController = TextEditingController();
   final emailController = TextEditingController();
   final confirmPasswordController = TextEditingController();
@@ -150,7 +152,10 @@ class _SingupPageState extends State<SignUpScreen> {
         UserData user = UserData(
           uid: userCredential.user!.uid,
           email: userCredential.user!.email,
-          displayName: fullNameController.text,
+          firstName: firstNameController.text,
+          lastName: lastNameController.text,
+          displayName: "${firstNameController.text} ${lastNameController.text}",
+          phoneNumber: userCredential.user!.phoneNumber,
           photoUrl: AppTheme.defaultProfileImage,
           createdAt: DateFormat('dd/MM/yyyy').format(DateTime.now()).toString(),
         );
@@ -196,7 +201,8 @@ class _SingupPageState extends State<SignUpScreen> {
     emailController.dispose();
     passwordController.dispose();
     confirmPasswordController.dispose();
-    fullNameController.dispose();
+    firstNameController.dispose();
+    lastNameController.dispose();
     super.dispose();
   }
 
@@ -222,30 +228,49 @@ class _SingupPageState extends State<SignUpScreen> {
         key: _formKey,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Text(
-              "QuickDrop",
+              "Sing up to QuickDrop",
               style: TextStyle(
-                  color: AppColors.blue,
-                  fontSize: 30,
+                  color: AppColors.headingText,
+                  fontSize: 24,
                   fontWeight: FontWeight.bold),
             ),
             const SizedBox(
               height: 20,
             ),
-            // const Text(
-            //   "Welcome Back!",
-            //   style: TextStyle(
-            //       color: AppColors.blue, fontSize: 18, fontWeight: FontWeight.bold),
-            // ),
-            const SizedBox(height: 25),
+          Row(
+            children: [
+              Expanded(
+                child: IconTextField(
+                  controller: firstNameController,
+                  hintText: 'First Name',
+                  obsecureText: false,
+                  iconPath: "assets/icon/user.svg",
+                  validator: Validators.name,
+                ),
+              ),
+              const SizedBox(width: 10),
+            Expanded(
+              child: IconTextField(
+                controller: lastNameController,
+                hintText: 'Last Name',
+                obsecureText: false,
+                iconPath: "assets/icon/user.svg",
+                validator: Validators.name,
+              ),
+            ),
+          ],
+        ),
+            const SizedBox(height: 15),
             IconTextField(
-              controller: fullNameController,
-              hintText: 'Full Name',
+              controller: phoneNumberController,
+              hintText: 'Phone Number',
               obsecureText: false,
-              iconPath: "assets/icon/user.svg",
-              validator: Validators.name,
+              iconPath: "assets/icon/phone.svg",
+              keyboardType: TextInputType.phone,
+              validator: Validators.phone,
             ),
             const SizedBox(height: 15),
             IconTextField(
@@ -295,70 +320,35 @@ class _SingupPageState extends State<SignUpScreen> {
               height: 25,
             ),
             LoginButton(
-                hintText: "Sign up",
+                hintText: "Create Account",
                 onPressed: _singUpUserWithEmail,
                 isLoading: _isEmailLoading),
             const SizedBox(
               height: 10,
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Text(
-                  "Already have an account? ",
-                  style: TextStyle(color: AppColors.headingText, fontSize: 14),
-                ),
-                GestureDetectorWidget(
-                  onPressed: () => {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const LoginPage()),
-                    )
-                  },
-                  hintText: "Log in",
-                )
-              ],
-            ),
-            const SizedBox(
-              height: 25,
-            ),
-            const Row(
-              children: [
-                Expanded(
-                  child: Divider(
-                    color: AppColors.lessImportant,
-                    thickness: 0.4,
-                  ),
-                ),
-                SizedBox(
-                  width: 8,
-                ),
-                Text(
-                  "or",
-                  style:
-                      TextStyle(color: AppColors.lessImportant, fontSize: 12),
-                ),
-                SizedBox(
-                  width: 8,
-                ),
-                Expanded(
-                  child: Divider(
-                    color: AppColors.lessImportant,
-                    thickness: 0.4,
-                  ),
-                )
-              ],
-            ),
+           
+            
             const SizedBox(
               height: 20,
             ),
-            AuthButton(
-              hintText: "Continue with Google",
-              onPressed: _signInWithGoogle,
-              imagePath: "assets/images/google.png",
-              isLoading: _isGoogleLoading,
+           Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Text(
+              "Already have an account?",
+              style: TextStyle(color: AppColors.shipmentText, fontSize: 14),
             ),
+            GestureDetectorWidget(
+              onPressed: () => {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const LoginPage()),
+                )
+              },
+              hintText: "Sign in",
+            )
+          ],
+        ),
           ],
         ));
   }

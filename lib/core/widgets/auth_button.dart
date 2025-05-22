@@ -7,11 +7,13 @@ class AuthButton extends StatelessWidget {
   final VoidCallback onPressed;
   final String? imagePath; // Optional image
   final bool isLoading;
+  final double radius;
   const AuthButton({
     super.key,
     required this.hintText,
     required this.onPressed,
     this.imagePath,
+    this.radius = 30,
     required this.isLoading,
   });
 
@@ -23,8 +25,8 @@ class AuthButton extends StatelessWidget {
         padding: const EdgeInsets.all(10),
         decoration: BoxDecoration(
           color:  AppColors.cardBackground, 
-          borderRadius: BorderRadius.circular(AppTheme.textFeildRadius),
-          border: Border.all(width: 1, color: isLoading? AppColors.blue: AppColors.lessImportant),
+          borderRadius: BorderRadius.circular(radius),
+          border: Border.all(width: 1, color: isLoading? AppColors.shipmentText: AppColors.lessImportant),
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -48,7 +50,7 @@ class AuthButton extends StatelessWidget {
               Text(
                 hintText,
                 style:
-                    const TextStyle(color: AppColors.lessImportant, fontSize: 14),
+                    const TextStyle(color: AppColors.shipmentText, fontSize: 14, fontWeight: FontWeight.bold),
               ),
             ],
           ],
