@@ -20,7 +20,7 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: AppColors.blue,
+        backgroundColor: AppColors.cardBackground,
         body: Padding(
             padding: const EdgeInsets.all(AppTheme.homeScreenPadding),
             child: Center(
@@ -28,11 +28,22 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Text("Email verification",
+                    Container(
+                      width:  100,
+                      height: 100,
+                      decoration: const BoxDecoration(
+                        // shape: BoxShape.circle,
+                        // color: AppColors.blue,
+                        color: AppColors.requestButton,
+                        borderRadius: BorderRadius.all(Radius.circular(100)),
+                      ),
+                      child: CustomIcon(iconPath: "assets/icon/email.svg", color: AppColors.blue, size: 108,),
+                    ),
+                    const Text("Check your email",
                         style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                         textAlign: TextAlign.center),
                     const Text(
-                      "Please verify your email to continue.",
+                      "We've sent a verification link to",
                       style: TextStyle(
                         fontSize: 16,
                       ),
@@ -41,13 +52,48 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
                     const SizedBox(
                       height: 20,
                     ),
-                    Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        ElevatedButton(
-                          onPressed: () async {
-                            await FirebaseAuth.instance.currentUser?.reload();
+                    Text(
+                      "${FirebaseAuth.instance.currentUser?.email}",
+                      style: const TextStyle(
+                        fontSize: 16, fontWeight: FontWeight.bold
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    Container(
+                      width: double.infinity,
+                        padding: const EdgeInsets.all(AppTheme.addShipmentPadding),
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                            color: AppColors.lessImportant,
+                            width: AppTheme.textFieldBorderWidth),
+                        color: AppColors.background,
+                        borderRadius: BorderRadius.circular(AppTheme.cardRadius),
+                      ),
+                      child: const Column(
+                        mainAxisSize: MainAxisSize.max,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text("Next steps",
+                              style: TextStyle(
+                                  fontSize: 16, fontWeight: FontWeight.bold),
+                          ),
+                          Text("1. . Check your email inbox"),
+                          Text("2. . Click the verification link"),
+                          Text("3.  Return here and click \"I've verified\""),
+
+                      ]
+                      ),
+
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    LoginButton(hintText: "I've verified my email", onPressed: () async {
+                      await FirebaseAuth.instance.currentUser?.reload();
                             User? user = FirebaseAuth.instance.currentUser;
 
                             if (user != null && user.emailVerified) {
@@ -56,23 +102,42 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
                               AppUtils.showError(
                                   context, "Please verify your email first.");
                             }
-                          },
-                          child: const Text("I've verified"),
-                        ),
-                      const SizedBox(
-                        width: 20,
-                      ),
-                      ElevatedButton(
-                        onPressed: () async {
-                          await FirebaseAuth.instance.currentUser?.reload();
+                    }, 
+                      isLoading: false,
+                      radius: 12,
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                     LoginButton(hintText: "Resend verification link", onPressed: () async {
+                      await FirebaseAuth.instance.currentUser?.reload();
                           User? user = FirebaseAuth.instance.currentUser;
                           await user?.sendEmailVerification();
                           AppUtils.showSuccess(
                               context, "A new email has been sent.");
-                        },
-                        child: Text("resend link"),
-                      ),
-                    ]),
+                    }, 
+                      isLoading: false,
+                      radius: 12,
+                      backgroundColor: AppColors.dark,
+                    ),
+
+                    const SizedBox(
+                      height: 40,
+                    ),
+                    const Text("Didn't receive the email? Check your spam folder or contact support", 
+                      style: TextStyle(color: AppColors.shipmentText, fontSize: 12),
+                      textAlign: TextAlign.center,), 
+                    const SizedBox(
+                      height: 20
+                    ),
+                    const Text("Want to use a different email?"),
+                    TextWithLink(
+                      text: "Sign up with a different email? ", 
+                      textLink: "Change email address", 
+                      navigatTo: '/signup', 
+                      context: context
+                    )
+                   
               ],
             ))));
   }
