@@ -293,7 +293,7 @@ class _AddShipmentScreenState extends State<AddShipmentScreen> {
             const Row(
               children: [
                 CustomIcon(
-                  iconPath: "assets/icon/map-point.svg",
+                  iconPath: "assets/icon/package.svg",
                   size: 20,
                   color: AppColors.blue,
                 ),
@@ -402,7 +402,7 @@ class _AddShipmentScreenState extends State<AddShipmentScreen> {
                   width: 8,
                 ),
                 Text(
-                  "Pickup & Delivery Details",
+                  "Pickup & Delivery locations",
                   style: TextStyle(
                       color: AppColors.headingText,
                       fontWeight: FontWeight.bold,

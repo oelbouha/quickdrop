@@ -63,11 +63,10 @@ class _DropdownTextFieldState extends State<DropdownTextField> {
         return DropdownMenuItem<String>(
             value: item,
             child: Container(
-              // color: AppColors.white,
-              decoration: BoxDecoration(
-                // color: AppColors.white,
-                borderRadius: BorderRadius.circular(AppTheme.cardRadius),
-              ),
+              // decoration: BoxDecoration(
+              //   // color: AppColors.white,
+              //   // borderRadius: BorderRadius.circular(30),
+              // ),
               child: Text(
                 item,
                 style: TextStyle(

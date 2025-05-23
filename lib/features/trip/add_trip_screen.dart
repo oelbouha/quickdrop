@@ -112,11 +112,11 @@ class _AddTripScreenState extends State<AddTripScreen> {
                     ),
                     _buildPackageDestails(),
                     const SizedBox(
-                      height: 10,
+                      height: 20,
                     ),
                     _buildPackageDestination(),
                     const SizedBox(
-                      height: 10,
+                      height: 20,
                     ),
                     _buildTimingDetails(),
                     const SizedBox(
