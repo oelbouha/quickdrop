@@ -28,10 +28,10 @@ class _AddShipmentScreenState extends State<AddShipmentScreen> {
 
   void _listShipment() async {
     if (_isListButtonLoading) return;
-    setState(() {
-      _isListButtonLoading = true;
-    });
     if (_formKey.currentState!.validate()) {
+      setState(() {
+        _isListButtonLoading = true;
+      });
       // final userProvider = Provider.of<UserProvider>(context);
       // final user = userProvider.user;
 
@@ -225,31 +225,20 @@ class _AddShipmentScreenState extends State<AddShipmentScreen> {
             const SizedBox(
               height: 10,
             ),
-            const Text(
-              "Package name",
-              style: TextStyle(
-                  color: AppColors.headingText, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(
-              height: 2,
-            ),
-            CustomTextField(
+
+            TextFieldWithHeader(
               controller: packageNameController,
-              hintText: "Name",
-              backgroundColor: AppColors.cardBackground,
+              hintText: "Packge Name",
+              // backgroundColor: AppColors.cardBackground,
+              obsecureText: false ,
+              keyboardType: TextInputType.text,
               validator: Validators.notEmpty,
             ),
             const SizedBox(
               height: 10,
             ),
-            const Text(
-              "Package description",
-              style: TextStyle(
-                  color: AppColors.headingText, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(
-              height: 2,
-            ),
+            
+            TextWithRequiredIcon(text: "Package description"),
             CustomTextField(
               controller: descriptionController,
               hintText: "Describe your package content",
@@ -260,53 +249,37 @@ class _AddShipmentScreenState extends State<AddShipmentScreen> {
             const SizedBox(
               height: 10,
             ),
-            const Text(
-              "Weight (kg)",
-              style: TextStyle(
-                  color: AppColors.headingText, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(
-              height: 2,
-            ),
-            NumberField(
+           
+            TextFieldWithHeader(
               controller: weightController,
               hintText: "Weight",
-              backgroundColor: AppColors.cardBackground,
+              
+              keyboardType: TextInputType.number,
+              // backgroundColor: AppColors.cardBackground,
               validator: Validators.notEmpty,
             ),
             const SizedBox(
               height: 10,
             ),
-            const Text(
-              "Quantity",
-              style: TextStyle(
-                  color: AppColors.headingText, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(
-              height: 2,
-            ),
-            NumberField(
+           
+            TextFieldWithHeader(
               controller: packageQuantityController,
               hintText: "Quantity",
-              backgroundColor: AppColors.cardBackground,
+              // backgroundColor: AppColors.cardBackground,
+              keyboardType: TextInputType.number,
               validator: Validators.notEmpty,
             ),
             const SizedBox(
               height: 10,
             ),
-            const Text(
-              "Price",
-              style: TextStyle(
-                  color: AppColors.headingText, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(
-              height: 2,
-            ),
-            NumberField(
+           
+            TextFieldWithHeader(
               controller: priceController,
               hintText: "Price",
-              backgroundColor: AppColors.cardBackground,
+              // backgroundColor: AppColors.cardBackground,
               validator: Validators.notEmpty,
+
+              keyboardType: TextInputType.number,
             ),
             const SizedBox(
               height: 10,
@@ -337,26 +310,34 @@ class _AddShipmentScreenState extends State<AddShipmentScreen> {
             Row(
               children: [
                 Expanded(
-                  child: NumberField(
+                  child: TextFieldWithHeader(
                     controller: lengthController,
                     hintText: "Length",
-                    backgroundColor: AppColors.cardBackground,
+                    // backgroundColor: AppColors.cardBackground,
+
+                    keyboardType: TextInputType.number,
+                    isRequired: false,
                   ),
                 ),
                 const SizedBox(width: 8), // Add spacing between inputs
                 Expanded(
-                  child: NumberField(
+                  child: TextFieldWithHeader(
                     controller: widthController,
                     hintText: "Width",
-                    backgroundColor: AppColors.cardBackground,
+                    isRequired: false,
+                    keyboardType: TextInputType.number,
+                    // backgroundColor: AppColors.cardBackground,
                   ),
                 ),
                 const SizedBox(width: 8),
                 Expanded(
-                  child: NumberField(
+                  child: TextFieldWithHeader(
                     controller: heightController,
                     hintText: "Height",
-                    backgroundColor: AppColors.cardBackground,
+                    isRequired: false,
+                    
+                    keyboardType: TextInputType.number,
+                    // backgroundColor: AppColors.cardBackground,
                   ),
                 ),
               ],
@@ -364,14 +345,8 @@ class _AddShipmentScreenState extends State<AddShipmentScreen> {
             const SizedBox(
               height: 15,
             ),
-            const Text(
-              "Package image",
-              style: TextStyle(
-                  color: AppColors.headingText, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(
-              height: 2,
-            ),
+           TextWithRequiredIcon(text: "Package image"),
+
             ImageUpload(
               onPressed: _pickImage,
               backgroundColor: AppColors.cardBackground,
@@ -418,35 +393,19 @@ class _AddShipmentScreenState extends State<AddShipmentScreen> {
             const SizedBox(
               height: 10,
             ),
-            const Text(
-              "Pickup Address",
-              style: TextStyle(
-                  color: AppColors.headingText, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(
-              height: 2,
-            ),
-            CustomTextField(
+           
+            TextFieldWithHeader(
               controller: fromController,
               hintText: "Enter pickup location ",
-              backgroundColor: AppColors.cardBackground,
               validator: Validators.notEmpty,
             ),
             const SizedBox(
               height: 10,
             ),
-            const Text(
-              "Dropoff Address",
-              style: TextStyle(
-                  color: AppColors.headingText, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(
-              height: 2,
-            ),
-            CustomTextField(
+            
+            TextFieldWithHeader(
               controller: toController,
               hintText: "Enter delivery location",
-              backgroundColor: AppColors.cardBackground,
               validator: Validators.notEmpty,
             ),
           ],
@@ -489,14 +448,9 @@ class _AddShipmentScreenState extends State<AddShipmentScreen> {
             const SizedBox(
               height: 10,
             ),
-            const Text(
-              "Preferred Pickup Time",
-              style: TextStyle(
-                  color: AppColors.headingText, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(
-              height: 2,
-            ),
+            
+            TextWithRequiredIcon(text: "Preferred Pickup Time"),
+
             DateTextField(
               controller: dateController,
               backgroundColor: AppColors.cardBackground,

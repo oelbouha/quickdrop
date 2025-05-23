@@ -19,7 +19,7 @@ class TextFieldWithHeader extends StatelessWidget {
     required this.controller,
     required this.hintText,
     this.iconPath = "d  ",
-    required this.obsecureText,
+     this.obsecureText = false,
     this.keyboardType = TextInputType.text,
     this.validator,
     this.isRequired = true,
