@@ -22,7 +22,7 @@ class AuthButton extends StatelessWidget {
     return GestureDetector(
       onTap: isLoading? null : onPressed,
       child: Container(
-        padding: const EdgeInsets.all(10),
+        padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
           color:  AppColors.cardBackground, 
           borderRadius: BorderRadius.circular(radius),

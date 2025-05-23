@@ -80,6 +80,11 @@ class UserProvider with ChangeNotifier {
       if (updatedUser.email != null) 'email': updatedUser.email,
       if (updatedUser.displayName != null)
         'displayName': updatedUser.displayName,
+      if (updatedUser.firstName != null)
+        'firstName': updatedUser.firstName,
+      if (updatedUser.lastName != null) 'lastName': updatedUser.lastName,
+      if (updatedUser.phoneNumber != null)
+        'phoneNumber': updatedUser.phoneNumber,
       if (updatedUser.photoUrl != null) 'photoUrl': updatedUser.photoUrl,
     };
     userDocRef.update(updateMap);

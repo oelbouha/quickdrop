@@ -9,7 +9,11 @@ class UpdateUserInfoScreen extends StatefulWidget {
 
 class UpdateUserInfoScreenState extends State<UpdateUserInfoScreen> {
   bool _isLoading = false;
-  final nameController = TextEditingController();
+  final firstNameController = TextEditingController();
+
+  final lastNameController = TextEditingController();
+
+  final phoneNumberController = TextEditingController();
   final emailController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   UserData? user;
@@ -20,7 +24,9 @@ class UpdateUserInfoScreenState extends State<UpdateUserInfoScreen> {
     super.initState();
     user = Provider.of<UserProvider>(context, listen: false).user;
     emailController.text = user?.email ?? "Email";
-    nameController.text = user?.displayName ?? "Name";
+    firstNameController.text = user?.firstName ?? "First Name";
+    lastNameController.text = user?.lastName ?? "Last Name";
+    phoneNumberController.text = user?.phoneNumber ?? "Phone Number";
   }
 
   void updateInfo() async {
@@ -32,8 +38,12 @@ class UpdateUserInfoScreenState extends State<UpdateUserInfoScreen> {
         final user = Provider.of<UserProvider>(context, listen: false).user;
         UserData updatedUser = UserData(
           uid: user!.uid,
-          displayName: nameController.text,
+          displayName: '${firstNameController.text} ${lastNameController.text}',
           email: emailController.text,
+          firstName: firstNameController.text,
+          lastName: lastNameController.text,
+          phoneNumber: phoneNumberController.text,
+
         );
         await Provider.of<UserProvider>(context, listen: false)
             .updateUserInfo(updatedUser);
@@ -64,8 +74,8 @@ class UpdateUserInfoScreenState extends State<UpdateUserInfoScreen> {
           backgroundColor: AppColors.barColor,
           centerTitle: true,
         ),
-        body: Padding(
-            padding: const EdgeInsets.all(16), child: _buildUpdateScreen()));
+        body: SingleChildScrollView(child:  Padding(
+            padding: const EdgeInsets.all(16), child: _buildUpdateScreen())));
   }
 
   Widget _buildUpdateScreen() {
@@ -75,7 +85,7 @@ class UpdateUserInfoScreenState extends State<UpdateUserInfoScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Text(
-              "Name",
+              "First name",
               style: TextStyle(
                   color: AppColors.headingText, fontWeight: FontWeight.bold),
             ),
@@ -83,8 +93,42 @@ class UpdateUserInfoScreenState extends State<UpdateUserInfoScreen> {
               height: 2,
             ),
             CustomTextField(
-              controller: nameController,
-              hintText: nameController.text,
+              controller: firstNameController,
+              hintText: firstNameController.text,
+              backgroundColor: AppColors.cardBackground,
+              validator: Validators.name,
+            ),
+            const SizedBox(
+              height: 15,
+            ),
+             const Text(
+              "Last name",
+              style: TextStyle(
+                  color: AppColors.headingText, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(
+              height: 2,
+            ),
+            CustomTextField(
+              controller: lastNameController,
+              hintText: lastNameController.text,
+              backgroundColor: AppColors.cardBackground,
+              validator: Validators.name,
+            ),
+            const SizedBox(
+              height: 15,
+            ),
+             const Text(
+              "Phone number",
+              style: TextStyle(
+                  color: AppColors.headingText, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(
+              height: 2,
+            ),
+            CustomTextField(
+              controller: phoneNumberController,
+              hintText: phoneNumberController.text,
               backgroundColor: AppColors.cardBackground,
               validator: Validators.name,
             ),
