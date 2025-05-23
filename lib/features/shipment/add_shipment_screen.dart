@@ -142,7 +142,15 @@ class _AddShipmentScreenState extends State<AddShipmentScreen> {
                       const SizedBox(
                         height: 25,
                       ),
+                      _buildPackageDemensions(),
+                      const SizedBox(
+                        height: 25,
+                      ),
                       _buildPackageDestination(),
+                      const SizedBox(
+                        height: 25,
+                      ),
+                      _buildImage(),
                       const SizedBox(
                         height: 25,
                       ),
@@ -229,7 +237,6 @@ class _AddShipmentScreenState extends State<AddShipmentScreen> {
             TextFieldWithHeader(
               controller: packageNameController,
               hintText: "Packge Name",
-              // backgroundColor: AppColors.cardBackground,
               obsecureText: false ,
               keyboardType: TextInputType.text,
               validator: Validators.notEmpty,
@@ -249,13 +256,66 @@ class _AddShipmentScreenState extends State<AddShipmentScreen> {
             const SizedBox(
               height: 10,
             ),
-           
             TextFieldWithHeader(
+              controller: priceController,
+              hintText: "Price",
+              validator: Validators.notEmpty,
+              keyboardType: TextInputType.number,
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+           TextWithRequiredIcon(text: "Package type"),
+            DropdownTextField(
+              validator: Validators.notEmpty,
+              controller: typeController,
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+          ],
+        ));
+  }
+
+  Widget _buildPackageDemensions() {
+    return Container(
+        padding: const EdgeInsets.all(AppTheme.addShipmentPadding),
+        decoration: BoxDecoration(
+            border: Border.all(
+                color: AppColors.lessImportant,
+                width: AppTheme.textFieldBorderWidth),
+            color: AppColors.cardBackground,
+            borderRadius: BorderRadius.circular(AppTheme.cardRadius)),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Row(
+              children: [
+                CustomIcon(
+                  iconPath: "assets/icon/map-point.svg",
+                  size: 20,
+                  color: AppColors.blue,
+                ),
+                SizedBox(
+                  width: 8,
+                ),
+                Text(
+                  "Package Demensions",
+                  style: TextStyle(
+                      color: AppColors.headingText,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20),
+                ),
+              ],
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+             TextFieldWithHeader(
               controller: weightController,
               hintText: "Weight",
-              
               keyboardType: TextInputType.number,
-              // backgroundColor: AppColors.cardBackground,
               validator: Validators.notEmpty,
             ),
             const SizedBox(
@@ -265,7 +325,6 @@ class _AddShipmentScreenState extends State<AddShipmentScreen> {
             TextFieldWithHeader(
               controller: packageQuantityController,
               hintText: "Quantity",
-              // backgroundColor: AppColors.cardBackground,
               keyboardType: TextInputType.number,
               validator: Validators.notEmpty,
             ),
@@ -273,39 +332,13 @@ class _AddShipmentScreenState extends State<AddShipmentScreen> {
               height: 10,
             ),
            
-            TextFieldWithHeader(
-              controller: priceController,
-              hintText: "Price",
-              // backgroundColor: AppColors.cardBackground,
-              validator: Validators.notEmpty,
-
-              keyboardType: TextInputType.number,
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            const Text(
-              "Type",
-              style: TextStyle(
-                  color: AppColors.headingText, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(
-              height: 2,
-            ),
-            DropdownTextField(
-              validator: Validators.notEmpty,
-              controller: typeController,
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            const Text(
+              const Text(
               "Demensions (cm)",
               style: TextStyle(
-                  color: AppColors.headingText, fontWeight: FontWeight.bold),
+                  color: AppColors.headingText, fontWeight: FontWeight.bold, fontSize: 16),
             ),
             const SizedBox(
-              height: 2,
+              height: 4,
             ),
             Row(
               children: [
@@ -313,8 +346,6 @@ class _AddShipmentScreenState extends State<AddShipmentScreen> {
                   child: TextFieldWithHeader(
                     controller: lengthController,
                     hintText: "Length",
-                    // backgroundColor: AppColors.cardBackground,
-
                     keyboardType: TextInputType.number,
                     isRequired: false,
                   ),
@@ -326,7 +357,6 @@ class _AddShipmentScreenState extends State<AddShipmentScreen> {
                     hintText: "Width",
                     isRequired: false,
                     keyboardType: TextInputType.number,
-                    // backgroundColor: AppColors.cardBackground,
                   ),
                 ),
                 const SizedBox(width: 8),
@@ -335,9 +365,7 @@ class _AddShipmentScreenState extends State<AddShipmentScreen> {
                     controller: heightController,
                     hintText: "Height",
                     isRequired: false,
-                    
                     keyboardType: TextInputType.number,
-                    // backgroundColor: AppColors.cardBackground,
                   ),
                 ),
               ],
@@ -345,14 +373,6 @@ class _AddShipmentScreenState extends State<AddShipmentScreen> {
             const SizedBox(
               height: 15,
             ),
-           TextWithRequiredIcon(text: "Package image"),
-
-            ImageUpload(
-              onPressed: _pickImage,
-              backgroundColor: AppColors.cardBackground,
-              controller: dateController,
-              hintText: "",
-            )
           ],
         ));
   }
@@ -461,4 +481,54 @@ class _AddShipmentScreenState extends State<AddShipmentScreen> {
           ],
         ));
   }
+
+   Widget _buildImage() {
+    return Container(
+        padding: const EdgeInsets.all(AppTheme.addShipmentPadding),
+        decoration: BoxDecoration(
+            border: Border.all(
+                color: AppColors.lessImportant,
+                width: AppTheme.textFieldBorderWidth),
+            color: AppColors.cardBackground,
+            borderRadius: BorderRadius.circular(AppTheme.cardRadius)),
+        child: Column(
+          // mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Row(
+              children: [
+                CustomIcon(
+                  iconPath: "assets/icon/camera-add.svg",
+                  size: 20,
+                  color: AppColors.blue,
+                ),
+                SizedBox(
+                  width: 8,
+                ),
+                Text(
+                  "Upload Image",
+                  style: TextStyle(
+                      color: AppColors.headingText,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20),
+                ),
+              ],
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            
+             TextWithRequiredIcon(text: "Package image"),
+
+            ImageUpload(
+              onPressed: _pickImage,
+              backgroundColor: AppColors.cardBackground,
+              controller: dateController,
+              hintText: "",
+            )
+          ],
+        ));
+  }
+
 }

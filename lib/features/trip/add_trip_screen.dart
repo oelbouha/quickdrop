@@ -110,6 +110,10 @@ class _AddTripScreenState extends State<AddTripScreen> {
                     const SizedBox(
                       height: 20,
                     ),
+                    _buildPackageDestails(),
+                    const SizedBox(
+                      height: 10,
+                    ),
                     _buildPackageDestination(),
                     const SizedBox(
                       height: 10,
@@ -131,7 +135,7 @@ class _AddTripScreenState extends State<AddTripScreen> {
         ));
   }
 
-  Widget _buildPackageDestination() {
+  Widget _buildPackageDestails() {
     return Container(
         padding: const EdgeInsets.all(AppTheme.addShipmentPadding),
         decoration: BoxDecoration(
@@ -156,7 +160,7 @@ class _AddTripScreenState extends State<AddTripScreen> {
                   width: 8,
                 ),
                 Text(
-                  "Pickup & Trip Details",
+                  "Trip Details",
                   style: TextStyle(
                       color: AppColors.headingText,
                       fontWeight: FontWeight.bold,
@@ -167,74 +171,81 @@ class _AddTripScreenState extends State<AddTripScreen> {
             const SizedBox(
               height: 10,
             ),
-            const Text(
-              "Pickup Address",
-              style: TextStyle(
-                  color: AppColors.headingText, fontWeight: FontWeight.bold),
+
+           TextFieldWithHeader(
+              controller: priceController,
+              hintText: "Available weight",
+              validator: Validators.notEmpty,
+              keyboardType: TextInputType.number,
             ),
             const SizedBox(
-              height: 2,
+              height: 10,
             ),
-            CustomTextField(
+            TextFieldWithHeader(
+              controller: priceController,
+              hintText: "Price",
+              validator: Validators.notEmpty,
+              keyboardType: TextInputType.number,
+            ),
+          ],
+        ));
+  }
+
+ Widget _buildPackageDestination() {
+    return Container(
+        padding: const EdgeInsets.all(AppTheme.addShipmentPadding),
+        decoration: BoxDecoration(
+            border: Border.all(
+                color: AppColors.lessImportant,
+                width: AppTheme.textFieldBorderWidth),
+            color: AppColors.cardBackground,
+            borderRadius: BorderRadius.circular(AppTheme.cardRadius)),
+        child: Column(
+          // mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Row(
+              children: [
+                CustomIcon(
+                  iconPath: "assets/icon/map-point.svg",
+                  size: 20,
+                  color: AppColors.blue,
+                ),
+                SizedBox(
+                  width: 8,
+                ),
+                Text(
+                  "Pickup & Delivery Details",
+                  style: TextStyle(
+                      color: AppColors.headingText,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20),
+                ),
+              ],
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+           
+            TextFieldWithHeader(
               controller: fromController,
               hintText: "Enter pickup location ",
-              backgroundColor: AppColors.cardBackground,
               validator: Validators.notEmpty,
             ),
             const SizedBox(
               height: 10,
             ),
-            const Text(
-              "Dropoff Address",
-              style: TextStyle(
-                  color: AppColors.headingText, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(
-              height: 2,
-            ),
-            CustomTextField(
+            
+            TextFieldWithHeader(
               controller: toController,
               hintText: "Enter delivery location",
-              backgroundColor: AppColors.cardBackground,
-              validator: Validators.notEmpty,
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            const Text(
-              "Weight (kg)",
-              style: TextStyle(
-                  color: AppColors.headingText, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(
-              height: 2,
-            ),
-            NumberField(
-              controller: weightController,
-              hintText: "Available weight",
-              backgroundColor: AppColors.cardBackground,
-              validator: Validators.notEmpty,
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            const Text(
-              "price (dh)",
-              style: TextStyle(
-                  color: AppColors.headingText, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(
-              height: 2,
-            ),
-            NumberField(
-              controller: priceController,
-              hintText: "price",
-              backgroundColor: AppColors.cardBackground,
               validator: Validators.notEmpty,
             ),
           ],
         ));
   }
+
 
   Widget _buildTimingDetails() {
     return Container(
@@ -272,14 +283,9 @@ class _AddTripScreenState extends State<AddTripScreen> {
             const SizedBox(
               height: 10,
             ),
-            const Text(
-              "Preferred Pickup Time",
-              style: TextStyle(
-                  color: AppColors.headingText, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(
-              height: 2,
-            ),
+            
+            TextWithRequiredIcon(text: "Preferred Pickup Time"),
+
             DateTextField(
               controller: dateController,
               backgroundColor: AppColors.cardBackground,
@@ -290,4 +296,6 @@ class _AddTripScreenState extends State<AddTripScreen> {
           ],
         ));
   }
+
+
 }

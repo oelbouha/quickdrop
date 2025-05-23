@@ -50,14 +50,14 @@ class _LoginPageState extends State<LoginPage> {
       createdAt: DateFormat('dd/MM/yyyy').format(DateTime.now()).toString(),
     );
 
-    bool userExist = await doesUserExist(user.uid);
+    // bool userExist = await doesUserExist(user.uid);
     final userProvider = Provider.of<UserProvider>(context, listen: false);
-    if (userExist == false) {
-      userProvider.setUser(user);
-      userProvider.saveUserToFirestore(user);
-    } else {
+    // if (userExist == false) {
+      // userProvider.setUser(user);
+      // userProvider.saveUserToFirestore(user);
+    // } else {
       await userProvider.fetchUser(user.uid);
-    }
+    // }
   }
 
   Future<bool> doesUserExist(String uid) async {
