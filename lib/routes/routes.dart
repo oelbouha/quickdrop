@@ -40,6 +40,7 @@ class AppRouter {
             FirebaseAuth.instance.currentUser?.emailVerified;
         final isLoggingIn = currentPath == '/';
 
+        // return '/verify-email';
         if (user == null && !isLoggingIn) {
           return '/';
         }
@@ -87,7 +88,7 @@ class AppRouter {
           builder: (context, state) => const LoginPage(),
         ),
         GoRoute(
-          path: '/singup',
+          path: '/signup',
           name: 'singup',
           builder: (context, state) => const SignUpScreen(),
         ),

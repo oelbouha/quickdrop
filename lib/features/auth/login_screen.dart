@@ -294,6 +294,12 @@ class _LoginPageState extends State<LoginPage> {
             const SizedBox(
               height: 10,
             ),
+             TextWithLink(
+                      text: "Don't have an account? ", 
+                      textLink: "sign up", 
+                      navigatTo: '/signup', 
+                      context: context
+                    ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -306,6 +312,7 @@ class _LoginPageState extends State<LoginPage> {
                 //   onPressed: () => {},
                 //   hintText: "Don't have an account? ",
                 // ),
+               
                 GestureDetectorWidget(
                   onPressed: () => {
                     Navigator.push(

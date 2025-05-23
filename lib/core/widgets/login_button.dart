@@ -6,12 +6,16 @@ class LoginButton extends StatelessWidget {
   final String hintText;
   final VoidCallback onPressed;
   final bool isLoading;
+  final Color backgroundColor;
+  final double radius;
 
   const LoginButton({
     super.key,
     required this.hintText,
     required this.onPressed,
     required this.isLoading,
+    this.radius = 30,
+    this.backgroundColor = AppColors.blue,
   });
 
   @override
@@ -21,8 +25,8 @@ class LoginButton extends StatelessWidget {
       child: Container(
           padding: const EdgeInsets.all(14),
           decoration: BoxDecoration(
-            color: AppColors.blue,
-            borderRadius: BorderRadius.circular(30),
+            color: backgroundColor,
+            borderRadius: BorderRadius.circular(radius),
           ),
           child: Center(
             child: isLoading?
