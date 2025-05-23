@@ -1,7 +1,5 @@
 import 'package:quickdrop_app/features/models/statictics_model.dart';
-import 'package:quickdrop_app/core/widgets/auth_button.dart';
 import 'package:quickdrop_app/core/widgets/gestureDetector.dart';
-import 'package:quickdrop_app/core/widgets/iconTextField.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:provider/provider.dart';
 import 'package:quickdrop_app/core/utils/imports.dart';
@@ -68,62 +66,8 @@ class _SingupPageState extends State<SignUpScreen> {
         await FirebaseFirestore.instance.collection('users').doc(uid).get();
     return userDoc.exists;
   }
-
-  void _signInWithGoogle() async {
-    if (_isGoogleLoading) return;
-    setState(
-      () {
-        _isGoogleLoading = true;
-      },
-    );
-
-    try {
-      final GoogleSignIn googleSignIn = GoogleSignIn(
-        scopes: ['email'],
-      );
-
-      await googleSignIn.signOut();
-
-      GoogleSignInAccount? googleUser = await googleSignIn.signIn();
-      if (googleUser == null) {
-        return;
-      }
-
-      final GoogleSignInAuthentication googleAuth =
-          await googleUser.authentication;
-
-      final AuthCredential credential = GoogleAuthProvider.credential(
-          accessToken: googleAuth.accessToken, idToken: googleAuth.idToken);
-
-      UserCredential userCredential =
-          await FirebaseAuth.instance.signInWithCredential(credential);
-
-      // await FirebaseService().saveUserToFirestore(userCredential.user!);
-
-      try {
-        await setUserData(userCredential);
-
-        if (mounted) {
-          context.go('/home');
-        }
-      } catch (e) {
-        if (mounted) {
-          AppUtils.showError(context, "failed to log in user $e");
-          return;
-        }
-      }
-    } on FirebaseAuthException catch (e) {
-      if (mounted) AppUtils.showError(context, 'Google Sign-In failed: ${e.message}');
-    } catch (e) {
-      if (mounted) AppUtils.showError(context, 'An unexpected error occurred: $e');
-    } finally {
-      setState(() {
-        _isGoogleLoading = false;
-      });
-    }
-  }
-
-  void _singUpUserWithEmail() async {
+  
+ void _singUpUserWithEmail() async {
     if (_formKey.currentState!.validate()) {
       if (_isEmailLoading) return;
 
@@ -161,14 +105,10 @@ class _SingupPageState extends State<SignUpScreen> {
         );
         try {
           _createStatsIfNewUser(user.uid);
-          bool userExist = await doesUserExist(user.uid);
+          // bool userExist = await doesUserExist(user.uid);
           final userProvider = Provider.of<UserProvider>(context, listen: false);
-          if (userExist == false) {
-            userProvider.setUser(user);
-            userProvider.saveUserToFirestore(user);
-          } else {
-            await userProvider.fetchUser(user.uid);
-          }
+          userProvider.setUser(user);
+          userProvider.saveUserToFirestore(user);
           if (mounted) {
             context.go('/verify-email');
           }

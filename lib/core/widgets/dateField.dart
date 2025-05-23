@@ -25,9 +25,7 @@ final String? Function(String?)? validator; // For form validation
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: 50,
-      child: TextFormField(
+    return TextFormField(
       controller: controller,
       validator: validator,
       onChanged: onChanged,
@@ -56,6 +54,6 @@ final String? Function(String?)? validator; // For form validation
         ),
           errorStyle: const TextStyle(height: 0, fontSize: 0),
       ),
-    ));
+    );
   }
 }

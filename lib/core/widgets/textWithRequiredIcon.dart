@@ -4,7 +4,7 @@ import 'package:quickdrop_app/core/utils/imports.dart';
 Widget TextWithRequiredIcon({
   required String text
 }) {
-  return Row(
+  return Column(children: [ Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Text(
@@ -24,5 +24,8 @@ Widget TextWithRequiredIcon({
               ),
             ),
         ],
-      );
+      ),
+      const SizedBox(height: 2),
+    ]
+  );
 }
