@@ -58,7 +58,7 @@ class _DropdownTextFieldState extends State<DropdownTextField> {
           ),
         ),
       ),
-      dropdownColor: AppColors.cardBackground,
+      dropdownColor: AppColors.dark,
       items: _items.map((String item) {
         return DropdownMenuItem<String>(
             value: item,
