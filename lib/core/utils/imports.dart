@@ -55,6 +55,7 @@ export 'package:quickdrop_app/core/utils/validator.dart';
 export 'package:quickdrop_app/core/utils/firebase_service.dart';
 export 'package:quickdrop_app/core/widgets/floatingActionButton.dart';
 export 'package:quickdrop_app/core/widgets/confirmation_dialog.dart';
+export 'package:quickdrop_app/core/widgets/textFieldWithHeader.dart';
 
 
 export 'package:quickdrop_app/core/widgets/item_details.dart';

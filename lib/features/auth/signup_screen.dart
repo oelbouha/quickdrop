@@ -155,8 +155,8 @@ class _SingupPageState extends State<SignUpScreen> {
           firstName: firstNameController.text,
           lastName: lastNameController.text,
           displayName: "${firstNameController.text} ${lastNameController.text}",
-          phoneNumber: userCredential.user!.phoneNumber,
-          photoUrl: AppTheme.defaultProfileImage,
+          phoneNumber: phoneNumberController.text,
+          photoUrl: null,
           createdAt: DateFormat('dd/MM/yyyy').format(DateTime.now()).toString(),
         );
         try {
@@ -230,20 +230,20 @@ class _SingupPageState extends State<SignUpScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              "Sing up to QuickDrop",
-              style: TextStyle(
-                  color: AppColors.headingText,
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(
-              height: 20,
-            ),
+            // const Text(
+            //   "Sing up",
+            //   style: TextStyle(
+            //       color: AppColors.headingText,
+            //       fontSize: 24,
+            //       fontWeight: FontWeight.bold),
+            // ),
+            // const SizedBox(
+            //   height: 20,
+            // ),
           Row(
             children: [
               Expanded(
-                child: IconTextField(
+                child: TextFieldWithHeader(
                   controller: firstNameController,
                   hintText: 'First Name',
                   obsecureText: false,
@@ -253,7 +253,7 @@ class _SingupPageState extends State<SignUpScreen> {
               ),
               const SizedBox(width: 10),
             Expanded(
-              child: IconTextField(
+              child: TextFieldWithHeader(
                 controller: lastNameController,
                 hintText: 'Last Name',
                 obsecureText: false,
@@ -263,8 +263,8 @@ class _SingupPageState extends State<SignUpScreen> {
             ),
           ],
         ),
-            const SizedBox(height: 15),
-            IconTextField(
+            const SizedBox(height: 8),
+            TextFieldWithHeader(
               controller: phoneNumberController,
               hintText: 'Phone Number',
               obsecureText: false,
@@ -272,16 +272,16 @@ class _SingupPageState extends State<SignUpScreen> {
               keyboardType: TextInputType.phone,
               validator: Validators.phone,
             ),
-            const SizedBox(height: 15),
-            IconTextField(
+            const SizedBox(height: 8),
+            TextFieldWithHeader(
               controller: emailController,
               hintText: 'Email',
               obsecureText: false,
               iconPath: "assets/icon/email.svg",
               validator: Validators.email,
             ),
-            const SizedBox(height: 15),
-            IconTextField(
+            const SizedBox(height: 8),
+            TextFieldWithHeader(
               controller: passwordController,
               hintText: 'Password',
               obsecureText: true,
@@ -298,9 +298,9 @@ class _SingupPageState extends State<SignUpScreen> {
               },
             ),
             const SizedBox(
-              height: 15,
+              height: 8,
             ),
-            IconTextField(
+            TextFieldWithHeader(
               controller: confirmPasswordController,
               hintText: 'Confirm Password',
               obsecureText: true,

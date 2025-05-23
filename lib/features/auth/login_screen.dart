@@ -216,7 +216,7 @@ class _LoginPageState extends State<LoginPage> {
             //   height: 20,
             // ),
             const Text(
-              "Sign in to QuickDrop",
+              "Sign in",
               style: TextStyle(
                   color: AppColors.dark,
                   fontSize: 24,
@@ -225,10 +225,10 @@ class _LoginPageState extends State<LoginPage> {
               textAlign: TextAlign.start,
             ),
              const SizedBox(
-              height: 30,
+              height: 25,
             ),
             AuthButton(
-              hintText: "Continue with Google",
+              hintText: "Sign in with Google",
               onPressed: _signInWithGoogle,
               imagePath: "assets/images/google.png",
               isLoading: _isGoogleLoading,
@@ -266,17 +266,19 @@ class _LoginPageState extends State<LoginPage> {
             const SizedBox(
               height: 30,
             ),
-            
-            IconTextField(
+
+            TextFieldWithHeader(
                 controller: emailController,
                 hintText: 'Email',
                 obsecureText: false,
                 iconPath: "assets/icon/email.svg",
+                isRequired: false,
                 validator: Validators.email),
             const SizedBox(height: 25),
-            IconTextField(
+            TextFieldWithHeader(
               controller: passwordController,
               hintText: 'Password',
+              isRequired: false,
               obsecureText: true,
               iconPath: "assets/icon/lock.svg",
               validator: Validators.notEmpty,
@@ -285,7 +287,7 @@ class _LoginPageState extends State<LoginPage> {
               height: 25,
             ),
             LoginButton(
-              hintText: "Log in",
+              hintText: "Sign in",
               onPressed: _signInUserWithEmail,
               isLoading: _isEmailLoading,
             ),
