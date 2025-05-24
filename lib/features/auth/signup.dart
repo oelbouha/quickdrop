@@ -16,15 +16,30 @@ class Signup extends StatefulWidget {
 }
 
 class _SignupState extends State<Signup> {
+
+  final phoneNumberController = TextEditingController();
   bool _isEmailLoading = false;
   bool _isGoogleLoading = false;
 
   void _signupUserWithEmail() async {
-    // context.push('/singup');
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => const SignUpScreen()),
-    );
+    if (_isEmailLoading) return;
+    setState(() {
+      _isEmailLoading = true;
+    });
+    if (phoneNumberController.text.isEmpty) {
+      AppUtils.showError(context, "Please enter your phone number");
+      setState(() {
+        _isEmailLoading = false;
+      });
+      return;
+    }
+    print(phoneNumberController.text);
+      context.pushNamed(
+    'create-account',
+    queryParameters: {
+      'phoneNumber': phoneNumberController.text,
+    },
+  );
   }
 
   Future<void> _createStatsIfNewUser(String userId) async {
@@ -133,6 +148,7 @@ class _SignupState extends State<Signup> {
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: AppColors.cardBackground,
+        
         body: Padding(
             padding: const EdgeInsets.all(AppTheme.homeScreenPadding),
             child: Center(
@@ -151,16 +167,29 @@ class _SignupState extends State<Signup> {
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        AuthButton(
-          hintText: "Sign up with Google",
-          onPressed: _signInWithGoogle,
-          imagePath: "assets/images/google.png",
-          isLoading: _isGoogleLoading,
+        
+        // const SizedBox(height: 8),
+            TextFieldWithHeader(
+              controller: phoneNumberController,
+              hintText: 'Phone Number',
+              obsecureText: false,
+              iconPath: "assets/icon/phone.svg",
+              keyboardType: TextInputType.phone,
+              validator: Validators.phone,
+            ),
+        
+        const SizedBox(
+          height: 15,
+        ),
+        LoginButton(
+          hintText: "Continue",
+          onPressed: _signupUserWithEmail,
+          isLoading: _isEmailLoading,
         ),
         const SizedBox(
           height: 15,
         ),
-        const Row(
+         const Row(
           children: [
             Expanded(
               child: Divider(
@@ -186,44 +215,43 @@ class _SignupState extends State<Signup> {
             )
           ],
         ),
-        const SizedBox(
-          height: 30,
-        ),
-        LoginButton(
-          hintText: "Continue with Email",
-          onPressed: _signupUserWithEmail,
-          isLoading: _isEmailLoading,
-        ),
-        const SizedBox(
+         const SizedBox(
           height: 15,
         ),
-        const Text(
-            "By continuing, you agree to our Terms of Service and Privacy Policy",
-            style: TextStyle(
-                color: AppColors.shipmentText,
-                fontSize: 12,
-                fontWeight: FontWeight.bold),
-            textAlign: TextAlign.center),
+        AuthButton(
+          hintText: "Sign up with Google",
+          onPressed: _signInWithGoogle,
+          imagePath: "assets/images/google.png",
+          isLoading: _isGoogleLoading,
+        ),
         const SizedBox(
           height: 30,
         ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Text(
-              "Already have an account?",
-              style: TextStyle(color: AppColors.shipmentText, fontSize: 14),
-            ),
-            GestureDetectorWidget(
-              onPressed: () => {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const LoginPage()),
-                )
-              },
-              hintText: "Sign in",
-            )
-          ],
+      
+        textWithLink(
+          text: "By continuing, you agree to our ",
+          textLink: "Terms of Service", 
+          linkTextColor: AppColors.shipmentText,
+          navigatTo: '/terms-of-service', 
+          context: context,
+          push: true
+        ),
+        textWithLink(
+          text: " And our ",
+          textLink: "Privacy Policy", 
+          linkTextColor: AppColors.shipmentText,
+          navigatTo: '/privacy-policy', 
+          context: context,
+          push: true
+        ),
+        const SizedBox(
+          height: 30,
+        ),
+         textWithLink(
+          text: "Already have an account? ", 
+          textLink: "sign in", 
+          navigatTo: '/login', 
+          context: context
         ),
       ],
     );

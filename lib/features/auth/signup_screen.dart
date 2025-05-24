@@ -8,7 +8,11 @@ import 'package:intl/intl.dart';
 import 'package:go_router/go_router.dart';
 
 class SignUpScreen extends StatefulWidget {
-  const SignUpScreen({Key? key}) : super(key: key);
+  final String ? phoneNumber;
+  const SignUpScreen({
+    super.key,
+    this.phoneNumber,
+  });
 
   @override
   State<SignUpScreen> createState() => _SingupPageState();
@@ -157,7 +161,7 @@ class _SingupPageState extends State<SignUpScreen> {
               children: [
                 Expanded(
                     child: Center(
-                  child: SingleChildScrollView(child: _buildSignUpScreen()),
+                    child: SingleChildScrollView(child: _buildSignUpScreen()),
                 )),
               ],
             ))));
@@ -203,15 +207,6 @@ class _SingupPageState extends State<SignUpScreen> {
             ),
           ],
         ),
-            const SizedBox(height: 8),
-            TextFieldWithHeader(
-              controller: phoneNumberController,
-              hintText: 'Phone Number',
-              obsecureText: false,
-              iconPath: "assets/icon/phone.svg",
-              keyboardType: TextInputType.phone,
-              validator: Validators.phone,
-            ),
             const SizedBox(height: 8),
             TextFieldWithHeader(
               controller: emailController,
@@ -264,31 +259,14 @@ class _SingupPageState extends State<SignUpScreen> {
                 onPressed: _singUpUserWithEmail,
                 isLoading: _isEmailLoading),
             const SizedBox(
-              height: 10,
+              height: 30,
             ),
-           
-            
-            const SizedBox(
-              height: 20,
+            textWithLink(
+              text: "Already have an account? ", 
+              textLink: "sign in", 
+              navigatTo: '/login', 
+              context: context
             ),
-           Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Text(
-              "Already have an account?",
-              style: TextStyle(color: AppColors.shipmentText, fontSize: 14),
-            ),
-            GestureDetectorWidget(
-              onPressed: () => {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const LoginPage()),
-                )
-              },
-              hintText: "Sign in",
-            )
-          ],
-        ),
           ],
         ));
   }

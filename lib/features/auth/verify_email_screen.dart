@@ -29,15 +29,19 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Container(
-                      width:  100,
-                      height: 100,
+                      width:  50,
+                      height: 50,
                       decoration: const BoxDecoration(
                         // shape: BoxShape.circle,
                         // color: AppColors.blue,
                         color: AppColors.requestButton,
-                        borderRadius: BorderRadius.all(Radius.circular(100)),
+                        borderRadius: BorderRadius.all(Radius.circular(30)),
                       ),
-                      child: CustomIcon(iconPath: "assets/icon/email.svg", color: AppColors.blue, size: 108,),
+                      child: const Icon(
+                        Icons.mail_outline,
+                        color: AppColors.white,
+                        size: 35,
+                      ),
                     ),
                     const Text("Check your email",
                         style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
@@ -53,7 +57,7 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
                       height: 20,
                     ),
                     Text(
-                      "${FirebaseAuth.instance.currentUser?.email}",
+                      FirebaseAuth.instance.currentUser?.email ?? "Your email",
                       style: const TextStyle(
                         fontSize: 16, fontWeight: FontWeight.bold
                       ),
@@ -84,7 +88,6 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
                           Text("1. . Check your email inbox"),
                           Text("2. . Click the verification link"),
                           Text("3.  Return here and click \"I've verified\""),
-
                       ]
                       ),
 
@@ -131,10 +134,10 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
                       height: 20
                     ),
                     const Text("Want to use a different email?"),
-                    TextWithLink(
+                    textWithLink(
                       text: "Sign up with a different email? ", 
-                      textLink: "Change email address", 
-                      navigatTo: '/signup', 
+                      textLink: "Change email", 
+                      navigatTo: '/create-account', 
                       context: context
                     )
                    
