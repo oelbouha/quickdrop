@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:quickdrop_app/theme/colors.dart';
-import 'package:quickdrop_app/theme/AppTheme.dart';
 
 class GestureDetectorWidget extends StatelessWidget {
-  final String hintText;
   final VoidCallback onPressed;
+  final String hintText;
+  final Color color;
+  final double fontSize;
 
   const GestureDetectorWidget({
     super.key,
-    required this.hintText,
     required this.onPressed,
+    required this.hintText,
+    this.color = Colors.blue,
+    this.fontSize = 14,
   });
 
   @override
@@ -18,10 +20,15 @@ class GestureDetectorWidget extends StatelessWidget {
       onTap: onPressed,
       child: Text(
         hintText,
-        style: const TextStyle(
-          color: AppColors.shipmentText,
-          fontSize: 14,
-          fontWeight: FontWeight.bold,
+        style: TextStyle(
+          color: color,
+          fontSize: fontSize,
+          fontWeight: FontWeight.w800,
+          fontFamily: 'MonaSans',
+          decoration: TextDecoration.underline,
+          decorationStyle: TextDecorationStyle.solid,
+          letterSpacing: 0.5,
+          decorationColor: color,
         ),
       ),
     );

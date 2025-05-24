@@ -8,6 +8,7 @@ class LoginButton extends StatelessWidget {
   final bool isLoading;
   final Color backgroundColor;
   final double radius;
+  final Color textColor;
 
   const LoginButton({
     super.key,
@@ -16,6 +17,7 @@ class LoginButton extends StatelessWidget {
     required this.isLoading,
     this.radius = 30,
     this.backgroundColor = AppColors.blue,
+    this.textColor = AppColors.white,
   });
 
   @override
@@ -41,8 +43,8 @@ class LoginButton extends StatelessWidget {
             :
               Text(
                 hintText,
-                style: const TextStyle(
-                    color: Colors.white,
+                style:  TextStyle(
+                    color: textColor,
                     fontSize: 18,
                     fontWeight: FontWeight.bold),
               ),

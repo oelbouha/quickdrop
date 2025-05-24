@@ -1,6 +1,7 @@
 import 'package:quickdrop_app/core/utils/imports.dart';
 import 'package:quickdrop_app/features/home/home_screen.dart';
-
+import 'package:quickdrop_app/features/auth/intro_screen.dart';
+import 'package:quickdrop_app/features/auth/signup.dart';
 import 'package:quickdrop_app/features/auth/signup_screen.dart';
 import 'package:quickdrop_app/features/chat/chat_screen.dart';
 import 'package:quickdrop_app/features/profile/profile_screen.dart';
@@ -11,6 +12,8 @@ import 'package:quickdrop_app/features/profile/update_user_info_screen.dart';
 import 'package:quickdrop_app/features/profile/profile_statistics.dart';
 import 'package:quickdrop_app/features/shipment/listing_card_details_screen.dart';
 
+import 'package:quickdrop_app/features/help/privacy_policy.dart';
+import 'package:quickdrop_app/features/help/terms_of_service.dart';
 import 'package:quickdrop_app/features/auth/verify_email_screen.dart';
 
 CustomTransitionPage buildCustomTransitionPage(
@@ -39,16 +42,33 @@ class AppRouter {
         final isEmailVerified =
             FirebaseAuth.instance.currentUser?.emailVerified;
         final isLoggingIn = currentPath == '/';
+        final publicRoutes = {
+          '/',
+          '/signup',
+          '/login',
+          '/forgot-password',
+          '/create-account',
+          '/privacy-policy',
+          '/terms-of-service',
+        };
 
+        // print("isLoggingIn: $isLoggingIn");
+        // print("currentPath: $currentPath");
+        // print("user: $user");
+        // print("isEmailVerified: $isEmailVerified");
         // return '/verify-email';
-        if (user == null && !isLoggingIn) {
-          return '/';
+        if (user != null && currentPath == '/create-account') {
+          return null;
         }
+        if (publicRoutes.contains(currentPath)) {
+          return null;
+        }
+
         if (user != null && isEmailVerified == false) {
           Provider.of<UserProvider>(context, listen: false).fetchUser(user.uid);
           return '/verify-email';
         }
-        if (user != null && isLoggingIn) {
+        if (user != null && currentPath == '/') {
           Provider.of<UserProvider>(context, listen: false).fetchUser(user.uid);
           return '/home';
         }
@@ -64,34 +84,60 @@ class AppRouter {
               GoRoute(
                 path: '/home',
                 pageBuilder: (context, state) =>
-                    NoTransitionPage(child: HomeScreen()),
+                    const NoTransitionPage(child: HomeScreen()),
               ),
               GoRoute(
                 path: '/trip',
                 pageBuilder: (context, state) =>
-                    NoTransitionPage(child: TripScreen()),
+                    const NoTransitionPage(child: TripScreen()),
               ),
               GoRoute(
                 path: '/shipment',
                 pageBuilder: (context, state) =>
-                    NoTransitionPage(child: ShipmentScreen()),
+                    const NoTransitionPage(child: ShipmentScreen()),
               ),
               GoRoute(
                 path: '/chat',
                 pageBuilder: (context, state) =>
-                    NoTransitionPage(child: ChatScreen()),
+                    const NoTransitionPage(child: ChatScreen()),
               ),
             ]),
         GoRoute(
           path: '/',
-          name: 'login',
-          builder: (context, state) => const LoginPage(),
+          name: 'intro',
+          builder: (context, state) => const IntroScreen(),
         ),
         GoRoute(
-          path: '/signup',
-          name: 'singup',
-          builder: (context, state) => const SignUpScreen(),
-        ),
+            path: '/signup',
+            name: 'signup',
+            pageBuilder: (context, state) {
+              return buildCustomTransitionPage(
+                context,
+                const Signup(),
+              );
+            }),
+        GoRoute(
+          path: '/login',
+          name: 'login',
+          pageBuilder: (context, state) {
+            return buildCustomTransitionPage(
+              context,
+              const LoginPage(),
+            );
+          }),
+        GoRoute(
+            path: '/create-account',
+            name: 'create-account',
+            pageBuilder: (context, state) {
+              final phoneNumber = state.uri.queryParameters['phoneNumber'];
+              print("Route param received: ${state.uri.queryParameters}");
+
+              print("phoneNumber: $phoneNumber");
+              return buildCustomTransitionPage(
+                context,
+                SignUpScreen(phoneNumber: phoneNumber),
+              );
+            }),
         GoRoute(
           name: "chat",
           path: "/chat",
@@ -103,6 +149,22 @@ class AppRouter {
           pageBuilder: (context, state) => buildCustomTransitionPage(
             context,
             const VerifyEmailScreen(),
+          ),
+        ),
+        GoRoute(
+          name: "privacy-policy",
+          path: "/privacy-policy",
+          pageBuilder: (context, state) => buildCustomTransitionPage(
+            context,
+            const PrivacyPolicy(),
+          ),
+        ),
+        GoRoute(
+          name: "terms-of-service",
+          path: "/terms-of-service",
+          pageBuilder: (context, state) => buildCustomTransitionPage(
+            context,
+            const TermsOfService(),
           ),
         ),
         GoRoute(

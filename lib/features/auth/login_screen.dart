@@ -205,16 +205,6 @@ class _LoginPageState extends State<LoginPage> {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // const Text(
-            //   "QuickDrop",
-            //   style: TextStyle(
-            //       color: AppColors.blue,
-            //       fontSize: 30,
-            //       fontWeight: FontWeight.bold),
-            // ),
-            // const SizedBox(
-            //   height: 20,
-            // ),
             const Text(
               "Sign in",
               style: TextStyle(
@@ -294,36 +284,11 @@ class _LoginPageState extends State<LoginPage> {
             const SizedBox(
               height: 10,
             ),
-             TextWithLink(
-                      text: "Don't have an account? ", 
-                      textLink: "sign up", 
-                      navigatTo: '/signup', 
-                      context: context
-                    ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Text(
-                  "Don't have an account?",
-                  style:  TextStyle(
-                      color: AppColors.shipmentText, fontSize: 14),
-                ),
-                // GestureDetectorWidget(
-                //   onPressed: () => {},
-                //   hintText: "Don't have an account? ",
-                // ),
-               
-                GestureDetectorWidget(
-                  onPressed: () => {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const Signup()),
-                    )
-                  },
-                  hintText: "Sign up",
-                )
-              ],
+             textWithLink(
+              text: "Don't have an account? ", 
+              textLink: "sign up", 
+              navigatTo: '/signup', 
+              context: context
             ),
            
           ],

@@ -37,7 +37,7 @@ class MyApp extends StatelessWidget {
     child: MaterialApp.router(
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
-          fontFamily: 'Roboto',
+          fontFamily: 'MonaSans',
           appBarTheme: const AppBarTheme(
             // backgroundColor: Colors.blue,
             iconTheme: IconThemeData(color: Colors.white), // Makes the back arrow white
