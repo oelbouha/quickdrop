@@ -48,7 +48,7 @@ class IconTextField extends StatelessWidget {
               color: Colors.grey,
               width: AppTheme.textFieldBorderWidth,
             ),
-            borderRadius: BorderRadius.circular(AppTheme.cardRadius),
+            borderRadius: BorderRadius.circular(AppTheme.textFeildRadius),
           ),
           focusedBorder: OutlineInputBorder(
             borderSide: const BorderSide(

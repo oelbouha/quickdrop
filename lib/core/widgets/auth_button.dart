@@ -13,7 +13,7 @@ class AuthButton extends StatelessWidget {
     required this.hintText,
     required this.onPressed,
     this.imagePath,
-    this.radius = 30,
+    this.radius = AppTheme.textFeildRadius,
     required this.isLoading,
   });
 
