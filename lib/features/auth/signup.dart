@@ -7,6 +7,8 @@ import 'package:quickdrop_app/core/utils/imports.dart';
 import 'package:quickdrop_app/features/models/statictics_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
+import 'package:intl_phone_field/intl_phone_field.dart';
+
 
 class Signup extends StatefulWidget {
   const Signup({Key? key}) : super(key: key);
@@ -148,7 +150,10 @@ class _SignupState extends State<Signup> {
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: AppColors.cardBackground,
-        
+        appBar: AppBar(
+          backgroundColor: AppColors.cardBackground,
+         
+        ),
         body: Padding(
             padding: const EdgeInsets.all(AppTheme.homeScreenPadding),
             child: Center(
@@ -165,21 +170,33 @@ class _SignupState extends State<Signup> {
   Widget _buildLogInScreen() {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        
-        // const SizedBox(height: 8),
-            TextFieldWithHeader(
-              controller: phoneNumberController,
-              hintText: 'Phone Number',
-              obsecureText: false,
-              iconPath: "assets/icon/phone.svg",
-              keyboardType: TextInputType.phone,
-              validator: Validators.phone,
+            const Text("Join us", 
+            style: TextStyle(
+              color: AppColors.shipmentText, fontWeight: FontWeight.w700,
+              fontSize: 30
             ),
-        
+            textAlign: TextAlign.start,
+          ),
+            const SizedBox(
+              height: 10,
+            ),
+          const Text("W'll send you a verification code to this number", 
+            style: TextStyle(
+              color: AppColors.shipmentText, fontWeight: FontWeight.w500,
+              fontSize: 14,
+            ),
+            textAlign: TextAlign.start,
+          ),
+          const SizedBox(
+              height: 6,
+            ),
+            PhoneNumber(
+              controller: phoneNumberController
+            ),
         const SizedBox(
-          height: 15,
+          height: 6,
         ),
         LoginButton(
           hintText: "Continue",
@@ -228,25 +245,25 @@ class _SignupState extends State<Signup> {
           height: 30,
         ),
       
-        textWithLink(
-          text: "By continuing, you agree to our ",
-          textLink: "Terms of Service", 
-          linkTextColor: AppColors.shipmentText,
-          navigatTo: '/terms-of-service', 
-          context: context,
-          push: true
-        ),
-        textWithLink(
-          text: " And our ",
-          textLink: "Privacy Policy", 
-          linkTextColor: AppColors.shipmentText,
-          navigatTo: '/privacy-policy', 
-          context: context,
-          push: true
-        ),
-        const SizedBox(
-          height: 30,
-        ),
+        // textWithLink(
+        //   text: "By continuing, you agree to our ",
+        //   textLink: "Terms of Service", 
+        //   linkTextColor: AppColors.shipmentText,
+        //   navigatTo: '/terms-of-service', 
+        //   context: context,
+        //   push: true
+        // ),
+        // textWithLink(
+        //   text: " And our ",
+        //   textLink: "Privacy Policy", 
+        //   linkTextColor: AppColors.shipmentText,
+        //   navigatTo: '/privacy-policy', 
+        //   context: context,
+        //   push: true
+        // ),
+        // const SizedBox(
+        //   height: 30,
+        // ),
          textWithLink(
           text: "Already have an account? ", 
           textLink: "sign in", 
