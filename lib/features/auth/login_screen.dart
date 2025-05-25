@@ -18,6 +18,7 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   final emailController = TextEditingController();
+  final phoneNumberController = TextEditingController();
   final passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   // final UserData? _usr;
@@ -176,7 +177,7 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   void dispose() {
-    emailController.dispose();
+    // emailController.dispose();
     passwordController.dispose();
     super.dispose();
   }
@@ -185,6 +186,7 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: AppColors.cardBackground,
+        resizeToAvoidBottomInset: false,
         body: Padding(
             padding: const EdgeInsets.all(AppTheme.homeScreenPadding),
             child: Center(
@@ -257,18 +259,13 @@ class _LoginPageState extends State<LoginPage> {
               height: 30,
             ),
 
-            TextFieldWithHeader(
-                controller: emailController,
-                hintText: 'Email',
-                obsecureText: false,
-                iconPath: "assets/icon/email.svg",
-                isRequired: false,
-                validator: Validators.email),
-            const SizedBox(height: 25),
-            TextFieldWithHeader(
+             PhoneNumber(
+              controller: phoneNumberController
+            ),
+            const SizedBox(height: 10),
+            IconTextField(
               controller: passwordController,
               hintText: 'Password',
-              isRequired: false,
               obsecureText: true,
               iconPath: "assets/icon/lock.svg",
               validator: Validators.notEmpty,

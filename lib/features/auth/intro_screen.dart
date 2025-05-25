@@ -38,13 +38,6 @@ Widget build(BuildContext context) {
         padding: const EdgeInsets.all(AppTheme.homeScreenPadding),
         child: Column(
           children: [
-
-            // Title
-           
-
-            // const SizedBox(height: 20),
-
-            // Slide content area
             Expanded(
               child: PageView(
                 children: const [
@@ -63,10 +56,7 @@ Widget build(BuildContext context) {
                 ],
               ),
             ),
-
             const SizedBox(height: 40),
-
-            // Log in button
             LoginButton(
               hintText: "Log in",
               onPressed: () {
@@ -74,10 +64,7 @@ Widget build(BuildContext context) {
               },
               isLoading: _isLoginLoading,
             ),
-
             const SizedBox(height: 15),
-
-            // Sign up button
             LoginButton(
               hintText: "Create an account",
               onPressed: () {
