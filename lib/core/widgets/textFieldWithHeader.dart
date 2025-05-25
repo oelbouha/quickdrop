@@ -62,20 +62,20 @@ Widget build(BuildContext context) {
         validator: validator,
         onChanged: onChanged,
         keyboardType: keyboardType,
-        style: const TextStyle(color: Color.fromARGB(255, 224, 72, 72)),
+        style: const TextStyle(color: AppColors.shipmentText),
         decoration: InputDecoration(
           hintText: hintText,
           hintStyle: const TextStyle(
             color: AppColors.lessImportant,
           ),
           filled: true,
-          fillColor: AppColors.background,
+          fillColor: AppColors.white,
           enabledBorder: OutlineInputBorder(
             borderSide: const BorderSide(
-              color: AppColors.background,
+              color: AppColors.lessImportant,
               width: AppTheme.textFieldBorderWidth,
             ),
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(AppTheme.textFeildRadius),
           ),
           focusedBorder: OutlineInputBorder(
             borderSide: const BorderSide(

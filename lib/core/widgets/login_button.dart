@@ -15,7 +15,7 @@ class LoginButton extends StatelessWidget {
     required this.hintText,
     required this.onPressed,
     required this.isLoading,
-    this.radius = 30,
+    this.radius = AppTheme.textFeildRadius,
     this.backgroundColor = AppColors.blue,
     this.textColor = AppColors.white,
   });
