@@ -32,10 +32,10 @@ class IconTextField extends StatelessWidget {
       validator: validator,
       onChanged: onChanged,
       
-      style: const TextStyle(color: AppColors.lessImportant),
+      style: const TextStyle(color: AppColors.shipmentText),
       decoration: InputDecoration(
           hintStyle: const TextStyle(
-            color: AppColors.lessImportant,
+            color: AppColors.textFieldHintText,
           ),
           hintText: hintText,
           filled: true,

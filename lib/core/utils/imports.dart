@@ -9,6 +9,7 @@ export 'package:quickdrop_app/core/widgets/ongoing_item_card.dart';
 export 'package:quickdrop_app/core/widgets/active_item_card.dart';
 export 'package:quickdrop_app/core/widgets/custom_tab_bar.dart';
 export 'package:quickdrop_app/core/widgets/textWithRequiredIcon.dart';
+export 'package:quickdrop_app/core/widgets/textFieldWithoutHeader.dart';
 export 'package:quickdrop_app/core/widgets/textWithLink.dart';
 export 'package:quickdrop_app/core/widgets/appBarText.dart';
 export 'package:quickdrop_app/core/widgets/phone_number.dart';

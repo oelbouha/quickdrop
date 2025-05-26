@@ -150,6 +150,7 @@ class _SignupState extends State<Signup> {
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: AppColors.cardBackground,
+        resizeToAvoidBottomInset: false,
         appBar: AppBar(
           backgroundColor: AppColors.cardBackground,
          
@@ -174,7 +175,7 @@ class _SignupState extends State<Signup> {
       children: [
             const Text("Join us", 
             style: TextStyle(
-              color: AppColors.shipmentText, fontWeight: FontWeight.w700,
+              color: AppColors.headingText, fontWeight: FontWeight.w700,
               fontSize: 30
             ),
             textAlign: TextAlign.start,

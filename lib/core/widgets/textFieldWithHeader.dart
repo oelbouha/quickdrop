@@ -6,6 +6,7 @@ import 'package:quickdrop_app/core/widgets/custom_svg.dart';
 class TextFieldWithHeader extends StatelessWidget {
   final TextEditingController controller;
   final String hintText;
+  final String headerText;
   final bool obsecureText;
   final bool isRequired;
   final String iconPath;
@@ -19,6 +20,7 @@ class TextFieldWithHeader extends StatelessWidget {
     required this.controller,
     required this.hintText,
     this.iconPath = "d  ",
+    required this.headerText ,
      this.obsecureText = false,
     this.keyboardType = TextInputType.text,
     this.validator,
@@ -37,7 +39,7 @@ Widget build(BuildContext context) {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Text(
-            hintText,
+            headerText,
             style: const TextStyle(
               color: AppColors.headingText,
               fontSize: 16,
