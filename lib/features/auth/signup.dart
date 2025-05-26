@@ -173,7 +173,7 @@ class _SignupState extends State<Signup> {
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-            const Text("Join us", 
+            const Text("Join us via phone", 
             style: TextStyle(
               color: AppColors.headingText, fontWeight: FontWeight.w700,
               fontSize: 30
@@ -183,9 +183,9 @@ class _SignupState extends State<Signup> {
             const SizedBox(
               height: 10,
             ),
-          const Text("W'll send you a verification code to this number", 
+          const Text("W'll text you to confirm your phone number. ", 
             style: TextStyle(
-              color: AppColors.shipmentText, fontWeight: FontWeight.w500,
+              color: AppColors.shipmentText, fontWeight: FontWeight.w400,
               fontSize: 14,
             ),
             textAlign: TextAlign.start,
