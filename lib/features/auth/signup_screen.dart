@@ -6,6 +6,10 @@ import 'package:quickdrop_app/core/utils/imports.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
 import 'package:go_router/go_router.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter/gestures.dart';
+
+
 
 class SignUpScreen extends StatefulWidget {
   final String ? phoneNumber;
@@ -154,6 +158,17 @@ class _SingupPageState extends State<SignUpScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: AppColors.cardBackground,
+        appBar: AppBar(
+          backgroundColor: AppColors.cardBackground,
+          elevation: 0,
+          centerTitle: true,
+          iconTheme: const IconThemeData(
+            color: Colors.black, // Set the arrow back color to black
+          ),
+          systemOverlayStyle: SystemUiOverlayStyle.dark, // Ensures status bar icons are dark
+        ),
+
+        resizeToAvoidBottomInset: false,
         body: Padding(
             padding: const EdgeInsets.all(AppTheme.homeScreenPadding),
             child: Center(
@@ -174,43 +189,65 @@ class _SingupPageState extends State<SignUpScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // const Text(
-            //   "Sing up",
-            //   style: TextStyle(
-            //       color: AppColors.headingText,
-            //       fontSize: 24,
-            //       fontWeight: FontWeight.bold),
-            // ),
-            // const SizedBox(
-            //   height: 20,
-            // ),
-          Row(
-            children: [
-              Expanded(
-                child: TextFieldWithHeader(
+            const Text(
+              "Sing up",
+              style: TextStyle(
+                  color: AppColors.headingText,
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(
+              height: 20,
+            ),
+            TextFieldWithHeader(
                   controller: firstNameController,
-                  hintText: 'First Name',
+                  headerText: 'Full Name',
+                  hintText: 'First name on ID',
                   obsecureText: false,
                   iconPath: "assets/icon/user.svg",
+                  isRequired: false,
                   validator: Validators.name,
                 ),
+                const SizedBox(height: 8),
+                TextFieldWithoutHeader(
+                  controller: lastNameController,
+                  hintText: 'Last name on ID',
+                  obsecureText: false,
+                  validator: Validators.name,
               ),
-              const SizedBox(width: 10),
-            Expanded(
-              child: TextFieldWithHeader(
-                controller: lastNameController,
-                hintText: 'Last Name',
-                obsecureText: false,
-                iconPath: "assets/icon/user.svg",
-                validator: Validators.name,
+              const SizedBox(height: 6),
+              const Text("Make sure this matches the name on your government ID or passport.",
+                style: TextStyle(
+                  color: AppColors.headingText,
+                  fontSize: 12,
+                  fontWeight: FontWeight.w400,
+                ),
+              ),
+            const SizedBox(height: 15),
+            TextFieldWithHeader(
+              controller: emailController,
+              hintText: 'Birthday',
+              isRequired: false,
+              headerText: 'Date of Birth',
+              obsecureText: false,
+              iconPath: "assets/icon/email.svg",
+              keyboardType: TextInputType.datetime,
+              validator: Validators.email,
+            ),
+            const SizedBox(height: 8),
+            const Text("To Sign up, you must be at least 18 years old. other peaaple  who use quickdrop won't see your birthday.",
+              style: TextStyle(
+                color: AppColors.headingText,
+                fontSize: 12,
+                fontWeight: FontWeight.w400,
               ),
             ),
-          ],
-        ),
-            const SizedBox(height: 8),
+            const SizedBox(height: 15),
             TextFieldWithHeader(
               controller: emailController,
               hintText: 'Email',
+              isRequired: false,
+              headerText: 'Email',
               obsecureText: false,
               iconPath: "assets/icon/email.svg",
               validator: Validators.email,
@@ -219,6 +256,8 @@ class _SingupPageState extends State<SignUpScreen> {
             TextFieldWithHeader(
               controller: passwordController,
               hintText: 'Password',
+              headerText: 'Password',
+              isRequired: false,
               obsecureText: true,
               iconPath: "assets/icon/lock.svg",
               validator: (value) {
@@ -233,40 +272,73 @@ class _SingupPageState extends State<SignUpScreen> {
               },
             ),
             const SizedBox(
-              height: 8,
+              height: 20,
             ),
-            TextFieldWithHeader(
-              controller: confirmPasswordController,
-              hintText: 'Confirm Password',
-              obsecureText: true,
-              iconPath: "assets/icon/lock.svg",
-              validator: (value) {
-                if (value == null || value.trim().isEmpty) {
-                  return 'This field cannot be empty';
-                }
-                if (confirmPasswordController.text.trim() !=
-                    passwordController.text.trim()) {
-                  return 'passwords does not match';
-                }
-                return null;
-              },
-            ),
+         Text.rich(
+  TextSpan(
+    style: const TextStyle(
+      fontSize: 14,
+      fontWeight: FontWeight.w400,
+      color: AppColors.shipmentText,
+    ),
+    children: [
+      const TextSpan(text: "By clicking "),
+      TextSpan(
+        text: "Agree and Continue, ",
+        style: const TextStyle(
+          fontWeight: FontWeight.w700,
+          color: AppColors.dark,
+        ),
+      ),
+      const TextSpan(text: "I agree to QuickDrop's "),
+      TextSpan(
+        text: "Terms of Service,",
+        style: const TextStyle(
+          fontWeight: FontWeight.w800,
+          color: AppColors.dark,
+          decoration: TextDecoration.underline,
+        ),
+        recognizer: TapGestureRecognizer()
+          ..onTap = () {
+            context.push('/terms-of-service');
+          },
+      ),
+      const TextSpan(text: " and acknowledge that I have read the "),
+      TextSpan(
+        text: "Privacy Policy",
+        style: const TextStyle(
+          fontWeight: FontWeight.w800,
+          color: AppColors.dark,
+          decoration: TextDecoration.underline,
+        ),
+        recognizer: TapGestureRecognizer()
+          ..onTap = () {
+            context.push('/privacy-policy');
+          },
+      ),
+      const TextSpan(text: "."),
+    ],
+  ),
+  textAlign: TextAlign.start,
+),
             const SizedBox(
-              height: 25,
+              height: 20,
             ),
             LoginButton(
-                hintText: "Create Account",
+                hintText: "Agree and Continue",
+                backgroundColor: AppColors.dark,
                 onPressed: _singUpUserWithEmail,
                 isLoading: _isEmailLoading),
             const SizedBox(
               height: 30,
             ),
-            textWithLink(
-              text: "Already have an account? ", 
-              textLink: "sign in", 
-              navigatTo: '/login', 
-              context: context
-            ),
+            
+            // textWithLink(
+            //   text: "Already have an account? ", 
+            //   textLink: "sign in", 
+            //   navigatTo: '/login', 
+            //   context: context
+            // ),
           ],
         ));
   }
