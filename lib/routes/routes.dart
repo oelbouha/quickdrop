@@ -15,6 +15,7 @@ import 'package:quickdrop_app/features/shipment/listing_card_details_screen.dart
 import 'package:quickdrop_app/features/help/privacy_policy.dart';
 import 'package:quickdrop_app/features/help/terms_of_service.dart';
 import 'package:quickdrop_app/features/auth/verify_email_screen.dart';
+import 'package:quickdrop_app/features/auth/verify_phone_number.dart';
 
 CustomTransitionPage buildCustomTransitionPage(
   BuildContext context,
@@ -51,7 +52,7 @@ class AppRouter {
           '/privacy-policy',
           '/terms-of-service',
         };
-        // return '/create-account';
+        return '/verify-phone';
         // Debugging prints
         // print("isLoggingIn: $isLoggingIn");
         // print("currentPath: $currentPath");
@@ -150,6 +151,14 @@ class AppRouter {
           pageBuilder: (context, state) => buildCustomTransitionPage(
             context,
             const VerifyEmailScreen(),
+          ),
+        ),
+        GoRoute(
+          name: "verify-phone",
+          path: "/verify-phone",
+          pageBuilder: (context, state) => buildCustomTransitionPage(
+            context,
+            const VerifyPhoneScreen(),
           ),
         ),
         GoRoute(

@@ -208,11 +208,11 @@ class _LoginPageState extends State<LoginPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Text(
-              "Sign in",
+              "Sign in to Quickdrop",
               style: TextStyle(
                   color: AppColors.dark,
                   fontSize: 24,
-                  fontWeight: FontWeight.bold
+                  fontWeight: FontWeight.w600
               ),
               textAlign: TextAlign.start,
             ),
@@ -237,15 +237,15 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ),
                 SizedBox(
-                  width: 8,
+                  width: 12,
                 ),
                 Text(
-                  "or sign in with email",
+                  "or",
                   style:
                       TextStyle(color: AppColors.shipmentText, fontSize: 12),
                 ),
                 SizedBox(
-                  width: 8,
+                  width: 12,
                 ),
                 Expanded(
                   child: Divider(
@@ -258,7 +258,6 @@ class _LoginPageState extends State<LoginPage> {
             const SizedBox(
               height: 30,
             ),
-
              PhoneNumber(
               controller: phoneNumberController
             ),
@@ -283,8 +282,8 @@ class _LoginPageState extends State<LoginPage> {
             ),
              textWithLink(
               text: "Don't have an account? ", 
-              textLink: "sign up", 
-              navigatTo: '/signup', 
+              textLink: "sign up",
+              navigatTo: '/signup',
               context: context
             ),
            
