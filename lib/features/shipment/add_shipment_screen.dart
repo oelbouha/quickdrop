@@ -236,7 +236,8 @@ class _AddShipmentScreenState extends State<AddShipmentScreen> {
 
             TextFieldWithHeader(
               controller: packageNameController,
-              hintText: "Packge Name",
+              headerText: "Packge Name",
+              hintText: "phone case, book, etc",
               obsecureText: false ,
               keyboardType: TextInputType.text,
               validator: Validators.notEmpty,
@@ -259,6 +260,7 @@ class _AddShipmentScreenState extends State<AddShipmentScreen> {
             TextFieldWithHeader(
               controller: priceController,
               hintText: "Price",
+              headerText: "Price",
               validator: Validators.notEmpty,
               keyboardType: TextInputType.number,
             ),
@@ -315,6 +317,7 @@ class _AddShipmentScreenState extends State<AddShipmentScreen> {
              TextFieldWithHeader(
               controller: weightController,
               hintText: "Weight",
+              headerText: "Weight in kg",
               keyboardType: TextInputType.number,
               validator: Validators.notEmpty,
             ),
@@ -325,6 +328,7 @@ class _AddShipmentScreenState extends State<AddShipmentScreen> {
             TextFieldWithHeader(
               controller: packageQuantityController,
               hintText: "Quantity",
+              headerText: "Package Quantity",
               keyboardType: TextInputType.number,
               validator: Validators.notEmpty,
             ),
@@ -345,7 +349,8 @@ class _AddShipmentScreenState extends State<AddShipmentScreen> {
                 Expanded(
                   child: TextFieldWithHeader(
                     controller: lengthController,
-                    hintText: "Length",
+                    hintText: "Length (cm)",
+                    headerText: "Length ",
                     keyboardType: TextInputType.number,
                     isRequired: false,
                   ),
@@ -355,6 +360,7 @@ class _AddShipmentScreenState extends State<AddShipmentScreen> {
                   child: TextFieldWithHeader(
                     controller: widthController,
                     hintText: "Width",
+                    headerText: "Width",
                     isRequired: false,
                     keyboardType: TextInputType.number,
                   ),
@@ -364,6 +370,7 @@ class _AddShipmentScreenState extends State<AddShipmentScreen> {
                   child: TextFieldWithHeader(
                     controller: heightController,
                     hintText: "Height",
+                    headerText: "Height",
                     isRequired: false,
                     keyboardType: TextInputType.number,
                   ),
@@ -417,6 +424,7 @@ class _AddShipmentScreenState extends State<AddShipmentScreen> {
             TextFieldWithHeader(
               controller: fromController,
               hintText: "Enter pickup location ",
+              headerText: "Pickup Location",
               validator: Validators.notEmpty,
             ),
             const SizedBox(
@@ -426,6 +434,7 @@ class _AddShipmentScreenState extends State<AddShipmentScreen> {
             TextFieldWithHeader(
               controller: toController,
               hintText: "Enter delivery location",
+              headerText: "Delivery Location",
               validator: Validators.notEmpty,
             ),
           ],

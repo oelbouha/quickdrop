@@ -175,6 +175,7 @@ class _AddTripScreenState extends State<AddTripScreen> {
            TextFieldWithHeader(
               controller: priceController,
               hintText: "Available weight",
+              headerText: "Available Weight",
               validator: Validators.notEmpty,
               keyboardType: TextInputType.number,
             ),
@@ -184,6 +185,7 @@ class _AddTripScreenState extends State<AddTripScreen> {
             TextFieldWithHeader(
               controller: priceController,
               hintText: "Price",
+              headerText: "Price",
               validator: Validators.notEmpty,
               keyboardType: TextInputType.number,
             ),
@@ -231,6 +233,7 @@ class _AddTripScreenState extends State<AddTripScreen> {
             TextFieldWithHeader(
               controller: fromController,
               hintText: "Enter pickup location ",
+              headerText: "Pickup Location",
               validator: Validators.notEmpty,
             ),
             const SizedBox(
@@ -240,6 +243,7 @@ class _AddTripScreenState extends State<AddTripScreen> {
             TextFieldWithHeader(
               controller: toController,
               hintText: "Enter delivery location",
+              headerText: "Delivery Location",
               validator: Validators.notEmpty,
             ),
           ],

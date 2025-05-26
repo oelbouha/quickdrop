@@ -9,9 +9,9 @@ Widget PhoneNumber({
 }) {
 return  IntlPhoneField(
       decoration:  InputDecoration(
-        labelText: 'Phone Number',
-        labelStyle: const TextStyle(
-          color: AppColors.shipmentText,
+        hintText: '0 00 00 00 00',
+        hintStyle: const TextStyle(
+          color: AppColors.textFieldHintText,
           fontSize: 14,
           fontWeight: FontWeight.w500,
         ),

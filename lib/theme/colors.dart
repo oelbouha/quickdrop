@@ -8,6 +8,8 @@ class AppColors {
   static const Color headingText = Color(0xFF212121);
   static const Color lessImportant = Color(0xFFa9a9a9);
 
+  static const Color textFieldHintText = Color(0xFFc6c6c6);
+
   static const Color blue = Color(0xFF006994); // Moroccan Blue
   static const Color success = Color(0xFF10B981);
   static const Color warning = Color(0xFFF59E0B);
