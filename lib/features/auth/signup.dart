@@ -9,7 +9,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
 
-
 class Signup extends StatefulWidget {
   const Signup({Key? key}) : super(key: key);
 
@@ -18,7 +17,6 @@ class Signup extends StatefulWidget {
 }
 
 class _SignupState extends State<Signup> {
-
   final phoneNumberController = TextEditingController();
   bool _isEmailLoading = false;
   bool _isGoogleLoading = false;
@@ -35,13 +33,51 @@ class _SignupState extends State<Signup> {
       });
       return;
     }
-    print(phoneNumberController.text);
-      context.pushNamed(
-    'create-account',
-    queryParameters: {
-      'phoneNumber': phoneNumberController.text,
-    },
-  );
+    setState(() {
+      _isEmailLoading = false;
+    });
+    context.pushNamed(
+      'verify-number',
+      queryParameters: {
+        'phoneNumber': phoneNumberController.text,
+        'verificationId': "verificationId"
+      },
+    );
+    return;
+
+    FirebaseAuth.instance.verifyPhoneNumber(
+      phoneNumber: phoneNumberController.text,
+      verificationCompleted: (PhoneAuthCredential credential) async {
+        await FirebaseAuth.instance.signInWithCredential(credential);
+      },
+      verificationFailed: (FirebaseAuthException e) {
+        print('Phone verification failed: $e');
+        setState(() {
+          _isEmailLoading = false;
+        });
+        AppUtils.showError(context, 'Phone verification failed: ${e.message}');
+      },
+      codeSent: (String verificationId, int? resendToken) {
+        // ⬇️ Navigate to VerifyPhoneScreen with verificationId
+        // context.push('/verify', extra: {
+        //   'phoneNumber': phoneNumber,
+        //   'verificationId': verificationId,
+        // });
+        setState(() {
+          _isEmailLoading = false;
+        });
+        context.pushNamed(
+          'verify-number',
+          queryParameters: {
+            'phoneNumber': phoneNumberController.text,
+            'verificationId': verificationId
+          },
+        );
+      },
+      codeAutoRetrievalTimeout: (String verificationId) {},
+    );
+
+    // print(phoneNumberController.text);
   }
 
   Future<void> _createStatsIfNewUser(String userId) async {
@@ -153,7 +189,6 @@ class _SignupState extends State<Signup> {
         resizeToAvoidBottomInset: false,
         appBar: AppBar(
           backgroundColor: AppColors.cardBackground,
-         
         ),
         body: Padding(
             padding: const EdgeInsets.all(AppTheme.homeScreenPadding),
@@ -173,29 +208,30 @@ class _SignupState extends State<Signup> {
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-            const Text("Join us via phone", 
-            style: TextStyle(
-              color: AppColors.headingText, fontWeight: FontWeight.w700,
-              fontSize: 30
-            ),
-            textAlign: TextAlign.start,
+        const Text(
+          "Join us via phone",
+          style: TextStyle(
+              color: AppColors.headingText,
+              fontWeight: FontWeight.w700,
+              fontSize: 30),
+          textAlign: TextAlign.start,
+        ),
+        const SizedBox(
+          height: 10,
+        ),
+        const Text(
+          "W'll text you to confirm your phone number. ",
+          style: TextStyle(
+            color: AppColors.shipmentText,
+            fontWeight: FontWeight.w400,
+            fontSize: 14,
           ),
-            const SizedBox(
-              height: 10,
-            ),
-          const Text("W'll text you to confirm your phone number. ", 
-            style: TextStyle(
-              color: AppColors.shipmentText, fontWeight: FontWeight.w400,
-              fontSize: 14,
-            ),
-            textAlign: TextAlign.start,
-          ),
-          const SizedBox(
-              height: 6,
-            ),
-            PhoneNumber(
-              controller: phoneNumberController
-            ),
+          textAlign: TextAlign.start,
+        ),
+        const SizedBox(
+          height: 6,
+        ),
+        PhoneNumber(controller: phoneNumberController),
         const SizedBox(
           height: 6,
         ),
@@ -207,7 +243,7 @@ class _SignupState extends State<Signup> {
         const SizedBox(
           height: 15,
         ),
-         const Row(
+        const Row(
           children: [
             Expanded(
               child: Divider(
@@ -233,7 +269,7 @@ class _SignupState extends State<Signup> {
             )
           ],
         ),
-         const SizedBox(
+        const SizedBox(
           height: 15,
         ),
         AuthButton(
@@ -245,32 +281,31 @@ class _SignupState extends State<Signup> {
         const SizedBox(
           height: 30,
         ),
-      
+
         // textWithLink(
         //   text: "By continuing, you agree to our ",
-        //   textLink: "Terms of Service", 
+        //   textLink: "Terms of Service",
         //   linkTextColor: AppColors.shipmentText,
-        //   navigatTo: '/terms-of-service', 
+        //   navigatTo: '/terms-of-service',
         //   context: context,
         //   push: true
         // ),
         // textWithLink(
         //   text: " And our ",
-        //   textLink: "Privacy Policy", 
+        //   textLink: "Privacy Policy",
         //   linkTextColor: AppColors.shipmentText,
-        //   navigatTo: '/privacy-policy', 
+        //   navigatTo: '/privacy-policy',
         //   context: context,
         //   push: true
         // ),
         // const SizedBox(
         //   height: 30,
         // ),
-         textWithLink(
-          text: "Already have an account? ", 
-          textLink: "sign in", 
-          navigatTo: '/login', 
-          context: context
-        ),
+        textWithLink(
+            text: "Already have an account? ",
+            textLink: "sign in",
+            navigatTo: '/login',
+            context: context),
       ],
     );
   }

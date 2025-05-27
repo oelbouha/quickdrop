@@ -42,6 +42,7 @@ class IconTextField extends StatelessWidget {
           prefixIcon: Padding(
             padding: const EdgeInsets.all(12), 
             child: CustomIcon(iconPath: iconPath, size: 20, color: AppColors.lessImportant,)),
+            
           fillColor: AppColors.cardBackground,
           enabledBorder: OutlineInputBorder(
             borderSide: const BorderSide(
