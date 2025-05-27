@@ -108,12 +108,14 @@ class _VerifyPhoneScreenState extends State<VerifyPhoneScreen> {
                     activeColor: Colors.blue,
                     selectedColor: AppColors.blue,
                     inactiveColor: Colors.blue,
-                    borderWidth: 0.5,
+                    activeBorderWidth: 1.0,
+                    inactiveBorderWidth: 1.0,
+                    selectedBorderWidth: 1.0,
                   ),
                 ),
                 const SizedBox(height: 20),
                 LoginButton(
-                  hintText: "Verify phone number",
+                  hintText: "Continue",
                   backgroundColor: AppColors.dark,
                   onPressed: () {
                     if (_formKey.currentState?.validate() ?? false) {
@@ -123,19 +125,24 @@ class _VerifyPhoneScreenState extends State<VerifyPhoneScreen> {
                   isLoading: false, // Set to true if loading
                 ),
                 const SizedBox(height: 20),
-                GestureDetector(
-                  onTap: () {
-                    // Handle resend code
-                  },
-                  child: const Text(
-                    "Resend Code",
-                    style: TextStyle(
-                      color: AppColors.blue,
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
+                Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                      const Text(
+                  "Didn't receive the code? ",
+                  style: TextStyle(
+                    color: AppColors.shipmentText,
+                    fontSize: 14,
                   ),
                 ),
+               GestureDetectorWidget(
+                    onPressed: () => {
+                      },
+                    hintText: "Resend code",
+                    color: AppColors.dark,
+                  )
+                ],),
+                
               ],
             ))));
   }

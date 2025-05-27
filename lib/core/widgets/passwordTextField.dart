@@ -8,12 +8,14 @@ class PasswordTextfield extends StatefulWidget {
   final TextEditingController controller;
   final String? Function(String?)? validator;
   final void Function(String)? onChanged;
+  bool showPrefix ;
 
-  const PasswordTextfield({
+  PasswordTextfield({
     super.key,
     required this.controller,
     this.validator,
     this.onChanged,
+    this.showPrefix = true,
   });
 
   @override
@@ -43,14 +45,14 @@ class _PasswordTextfieldState extends State<PasswordTextfield> {
         ),
         hintText: "Password",
         filled: true,
-        prefixIcon: Padding(
-          padding: const EdgeInsets.all(12),
+        prefixIcon:  widget.showPrefix == true ? const Padding(
+          padding:  EdgeInsets.all(12),
           child: CustomIcon(
             iconPath: "assets/icon/lock.svg",
             size: 20,
             color: AppColors.lessImportant,
           ),
-        ),
+        ) : null,
         suffixIcon: IconButton(
           onPressed: _toggleVisibility,
           icon: CustomIcon(

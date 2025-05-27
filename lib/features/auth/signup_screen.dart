@@ -6,6 +6,8 @@ import 'package:quickdrop_app/core/utils/imports.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
 import 'package:go_router/go_router.dart';
+
+import 'package:quickdrop_app/core/widgets/passwordTextField.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/gestures.dart';
 
@@ -207,7 +209,7 @@ class _SingupPageState extends State<SignUpScreen> {
               obsecureText: false,
               iconPath: "assets/icon/email.svg",
               keyboardType: TextInputType.datetime,
-              validator: Validators.email,
+              validator: Validators.notEmpty,
             ),
             const SizedBox(height: 8),
             const Text("To Sign up, you must be at least 18 years old. other peaaple  who use quickdrop won't see your birthday.",
@@ -220,7 +222,7 @@ class _SingupPageState extends State<SignUpScreen> {
             const SizedBox(height: 15),
             TextFieldWithHeader(
               controller: emailController,
-              hintText: 'Email',
+              hintText: 'example@gmail.com',
               isRequired: false,
               headerText: 'Email',
               obsecureText: false,
@@ -228,19 +230,10 @@ class _SingupPageState extends State<SignUpScreen> {
               validator: Validators.email,
             ),
             const SizedBox(height: 8),
-            TextFieldWithHeader(
+             PasswordTextfield(
               controller: passwordController,
-              hintText: 'Password',
-              headerText: 'Password',
-              isRequired: false,
-              obsecureText: true,
-              iconPath: "assets/icon/lock.svg",
-              validator: (value) {
-                if (value == null || value.trim().isEmpty) {
-                  return 'This field cannot be empty';
-                }
-                return null;
-              },
+              validator: Validators.notEmpty,
+              showPrefix: false,
             ),
             const SizedBox(
               height: 20,
