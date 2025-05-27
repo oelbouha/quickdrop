@@ -6,7 +6,7 @@ class AppColors {
   static const Color cardBorder = Color(0xFFE0E0E0);
   
   static const Color headingText = Color(0xFF212121);
-  static const Color lessImportant = Color(0xFFa9a9a9);
+  static const Color lessImportant = Color(0xFF959595);
 
   static const Color textFieldHintText = Color(0xFFb3b3b3);
 
