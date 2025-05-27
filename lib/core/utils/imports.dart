@@ -67,4 +67,9 @@ export 'package:quickdrop_app/routes/routes.dart';
 
 export 'package:quickdrop_app/core/utils/delivery_status.dart';
 
+
+
+import 'package:flutter/services.dart';
+import 'package:flutter/gestures.dart';
+
 export 'package:go_router/go_router.dart';

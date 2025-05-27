@@ -3,6 +3,7 @@ import 'package:quickdrop_app/features/auth/signup_screen.dart';
 import 'package:quickdrop_app/features/auth/signup.dart';
 import 'package:quickdrop_app/core/widgets/auth_button.dart';
 import 'package:quickdrop_app/core/widgets/gestureDetector.dart';
+import 'package:quickdrop_app/core/widgets/passwordTextField.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:quickdrop_app/core/utils/imports.dart';
 import 'package:quickdrop_app/features/models/statictics_model.dart';
@@ -262,11 +263,8 @@ class _LoginPageState extends State<LoginPage> {
               controller: phoneNumberController
             ),
             const SizedBox(height: 10),
-            IconTextField(
+            PasswordTextfield(
               controller: passwordController,
-              hintText: 'Password',
-              obsecureText: true,
-              iconPath: "assets/icon/lock.svg",
               validator: Validators.notEmpty,
             ),
             const SizedBox(

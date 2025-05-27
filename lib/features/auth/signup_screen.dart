@@ -10,7 +10,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter/gestures.dart';
 
 
-
 class SignUpScreen extends StatefulWidget {
   final String ? phoneNumber;
   const SignUpScreen({
@@ -28,11 +27,11 @@ class _SingupPageState extends State<SignUpScreen> {
   final firstNameController = TextEditingController();
   final passwordController = TextEditingController();
   final emailController = TextEditingController();
+  final birthdayController = TextEditingController();
   final confirmPasswordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
 
   bool _isEmailLoading = false;
-  bool _isGoogleLoading = false;
 
   Future<void> _createStatsIfNewUser(String userId) async {
     bool userExist = await doesUserExist(userId);
@@ -46,26 +45,6 @@ class _SingupPageState extends State<SignUpScreen> {
           userId: userId);
       Provider.of<StatisticsProvider>(context, listen: false)
           .addStatictics(userId, stats);
-    }
-  }
-
-  Future<void> setUserData(userCredential) async {
-    _createStatsIfNewUser(userCredential.user.uid);
-    UserData user = UserData(
-      uid: userCredential.user.uid,
-      email: userCredential.user!.email,
-      displayName: userCredential.user!.displayName,
-      photoUrl: userCredential.user!.photoURL,
-      createdAt: DateFormat('dd/MM/yyyy').format(DateTime.now()).toString(),
-    );
-
-    bool userExist = await doesUserExist(user.uid);
-    final userProvider = Provider.of<UserProvider>(context, listen: false);
-    if (userExist == false) {
-      userProvider.setUser(user);
-      userProvider.saveUserToFirestore(user);
-    } else {
-      await userProvider.fetchUser(user.uid);
     }
   }
 
@@ -86,10 +65,6 @@ class _SingupPageState extends State<SignUpScreen> {
       try {
         final email = emailController.text.trim();
         final password = passwordController.text.trim();
-        if (passwordController.text != confirmPasswordController.text) {
-          AppUtils.showError(context, "passwords does not match");
-          return;
-        }
 
         UserCredential userCredential = await FirebaseAuth.instance
             .createUserWithEmailAndPassword(email: email, password: password);
@@ -99,7 +74,7 @@ class _SingupPageState extends State<SignUpScreen> {
         // await FirebaseAuth.instance.currentUser
         //     ?.updateDisplayName(fullNameController.text.trim());
         // Send email verification
-        await userCredential.user?.sendEmailVerification();
+        // await userCredential.user?.sendEmailVerification();
 
         UserData user = UserData(
           uid: userCredential.user!.uid,
@@ -107,7 +82,7 @@ class _SingupPageState extends State<SignUpScreen> {
           firstName: firstNameController.text,
           lastName: lastNameController.text,
           displayName: "${firstNameController.text} ${lastNameController.text}",
-          phoneNumber: phoneNumberController.text,
+          phoneNumber: widget.phoneNumber,
           photoUrl: null,
           createdAt: DateFormat('dd/MM/yyyy').format(DateTime.now()).toString(),
         );
@@ -118,11 +93,11 @@ class _SingupPageState extends State<SignUpScreen> {
           userProvider.setUser(user);
           userProvider.saveUserToFirestore(user);
           if (mounted) {
-            context.go('/verify-email');
+            context.go('/home');
           }
         } catch (e) {
           if (mounted) {
-            AppUtils.showError(context, "failed to log in user $e");
+            AppUtils.showError(context, "failed to signup user $e");
             return;
           }
         }
@@ -190,7 +165,7 @@ class _SingupPageState extends State<SignUpScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Text(
-              "Sing up",
+              "Finish signing up",
               style: TextStyle(
                   color: AppColors.headingText,
                   fontSize: 24,
@@ -225,7 +200,7 @@ class _SingupPageState extends State<SignUpScreen> {
               ),
             const SizedBox(height: 15),
             TextFieldWithHeader(
-              controller: emailController,
+              controller: birthdayController,
               hintText: 'Birthday',
               isRequired: false,
               headerText: 'Date of Birth',
@@ -264,10 +239,6 @@ class _SingupPageState extends State<SignUpScreen> {
                 if (value == null || value.trim().isEmpty) {
                   return 'This field cannot be empty';
                 }
-                if (confirmPasswordController.text.trim() !=
-                    passwordController.text.trim()) {
-                  return 'passwords does not match';
-                }
                 return null;
               },
             ),
@@ -283,9 +254,9 @@ class _SingupPageState extends State<SignUpScreen> {
     ),
     children: [
       const TextSpan(text: "By clicking "),
-      TextSpan(
+      const TextSpan(
         text: "Agree and Continue, ",
-        style: const TextStyle(
+        style:  TextStyle(
           fontWeight: FontWeight.w700,
           color: AppColors.dark,
         ),
@@ -332,13 +303,6 @@ class _SingupPageState extends State<SignUpScreen> {
             const SizedBox(
               height: 30,
             ),
-            
-            // textWithLink(
-            //   text: "Already have an account? ", 
-            //   textLink: "sign in", 
-            //   navigatTo: '/login', 
-            //   context: context
-            // ),
           ],
         ));
   }

@@ -49,27 +49,28 @@ class AppRouter {
           '/login',
           '/forgot-password',
           '/create-account',
+          '/verify-number'
           '/privacy-policy',
           '/terms-of-service',
         };
-        return '/verify-phone';
+        // return '/verify-phone';
         // Debugging prints
         // print("isLoggingIn: $isLoggingIn");
         // print("currentPath: $currentPath");
         // print("user: $user");
         // print("isEmailVerified: $isEmailVerified");
         // return '/verify-email';
-        if (user != null && currentPath == '/create-account') {
+        if (user != null && currentPath == '/create-account' || currentPath == "/verify-number") {
           return null;
         }
         if (publicRoutes.contains(currentPath)) {
           return null;
         }
 
-        if (user != null && isEmailVerified == false) {
-          Provider.of<UserProvider>(context, listen: false).fetchUser(user.uid);
-          return '/verify-email';
-        }
+        // if (user != null && isEmailVerified == false) {
+        //   Provider.of<UserProvider>(context, listen: false).fetchUser(user.uid);
+        //   return '/verify-email';
+        // }
         if (user != null && currentPath == '/') {
           Provider.of<UserProvider>(context, listen: false).fetchUser(user.uid);
           return '/home';
@@ -127,17 +128,33 @@ class AppRouter {
               const LoginPage(),
             );
           }),
-        GoRoute(
+            GoRoute(
             path: '/create-account',
             name: 'create-account',
             pageBuilder: (context, state) {
               final phoneNumber = state.uri.queryParameters['phoneNumber'];
+              return buildCustomTransitionPage(
+                context,
+                SignUpScreen(
+                  phoneNumber: phoneNumber,
+                ),
+              );
+            }),
+        GoRoute(
+            path: '/verify-number',
+            name: 'verify-number',
+            pageBuilder: (context, state) {
+              final phoneNumber = state.uri.queryParameters['phoneNumber'];
+              final verificationId = state.uri.queryParameters['verificationId'];
               print("Route param received: ${state.uri.queryParameters}");
 
               print("phoneNumber: $phoneNumber");
               return buildCustomTransitionPage(
                 context,
-                SignUpScreen(phoneNumber: phoneNumber),
+                VerifyPhoneScreen(
+                  phoneNumber: phoneNumber,
+                  verificationId: verificationId!
+                ),
               );
             }),
         GoRoute(
@@ -153,14 +170,14 @@ class AppRouter {
             const VerifyEmailScreen(),
           ),
         ),
-        GoRoute(
-          name: "verify-phone",
-          path: "/verify-phone",
-          pageBuilder: (context, state) => buildCustomTransitionPage(
-            context,
-            const VerifyPhoneScreen(),
-          ),
-        ),
+        // GoRoute(
+        //   name: "verify-phone",
+        //   path: "/verify-phone",
+        //   pageBuilder: (context, state) => buildCustomTransitionPage(
+        //     context,
+        //     const VerifyPhoneScreen(),
+        //   ),
+        // ),
         GoRoute(
           name: "privacy-policy",
           path: "/privacy-policy",
