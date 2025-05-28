@@ -110,7 +110,7 @@ class OnboardingSlide extends StatelessWidget {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Icon(Icons.delivery_dining, size: 60, color: AppColors.blue),
+        const CustomIcon( iconPath: "assets/icon/car.svg", size: 60, color: AppColors.blue),
         const SizedBox(height: 20),
         Text(
           title,

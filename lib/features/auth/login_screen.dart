@@ -8,6 +8,8 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:quickdrop_app/core/utils/imports.dart';
 import 'package:quickdrop_app/features/models/statictics_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:intl/intl.dart';
 
 class LoginPage extends StatefulWidget {
@@ -19,10 +21,8 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   final emailController = TextEditingController();
-  final phoneNumberController = TextEditingController();
   final passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
-  // final UserData? _usr;
 
   bool _isEmailLoading = false;
   bool _isGoogleLoading = false;
@@ -144,6 +144,10 @@ class _LoginPageState extends State<LoginPage> {
 
         try {
           setUserData(userCredential);
+
+          // Save credentials
+          await saveCredentials(email, password);
+
           if (mounted) context.go('/home');
         } catch (e) {
           if (mounted) {
@@ -177,9 +181,38 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 
+
+Future<void> saveCredentials(String email, String password) async {
+  final prefs = await SharedPreferences.getInstance();
+  await prefs.setString('email', email);
+  await prefs.setString('password', password);
+}
+
+Future<Map<String, String>> getSavedCredentials() async {
+  final prefs = await SharedPreferences.getInstance();
+  final email = prefs.getString('email') ?? '';
+  final password = prefs.getString('password') ?? '';
+  return {'email': email, 'password': password};
+}
+
+@override
+void initState() {
+  super.initState();
+  _loadSavedCredentials();
+}
+
+void _loadSavedCredentials() async {
+  final creds = await getSavedCredentials();
+  setState(() {
+    emailController.text = creds['email']!;
+    passwordController.text = creds['password']!;
+  });
+}
+
+
   @override
   void dispose() {
-    // emailController.dispose();
+    emailController.dispose();
     passwordController.dispose();
     super.dispose();
   }
@@ -187,7 +220,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: AppColors.cardBackground,
+        backgroundColor: AppColors.background,
         resizeToAvoidBottomInset: false,
         body: Padding(
             padding: const EdgeInsets.all(AppTheme.homeScreenPadding),
@@ -226,6 +259,7 @@ class _LoginPageState extends State<LoginPage> {
               onPressed: _signInWithGoogle,
               imagePath: "assets/images/google.png",
               isLoading: _isGoogleLoading,
+              backgroundColor: AppColors.background,
             ),
              const SizedBox(
               height: 15,
