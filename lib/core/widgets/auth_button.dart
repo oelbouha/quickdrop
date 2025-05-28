@@ -8,12 +8,20 @@ class AuthButton extends StatelessWidget {
   final String? imagePath; // Optional image
   final bool isLoading;
   final double radius;
+  final Color backgroundColor;
+  final Color textColor;
+  final Color borderColor;
+
+
   const AuthButton({
     super.key,
     required this.hintText,
     required this.onPressed,
     this.imagePath,
     this.radius = AppTheme.textFeildRadius,
+    this.backgroundColor = AppColors.cardBackground,
+    this.textColor = AppColors.shipmentText,
+    this.borderColor = AppColors.lessImportant,
     required this.isLoading,
   });
 
@@ -24,9 +32,9 @@ class AuthButton extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
-          color:  AppColors.cardBackground, 
+          color:  backgroundColor, 
           borderRadius: BorderRadius.circular(radius),
-          border: Border.all(width: 1, color: isLoading? AppColors.shipmentText: AppColors.lessImportant),
+          border: Border.all(width: 1, color: isLoading? AppColors.shipmentText: borderColor),
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -50,7 +58,7 @@ class AuthButton extends StatelessWidget {
               Text(
                 hintText,
                 style:
-                    const TextStyle(color: AppColors.shipmentText, fontSize: 14, fontWeight: FontWeight.bold),
+                     TextStyle(color: textColor, fontSize: 14, fontWeight: FontWeight.bold),
               ),
             ],
           ],

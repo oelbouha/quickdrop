@@ -131,6 +131,7 @@ class _LoginPageState extends State<LoginPage> {
 
     // Validate the form
     if (_formKey.currentState!.validate()) {
+     
       setState(() => _isEmailLoading = true);
       try {
         final email = emailController.text.trim();
@@ -259,10 +260,34 @@ class _LoginPageState extends State<LoginPage> {
             const SizedBox(
               height: 30,
             ),
-             PhoneNumber(
-              controller: phoneNumberController
+            const Text(
+              "Email",
+              style:  TextStyle(
+                color: AppColors.shipmentText,
+                fontSize: 16,
+                fontWeight: FontWeight.w600,
+              ),
+              textAlign: TextAlign.start,
             ),
-            const SizedBox(height: 10),
+              IconTextField(
+                controller: emailController,
+                keyboardType: TextInputType.emailAddress,
+                hintText: 'example@gmail.com',
+                obsecureText: false,
+                iconPath: "assets/icon/email.svg",
+                validator: Validators.email,
+            ),
+
+            const SizedBox(height: 15),
+            const Text(
+              "Password",
+               style: const TextStyle(
+                  color: AppColors.shipmentText,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                ),
+              textAlign: TextAlign.start,
+            ),
             PasswordTextfield(
               controller: passwordController,
               validator: Validators.notEmpty,

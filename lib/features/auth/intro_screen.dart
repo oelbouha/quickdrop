@@ -6,6 +6,8 @@ import 'package:provider/provider.dart';
 import 'package:quickdrop_app/features/models/user_model.dart';
 import 'package:quickdrop_app/core/utils/imports.dart';
 
+import 'package:quickdrop_app/core/widgets/auth_button.dart';
+
 class IntroScreen extends StatefulWidget {
   const IntroScreen({super.key});
 
@@ -57,22 +59,32 @@ Widget build(BuildContext context) {
               ),
             ),
             const SizedBox(height: 40),
-            LoginButton(
-              hintText: "Log in",
-              onPressed: () {
-                context.pushNamed('login');
-              },
-              isLoading: _isLoginLoading,
-            ),
-            const SizedBox(height: 15),
-            LoginButton(
-              hintText: "Create an account",
-              onPressed: () {
-                context.pushNamed('signup');
-              },
-              isLoading: _isLoginLoading,
-              backgroundColor: AppColors.dark,
-            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Expanded(child:AuthButton(
+                  hintText: "Login",
+                  onPressed: () {
+                    context.pushNamed('login');
+                  },
+                  isLoading: _isLoginLoading,
+                  backgroundColor: AppColors.blue,
+                  textColor: AppColors.white,
+                  borderColor: AppColors.blue,
+                )),
+                const SizedBox(width: 10),
+                Expanded(child: AuthButton(
+                  hintText: "Sign up",
+                  onPressed: () {
+                    context.pushNamed('signup');
+                  },
+                  isLoading: _isLoginLoading,
+                  backgroundColor: AppColors.background,
+                  textColor: AppColors.blue,
+                  borderColor: AppColors.blue,
+                )),
+
+            ],),
 
             const SizedBox(height: 15),
           ],
