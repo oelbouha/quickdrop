@@ -16,8 +16,12 @@ import 'package:pin_code_fields/pin_code_fields.dart';
 class VerifyPhoneScreen extends StatefulWidget {
   final String? phoneNumber;
   final String verificationId;
-  const VerifyPhoneScreen(
-      {super.key, required this.phoneNumber, required this.verificationId});
+
+  const VerifyPhoneScreen({
+    super.key,
+    required this.phoneNumber,
+    required this.verificationId,
+  });
 
   @override
   _VerifyPhoneScreenState createState() => _VerifyPhoneScreenState();
@@ -26,55 +30,86 @@ class VerifyPhoneScreen extends StatefulWidget {
 class _VerifyPhoneScreenState extends State<VerifyPhoneScreen> {
   final codeController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
+  late String _currentVerificationId;
+  bool isLoading = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _currentVerificationId = widget.verificationId;
+  }
 
   void verifyCode(String smsCode) async {
+    setState(() => isLoading = true);
     try {
-      // PhoneAuthCredential credential = PhoneAuthProvider.credential(
-      //   verificationId: widget.verificationId,
-      //   smsCode: smsCode,
-      // );
+      PhoneAuthCredential credential = PhoneAuthProvider.credential(
+        verificationId: _currentVerificationId,
+        smsCode: smsCode,
+      );
 
-      // await FirebaseAuth.instance.signInWithCredential(credential);
-      // AppUtils.showError(context, widget.phoneNumber!);
+      await FirebaseAuth.instance.signInWithCredential(credential);
+
+      AppUtils.showError(context, widget.phoneNumber!); // Can rename later
       context.pushNamed(
         'create-account',
-        queryParameters: {
-          'phoneNumber': widget.phoneNumber,
-        },
+        queryParameters: {'phoneNumber': widget.phoneNumber},
       );
     } catch (e) {
-      print('Verification failed: $e');
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Invalid code. Please try again.")),
+        const SnackBar(content: Text("Invalid code. Please try again.")),
       );
+    } finally {
+      setState(() => isLoading = false);
     }
+  }
+
+  void resendCode() async {
+    await FirebaseAuth.instance.verifyPhoneNumber(
+      phoneNumber: widget.phoneNumber!,
+      verificationCompleted: (PhoneAuthCredential credential) {},
+      verificationFailed: (FirebaseAuthException e) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Failed to resend code: ${e.message}")),
+        );
+      },
+      codeSent: (String newVerificationId, int? resendToken) {
+        setState(() {
+          _currentVerificationId = newVerificationId;
+        });
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("Code resent.")),
+        );
+      },
+      codeAutoRetrievalTimeout: (String verificationId) {},
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColors.cardBackground,
+      appBar: AppBar(
         backgroundColor: AppColors.cardBackground,
-        appBar: AppBar(
-          backgroundColor: AppColors.cardBackground,
-          centerTitle: true,
-          iconTheme: const IconThemeData(
-            color: Colors.black,
-          ),
-          systemOverlayStyle: SystemUiOverlayStyle.dark,
-        ),
-        body: Padding(
-            padding: const EdgeInsets.all(AppTheme.homeScreenPadding),
-            child: Center(
-                child: Column(
+        centerTitle: true,
+        iconTheme: const IconThemeData(color: Colors.black),
+        systemOverlayStyle: SystemUiOverlayStyle.dark,
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(AppTheme.homeScreenPadding),
+        child: Form(
+          key: _formKey,
+          child: Center(
+            child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                const Text("Enter Verification Code",
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                    textAlign: TextAlign.center),
+                const Text(
+                  "Enter Verification Code",
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  textAlign: TextAlign.center,
+                ),
                 const SizedBox(height: 20),
                 const Text(
-                  "Enter the verification code sent to ",
+                  "Enter the verification code sent to",
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w400,
@@ -98,7 +133,13 @@ class _VerifyPhoneScreenState extends State<VerifyPhoneScreen> {
                   controller: codeController,
                   onChanged: (value) {},
                   onCompleted: (value) {
-                    verifyCode(value);
+                    if (value.length == 6) verifyCode(value.trim());
+                  },
+                  validator: (value) {
+                    if (value == null || value.trim().length != 6) {
+                      return "Enter a valid 6-digit code";
+                    }
+                    return null;
                   },
                   pinTheme: PinTheme(
                     shape: PinCodeFieldShape.box,
@@ -108,9 +149,6 @@ class _VerifyPhoneScreenState extends State<VerifyPhoneScreen> {
                     activeColor: Colors.blue,
                     selectedColor: AppColors.blue,
                     inactiveColor: Colors.blue,
-                    activeBorderWidth: 1.0,
-                    inactiveBorderWidth: 1.0,
-                    selectedBorderWidth: 1.0,
                   ),
                 ),
                 const SizedBox(height: 20),
@@ -119,31 +157,34 @@ class _VerifyPhoneScreenState extends State<VerifyPhoneScreen> {
                   backgroundColor: AppColors.dark,
                   onPressed: () {
                     if (_formKey.currentState?.validate() ?? false) {
-                      verifyCode("444");
+                      verifyCode(codeController.text.trim());
                     }
                   },
-                  isLoading: false, // Set to true if loading
+                  isLoading: isLoading,
                 ),
                 const SizedBox(height: 20),
                 Row(
-              mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                      const Text(
-                  "Didn't receive the code? ",
-                  style: TextStyle(
-                    color: AppColors.shipmentText,
-                    fontSize: 14,
-                  ),
+                    const Text(
+                      "Didn't receive the code? ",
+                      style: TextStyle(
+                        color: AppColors.shipmentText,
+                        fontSize: 14,
+                      ),
+                    ),
+                    GestureDetectorWidget(
+                      onPressed: resendCode,
+                      hintText: "Resend code",
+                      color: AppColors.dark,
+                    ),
+                  ],
                 ),
-               GestureDetectorWidget(
-                    onPressed: () => {
-                      },
-                    hintText: "Resend code",
-                    color: AppColors.dark,
-                  )
-                ],),
-                
               ],
-            ))));
+            ),
+          ),
+        ),
+      ),
+    );
   }
 }

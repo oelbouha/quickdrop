@@ -8,11 +8,13 @@ class PasswordTextfield extends StatefulWidget {
   final TextEditingController controller;
   final String? Function(String?)? validator;
   final void Function(String)? onChanged;
+  final Color backgroundColor ;
   bool showPrefix ;
 
   PasswordTextfield({
     super.key,
     required this.controller,
+    this.backgroundColor = AppColors.background,
     this.validator,
     this.onChanged,
     this.showPrefix = true,
@@ -63,7 +65,7 @@ class _PasswordTextfieldState extends State<PasswordTextfield> {
             color: AppColors.shipmentText,
           ),
         ),
-        fillColor: AppColors.cardBackground,
+        fillColor: widget.backgroundColor,
         enabledBorder: OutlineInputBorder(
           borderSide: const BorderSide(
             color: Colors.grey,

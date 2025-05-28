@@ -22,63 +22,46 @@ class _SignupState extends State<Signup> {
   bool _isGoogleLoading = false;
 
   void _signupUserWithEmail() async {
-    if (_isEmailLoading) return;
-    setState(() {
-      _isEmailLoading = true;
-    });
-    if (phoneNumberController.text.isEmpty) {
-      AppUtils.showError(context, "Please enter your phone number");
-      setState(() {
-        _isEmailLoading = false;
-      });
-      return;
-    }
+  if (_isEmailLoading) return;
+  setState(() {
+    _isEmailLoading = true;
+  });
+
+  final phone = phoneNumberController.text.trim();
+  if (phone.isEmpty) {
+    AppUtils.showError(context, "Please enter your phone number");
     setState(() {
       _isEmailLoading = false;
     });
-    context.pushNamed(
-      'verify-number',
-      queryParameters: {
-        'phoneNumber': phoneNumberController.text,
-        'verificationId': "verificationId"
-      },
-    );
     return;
-
-    FirebaseAuth.instance.verifyPhoneNumber(
-      phoneNumber: phoneNumberController.text,
-      verificationCompleted: (PhoneAuthCredential credential) async {
-        await FirebaseAuth.instance.signInWithCredential(credential);
-      },
-      verificationFailed: (FirebaseAuthException e) {
-        print('Phone verification failed: $e');
-        setState(() {
-          _isEmailLoading = false;
-        });
-        AppUtils.showError(context, 'Phone verification failed: ${e.message}');
-      },
-      codeSent: (String verificationId, int? resendToken) {
-        // ⬇️ Navigate to VerifyPhoneScreen with verificationId
-        // context.push('/verify', extra: {
-        //   'phoneNumber': phoneNumber,
-        //   'verificationId': verificationId,
-        // });
-        setState(() {
-          _isEmailLoading = false;
-        });
-        context.pushNamed(
-          'verify-number',
-          queryParameters: {
-            'phoneNumber': phoneNumberController.text,
-            'verificationId': verificationId
-          },
-        );
-      },
-      codeAutoRetrievalTimeout: (String verificationId) {},
-    );
-
-    // print(phoneNumberController.text);
   }
+
+  await FirebaseAuth.instance.verifyPhoneNumber(
+    phoneNumber: phone,
+    verificationCompleted: (PhoneAuthCredential credential) async {
+      // Auto-retrieval or instant verification
+      await FirebaseAuth.instance.signInWithCredential(credential);
+    },
+    verificationFailed: (FirebaseAuthException e) {
+      setState(() => _isEmailLoading = false);
+      AppUtils.showError(context, 'Phone verification failed: ${e.message}');
+    },
+    codeSent: (String verificationId, int? resendToken) {
+      setState(() => _isEmailLoading = false);
+      context.pushNamed(
+        'verify-number',
+        queryParameters: {
+          'phoneNumber': phone,
+          'verificationId': verificationId,
+        },
+      );
+    },
+    codeAutoRetrievalTimeout: (String verificationId) {
+      // Optionally handle timeout
+    },
+  );
+}
+
 
   Future<void> _createStatsIfNewUser(String userId) async {
     bool userExist = await doesUserExist(userId);
@@ -185,10 +168,10 @@ class _SignupState extends State<Signup> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: AppColors.cardBackground,
+        backgroundColor: AppColors.background,
         resizeToAvoidBottomInset: false,
         appBar: AppBar(
-          backgroundColor: AppColors.cardBackground,
+          backgroundColor: AppColors.background,
         ),
         body: Padding(
             padding: const EdgeInsets.all(AppTheme.homeScreenPadding),
@@ -277,35 +260,16 @@ class _SignupState extends State<Signup> {
           onPressed: _signInWithGoogle,
           imagePath: "assets/images/google.png",
           isLoading: _isGoogleLoading,
+          backgroundColor: AppColors.background,
         ),
         const SizedBox(
           height: 30,
         ),
-
-        // textWithLink(
-        //   text: "By continuing, you agree to our ",
-        //   textLink: "Terms of Service",
-        //   linkTextColor: AppColors.shipmentText,
-        //   navigatTo: '/terms-of-service',
-        //   context: context,
-        //   push: true
-        // ),
-        // textWithLink(
-        //   text: " And our ",
-        //   textLink: "Privacy Policy",
-        //   linkTextColor: AppColors.shipmentText,
-        //   navigatTo: '/privacy-policy',
-        //   context: context,
-        //   push: true
-        // ),
-        // const SizedBox(
-        //   height: 30,
-        // ),
         textWithLink(
-            text: "Already have an account? ",
-            textLink: "sign in",
-            navigatTo: '/login',
-            context: context),
+          text: "Already have an account? ",
+          textLink: "sign in",
+          navigatTo: '/login',
+          context: context),
       ],
     );
   }
