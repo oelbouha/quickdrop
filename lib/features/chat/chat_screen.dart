@@ -26,7 +26,7 @@ class _ChatScreenState extends State<ChatScreen> with SingleTickerProviderStateM
         userPhotoUrl = "assets/images/profile.png";
       }
 
-     _tabController = TabController(length: 2, vsync: this);
+     _tabController = TabController(length: 3, vsync: this);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Future.microtask(() async {
         try {
@@ -72,10 +72,11 @@ class _ChatScreenState extends State<ChatScreen> with SingleTickerProviderStateM
         userPhotoUrl: userPhotoUrl!,
         tabController: _tabController,
         tabs: const [
-          "Chat",
-          "Requests",
+          "Send",
+          "Received",
+          "Negotiate",
         ],
-        title: "Chats",
+        title: "Offers",
       ),
       body: Skeletonizer(
             enabled: _isLoading,
@@ -83,6 +84,7 @@ class _ChatScreenState extends State<ChatScreen> with SingleTickerProviderStateM
                   controller: _tabController,
                 children: [
                   _buildChatConversations(),
+                  _buildDeliveryRequests(),
                   _buildDeliveryRequests(),
                 ],
               ),

@@ -24,7 +24,7 @@ class FloatButton extends StatelessWidget {
         backgroundColor: backgroundColor,
         elevation: 6,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(30),
+          borderRadius: BorderRadius.circular(12),
         ),
         extendedIconLabelSpacing: 10,
         extendedPadding: const EdgeInsets.all(12),

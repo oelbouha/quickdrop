@@ -37,10 +37,17 @@ class UserProfileCard extends StatelessWidget {
     
     return Row(
       children: [
-        CircleAvatar(
-          radius: avatarSize,
-          backgroundImage: imageProvider,
-        ),
+Container(
+  width: avatarSize * 2,
+  height: avatarSize * 2,
+  decoration: BoxDecoration(
+    shape: BoxShape.circle,
+    image: DecorationImage(
+      image: imageProvider,
+      fit: BoxFit.cover, // Ensures the image fully covers the circle
+    ),
+  ),
+),
         const SizedBox(width: 10),
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
