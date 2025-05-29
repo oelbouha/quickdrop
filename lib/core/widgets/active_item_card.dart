@@ -134,20 +134,26 @@ class ActiveListing extends State<ActiveItemCard> {
         const Spacer(),
          ElevatedButton.icon(
           style: ElevatedButton.styleFrom(
-            backgroundColor: AppColors.error,
+            backgroundColor: AppColors.cardFooterBackground,
+            
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(8),
             ),
+            side: const BorderSide( 
+              color: AppColors.error,
+              width: 0.6, 
+            ),
              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+             elevation: 0
           ),
           onPressed: widget.onPressed,
           icon: const CustomIcon(
               iconPath: "assets/icon/trash-bin.svg",
               size: 20,
-              color: AppColors.cardBackground),
+              color: AppColors.error),
             label: const Text('Delete', 
               style: TextStyle(
-                color: AppColors.cardBackground,
+                color: AppColors.error,
                 fontSize: 14,
               )),
         ),

@@ -57,12 +57,12 @@ class _IconTextFieldState extends State<IconTextField> {
   @override
   Widget build(BuildContext context) {
     final BorderSide borderSide = BorderSide(
-      color: hasText ? AppColors.ongoingStatusText : Colors.grey,
+      color: hasText ? AppColors.lessImportant : Colors.grey,
       width: AppTheme.textFieldBorderWidth,
     );
 
     final BorderSide focusedBorderSide = BorderSide(
-      color: hasText ? AppColors.ongoingStatusText : AppColors.blue,
+      color: hasText ? AppColors.lessImportant : AppColors.blue,
       width: AppTheme.textFieldBorderWidth,
     );
 
@@ -72,7 +72,7 @@ class _IconTextFieldState extends State<IconTextField> {
       validator: widget.validator,
       onChanged: widget.onChanged,
       keyboardType: widget.keyboardType,
-      style:    TextStyle(color: hasText ? AppColors.ongoingStatusText: AppColors.shipmentText),
+      style:    TextStyle(color: hasText ? AppColors.shipmentText: AppColors.shipmentText),
       decoration: InputDecoration(
         hintStyle: const TextStyle(
           color: AppColors.textFieldHintText,

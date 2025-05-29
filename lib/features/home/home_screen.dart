@@ -102,9 +102,30 @@ class _HomeScreenState extends State<HomeScreen> {
                     child: Column(children: [
                   const SizedBox(height: 10),
                   SearchForm(),
-                  const SizedBox(height: 10),
-                  _buildTogleButtons(),
+                  // const SizedBox(height: 10),
+                  // _buildTogleButtons(),
                   const SizedBox(height: 15),
+                  Row(
+                    children: [
+                      const Text("Recent Listings",
+                          style: TextStyle(
+                              color: AppColors.shipmentText,
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500)),
+                          const Spacer(),
+                          TextButton(
+                            onPressed: () {
+                              context.push("/");
+                            },
+                            child: const Text("Filter",
+                                style: TextStyle(
+                                    color: AppColors.blue,
+                                    fontSize: 14,
+                                fontWeight: FontWeight.bold)),
+                      ),
+                    ],
+                  ),
+                  // const SizedBox(height: 10),
                   Consumer3<ShipmentProvider, TripProvider, UserProvider>(
                       builder: (context, shipmentProvider, tripProvider,
                           userProvider, child) {
