@@ -57,89 +57,187 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: AppColors.background,
-        appBar: AppBar(
-          backgroundColor: AppColors.appBarBackground,
-          title: const Text("QuickDrop",
-              style: TextStyle(
-                  color: AppColors.appBarText, fontWeight: FontWeight.bold)),
-          actions: [
-            IconButton(
-              icon: const CustomIcon(
-                iconPath: "assets/icon/notification.svg",
-                size: 22,
-                color: AppColors.appBarIcons,
-              ),
-              tooltip: 'notification',
-              onPressed: () {
-                context.push("/notification");
-              },
-            ),
-            GestureDetector(
-              onTap: () {
-                context.push("/profile");
-              },
-              child: CircleAvatar(
-                radius: 18,
-                backgroundColor: AppColors.blue,
-                backgroundImage: userPhotoUrl!.startsWith("http")
-                    ? NetworkImage(userPhotoUrl!)
-                    : AssetImage(userPhotoUrl!) as ImageProvider,
-              ),
-            ),
-            const SizedBox(
-              width: 10,
-            ),
-          ],
-        ),
-        body: Skeletonizer(
-            enabled: _isLoading,
-            child: Padding(
-                padding: const EdgeInsets.only(
-                  left: AppTheme.homeScreenPadding,
-                  right: AppTheme.homeScreenPadding,
-                ),
-                child: SingleChildScrollView(
-                    child: Column(children: [
-                  const SizedBox(height: 10),
-                  SearchForm(),
-                  // const SizedBox(height: 10),
-                  // _buildTogleButtons(),
-                  const SizedBox(height: 15),
-                  Row(
-                    children: [
-                      const Text("Recent Listings",
-                          style: TextStyle(
-                              color: AppColors.shipmentText,
-                              fontSize: 14,
-                              fontWeight: FontWeight.w500)),
-                          const Spacer(),
-                          TextButton(
-                            onPressed: () {
-                              context.push("/");
-                            },
-                            child: const Text("Filter",
-                                style: TextStyle(
-                                    color: AppColors.blue,
-                                    fontSize: 14,
-                                fontWeight: FontWeight.bold)),
-                      ),
-                    ],
-                  ),
-                  // const SizedBox(height: 10),
-                  Consumer3<ShipmentProvider, TripProvider, UserProvider>(
-                      builder: (context, shipmentProvider, tripProvider,
-                          userProvider, child) {
-                    return IndexedStack(
-                      index: selectedIndex,
-                      children: [
-                        _buildShipmentListings(
-                            shipmentProvider.activeShipments),
-                        _buildTripListings(tripProvider.activeTrips),
-                      ],
-                    );
-                  })
-                ])))));
+        body: SafeArea(
+            child: Skeletonizer(
+                enabled: _isLoading,
+                child: Padding(
+                    padding: const EdgeInsets.only(
+                      left: AppTheme.homeScreenPadding,
+                      right: AppTheme.homeScreenPadding,
+                    ),
+                    child: SingleChildScrollView(
+                        child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                          _buildAppBar(),
+                          const SizedBox(height: 20),
+                          const Text("What are you looking for?",
+                              style: TextStyle(
+                                  color: AppColors.shipmentText,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w600),
+                              textAlign: TextAlign.start),
+                          const SizedBox(height: 10),
+                          Row(children: [
+                            Expanded(
+                                child: searchTextField(
+                                    hintText: "Search",
+                                    controller: TextEditingController(),
+                                    iconPath: "assets/icon/magnifer.svg")),
+                            const SizedBox(width: 10),
+                            Container(
+                              decoration: BoxDecoration(
+                                color: AppColors.blue,
+                                borderRadius:
+                                    BorderRadius.circular(AppTheme.cardRadius),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Color.fromARGB(255, 0, 0, 0)
+                                        .withOpacity(0.1), // Shadow color
+                                    spreadRadius:
+                                        0.2, // How much the shadow spreads
+                                    blurRadius: 2, // Soften the shadow
+                                    offset: const Offset(
+                                        0, 1), // Move shadow downwards
+                                  )
+                                ],
+                              ),
+                              child: IconButton(
+                                onPressed: () {
+                                  _showRequestSheet();
+                                },
+                                icon: const CustomIcon(
+                                  iconPath: "assets/icon/filter.svg",
+                                  size: 30,
+                                  color: AppColors.white,
+                                ),
+                              ),
+                            ),
+                          ]),
+                          const SizedBox(height: 10),
+                          // const SizedBox(height: 10),
+                          // _buildTogleButtons(),
+                          const SizedBox(height: 15),
+                          Row(
+                            children: [
+                              const Text("Recent Listings",
+                                  style: TextStyle(
+                                      color: AppColors.shipmentText,
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w600)),
+                              const Spacer(),
+                              TextButton(
+                                onPressed: () {
+                                  context.push("/");
+                                },
+                                child: const Text("Filter",
+                                    style: TextStyle(
+                                        color: AppColors.blue,
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.bold)),
+                              ),
+                            ],
+                          ),
+                          // const SizedBox(height: 10),
+                          Consumer3<ShipmentProvider, TripProvider,
+                                  UserProvider>(
+                              builder: (context, shipmentProvider, tripProvider,
+                                  userProvider, child) {
+                            return IndexedStack(
+                              index: selectedIndex,
+                              children: [
+                                _buildShipmentListings(
+                                    shipmentProvider.activeShipments),
+                                _buildTripListings(tripProvider.activeTrips),
+                              ],
+                            );
+                          })
+                        ]))))));
   }
+
+  Widget _buildAppBar() {
+    return (Row(mainAxisSize: MainAxisSize.min, children: [
+      UserProfileCard(
+        header: "Outman",
+        photoUrl: userPhotoUrl!,
+        avatarSize: 26,
+        subHeader: "Welcome",
+        headerFontSize: 14,
+        onPressed: () => print("user profile  Clicked"),
+      ),
+      const Spacer(),
+      Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          GestureDetector(
+            onTap: () => context.push("/help"),
+            child: const CustomIcon(
+              iconPath: "assets/icon/help.svg",
+              size: 24,
+              color: AppColors.dark,
+            ),
+          ),
+          const SizedBox(width: 8),
+          GestureDetector(
+            onTap: () => context.push("/notification"),
+            child: const CustomIcon(
+              iconPath: "assets/icon/notification.svg",
+              size: 24,
+              color: AppColors.dark,
+            ),
+          ),
+        ],
+      )
+    ]));
+  }
+
+  Widget _buildRequesBody() {
+    return Text(
+      "Request a shipment or trip",
+      style: TextStyle(
+        color: AppColors.shipmentText,
+        fontSize: 18,
+        fontWeight: FontWeight.w600,
+      ),
+    );
+  }
+
+void _showRequestSheet() {
+  showModalBottomSheet(
+    context: context,
+    backgroundColor: AppColors.cardBackground,
+    isScrollControlled: true,
+    shape: const RoundedRectangleBorder(
+      borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+    ),
+    barrierColor: Colors.black.withOpacity(0.5),
+    builder: (BuildContext context) {
+      final mediaQuery = MediaQuery.of(context);
+      return Padding(
+        padding: EdgeInsets.only(
+          bottom: mediaQuery.viewInsets.bottom,
+        ),
+        child: SizedBox(
+          width: mediaQuery.size.width, // Full width
+          child: DraggableScrollableSheet(
+            expand: false,
+            initialChildSize: 0.6,
+            maxChildSize: 0.9,
+            minChildSize: 0.4,
+            builder: (context, scrollController) {
+              return SingleChildScrollView(
+                controller: scrollController,
+                child: _buildRequesBody(),
+              );
+            },
+          ),
+        ),
+      );
+    },
+  );
+}
+
 
   Widget toggleButton({
     required String text,
@@ -246,7 +344,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   itemBuilder: (context, index) {
                     final shipment = activeShipments[index];
                     final userData = userProvider.getUserById(shipment.userId);
-                     if (userData == null) {
+                    if (userData == null) {
                       return const SizedBox.shrink();
                     }
                     return Column(
@@ -278,7 +376,7 @@ Widget searchTextField({
 }) {
   return (TextFormField(
       style: const TextStyle(
-          color: AppColors.input, fontSize: 12, fontWeight: FontWeight.normal),
+          color: AppColors.input, fontSize: 12, fontWeight: FontWeight.w500),
       controller: controller,
       decoration: InputDecoration(
         enabledBorder: OutlineInputBorder(
@@ -295,13 +393,13 @@ Widget searchTextField({
           ),
           borderRadius: BorderRadius.circular(AppTheme.cardRadius),
         ),
-        prefixIcon: const Padding(
+        prefixIcon: Padding(
           padding: EdgeInsets.all(10),
           child: SizedBox(
             width: 20,
             height: 20,
             child: CustomIcon(
-              iconPath: "assets/icon/map-point.svg",
+              iconPath: iconPath,
               size: 20,
               color: AppColors.blue,
             ),

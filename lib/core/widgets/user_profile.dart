@@ -20,7 +20,7 @@ class UserProfileCard extends StatelessWidget {
     required this.photoUrl,
     this.subHeader = "",
     required this.headerFontSize,
-    required this.subHeaderFontSize,
+     this.subHeaderFontSize = 12,
     required this.avatarSize,
     this.subHeaderColor = AppColors.lessImportant,
     this.headerColor = AppColors.headingText,
