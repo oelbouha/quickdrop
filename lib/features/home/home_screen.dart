@@ -67,22 +67,28 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                     child: SingleChildScrollView(
                         child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                           _buildAppBar(),
                           const SizedBox(height: 20),
-                          const Text("What are you looking for?",
+                          const Text("Ship Anywhere, Anytime",
+                              style: TextStyle(
+                                  color: AppColors.shipmentText,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w700),
+                              textAlign: TextAlign.center),
+                              const Text("Connect with travelers going your way or send packages with trusted community members",
                               style: TextStyle(
                                   color: AppColors.shipmentText,
                                   fontSize: 16,
                                   fontWeight: FontWeight.w600),
-                              textAlign: TextAlign.start),
+                              textAlign: TextAlign.center),
                           const SizedBox(height: 10),
                           Row(children: [
                             Expanded(
                                 child: searchTextField(
-                                    hintText: "Search",
+                                    hintText: "Search ",
                                     controller: TextEditingController(),
                                     iconPath: "assets/icon/magnifer.svg")),
                             const SizedBox(width: 10),
