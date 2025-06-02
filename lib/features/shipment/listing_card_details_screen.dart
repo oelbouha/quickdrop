@@ -77,40 +77,137 @@ class _ListingCardDetailsState extends State<ListingCardDetails> {
   build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.background,
-      // appBar: AppBar(
-      // backgroundColor: AppColors.barColor,
-      // title: const Text(
-      //   "Shipment Details",
-      //   style: TextStyle(
-      //       color: AppColors.headingText,
-      //       fontWeight: FontWeight.bold,
-      //       fontSize: 18),
-      // ),
-      // ),
-      body: SingleChildScrollView(
-          child: Container(
-              color: AppColors.background,
-              // padding: const EdgeInsets.all(AppTheme.homeScreenPadding),
-              child: Column(
-                children: [
-                  _displayImage(),
-                  _buildUserProfile(),
-                  _buildDescription(),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  _buildDetails(),
-                ],
-              ))),
-      floatingActionButton: FloatButton(
-        onTap: () {
-          _showRequestSheet();
-        },
-        iconPath: "assets/icon/chat-round-line.svg",
-        hintText: "Request",
+      appBar: AppBar(
+      backgroundColor: AppColors.barColor,
+      title: const Text(
+        "Shipment Details",
+        style: TextStyle(
+            color: AppColors.white,
+            fontWeight: FontWeight.bold,
+            fontSize: 18),
       ),
+      ),
+     body: Stack(
+    children: [
+      SingleChildScrollView(
+        child: Container(
+          color: AppColors.background,
+          child: Column(
+            children: [
+              _displayImage(),
+              _buildUserProfile(),
+              _buildDescription(),
+              const SizedBox(height: 20),
+              _buildDetails(),
+              const SizedBox(height: 80), // space for bottom bar
+            ],
+          ),
+        ),
+      ),
+      Positioned(
+        left: 0,
+        right: 0,
+        bottom: 0,
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          decoration: BoxDecoration(
+            color: Colors.white,
+             border: Border(
+              top: BorderSide(
+                color: AppColors.lessImportant,
+                width: 1,
+              ),
+            ),
+          ),
+          child: _buildPriceAndAction()
+        ),
+      ),
+    ],
+  ),
     );
   }
+
+
+  Widget _buildPriceAndAction() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              "STARTING FROM",
+              style: TextStyle(
+                fontSize: 10,
+                fontWeight: FontWeight.w500,
+                color: AppColors.lessImportant,
+                letterSpacing: 0.8,
+              ),
+            ),
+            const SizedBox(height: 2),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.baseline,
+              textBaseline: TextBaseline.alphabetic,
+              children: [
+                ShaderMask(
+                  shaderCallback: (bounds) => const LinearGradient(
+                    colors: [AppColors.blue, Colors.purple],
+                  ).createShader(bounds),
+                  child: Text(
+                    widget.shipment.price,
+                    style: const TextStyle(
+                      fontSize: 32,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 4),
+                Text(
+                  "dh",
+                  style: TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.grey[400],
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+        GestureDetector(
+          onTap: _showRequestSheet,
+          child: AnimatedContainer(
+            duration: const Duration(milliseconds: 200),
+            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+            decoration: BoxDecoration(
+              gradient: const LinearGradient(
+                colors: [AppColors.blue, Colors.purple],
+              ),
+              borderRadius: BorderRadius.circular(16),
+              boxShadow: [
+                BoxShadow(
+                  color: AppColors.blue.withOpacity(0.3),
+                  blurRadius: 8,
+                  offset: const Offset(0, 4),
+                ),
+              ],
+            ),
+            child: const Text(
+              "Make Offer",
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 12,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+
 
   Widget _displayImage() {
     return Row(
@@ -348,8 +445,9 @@ class _ListingCardDetailsState extends State<ListingCardDetails> {
         padding: const EdgeInsets.all(16),
         child: UserProfileCard(
           header: widget.user.displayName ?? "unknow user",
-          onPressed: () => print("user profile  Clicked"),
+          onPressed: () => {context.push("/profile")},
           photoUrl: widget.user.photoUrl ?? AppTheme.defaultProfileImage,
+          subHeader: "⭐ 4.5",
           headerFontSize: 16,
           subHeaderFontSize: 10,
           avatarSize: 22,

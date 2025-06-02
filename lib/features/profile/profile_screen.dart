@@ -49,9 +49,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
         appBar: AppBar(
           title: const Text(
             'Profile',
-            style: TextStyle(color: AppColors.appBarText),
+            style: TextStyle(color: AppColors.white),
           ),
-          backgroundColor: AppColors.appBarBackground,
+          backgroundColor: AppColors.blue,
           centerTitle: true,
         ),
         body: SingleChildScrollView(
@@ -183,13 +183,38 @@ class _ProfileScreenState extends State<ProfileScreen> {
             child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  CircleAvatar(
-                    radius: 50,
-                    backgroundImage: user != null && user.photoUrl != null
-                        ? NetworkImage(user.photoUrl!)
-                        : AssetImage('assets/images/profile.png')
-                            as ImageProvider,
-                  ),
+                  Stack(
+          children: [
+            Container(
+              width: 100,
+              height: 100,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(80),
+                border: Border.all(
+                  color: const Color.fromARGB(255, 0, 0, 0).withOpacity(0.3),
+                  width: 3,
+                ),
+              ),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(80),
+                child: Image.network(
+                  user?.photoUrl ?? AppTheme.defaultProfileImage,
+                  fit: BoxFit.cover,
+                  errorBuilder: (context, error, stackTrace) {
+                    return Container(
+                      color: const Color.fromARGB(255, 9, 10, 12).withOpacity(0.1),
+                      child: const Icon(
+                        Icons.person,
+                        color: AppColors.white,
+                        size: 50,
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ),
+          ],
+        ),
                   const SizedBox(width: 15),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.center,

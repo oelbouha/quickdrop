@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:quickdrop_app/features/models/user_model.dart';
 import 'package:quickdrop_app/core/utils/imports.dart';
 
+import 'package:flutter/services.dart'; 
 import 'package:quickdrop_app/core/widgets/auth_button.dart';
 
 class IntroScreen extends StatefulWidget {
@@ -19,24 +20,26 @@ class _IntroScreenState extends State<IntroScreen> {
   bool _isLoginLoading = false;
   // bool _hasClearedUser = false;
 
-  @override
+
+@override
 Widget build(BuildContext context) {
-  return Scaffold(
-    backgroundColor: AppColors.background,
-     appBar: AppBar(
-        title:  const Text(
-              "QuickDrop",
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-                color: AppColors.blue,
-              ),
-            ),
-        backgroundColor: AppColors.background,
-        centerTitle: true,
-      ),
-    body: SafeArea(
-      child: Padding(
+  return AnnotatedRegion<SystemUiOverlayStyle>(
+    value: SystemUiOverlayStyle.dark, 
+    child: Scaffold(
+      backgroundColor: AppColors.background,
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              AppColors.backgroundStart,
+              AppColors.backgroundMiddle,
+              AppColors.backgroundEnd,
+            ],
+            stops: [0.0, 0.5, 1.0],
+          ),
+        ),
         padding: const EdgeInsets.all(AppTheme.homeScreenPadding),
         child: Column(
           children: [
@@ -59,33 +62,20 @@ Widget build(BuildContext context) {
               ),
             ),
             const SizedBox(height: 40),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Expanded(child:AuthButton(
-                  hintText: "Login",
-                  onPressed: () {
-                    context.pushNamed('login');
-                  },
-                  isLoading: _isLoginLoading,
-                  backgroundColor: AppColors.blue,
-                  textColor: AppColors.white,
-                  borderColor: AppColors.blue,
-                )),
-                const SizedBox(width: 10),
-                Expanded(child: AuthButton(
-                  hintText: "Sign up",
-                  onPressed: () {
-                    context.pushNamed('signup');
-                  },
-                  isLoading: _isLoginLoading,
-                  backgroundColor: AppColors.background,
-                  textColor: AppColors.blue,
-                  borderColor: AppColors.blue,
-                )),
-
-            ],),
-
+            LoginButton(
+              hintText: "Sign in",
+              onPressed: () {
+                context.pushNamed('login');
+              },
+              isLoading: false,
+            ),
+            const SizedBox(height: 10),
+            textWithLink(
+              text: "Don't have an account? ",
+              textLink: "sign up",
+              navigatTo: '/signup',
+              context: context,
+            ),
             const SizedBox(height: 15),
           ],
         ),
@@ -93,6 +83,8 @@ Widget build(BuildContext context) {
     ),
   );
 }
+
+
 }
 
 class OnboardingSlide extends StatelessWidget {
