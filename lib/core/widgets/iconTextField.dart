@@ -78,7 +78,7 @@ class _IconTextFieldState extends State<IconTextField> {
           color: AppColors.textFieldHintText,
         ),
         hintText: widget.hintText,
-        filled: true,
+        filled: false,
         fillColor: widget.backgroundColor,
         prefixIcon: Padding(
           padding: const EdgeInsets.all(12),

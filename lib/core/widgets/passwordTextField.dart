@@ -46,7 +46,7 @@ class _PasswordTextfieldState extends State<PasswordTextfield> {
           color: AppColors.textFieldHintText,
         ),
         hintText: "Password",
-        filled: true,
+        filled: false,
         prefixIcon:  widget.showPrefix == true ? const Padding(
           padding:  EdgeInsets.all(12),
           child: CustomIcon(

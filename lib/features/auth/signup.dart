@@ -167,14 +167,28 @@ class _SignupState extends State<Signup> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+    value: SystemUiOverlayStyle.dark, 
+    child:Scaffold(
         backgroundColor: AppColors.background,
         resizeToAvoidBottomInset: false,
-        appBar: AppBar(
-          backgroundColor: AppColors.background,
-        ),
-        body: Padding(
+        // appBar: AppBar(
+        //   backgroundColor: AppColors.background,
+        // ),
+        body: Container(
             padding: const EdgeInsets.all(AppTheme.homeScreenPadding),
+             decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [
+                  AppColors.backgroundStart,
+                  AppColors.backgroundMiddle,
+                  AppColors.backgroundEnd,
+                ],
+                stops: [0.0, 0.5, 1.0],
+              ),
+            ),
             child: Center(
                 child: Column(
               children: [
@@ -183,7 +197,7 @@ class _SignupState extends State<Signup> {
                       child: SingleChildScrollView(child: _buildLogInScreen())),
                 ),
               ],
-            ))));
+            )))));
   }
 
   Widget _buildLogInScreen() {
