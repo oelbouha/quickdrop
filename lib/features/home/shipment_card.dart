@@ -45,7 +45,9 @@ class ShipmentCardState extends State<ShipmentCard>
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return GestureDetector(
+      onTap: widget.onPressed,
+      child: Container(
       width: double.infinity,
           decoration: BoxDecoration(
             color: Colors.white,
@@ -74,7 +76,7 @@ class ShipmentCardState extends State<ShipmentCard>
               ],
             ),
           ),
-    );
+    ));
   }
 
   Widget _buildImageSection() {
@@ -336,21 +338,27 @@ class ShipmentCardState extends State<ShipmentCard>
 
   Widget _buildContentSection() {
     return Padding(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.only(
+        left: 10,
+        right: 10,
+        top: 10,
+        bottom: 4
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _buildUserProfile(),
-          const SizedBox(height: 16),
+          const SizedBox(height: 12),
           _buildDestination(),
           const SizedBox(height: 6),
           _buildDetailsGrid(),
-          const SizedBox(height: 16),
+          const SizedBox(height: 12),
           _buildPriceAndAction(),
         ],
       ),
     );
   }
+
 
   Widget _buildUserProfile() {
     return Row(
@@ -447,6 +455,7 @@ class ShipmentCardState extends State<ShipmentCard>
       ],
     );
   }
+
 
 Widget _buildDestination() {
     return Row(
@@ -602,7 +611,7 @@ Widget _buildDestination() {
           ],
         ),
         GestureDetector(
-          onTap: widget.onMakeOffer ?? () {},
+          onTap: widget.onPressed,
           child: AnimatedContainer(
             duration: const Duration(milliseconds: 200),
             padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
@@ -632,4 +641,6 @@ Widget _buildDestination() {
       ],
     );
   }
+
+
 }
