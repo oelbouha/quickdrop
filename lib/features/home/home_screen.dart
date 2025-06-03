@@ -2,6 +2,7 @@ import 'package:quickdrop_app/core/utils/imports.dart';
 import 'package:quickdrop_app/features/shipment/listing_card_details_screen.dart';
 import 'package:quickdrop_app/features/profile/profile_screen.dart';
 import 'package:quickdrop_app/core/widgets/app_header.dart';
+import 'package:quickdrop_app/core/widgets/home_page_skeleton.dart';
 
 
 class HomeScreen extends StatefulWidget {
@@ -72,9 +73,8 @@ class _HomeScreenState extends State<HomeScreen> {
             stops: [0.0, 0.5, 1.0],
           ),
         ),
-        child: SafeArea(child: Skeletonizer(
-            enabled: _isLoading,
-            child: Column(
+        child: SafeArea( child:_isLoading ? const HomePageSkeleton()
+             : Column(
               children: [
                 // App Bar
                 Container(
@@ -122,7 +122,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ),
       ),
-    ));
+    );
   }
 
   Widget _buildHeroSection() {

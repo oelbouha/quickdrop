@@ -1,4 +1,5 @@
 import 'package:quickdrop_app/core/utils/imports.dart';
+import 'package:quickdrop_app/core/widgets/listing_skeleton.dart';
 
 class ShipmentScreen extends StatefulWidget {
   const ShipmentScreen({Key? key}) : super(key: key);
@@ -37,11 +38,17 @@ class _ShipmentScreenState extends State<ShipmentScreen>
               .fetchUsersData(userIds);
         }
 
-        setState(() {
-          _isLoading = false;
-        });
+      
       } catch (e) {
         if (mounted) AppUtils.showError(context, "Failed to fetch Shipments");
+      }
+      finally {
+        // Ensure the loading state is updated even if an error occurs
+        if (mounted) {
+          setState(() {
+            _isLoading = true;
+          });
+        }
       }
     });
   }
@@ -94,10 +101,7 @@ class _ShipmentScreenState extends State<ShipmentScreen>
         title: "Shipments",
       ),
       body: _isLoading
-          ? const Center(
-              child: CircularProgressIndicator(
-              color: AppColors.blue,
-            ))
+          ? const ListingSkeleton()
           : Consumer<ShipmentProvider>(builder: (context, provider, child) {
               final user = Provider.of<UserProvider>(context, listen: false).user;
               if (user == null) {
