@@ -2,18 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:quickdrop_app/theme/colors.dart';
 import 'package:quickdrop_app/theme/AppTheme.dart';
 import 'package:quickdrop_app/core/widgets/custom_svg.dart';
-
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-
-
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String userPhotoUrl;
   final TabController tabController;
-  final List<String> tabs;
+  final List tabs;
   final String? title;
-
   const CustomAppBar({
     super.key,
     required this.userPhotoUrl,
@@ -21,7 +17,6 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
     required this.tabs,
     required this.title,
   });
-
   @override
   Widget build(BuildContext context) {
     return AppBar(
@@ -46,88 +41,44 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
         ),
         GestureDetector(
           onTap: () => context.push("/profile"),
-          child: Container(
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              border: Border.all(
-                color: AppColors.blue.withOpacity(0.3),
-                width: 2,
-              ),
-            ),
-            child: CircleAvatar(
-              radius: 18,
-              backgroundColor: AppColors.blue,
-              backgroundImage: userPhotoUrl.startsWith("http")
-                  ? NetworkImage(userPhotoUrl)
-                  : AssetImage(userPhotoUrl) as ImageProvider,
-            ),
+          child: CircleAvatar(
+            radius: 18,
+            backgroundColor: AppColors.blue,
+            backgroundImage: userPhotoUrl.startsWith("http")
+                ? NetworkImage(userPhotoUrl)
+                : AssetImage(userPhotoUrl) as ImageProvider,
           ),
         ),
-        const SizedBox(width: 16),
+        const SizedBox(width: 10),
       ],
       bottom: PreferredSize(
-        preferredSize: const Size.fromHeight(56),
+        preferredSize: const Size.fromHeight(48),
         child: Container(
-          margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          decoration: BoxDecoration(
-            color: AppColors.lessImportant.withOpacity(0.2),
-            borderRadius: BorderRadius.circular(16),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.05),
-                blurRadius: 6,
-                offset: const Offset(0, 2),
-              ),
-            ],
-          ),
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(16),
-            child: TabBar(
-              controller: tabController,
-              labelColor: AppColors.shipmentText,
-              unselectedLabelColor: AppColors.tabTextInactive,
-              indicator: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [
-                    AppColors.white,
-                    AppColors.white.withOpacity(0.8),
-                  ],
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                ),
-                borderRadius: BorderRadius.circular(12),
-                boxShadow: [
-                  BoxShadow(
-                    color: AppColors.dark.withOpacity(0.3),
-                    blurRadius: 8,
-                    offset: const Offset(0, 2),
-                  ),
-                ],
-              ),
-              indicatorPadding: const EdgeInsets.all(4),
-              indicatorSize: TabBarIndicatorSize.tab,
-              dividerColor: Colors.transparent,
-              labelStyle: const TextStyle(
-                fontWeight: FontWeight.w600,
-                fontSize: 14,
-                letterSpacing: 0.5,
-              ),
-              unselectedLabelStyle: const TextStyle(
-                fontWeight: FontWeight.w500,
-                fontSize: 14,
-                letterSpacing: 0.3,
-              ),
-              tabs: tabs.map((tab) => 
-                Container(
-                  height: 40,
-                  alignment: Alignment.center,
-                  child: Text(
-                    tab,
-                    textAlign: TextAlign.center,
-                  ),
-                ),
-              ).toList(),
+          color: AppColors.background,
+          child: TabBar(
+            controller: tabController,
+            labelColor: AppColors.tabTextActive,
+            unselectedLabelColor: AppColors.tabTextInactive,
+            indicator: const UnderlineGradientIndicator(
+            gradient: LinearGradient(
+              colors: [AppColors.blueStart, AppColors.purpleStart],
             ),
+            strokeWidth: 3,
+          ),
+            tabAlignment: TabAlignment.fill,
+            indicatorWeight: 2,
+            indicatorSize: TabBarIndicatorSize.label,
+            dividerColor: AppColors.lessImportant,
+            dividerHeight: 0.4,
+            labelStyle: const TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 16,
+            ),
+            unselectedLabelStyle: const TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 16,
+            ),
+            tabs: tabs.map((tab) => Tab(text: tab)).toList(),
           ),
         ),
       ),
@@ -135,5 +86,54 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   }
 
   @override
-  Size get preferredSize => const Size.fromHeight(kToolbarHeight + 56);
+  Size get preferredSize => Size.fromHeight(kToolbarHeight + 48);
 }
+
+
+
+class UnderlineGradientIndicator extends Decoration {
+  final Gradient gradient;
+  final double strokeWidth;
+
+  const UnderlineGradientIndicator({
+    required this.gradient,
+    this.strokeWidth = 3,
+  });
+
+  @override
+  BoxPainter createBoxPainter([VoidCallback? onChanged]) {
+    return _UnderlinePainter(gradient, strokeWidth, BorderRadius.circular(8));
+  }
+}
+class _UnderlinePainter extends BoxPainter {
+  final Gradient gradient;
+  final double strokeWidth;
+  final BorderRadius borderRadius;
+
+  _UnderlinePainter(this.gradient, this.strokeWidth, this.borderRadius);
+
+  @override
+  void paint(Canvas canvas, Offset offset, ImageConfiguration config) {
+    final width = config.size?.width ?? 0;
+    final height = config.size?.height ?? 0;
+    final rect = Rect.fromLTWH(
+      offset.dx,
+      offset.dy + height - strokeWidth,
+      width,
+      strokeWidth,
+    );
+
+    final rrect = borderRadius.toRRect(rect);
+
+    final paint = Paint()
+      ..shader = gradient.createShader(rect)
+      ..style = PaintingStyle.fill;
+
+    canvas.drawRRect(rrect, paint);
+  }
+}
+
+
+
+
+
