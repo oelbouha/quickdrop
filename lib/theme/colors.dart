@@ -97,4 +97,7 @@ class AppColors {
   // Hover Colors
   static const Color hoverGray100 = Color(0xFFF3F4F6);
   static const Color hoverBlue50 = Color(0xFFEFF6FF);
+
+
+  static const Color skeletonColor = Color.fromARGB(255, 223, 219, 219);
 }
