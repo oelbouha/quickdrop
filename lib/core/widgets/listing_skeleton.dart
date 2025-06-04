@@ -7,23 +7,9 @@ class ListingSkeleton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
           backgroundColor: AppColors.white,
-          // appBar: AppBar(
-          //   title: _buildAppBarSkeleton(),
-          //   backgroundColor: AppColors.white,
-          // ),
           body: Container(
             decoration: const BoxDecoration(
               color: AppColors.white,
-              // gradient: LinearGradient(
-              //   begin: Alignment.topLeft,
-              //   end: Alignment.bottomRight,
-              //   colors: [
-              //     Color(0xFFF8FAFC), 
-              //     Color(0xFFF1F5F9), 
-              //     Color(0xFFE2E8F0), 
-              //   ],
-              //   stops: [0.0, 0.5, 1.0],
-              // ),
             ),
             child: SingleChildScrollView(
               padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -32,7 +18,6 @@ class ListingSkeleton extends StatelessWidget {
                 children: [
                   const SizedBox(height: 16),
                   _buildListingsSkeleton(),
-                  // const SizedBox(height: 100),
                 ],
               ),
             ),
@@ -48,7 +33,7 @@ class ListingSkeleton extends StatelessWidget {
             _buildShimmer(
               child: Container(
                 width: double.infinity,
-                height: 180,
+                height: 170,
                 decoration: BoxDecoration(
                   color: AppColors.skeletonColor,
                   borderRadius: BorderRadius.circular(16),
@@ -60,22 +45,11 @@ class ListingSkeleton extends StatelessWidget {
                   children: [
                     _buildShimmer(
                         child: Container(
-                          width: 100,
-                          height: 20,
+                          width: 120,
+                          height: 50,
                          decoration: BoxDecoration(
                           color: AppColors.skeletonColor,
-                          borderRadius: BorderRadius.circular(24),
-                        ),
-                        ),
-                      ),
-                    const SizedBox(height: 8),
-                     _buildShimmer(
-                        child: Container(
-                          width: 100,
-                          height: 20,
-                         decoration: BoxDecoration(
-                          color: AppColors.skeletonColor,
-                          borderRadius: BorderRadius.circular(24),
+                          borderRadius: BorderRadius.circular(8),
                         ),
                         ),
                       ),
@@ -83,32 +57,10 @@ class ListingSkeleton extends StatelessWidget {
                      _buildShimmer(
                         child: Container(
                           width: 60,
-                          height: 10,
+                          height: 30,
                          decoration: BoxDecoration(
                           color: AppColors.skeletonColor,
-                          borderRadius: BorderRadius.circular(24),
-                        ),
-                        ),
-                      ),
-                       const SizedBox(height: 8),
-                     _buildShimmer(
-                        child: Container(
-                          width: 60,
-                          height: 10,
-                         decoration: BoxDecoration(
-                          color: AppColors.skeletonColor,
-                          borderRadius: BorderRadius.circular(24),
-                        ),
-                        ),
-                      ),
-                       const SizedBox(height: 8),
-                     _buildShimmer(
-                        child: Container(
-                          width: 60,
-                          height: 10,
-                         decoration: BoxDecoration(
-                          color: AppColors.skeletonColor,
-                          borderRadius: BorderRadius.circular(24),
+                          borderRadius: BorderRadius.circular(8),
                         ),
                         ),
                       ),
@@ -119,7 +71,7 @@ class ListingSkeleton extends StatelessWidget {
                           height: 40,
                           decoration: BoxDecoration(
                             color: AppColors.skeletonColor,
-                            borderRadius: BorderRadius.circular(16),
+                            borderRadius: BorderRadius.circular(8),
                           ),
                         ),
                     )

@@ -57,12 +57,12 @@ class _IconTextFieldState extends State<IconTextField> {
   @override
   Widget build(BuildContext context) {
     final BorderSide borderSide = BorderSide(
-      color: hasText ? AppColors.lessImportant : Colors.grey,
+      color: hasText ? AppColors.blue700 : Colors.grey,
       width: AppTheme.textFieldBorderWidth,
     );
 
     final BorderSide focusedBorderSide = BorderSide(
-      color: hasText ? AppColors.lessImportant : AppColors.blue,
+      color: hasText ? AppColors.blue700 : AppColors.blue,
       width: AppTheme.textFieldBorderWidth,
     );
 
@@ -85,7 +85,7 @@ class _IconTextFieldState extends State<IconTextField> {
           child: CustomIcon(
             iconPath: widget.iconPath,
             size: 20,
-            color: AppColors.lessImportant,
+            color: hasText? AppColors.blue700 : AppColors.lessImportant,
           ),
         ),
         enabledBorder: OutlineInputBorder(
