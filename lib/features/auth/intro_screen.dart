@@ -5,7 +5,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:provider/provider.dart';
 import 'package:quickdrop_app/features/models/user_model.dart';
 import 'package:quickdrop_app/core/utils/imports.dart';
-
 import 'package:flutter/services.dart'; 
 import 'package:quickdrop_app/core/widgets/auth_button.dart';
 
@@ -65,9 +64,12 @@ Widget build(BuildContext context) {
             LoginButton(
               hintText: "Sign in",
               onPressed: () {
+                setState(() {
+                  _isLoginLoading = true;
+                });
                 context.pushNamed('login');
               },
-              isLoading: false,
+              isLoading: _isLoginLoading,
             ),
             const SizedBox(height: 10),
             textWithLink(

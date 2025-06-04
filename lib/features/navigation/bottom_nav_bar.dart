@@ -28,66 +28,66 @@ class BottomNavScreen extends StatelessWidget {
     // ));
     return Scaffold(
         body: child,
-        bottomNavigationBar: Theme(
-          data: Theme.of(context).copyWith(
-            splashColor:
-                AppColors.cardBackground, // ✅ Removes white ripple effect
-            highlightColor:
-                AppColors.cardBackground, // ✅ Disables highlight animation
+        bottomNavigationBar: Container(
+  decoration: const BoxDecoration(
+    border: Border(
+      top:  BorderSide(
+        color: AppColors.lessImportant, // Color of the top border
+        width: 0.4, // Thickness of the border
+      ),
+    ),
+  ),
+  child: Theme(
+    data: Theme.of(context).copyWith(
+      splashColor: AppColors.cardBackground, // Removes white ripple effect
+      highlightColor: AppColors.cardBackground, // Disables highlight animation
+    ),
+    child: BottomNavigationBar(
+      type: BottomNavigationBarType.fixed,
+      currentIndex: _calculateIndex(context),
+      onTap: (index) => _onTap(index, context),
+      showSelectedLabels: true,
+      selectedItemColor: AppColors.navTextActive,
+      showUnselectedLabels: true,
+      selectedLabelStyle: const TextStyle(
+        fontSize: 12,
+        fontWeight: FontWeight.w600,
+      ),
+      unselectedLabelStyle: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
+      backgroundColor: AppColors.navBackground,
+      unselectedItemColor: AppColors.navTextInactive,
+      items: <BottomNavigationBarItem>[
+        BottomNavigationBarItem(
+          icon: _buildIconWithBackground(
+            iconPath: "assets/icon/magnifer.svg",
+            isSelected: _calculateIndex(context) == 0,
           ),
-          child: BottomNavigationBar(
-            type: BottomNavigationBarType.fixed,
-            currentIndex: _calculateIndex(context),
-            onTap: (index) => _onTap(index, context),
-            showSelectedLabels: true,
-            selectedItemColor: AppColors.navTextActive,
-            showUnselectedLabels: true,
-            selectedLabelStyle: const TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.bold,
-            ),
-            unselectedLabelStyle:
-                const TextStyle(fontSize: 14 , fontWeight: FontWeight.bold),
-            backgroundColor: AppColors.navBackground,
-            unselectedItemColor: AppColors.navTextInactive,
-            items: <BottomNavigationBarItem>[
-              BottomNavigationBarItem(
-                icon: _buildIconWithBackground(
-                  iconPath: "assets/icon/magnifer.svg",
-                  isSelected: _calculateIndex(context) == 0,
-                ),
-                label: 'Search',
-              ),
-              BottomNavigationBarItem(
-                icon: _buildIconWithBackground(
-                  iconPath: "assets/icon/car.svg",
-                  isSelected: _calculateIndex(context) == 1,
-                ),
-                label: 'Trip',
-              ),
-              BottomNavigationBarItem(
-                icon: _buildIconWithBackground(
-                  iconPath: "assets/icon/package.svg",
-                  isSelected: _calculateIndex(context) == 2,
-                ),
-                label: 'Shipment',
-              ),
-              BottomNavigationBarItem(
-                icon: _buildIconWithBackground(
-                  iconPath: "assets/icon/money.svg",
-                  isSelected: _calculateIndex(context) == 3,
-                ),
-                label: 'Offers',
-              ),
-              // BottomNavigationBarItem(
-              //   icon: _buildIconWithBackground(
-              //     iconPath: "assets/icon/user.svg",
-              //     isSelected: navigationProvider.currentIndex == 4,
-              //   ),
-              //   label: 'Profile',
-              // ),
-            ],
+          label: 'Search',
+        ),
+        BottomNavigationBarItem(
+          icon: _buildIconWithBackground(
+            iconPath: "assets/icon/car.svg",
+            isSelected: _calculateIndex(context) == 1,
           ),
+          label: 'Trip',
+        ),
+        BottomNavigationBarItem(
+          icon: _buildIconWithBackground(
+            iconPath: "assets/icon/package.svg",
+            isSelected: _calculateIndex(context) == 2,
+          ),
+          label: 'Shipment',
+        ),
+        BottomNavigationBarItem(
+          icon: _buildIconWithBackground(
+            iconPath: "assets/icon/money.svg",
+            isSelected: _calculateIndex(context) == 3,
+          ),
+          label: 'Offers',
+        ),
+      ],
+    ),
+  ),
         ));
   }
 
@@ -96,17 +96,19 @@ class BottomNavScreen extends StatelessWidget {
     required bool isSelected,
   }) {
     return Container(
-      padding: const EdgeInsets.all(3),
-      width: 60,
-      height: 30,
+      padding: const EdgeInsets.all(2),
+      width: 48,
+      height: 25,
       decoration: BoxDecoration(
-          color:
-              isSelected ? AppColors.navTextActive.withOpacity(0.2) : Colors.transparent,
+        color: isSelected ? Colors.black.withOpacity(0.8): null,
+          gradient: isSelected ? const LinearGradient(
+          colors: [AppColors.blueStart, AppColors.purpleStart],
+        ) : null,
           borderRadius: BorderRadius.circular(20)),
       child: CustomIcon(
         iconPath: iconPath,
-        size: 24,
-        color: isSelected ? AppColors.navTextActive : AppColors.navTextInactive,
+        size: 20,
+        color: isSelected ? const Color.fromARGB(255, 255, 255, 255) : AppColors.navTextInactive,
       ),
     );
   }

@@ -46,7 +46,7 @@ class _ShipmentScreenState extends State<ShipmentScreen>
         // Ensure the loading state is updated even if an error occurs
         if (mounted) {
           setState(() {
-            _isLoading = true;
+            _isLoading = false;
           });
         }
       }
