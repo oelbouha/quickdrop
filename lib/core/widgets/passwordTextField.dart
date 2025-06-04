@@ -26,6 +26,28 @@ class PasswordTextfield extends StatefulWidget {
 
 class _PasswordTextfieldState extends State<PasswordTextfield> {
   bool _obscureText = true;
+ bool hasText = false;
+
+  @override
+  void initState() {
+    super.initState();
+    hasText = widget.controller.text.isNotEmpty;
+    widget.controller.addListener(_onTextChanged);
+  }
+
+  void _onTextChanged() {
+    if (mounted) {
+      setState(() {
+        hasText = widget.controller.text.isNotEmpty;
+      });
+    }
+  }
+
+  @override
+  void dispose() {
+    widget.controller.removeListener(_onTextChanged);
+    super.dispose();
+  }
 
   void _toggleVisibility() {
     setState(() {
@@ -35,6 +57,15 @@ class _PasswordTextfieldState extends State<PasswordTextfield> {
 
   @override
   Widget build(BuildContext context) {
+     final BorderSide borderSide = BorderSide(
+      color: hasText ? AppColors.blue700 : Colors.grey,
+      width: AppTheme.textFieldBorderWidth,
+    );
+
+    final BorderSide focusedBorderSide = BorderSide(
+      color: hasText ? AppColors.blue700 : AppColors.blue,
+      width: AppTheme.textFieldBorderWidth,
+    );
     return TextFormField(
       controller: widget.controller,
       obscureText: _obscureText,
@@ -47,12 +78,12 @@ class _PasswordTextfieldState extends State<PasswordTextfield> {
         ),
         hintText: "Password",
         filled: false,
-        prefixIcon:  widget.showPrefix == true ? const Padding(
+        prefixIcon:  widget.showPrefix == true ?  Padding(
           padding:  EdgeInsets.all(12),
           child: CustomIcon(
             iconPath: "assets/icon/lock.svg",
             size: 20,
-            color: AppColors.lessImportant,
+            color: hasText ? AppColors.blue700: AppColors.lessImportant,
           ),
         ) : null,
         suffixIcon: IconButton(
@@ -62,22 +93,16 @@ class _PasswordTextfieldState extends State<PasswordTextfield> {
                 ? "assets/icon/eye-closed-svgrepo-com.svg"
                 : "assets/icon/eye.svg",
             size: 20,
-            color: AppColors.shipmentText,
+            color:  AppColors.shipmentText,
           ),
         ),
         fillColor: widget.backgroundColor,
         enabledBorder: OutlineInputBorder(
-          borderSide: const BorderSide(
-            color: Colors.grey,
-            width: AppTheme.textFieldBorderWidth,
-          ),
+          borderSide: borderSide,
           borderRadius: BorderRadius.circular(AppTheme.textFeildRadius),
         ),
         focusedBorder: OutlineInputBorder(
-          borderSide: const BorderSide(
-            color: AppColors.blue,
-            width: AppTheme.textFieldBorderWidth,
-          ),
+          borderSide: focusedBorderSide,
           borderRadius: BorderRadius.circular(AppTheme.cardRadius),
         ),
         errorBorder: OutlineInputBorder(
