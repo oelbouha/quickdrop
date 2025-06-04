@@ -1,6 +1,5 @@
 import 'package:quickdrop_app/core/utils/imports.dart';
-import 'package:quickdrop_app/core/widgets/app_header.dart';
-
+import 'package:quickdrop_app/core/widgets/listing_skeleton.dart';
 import 'package:go_router/go_router.dart';
 
 class TripScreen extends StatefulWidget {
@@ -71,11 +70,16 @@ class _TripScreenState extends State<TripScreen>
               .fetchUsersData(userIds);
         }
 
-        setState(() {
-          _isLoading = false;
-        });
       } catch (e) {
         if (mounted) AppUtils.showError(context, "Failed to fetch Shipments");
+      }
+      finally {
+        // Ensure the loading state is updated even if an error occurs
+        if (mounted) {
+          setState(() {
+            _isLoading = false;
+          });
+        }
       }
     });
   }
@@ -101,10 +105,7 @@ class _TripScreenState extends State<TripScreen>
         title: "Trips",
       ),
       body: _isLoading
-          ? const Center(
-              child: CircularProgressIndicator(
-              color: AppColors.blue,
-            ))
+          ? const ListingSkeleton()
           : Consumer<TripProvider>(builder: (context, provider, child) {
               final user = FirebaseAuth.instance.currentUser;
               if (user == null) {
