@@ -101,7 +101,7 @@ class _ShipmentScreenState extends State<ShipmentScreen>
         title: "Shipments",
       ),
       body: _isLoading
-          ? const ListingSkeleton()
+          ?  const Center(child:  CircularProgressIndicator(color: AppColors.blue700,),)
           : Consumer<ShipmentProvider>(builder: (context, provider, child) {
               final user = Provider.of<UserProvider>(context, listen: false).user;
               if (user == null) {

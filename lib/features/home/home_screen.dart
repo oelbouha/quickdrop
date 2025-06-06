@@ -197,7 +197,7 @@ class _HomeScreenState extends State<HomeScreen> {
               style: TextStyle(
                 color: AppColors.textMuted,
                 fontSize: 16,
-                fontWeight: FontWeight.w500,
+                                  fontWeight: FontWeight.w500,
               ),
             ),
           ],
@@ -464,75 +464,113 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _buildListingsHeader() {
-    return Row(
-      children: [
-        Text(
-          "Recent ${selectedIndex == 0 ? 'Shipments' : 'Trips'}",
-          style: const TextStyle(
-            color: AppColors.textPrimary,
-            fontSize: 14,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        const Spacer(),
-        Container(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          decoration: BoxDecoration(
-            color: AppColors.hoverBlue50,
-            borderRadius: BorderRadius.circular(12),
-          ),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const Icon(
-                Icons.tune,
-                color: AppColors.blue600,
-                size: 16,
-              ),
-              const SizedBox(width: 4),
-              GestureDetector(
-                onTap: () => _showPopUpMenu(),
-                child: const Text(
-                  "Filter",
-                  style: TextStyle(
-                    color: AppColors.blue600,
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ],
-    );
-  }
 
-
-  Widget _showPopUpMenu() {
-    return PopupMenuButton<String>(
-    onSelected: (value) {
-      // Handle selection
-      if (value == 'settings') {
-        // Navigate to settings
-      } else if (value == 'logout') {
-        // Handle logout
-      }
-    },
-    itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
-      const PopupMenuItem<String>(
-        value: 'settings',
-        child: Text('Settings'),
+Widget _buildListingsHeader() {
+  return Row(
+    children: [
+      Text(
+        "Recent ${selectedIndex == 0 ? 'Shipments' : 'Trips'}",
+        style: const TextStyle(
+          color: AppColors.textPrimary,
+          fontSize: 14,
+          fontWeight: FontWeight.bold,
+        ),
       ),
-      const PopupMenuItem<String>(
-        value: 'logout',
-        child: Text('Logout'),
-      ),
+      const Spacer(),
+      _showPopUpMenu(),
     ],
   );
+} 
 
-  }
+  Widget _showPopUpMenu() {
+  return  Theme(
+    data: Theme.of(context).copyWith(
+      popupMenuTheme: PopupMenuThemeData(
+        color: AppColors.white, 
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12), 
+        ),
+      ),
+    ),
+    child: PopupMenuButton<int>(
+      onSelected: (value) {
+        setState(() {
+          selectedIndex = value;
+        });
+      },
+    itemBuilder: (BuildContext context) => <PopupMenuEntry<int>>[
+      
+      const PopupMenuItem<int>(
+        value: 0,
+        child: Row(
+          children: [
+            CustomIcon(
+              iconPath: "assets/icon/package.svg",
+              size: 20,
+              color: AppColors.blue600,
+            ),
+            SizedBox(width: 8),
+            Text(
+              'Shipments',
+              style: TextStyle(
+                color: AppColors.textPrimary,
+                fontSize: 14,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ],
+        ),
+      ),
+      const PopupMenuItem<int>(
+        value: 1,
+        child: Row(
+          children: [
+            CustomIcon(
+              iconPath: "assets/icon/car.svg",
+              size: 20,
+              color: AppColors.blue600,
+            ),
+            SizedBox(width: 8),
+            Text(
+              'Trips',
+              style: TextStyle(
+                color: AppColors.textPrimary,
+                fontSize: 14,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ],
+        ),
+      ),
+    ],
+    child: Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+      decoration: BoxDecoration(
+        color: AppColors.hoverBlue50,
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: const Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(
+            Icons.tune,
+            color: AppColors.blue600,
+            size: 16,
+          ),
+          // SizedBox(width: 4),
+          // Text(
+          //   "Filter",
+          //   style: TextStyle(
+          //     color: AppColors.blue600,
+          //     fontSize: 14,
+          //     fontWeight: FontWeight.w600,
+          //   ),
+          // ),
+        ],
+      ),
+    ),
+  ));
+}
 
   Widget _buildAppBar() {
     return Row(
@@ -603,34 +641,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _buildFloatingActionButton() {
-    return Container(
-      decoration: BoxDecoration(
-        gradient: const LinearGradient(
-          colors: [AppColors.blueStart, AppColors.purpleStart],
-        ),
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: AppColors.blueStart.withOpacity(0.4),
-            blurRadius: 20,
-            offset: const Offset(0, 8),
-          ),
-        ],
-      ),
-      child: FloatingActionButton(
-        onPressed: () => _showRequestSheet(),
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        child: const Icon(
-          Icons.add,
-          color: Colors.white,
-          size: 28,
-        ),
-      ),
-    );
-  }
-
+  
   Widget _buildRequesBody() {
     return const Padding(
       padding: EdgeInsets.all(24.0),

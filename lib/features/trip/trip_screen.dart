@@ -105,7 +105,7 @@ class _TripScreenState extends State<TripScreen>
         title: "Trips",
       ),
       body: _isLoading
-          ? const ListingSkeleton()
+          ? const Center(child:  CircularProgressIndicator(color: AppColors.blue700,),)
           : Consumer<TripProvider>(builder: (context, provider, child) {
               final user = FirebaseAuth.instance.currentUser;
               if (user == null) {
