@@ -26,9 +26,14 @@ class SettingsCard extends StatelessWidget {
     return InkWell(
       onTap: onTap,
       child:  Container(
+        decoration: BoxDecoration(
+          color: backgroundColor,
+          borderRadius: BorderRadius.circular(AppTheme.cardRadius),
+        ),
         padding: const EdgeInsets.only(
           top: AppTheme.homeScreenPadding,
           bottom: AppTheme.homeScreenPadding,
+          left: 8,
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.start,
@@ -43,7 +48,7 @@ class SettingsCard extends StatelessWidget {
             ),
             Text(
               hintText,
-              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: AppColors.lightGray),
+              style:  TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: hintTextColor),
             ),
       ],
 )

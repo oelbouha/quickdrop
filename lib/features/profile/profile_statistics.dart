@@ -58,10 +58,16 @@ class ProfileStatisticsState extends State<ProfileStatistics> {
         backgroundColor: AppColors.background,
         appBar: AppBar(
           title: const Text(
-            'Profile Statistics',
+            'Statistics',
             style: TextStyle(color: AppColors.white),
           ),
-          backgroundColor: AppColors.barColor,
+          flexibleSpace: Container(
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                colors: [AppColors.blueStart, AppColors.purpleEnd],
+              ),
+            ),
+          ),
           centerTitle: true,
         ),
         body: _isLoading
@@ -196,7 +202,7 @@ class ProfileStatisticsState extends State<ProfileStatistics> {
   Widget _buildReviews(List<ReviewModel> reviews) {
     return Consumer2<ReviewProvider, StatisticsProvider>(
         builder: (context, reviewProvider, statsProvider, child) {
-      print("reviews length ::${reviewProvider.reviews.length}");
+      // print("reviews length ::${reviewProvider.reviews.length}");
       return Column(children: [
         Row(children: [
           const CustomIcon(
@@ -251,40 +257,74 @@ class ProfileStatisticsState extends State<ProfileStatistics> {
   Widget _buildUserStatus() {
     final userProvider = Provider.of<UserProvider>(context);
     final user = userProvider.user;
+    // print("photo ${user!.photoUrl}");
     return Container(
-        width: double.infinity,
-        padding: const EdgeInsets.only(
-          left: AppTheme.cardPadding,
-          right: AppTheme.cardPadding,
-          top: AppTheme.cardPadding,
-          bottom: AppTheme.cardPadding,
+            width: double.infinity,
+            padding: const EdgeInsets.only(
+              left: AppTheme.cardPadding,
+              right: AppTheme.cardPadding,
+              top: AppTheme.cardPadding,
+              bottom: AppTheme.cardPadding,
+            ),
+            decoration: const BoxDecoration(
+              gradient:  LinearGradient(
+                colors: [AppColors.blueStart, AppColors.purpleEnd],
+              ),
+            ),
+            child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Stack(
+          children: [
+            Container(
+              width: 100,
+              height: 100,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(80),
+                border: Border.all(
+                  color: const Color.fromARGB(255, 255, 255, 255).withOpacity(0.3),
+                  width: 3,
+                ),
+              ),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(80),
+                child: Image.network(
+                  user?.photoUrl ?? AppTheme.defaultProfileImage,
+                  fit: BoxFit.cover,
+                  errorBuilder: (context, error, stackTrace) {
+                    return Container(
+                      color: const Color.fromARGB(255, 255, 255, 255).withOpacity(0.1),
+                      child: const Icon(
+                        Icons.person,
+                        color: AppColors.white,
+                        size: 50,
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ),
+          ],
         ),
-        decoration: const BoxDecoration(color: AppColors.blue),
-        child: Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
-          CircleAvatar(
-            radius: 50,
-            backgroundImage: user != null && user.photoUrl != null
-                ? NetworkImage(user.photoUrl!)
-                : AssetImage('assets/images/profile.png') as ImageProvider,
-          ),
-          const SizedBox(width: 15),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                user != null ? (user.displayName ?? 'Guest') : 'Guest',
-                style: const TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    color: AppColors.white),
-              ),
-              Text(
-                "Member since ${user!.createdAt}",
-                style: const TextStyle(fontSize: 14, color: AppColors.lessImportant),
-              ),
-            ],
-          ),
-        ]));
+                  const SizedBox(width: 15),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(user?.displayName ?? 'Guest',
+                        style: const TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            color: AppColors.white),
+                      ),
+                       Text(
+                       "Member since ${user?.createdAt!}",
+                        style: const TextStyle(
+                            fontSize: 12, color: AppColors.lessImportant),
+                      ),
+                    ],
+                  ),
+                ]));
   }
+
 }

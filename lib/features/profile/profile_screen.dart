@@ -51,12 +51,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
             'Profile',
             style: TextStyle(color: AppColors.white),
           ),
-          backgroundColor: AppColors.blue,
+          flexibleSpace: Container(
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                colors: [AppColors.blueStart, AppColors.purpleEnd],
+              ),
+            ),
+          ),
           centerTitle: true,
         ),
         body: SingleChildScrollView(
             child: Column(children: [
-          // const SizedBox(height: AppTheme.cardPadding),
           _buildUserStatus(),
           const SizedBox(height: AppTheme.cardPadding),
           Container(
@@ -65,11 +70,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   right: AppTheme.homeScreenPadding),
               child: Column(children: [
                 _buildUserProfileSettings(),
-                // const SizedBox(height: AppTheme.cardPadding),
+                const SizedBox(height: AppTheme.cardPadding),
                 const Text(
                   "Version 1.0.0 - 2025",
                   style: TextStyle(
-                    fontSize: 16,
+                    fontSize: 14,
                     fontWeight: FontWeight.w400,
                     color: AppColors.lightGray,
                   ),
@@ -88,15 +93,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
           "Profile Settings",
           style: TextStyle(
             fontSize: 18,
-            fontWeight: FontWeight.bold,
-            color: AppColors.lightGray,
+            fontWeight: FontWeight.w600,
+            color: AppColors.textPrimary,
           ),
         ),
+        const SizedBox(height: 6),
         SettingsCard(
           onTap: () {},
           hintText: "Update my profile picture",
           iconPath: "assets/icon/camera-add.svg",
         ),
+        const SizedBox(height: 6),
         SettingsCard(
           onTap: () {
             context.push("/profile/info");
@@ -104,50 +111,62 @@ class _ProfileScreenState extends State<ProfileScreen> {
           hintText: "Update my personal information",
           iconPath: "assets/icon/edit-user.svg",
         ),
+        const SizedBox(height: 6),
         SettingsCard(
           onTap: () {},
           hintText: "Notifications",
           iconPath: "assets/icon/notification.svg",
         ),
+        const SizedBox(height: 6),
         SettingsCard(
           onTap: () {},
           hintText: "Payment methods",
           iconPath: "assets/icon/money.svg",
         ),
+        
         const SizedBox(height: AppTheme.cardPadding),
         const Text(
           "Resources",
           style: TextStyle(
             fontSize: 18,
-            fontWeight: FontWeight.bold,
-            color: AppColors.lightGray,
+            fontWeight: FontWeight.w600,
+            color: AppColors.textPrimary,
           ),
         ),
+        const SizedBox(height: 6),
         SettingsCard(
           onTap: () {},
           hintText: "Contact suport",
           iconPath: "assets/icon/suport.svg",
         ),
+        const SizedBox(height: 6),
         SettingsCard(
           onTap: () {},
           hintText: "Terms and Conditions",
           iconPath: "assets/icon/condition.svg",
         ),
+        const SizedBox(height: 6),
         SettingsCard(
           onTap: () {},
           hintText: "Privacy Policy",
           iconPath: "assets/icon/privacy.svg",
         ),
+        const SizedBox(height: 6),
         SettingsCard(
           onTap: () {},
           hintText: "Refer to your friends",
           iconPath: "assets/icon/share.svg",
         ),
+        const SizedBox(height: 6),
         SettingsCard(
           onTap: () {},
           hintText: "Become a driver",
           iconPath: "assets/icon/driver.svg",
+          backgroundColor: AppColors.blueStart,
+          hintTextColor: AppColors.white,
+          iconColor: AppColors.white,
         ),
+        const SizedBox(height: 6),
         SettingsCard(
           onTap: () {
             _singOutUser();
@@ -155,8 +174,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
           hintText: "LogOut",
           backgroundColor: Colors.red,
           iconPath: "assets/icon/logout.svg",
-          hintTextColor: AppColors.headingText,
-          iconColor: AppColors.error,
+          hintTextColor: AppColors.white,
+          iconColor: AppColors.white,
         ),
         const SizedBox(height: AppTheme.cardPadding),
       ],
@@ -179,7 +198,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
               top: AppTheme.cardPadding,
               bottom: AppTheme.cardPadding,
             ),
-            decoration: const BoxDecoration(color: AppColors.blue),
+            decoration: const BoxDecoration(
+              gradient:  LinearGradient(
+                colors: [AppColors.blueStart, AppColors.purpleEnd],
+              ),
+            ),
             child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
@@ -191,7 +214,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(80),
                 border: Border.all(
-                  color: const Color.fromARGB(255, 0, 0, 0).withOpacity(0.3),
+                  color: const Color.fromARGB(255, 255, 255, 255).withOpacity(0.3),
                   width: 3,
                 ),
               ),
@@ -202,7 +225,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   fit: BoxFit.cover,
                   errorBuilder: (context, error, stackTrace) {
                     return Container(
-                      color: const Color.fromARGB(255, 9, 10, 12).withOpacity(0.1),
+                      color: const Color.fromARGB(255, 255, 255, 255).withOpacity(0.1),
                       child: const Icon(
                         Icons.person,
                         color: AppColors.white,
@@ -229,10 +252,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                        Text(
                        "Member since ${user?.createdAt!}",
                         style: const TextStyle(
-                            fontSize: 14, color: AppColors.lessImportant),
+                            fontSize: 12, color: AppColors.lessImportant),
                       ),
                     ],
                   ),
                 ])));
   }
+
+
+
 }
