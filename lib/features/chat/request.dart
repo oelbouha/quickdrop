@@ -5,13 +5,13 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Request extends StatefulWidget {
   final DeliveryRequest request;
-  final Map<String, dynamic> userData;
+  final  UserData user;
   final Shipment shipment;
 
   const Request({
     super.key,
     required this.request,
-    required this.userData,
+    required this.user,
     required this.shipment,
   });
 
@@ -112,8 +112,8 @@ class DeliveryRequestState extends State<Request> {
     return Padding(
         padding: const EdgeInsets.all(8),
         child: UserProfileCard(
-          photoUrl: widget.userData['photoUrl'],
-          header: widget.userData['displayName'],
+          photoUrl: widget.user.photoUrl ?? AppTheme.defaultProfileImage,
+          header: widget.user.displayName ?? "Unknown user",
           onPressed: () => print("user profile  Clicked"),
           // subHeader: "Carrier: Ahmed K.",
           headerFontSize: 14,
