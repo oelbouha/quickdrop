@@ -24,6 +24,7 @@ export 'package:provider/provider.dart';
 export 'package:quickdrop_app/features/models/shipment_model.dart';
 export 'package:quickdrop_app/features/models/trip_model.dart';
 export 'package:quickdrop_app/features/models/user_model.dart';
+export 'package:quickdrop_app/features/models/base_transport.dart';
 export 'package:quickdrop_app/features/models/delivery_request_model.dart';
 
 export 'package:quickdrop_app/features/home/filter_button.dart';

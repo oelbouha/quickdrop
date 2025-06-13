@@ -6,7 +6,7 @@ import 'package:quickdrop_app/features/chat/convo_screen.dart';
 
 class OngoingItemCard extends StatefulWidget {
   final TransportItem item;
-  final Map<String, dynamic> user;
+  final UserData user;
   const OngoingItemCard({super.key, required this.item, required this.user});
 
   @override
@@ -29,9 +29,9 @@ class OngoingItemCardState extends State<OngoingItemCard> {
     context.push(
       "/convo-screen",
       extra: {
-        'uid': widget.user['uid'],
-        'displayName': widget.user['displayName'],
-        'photoUrl': widget.user['photoUrl'],
+        'uid': widget.user.uid,
+        'displayName': widget.user.displayName ?? "Unknown user",
+        'photoUrl': widget.user.photoUrl ?? AppTheme.defaultProfileImage,
       },
     );
   }
@@ -101,37 +101,53 @@ class OngoingItemCardState extends State<OngoingItemCard> {
         child: Row(
           children: [
             UserProfileCard(
-              header: widget.user['displayName'],
+              header: widget.user.displayName ?? "Unknow user",
               onPressed: () => print("user profile  Clicked"),
               subHeader:
                   widget.item is Shipment ? "Package Carrier" : "Package owner",
-              photoUrl: widget.user['photoUrl'],
+              photoUrl: widget.user.photoUrl ?? AppTheme.defaultProfileImage,
               headerFontSize: 14,
               subHeaderFontSize: 10,
-              avatarSize: 18,
+              avatarSize: 14,
             ),
             const Spacer(),
-            ElevatedButton.icon(
-              onPressed: () {
+            GestureDetector(
+              onTap: () {
                 _contactCourier();
               },
-              icon: const CustomIcon(
+              child: Container(
+                width: 40,
+                height: 40,
+                padding: EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  color: AppColors.contactBackground,
+                  
+                  borderRadius: BorderRadius.circular(30),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.1),
+                      blurRadius: 20,
+                      offset: const Offset(0, 4),
+                    ),
+                  ],
+                ),
+                child: const CustomIcon(
                 iconPath: "assets/icon/chat-round-line.svg",
-                size: 20,
+                size: 24,
                 color: AppColors.blue,
               ),
-              label: const Text(
-                "Contact",
-                style: TextStyle(color: AppColors.blue, fontSize: 14),
-              ),
-              style: ElevatedButton.styleFrom(
-                elevation: 0,
-                backgroundColor: AppColors.contactBackground,
-                shape: RoundedRectangleBorder(
-                  borderRadius:
-                      BorderRadius.circular(AppTheme.cardButtonRadius),
-                ),
-                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+              // label: const Text(
+              //   "Contact",
+              //   style: TextStyle(color: AppColors.blue, fontSize: 14),
+              // ),
+              // style: ElevatedButton.styleFrom(
+              //   elevation: 0,
+              //   backgroundColor: AppColors.contactBackground,
+              //   shape: RoundedRectangleBorder(
+              //     borderRadius:
+              //         BorderRadius.circular(30),
+              //   ),
+                // padding: const EdgeInsets.symmetric(horizontal: 2, vertical: 2),
               ),
             ),
           ],
@@ -191,9 +207,9 @@ class OngoingItemCardState extends State<OngoingItemCard> {
             ),
             buildIconWithText(
                 iconPath: "weight.svg",
-                text: 'Weight ${widget.item.weight} kg'),
+                text: 'Weight ${widget.item.weight } kg'),
             const SizedBox(
-              height: 3,
+              height: 6,
             ),
             _buildHUserCard()
           ],
@@ -238,12 +254,12 @@ class OngoingItemCardState extends State<OngoingItemCard> {
           },
           icon: const CustomIcon(
             iconPath: "assets/icon/check-circle.svg",
-            size: 20,
+            size: 18,
             color: Colors.white,
           ),
           label: const Text(
             "Delivered",
-            style: TextStyle(color: AppColors.white, fontSize: 14),
+            style: TextStyle(color: AppColors.white, fontSize: 12),
           ),
           style: ElevatedButton.styleFrom(
             backgroundColor: AppColors.succes,
@@ -262,12 +278,12 @@ class OngoingItemCardState extends State<OngoingItemCard> {
           },
           icon: const CustomIcon(
             iconPath: "assets/icon/cancel.svg",
-            size: 20,
+            size: 18,
             color: Colors.white,
           ),
           label: const Text(
             "Cancel",
-            style: TextStyle(color: AppColors.white, fontSize: 14),
+            style: TextStyle(color: AppColors.white, fontSize: 12),
           ),
           style: ElevatedButton.styleFrom(
             backgroundColor: AppColors.error,

@@ -13,17 +13,39 @@ class DeliveryRequestProvider with ChangeNotifier {
   List<DeliveryRequest> get activeRequests =>
       _requests.where((item) => item.status == DeliveryStatus.active).toList();
 
-  Future<void> fetchRequests(String userId) async {
-    final snapshot = await _firestore
+ Future<void> fetchRequests(String userId) async {
+  try {
+    // Fetch sender requests
+    final senderSnapshot = await _firestore
+        .collection('requests')
+        .where('senderId', isEqualTo: userId)
+        .get();
+
+    // Fetch receiver requests
+    final receiverSnapshot = await _firestore
         .collection('requests')
         .where('receiverId', isEqualTo: userId)
-        // .where('status', isEqualTo: DeliveryStatus.active)
         .get();
-    _requests = snapshot.docs
-        .map((doc) => DeliveryRequest.fromMap(doc.data(), doc.id))
+
+    // Combine and deduplicate results
+    final allDocs = [...senderSnapshot.docs, ...receiverSnapshot.docs];
+    final uniqueDocs = allDocs.fold<Map<String, QueryDocumentSnapshot>>(
+      {},
+      (map, doc) => map..putIfAbsent(doc.id, () => doc),
+    ).values;
+
+    _requests = uniqueDocs
+        .map((doc) => DeliveryRequest.fromMap(doc.data() as Map<String, dynamic>, doc.id))
         .toList();
+
     notifyListeners();
+  } catch (e) {
+    // print('Error fetching requests: $e');
+    _requests = [];
+    notifyListeners();
+    rethrow;
   }
+}
 
   Future<void> deleteRequestsByShipmentId(String shipmentId) async {
     try {

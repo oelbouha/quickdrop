@@ -31,7 +31,7 @@ class Destination extends StatelessWidget {
           const Icon(
             Icons.circle,
             size: 12,
-            color: AppColors.blue,
+            color: AppColors.blue700,
           ),
           const SizedBox(width: 10),
           Text(
@@ -59,7 +59,7 @@ class Destination extends StatelessWidget {
           const Icon(
             Icons.circle,
             size: 12,
-            color: AppColors.succes,
+            color: AppColors.purple700,
           ),
           const SizedBox(width: 10),
           Text(

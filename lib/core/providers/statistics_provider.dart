@@ -6,7 +6,7 @@ import 'package:quickdrop_app/core/utils/delivery_status.dart';
 class StatisticsProvider with ChangeNotifier {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  StatisticsModel? _stats ;
+  StatisticsModel? _stats;
 
   StatisticsModel? get stats => _stats;
 
@@ -33,40 +33,41 @@ class StatisticsProvider with ChangeNotifier {
     }
   }
 
- Future<void> decrementField(String userId, String field) async {
-  try {
-    final doc = await _firestore.collection('statistics').doc(userId).get();
+  Future<void> decrementField(String userId, String field) async {
+    try {
+      final doc = await _firestore.collection('statistics').doc(userId).get();
 
-    if (!doc.exists) return;
+      if (!doc.exists) return;
 
-    final data = doc.data();
-    final currentValue = (data?[field] ?? 0) as int;
+      final data = doc.data();
+      final currentValue = (data?[field] ?? 0) as int;
 
-    if (currentValue > 0) {
-      await _firestore.collection('statistics').doc(userId).update({
-        field: FieldValue.increment(-1),
-      });
-      await fetchStatictics(userId);
+      if (currentValue > 0) {
+        await _firestore.collection('statistics').doc(userId).update({
+          field: FieldValue.increment(-1),
+        });
+        await fetchStatictics(userId);
+      }
+    } catch (e) {
+      rethrow;
     }
+  }
+
+ Future<void> addStatictics(String userId, StatisticsModel stats) async {
+  try {
+    if (userId.isEmpty) {
+      throw Exception("Invalid userId: empty or null");
+    }
+    print("Attempting to save stats for userId: $userId");
+    print("Stats data: ${stats.toMap()}");
+    await _firestore.collection('statistics').doc(userId).set(stats.toMap());
+    print("Stats saved successfully for userId: $userId");
+    // notifyListeners();
   } catch (e) {
+    print("Error saving stats: $e");
     rethrow;
   }
 }
-
-
-
-  Future<void> addStatictics(String userId, StatisticsModel stats) async {
-      try {
-        await _firestore
-            .collection('statistics')
-            .doc(userId) 
-            .set(stats.toMap());
-      } catch (e) {
-        rethrow;
-      }
-      notifyListeners();
-    }
-
 }
 
 // extension on ReviewModel {

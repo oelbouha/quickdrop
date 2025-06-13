@@ -11,9 +11,8 @@ import 'package:quickdrop_app/core/widgets/passwordTextField.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/gestures.dart';
 
-
 class SignUpScreen extends StatefulWidget {
-  final String ? phoneNumber;
+  final String? phoneNumber;
   const SignUpScreen({
     super.key,
     this.phoneNumber,
@@ -38,6 +37,7 @@ class _SingupPageState extends State<SignUpScreen> {
   Future<void> _createStatsIfNewUser(String userId) async {
     bool userExist = await doesUserExist(userId);
     if (userExist == false) {
+      print("user does not exist");
       StatisticsModel stats = StatisticsModel(
           pendingShipments: 0,
           ongoingShipments: 0,
@@ -45,8 +45,13 @@ class _SingupPageState extends State<SignUpScreen> {
           reviewCount: 0,
           id: userId,
           userId: userId);
-      Provider.of<StatisticsProvider>(context, listen: false)
-          .addStatictics(userId, stats);
+      try {
+        Provider.of<StatisticsProvider>(context, listen: false)
+            .addStatictics(userId, stats);
+      } catch (e) {
+        AppUtils.showError(context, "failed to create statistics");
+        rethrow;
+      }
     }
   }
 
@@ -55,8 +60,8 @@ class _SingupPageState extends State<SignUpScreen> {
         await FirebaseFirestore.instance.collection('users').doc(uid).get();
     return userDoc.exists;
   }
-  
- void _singUpUserWithEmail() async {
+
+  void _singUpUserWithEmail() async {
     if (_formKey.currentState!.validate()) {
       if (_isEmailLoading) return;
 
@@ -89,9 +94,10 @@ class _SingupPageState extends State<SignUpScreen> {
           createdAt: DateFormat('dd/MM/yyyy').format(DateTime.now()).toString(),
         );
         try {
-          _createStatsIfNewUser(user.uid);
+          _createStatsIfNewUser(userCredential.user!.uid);
           // bool userExist = await doesUserExist(user.uid);
-          final userProvider = Provider.of<UserProvider>(context, listen: false);
+          final userProvider =
+              Provider.of<UserProvider>(context, listen: false);
           userProvider.setUser(user);
           userProvider.saveUserToFirestore(user);
           if (mounted) {
@@ -142,9 +148,9 @@ class _SingupPageState extends State<SignUpScreen> {
           iconTheme: const IconThemeData(
             color: Colors.black, // Set the arrow back color to black
           ),
-          systemOverlayStyle: SystemUiOverlayStyle.dark, // Ensures status bar icons are dark
+          systemOverlayStyle:
+              SystemUiOverlayStyle.dark, // Ensures status bar icons are dark
         ),
-
         resizeToAvoidBottomInset: false,
         body: Padding(
             padding: const EdgeInsets.all(AppTheme.homeScreenPadding),
@@ -153,7 +159,7 @@ class _SingupPageState extends State<SignUpScreen> {
               children: [
                 Expanded(
                     child: Center(
-                    child: SingleChildScrollView(child: _buildSignUpScreen()),
+                  child: SingleChildScrollView(child: _buildSignUpScreen()),
                 )),
               ],
             ))));
@@ -177,29 +183,30 @@ class _SingupPageState extends State<SignUpScreen> {
               height: 20,
             ),
             TextFieldWithHeader(
-                  controller: firstNameController,
-                  headerText: 'Full Name',
-                  hintText: 'First name on ID',
-                  obsecureText: false,
-                  iconPath: "assets/icon/user.svg",
-                  isRequired: false,
-                  validator: Validators.name,
-                ),
-                const SizedBox(height: 8),
-                TextFieldWithoutHeader(
-                  controller: lastNameController,
-                  hintText: 'Last name on ID',
-                  obsecureText: false,
-                  validator: Validators.name,
+              controller: firstNameController,
+              headerText: 'Full Name',
+              hintText: 'First name on ID',
+              obsecureText: false,
+              iconPath: "assets/icon/user.svg",
+              isRequired: false,
+              validator: Validators.name,
+            ),
+            const SizedBox(height: 8),
+            TextFieldWithoutHeader(
+              controller: lastNameController,
+              hintText: 'Last name on ID',
+              obsecureText: false,
+              validator: Validators.name,
+            ),
+            const SizedBox(height: 6),
+            const Text(
+              "Make sure this matches the name on your government ID or passport.",
+              style: TextStyle(
+                color: AppColors.headingText,
+                fontSize: 12,
+                fontWeight: FontWeight.w400,
               ),
-              const SizedBox(height: 6),
-              const Text("Make sure this matches the name on your government ID or passport.",
-                style: TextStyle(
-                  color: AppColors.headingText,
-                  fontSize: 12,
-                  fontWeight: FontWeight.w400,
-                ),
-              ),
+            ),
             const SizedBox(height: 15),
             TextFieldWithHeader(
               controller: birthdayController,
@@ -212,7 +219,8 @@ class _SingupPageState extends State<SignUpScreen> {
               validator: Validators.notEmpty,
             ),
             const SizedBox(height: 8),
-            const Text("To Sign up, you must be at least 18 years old. other peaaple  who use quickdrop won't see your birthday.",
+            const Text(
+              "To Sign up, you must be at least 18 years old. other peaaple  who use quickdrop won't see your birthday.",
               style: TextStyle(
                 color: AppColors.headingText,
                 fontSize: 12,
@@ -230,7 +238,7 @@ class _SingupPageState extends State<SignUpScreen> {
               validator: Validators.email,
             ),
             const SizedBox(height: 8),
-             PasswordTextfield(
+            PasswordTextfield(
               controller: passwordController,
               validator: Validators.notEmpty,
               showPrefix: false,
@@ -238,53 +246,54 @@ class _SingupPageState extends State<SignUpScreen> {
             const SizedBox(
               height: 20,
             ),
-         Text.rich(
-  TextSpan(
-    style: const TextStyle(
-      fontSize: 14,
-      fontWeight: FontWeight.w400,
-      color: AppColors.shipmentText,
-    ),
-    children: [
-      const TextSpan(text: "By clicking "),
-      const TextSpan(
-        text: "Agree and Continue, ",
-        style:  TextStyle(
-          fontWeight: FontWeight.w700,
-          color: AppColors.dark,
-        ),
-      ),
-      const TextSpan(text: "I agree to QuickDrop's "),
-      TextSpan(
-        text: "Terms of Service,",
-        style: const TextStyle(
-          fontWeight: FontWeight.w800,
-          color: AppColors.dark,
-          decoration: TextDecoration.underline,
-        ),
-        recognizer: TapGestureRecognizer()
-          ..onTap = () {
-            context.push('/terms-of-service');
-          },
-      ),
-      const TextSpan(text: " and acknowledge that I have read the "),
-      TextSpan(
-        text: "Privacy Policy",
-        style: const TextStyle(
-          fontWeight: FontWeight.w800,
-          color: AppColors.dark,
-          decoration: TextDecoration.underline,
-        ),
-        recognizer: TapGestureRecognizer()
-          ..onTap = () {
-            context.push('/privacy-policy');
-          },
-      ),
-      const TextSpan(text: "."),
-    ],
-  ),
-  textAlign: TextAlign.start,
-),
+            Text.rich(
+              TextSpan(
+                style: const TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w400,
+                  color: AppColors.shipmentText,
+                ),
+                children: [
+                  const TextSpan(text: "By clicking "),
+                  const TextSpan(
+                    text: "Agree and Continue, ",
+                    style: TextStyle(
+                      fontWeight: FontWeight.w700,
+                      color: AppColors.dark,
+                    ),
+                  ),
+                  const TextSpan(text: "I agree to QuickDrop's "),
+                  TextSpan(
+                    text: "Terms of Service,",
+                    style: const TextStyle(
+                      fontWeight: FontWeight.w800,
+                      color: AppColors.dark,
+                      decoration: TextDecoration.underline,
+                    ),
+                    recognizer: TapGestureRecognizer()
+                      ..onTap = () {
+                        context.push('/terms-of-service');
+                      },
+                  ),
+                  const TextSpan(
+                      text: " and acknowledge that I have read the "),
+                  TextSpan(
+                    text: "Privacy Policy",
+                    style: const TextStyle(
+                      fontWeight: FontWeight.w800,
+                      color: AppColors.dark,
+                      decoration: TextDecoration.underline,
+                    ),
+                    recognizer: TapGestureRecognizer()
+                      ..onTap = () {
+                        context.push('/privacy-policy');
+                      },
+                  ),
+                  const TextSpan(text: "."),
+                ],
+              ),
+              textAlign: TextAlign.start,
+            ),
             const SizedBox(
               height: 20,
             ),

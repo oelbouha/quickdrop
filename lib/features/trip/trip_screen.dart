@@ -201,7 +201,7 @@ class _TripScreenState extends State<TripScreen>
                       if (index == 0)
                         const SizedBox(height: AppTheme.gapBetweenCards),
                       OngoingItemCard(
-                          item: ongoingTrips[index], user: userData.toMap()),
+                          item: ongoingTrips[index], user: userData),
                       const SizedBox(height: AppTheme.gapBetweenCards),
                     ],
                   );
@@ -242,7 +242,7 @@ class _TripScreenState extends State<TripScreen>
                         const SizedBox(height: AppTheme.gapBetweenCards),
                       CompletedItemCard(
                           item: completedTrips[index],
-                          user: userData.toMap(),
+                          user: userData,
                           onPressed: () {
                             removeTrip(completedTrips[index].id!);
                           }),

@@ -25,13 +25,13 @@ class ProfileStatisticsState extends State<ProfileStatistics> {
     // Fetch trips when the screen loads
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       try {
-        final user = Provider.of<UserProvider>(context, listen: false).user;
+        final user = FirebaseAuth.instance.currentUser;
 
         Provider.of<StatisticsProvider>(context, listen: false)
             .fetchStatictics(user!.uid);
 
         Provider.of<ReviewProvider>(context, listen: false)
-            .fetchReviews(user!.uid);
+            .fetchReviews(user.uid);
         final userIds = Provider.of<ReviewProvider>(context, listen: false)
             .reviews
             .map((r) => r.senderId)
