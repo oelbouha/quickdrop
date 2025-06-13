@@ -1,18 +1,19 @@
 import 'package:quickdrop_app/features/chat/request.dart';
 import 'package:quickdrop_app/features/chat/chat_conversation_card.dart';
 
+import 'package:quickdrop_app/features/chat/pending_request.dart';
 import 'package:go_router/go_router.dart';
 import 'package:quickdrop_app/core/widgets/app_header.dart';
 import 'package:quickdrop_app/core/utils/imports.dart';
 
 class ChatScreen extends StatefulWidget {
   const ChatScreen({Key? key}) : super(key: key);
-
   @override
   State<ChatScreen> createState() => _ChatScreenState();
 }
 
 class _ChatScreenState extends State<ChatScreen> with SingleTickerProviderStateMixin {
+  UserData? user;
   int selectedIndex = 0;
   bool _isLoading = true;
   late TabController _tabController;
@@ -26,6 +27,8 @@ class _ChatScreenState extends State<ChatScreen> with SingleTickerProviderStateM
         userPhotoUrl = "assets/images/profile.png";
       }
 
+      user = Provider.of<UserProvider>(context, listen: false).user;
+
      _tabController = TabController(length: 3, vsync: this);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Future.microtask(() async {
@@ -35,8 +38,9 @@ class _ChatScreenState extends State<ChatScreen> with SingleTickerProviderStateM
           if (user != null) {
             final deliveryProvider =
                 Provider.of<DeliveryRequestProvider>(context, listen: false);
+            
             await deliveryProvider.fetchRequests(user.uid);
-            // print("Fetched requests: ${deliveryProvider.requests.length}");
+            print("Fetched requests: ${deliveryProvider.requests.length}");
 
             // Extract all senderIds and fetch user data at once
             final userIds = deliveryProvider.requests
@@ -81,9 +85,9 @@ class _ChatScreenState extends State<ChatScreen> with SingleTickerProviderStateM
       body: Skeletonizer(
             enabled: _isLoading,
             child: TabBarView(
-                  controller: _tabController,
+                controller: _tabController,
                 children: [
-                  _buildChatConversations(),
+                  _buildMyRequests(),
                   _buildDeliveryRequests(),
                   _buildDeliveryRequests(),
                 ],
@@ -138,7 +142,10 @@ class _ChatScreenState extends State<ChatScreen> with SingleTickerProviderStateM
 
   Widget _buildDeliveryRequests() {
     final requestProvider = Provider.of<DeliveryRequestProvider>(context);
-    final requests = requestProvider.requests.where((request) => request.status == DeliveryStatus.active).toList();
+    final requests = requestProvider.requests.where((request) => 
+      request.status == DeliveryStatus.active
+      && request.receiverId == user!.uid
+      ).toList();
 
     if (requests.isEmpty) { 
       return Center(child: Message(context, "No delivery requests yet"));
@@ -158,7 +165,54 @@ class _ChatScreenState extends State<ChatScreen> with SingleTickerProviderStateM
               shipment = Provider.of<ShipmentProvider>(context, listen: false)
                 .getShipment(request.shipmentId);
             } catch (e) {
-              // print("Error fetching shipment: $e");
+              print("Error fetching shipment: $e");
+               return const SizedBox
+                  .shrink();
+            }
+            if (userData == null )  {
+              return const SizedBox
+                  .shrink();
+            }
+            
+            return Column(
+              children: [
+                if (index == 0) const SizedBox(height: AppTheme.gapBetweenCards),
+                Request(request: request, user: userData, shipment: shipment,),
+                const SizedBox(height: AppTheme.gapBetweenCards),
+              ],
+            );
+          }));
+    });
+  }
+
+
+
+  Widget _buildMyRequests() {
+    final requestProvider = Provider.of<DeliveryRequestProvider>(context);
+    final requests = requestProvider.requests.where((request) => 
+        request.status == DeliveryStatus.active 
+        && request.senderId == user!.uid
+        ).toList();
+
+    if (requests.isEmpty) { 
+      return Center(child: Message(context, "No delivery requests yet"));
+    }
+    return Consumer<UserProvider>(builder: (context, userProvider, _) {
+      return Container(
+        margin: const EdgeInsets.only(left: AppTheme.cardPadding, right: AppTheme.cardPadding),
+        child: ListView.builder(
+          itemCount: requests.length,
+          itemBuilder: (context, index) {
+            final request = requests[index];
+
+            final userData = Provider.of<UserProvider>(context, listen: false)
+                .getUserById(request.receiverId);
+            final  Shipment? shipment;
+            try {
+              shipment = Provider.of<ShipmentProvider>(context, listen: false)
+                .getShipment(request.shipmentId);
+            } catch (e) {
+              print("Error fetching shipment: $e");
                return const SizedBox
                   .shrink();
             }
@@ -170,18 +224,16 @@ class _ChatScreenState extends State<ChatScreen> with SingleTickerProviderStateM
             return Column(
               children: [
                 if (index == 0) const SizedBox(height: AppTheme.gapBetweenCards),
-                Request(request: request, userData: userData.toMap(), shipment: shipment,),
+                PendingRequest(request: request, user: userData, shipment: shipment,),
                 const SizedBox(height: AppTheme.gapBetweenCards),
               ],
             );
           }));
     });
   }
+
+
+
 }
 
-// return Column(
-//             children: [
-//               Request(request: request, userData: userData),
-//               const SizedBox(height: AppTheme.gapBetweenCards),
-//             ],
-//           );
+

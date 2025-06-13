@@ -1,6 +1,5 @@
 import 'package:quickdrop_app/core/utils/imports.dart';
 import 'package:quickdrop_app/features/models/chat_model.dart';
-import 'package:quickdrop_app/core/providers/chat_provider.dart';
 
 class ConversationScreen extends StatefulWidget {
   final Map<String, dynamic> user;
@@ -69,22 +68,23 @@ class _ConversationScreenState extends State<ConversationScreen> {
             headerFontSize: 14,
             subHeaderFontSize: 10,
             avatarSize: 18,
+            borderColor: AppColors.white,
             headerColor: AppColors.appBarText,
           ),
-          actions: [
-            IconButton(
-              icon: const CustomIcon(
-                iconPath: "assets/icon/dots.svg",
-                size: 22,
-                color: AppColors.appBarIcons,
-              ),
-              tooltip: 'delete chat',
-              onPressed: () {
-                context.push("/notification");
-              },
-            ),
-          ],
-          backgroundColor: AppColors.barColor,
+          // actions: [
+          //   IconButton(
+          //     icon: const CustomIcon(
+          //       iconPath: "assets/icon/dots.svg",
+          //       size: 22,
+          //       color: AppColors.appBarIcons,
+          //     ),
+          //     tooltip: 'delete chat',
+          //     onPressed: () {
+          //       context.push("/notification");
+          //     },
+          //   ),
+          // ],
+          backgroundColor: AppColors.blue600,
         ),
         body: Column(
           children: [
