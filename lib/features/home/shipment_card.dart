@@ -1,22 +1,19 @@
-import 'package:flutter/material.dart';
-import 'package:quickdrop_app/theme/colors.dart';
-import 'package:quickdrop_app/theme/AppTheme.dart';
-import 'package:quickdrop_app/core/widgets/custom_svg.dart';
-import 'package:quickdrop_app/core/utils/appUtils.dart';
-import 'package:quickdrop_app/features/models/shipment_model.dart';
-import 'package:quickdrop_app/features/models/user_model.dart';
+
+import 'package:quickdrop_app/features/models/base_transport.dart';
+import 'package:quickdrop_app/core/utils/imports.dart';
 
 class ShipmentCard extends StatefulWidget {
-  final Shipment shipment;
+  final TransportItem shipment;
+  // final Shipment shipment;
   final UserData userData;
   final VoidCallback onPressed;
   final VoidCallback? onLike;
   final VoidCallback? onSave;
   final VoidCallback? onMakeOffer;
-  
+
   const ShipmentCard({
-    super.key, 
-    required this.shipment, 
+    super.key,
+    required this.shipment,
     required this.userData,
     required this.onPressed,
     this.onLike,
@@ -28,37 +25,35 @@ class ShipmentCard extends StatefulWidget {
   ShipmentCardState createState() => ShipmentCardState();
 }
 
-class ShipmentCardState extends State<ShipmentCard> 
+class ShipmentCardState extends State<ShipmentCard>
     with TickerProviderStateMixin {
-  
   bool isLiked = false;
   bool isSaved = false;
   bool isHovered = false;
-  
-
 
   @override
   void dispose() {
     super.dispose();
   }
 
-
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: widget.onPressed,
-      child: Container(
-      width: double.infinity,
+        onTap: widget.onPressed,
+        child: Container(
+          width: double.infinity,
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(24),
             border: Border.all(
-              color: isHovered ? AppColors.blue.withOpacity(0.3) : Colors.grey.withOpacity(0.1),
+              color: isHovered
+                  ? AppColors.blue.withOpacity(0.3)
+                  : Colors.grey.withOpacity(0.1),
               width: isHovered ? 2 : 1,
             ),
             boxShadow: [
               BoxShadow(
-                color: isHovered 
+                color: isHovered
                     ? AppColors.blue.withOpacity(0.15)
                     : Colors.black.withOpacity(0.08),
                 blurRadius: isHovered ? 20 : 8,
@@ -69,38 +64,48 @@ class ShipmentCardState extends State<ShipmentCard>
           ),
           child: ClipRRect(
             borderRadius: BorderRadius.circular(24),
-            child: Column(
+            
+            child: Row(
               children: [
                 _buildImageSection(),
-                _buildContentSection(),
+                const SizedBox(width: 4),
+                Padding(
+                    padding: const EdgeInsets.only(
+                      left: 12,
+                      right: 2,
+                      top: 12,
+                      bottom: 4,
+                    ),
+                    child: _buildContentSection()),
               ],
             ),
           ),
-    ));
+        ));
   }
 
   Widget _buildImageSection() {
-    return Container(
-      height: 200,
-      width: double.infinity,
+    Shipment? shipment;
+    if (widget.shipment is Shipment) {
+      shipment = widget.shipment as Shipment;
+    }
+    if (shipment == null) {
+      return const SizedBox.shrink();
+    }
+    return SizedBox(
+      height: 180,
+      width: 130,
       child: Stack(
         children: [
           // Image with zoom effect
-          AnimatedContainer(
-            duration: const Duration(milliseconds: 700),
-            curve: Curves.easeOutCubic,
-            transform: Matrix4.identity()
-              ..scale(isHovered ? 1.1 : 1.0),
-            child: Container(
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage(widget.shipment.imageUrl ?? 'assets/images/box.jpg'),
-                  fit: BoxFit.cover,
-                ),
+          Container(
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage(shipment.imageUrl ?? 'assets/images/box.jpg'),
+                fit: BoxFit.cover,
               ),
             ),
           ),
-          
+
           // Gradient overlay
           Container(
             decoration: BoxDecoration(
@@ -116,7 +121,7 @@ class ShipmentCardState extends State<ShipmentCard>
               ),
             ),
           ),
-          
+
           // Top row - Status badges and actions
           Positioned(
             top: 16,
@@ -128,84 +133,24 @@ class ShipmentCardState extends State<ShipmentCard>
                 Row(
                   children: [
                     _buildStatusBadge(
-                      widget.shipment.type ?? "Package",
-                      Colors.white.withOpacity(0.95),
+                      shipment.type,
+                      Colors.white.withOpacity(0.6),
                       Colors.grey[700]!,
                     ),
-                    // if (widget.shipment.isUrgent ?? false) ...[
-                    //   const SizedBox(width: 8),
-                      // _buildUrgentBadge(),
-                    // ],
                   ],
                 ),
-                // Row(
-                //   children: [
-                //     _buildActionButton(
-                //       Icons.favorite,
-                //       isLiked,
-                //       Colors.red,
-                //       () {
-                //         setState(() {
-                //           isLiked = !isLiked;
-                //         });
-                //         widget.onLike?.call();
-                //       },
-                //     ),
-                //     const SizedBox(width: 8),
-                //     _buildActionButton(
-                //       Icons.bookmark,
-                //       isSaved,
-                //       AppColors.blue,
-                //       () {
-                //         setState(() {
-                //           isSaved = !isSaved;
-                //         });
-                //         widget.onSave?.call();
-                //       },
-                //     ),
-                //   ],
-                // ),
               ],
             ),
           ),
-          
-          // Bottom row - Time and verification
-          Positioned(
-            bottom: 16,
-            left: 16,
-            right: 16,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Row(
-                  children: [
-                    const Icon(
-                      Icons.access_time,
-                      color: Colors.white,
-                      size: 16,
-                    ),
-                    const SizedBox(width: 6),
-                    const Text(
-                       "2 days left",
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 14,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ],
-                ),
-                // if (widget.userData.isVerified ?? false)
-                  _buildVerificationBadge(),
-              ],
-            ),
-          ),
+
+          //
         ],
       ),
     );
   }
 
-  Widget _buildStatusBadge(String text, Color backgroundColor, Color textColor) {
+  Widget _buildStatusBadge(
+      String text, Color backgroundColor, Color textColor) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       decoration: BoxDecoration(
@@ -223,7 +168,7 @@ class ShipmentCardState extends State<ShipmentCard>
         text,
         style: TextStyle(
           color: textColor,
-          fontSize: 12,
+          fontSize: 10,
           fontWeight: FontWeight.w600,
         ),
       ),
@@ -280,9 +225,7 @@ class ShipmentCardState extends State<ShipmentCard>
         duration: const Duration(milliseconds: 200),
         padding: const EdgeInsets.all(8),
         decoration: BoxDecoration(
-          color: isActive
-              ? activeColor
-              : Colors.white.withOpacity(0.9),
+          color: isActive ? activeColor : Colors.white.withOpacity(0.9),
           borderRadius: BorderRadius.circular(20),
           boxShadow: [
             BoxShadow(
@@ -293,8 +236,8 @@ class ShipmentCardState extends State<ShipmentCard>
           ],
         ),
         child: Icon(
-          isActive && icon == Icons.favorite 
-              ? Icons.favorite 
+          isActive && icon == Icons.favorite
+              ? Icons.favorite
               : isActive && icon == Icons.bookmark
                   ? Icons.bookmark
                   : icon == Icons.favorite
@@ -337,28 +280,19 @@ class ShipmentCardState extends State<ShipmentCard>
   }
 
   Widget _buildContentSection() {
-    return Padding(
-      padding: const EdgeInsets.only(
-        left: 10,
-        right: 10,
-        top: 10,
-        bottom: 4
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _buildUserProfile(),
-          const SizedBox(height: 12),
-          _buildDestination(),
-          const SizedBox(height: 6),
-          _buildDetailsGrid(),
-          const SizedBox(height: 12),
-          _buildPriceAndAction(),
-        ],
-      ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _buildUserProfile(),
+        const SizedBox(height: 8),
+        _buildDestination(),
+        const SizedBox(height: 4),
+        _buildDetailsGrid(),
+        const SizedBox(height: 6),
+        _buildPriceAndAction(),
+      ],
     );
   }
-
 
   Widget _buildUserProfile() {
     return Row(
@@ -366,13 +300,13 @@ class ShipmentCardState extends State<ShipmentCard>
         Stack(
           children: [
             Container(
-              width: 48,
-              height: 48,
+              width: 34,
+              height: 34,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(24),
                 border: Border.all(
                   color: AppColors.blue.withOpacity(0.3),
-                  width: 3,
+                  width: 2,
                 ),
               ),
               child: ClipRRect(
@@ -386,7 +320,7 @@ class ShipmentCardState extends State<ShipmentCard>
                       child: const Icon(
                         Icons.person,
                         color: AppColors.blue,
-                        size: 26,
+                        size: 14,
                       ),
                     );
                   },
@@ -395,69 +329,66 @@ class ShipmentCardState extends State<ShipmentCard>
             ),
           ],
         ),
-        const SizedBox(width: 12),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                widget.userData.displayName ?? "Unknown user",
-                style: const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                  color: AppColors.headingText,
+        const SizedBox(width: 4),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              widget.userData.displayName ?? "Unknown user",
+              style: const TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.w600,
+                color: AppColors.headingText,
+              ),
+            ),
+            const SizedBox(height: 2),
+            Row(
+              children: [
+                const Icon(
+                  Icons.star,
+                  color: Colors.amber,
+                  size: 10,
                 ),
-              ),
-              const SizedBox(height: 2),
-              Row(
-                children: [
-                  const Icon(
-                    Icons.star,
-                    color: Colors.amber,
-                    size: 16,
+                const SizedBox(width: 4),
+                Text(
+                  "${4.5}",
+                  style: const TextStyle(
+                    fontSize: 8,
+                    fontWeight: FontWeight.w500,
+                    color: AppColors.headingText,
                   ),
-                  const SizedBox(width: 4),
-                  Text(
-                    "${4.5}",
-                    style: const TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w500,
-                      color: AppColors.headingText,
-                    ),
+                ),
+                const SizedBox(width: 8),
+                Text(
+                  "•",
+                  style: TextStyle(
+                    color: Colors.grey[400],
+                    fontSize: 8,
                   ),
-                  const SizedBox(width: 8),
-                  Text(
-                    "•",
-                    style: TextStyle(
-                      color: Colors.grey[400],
-                      fontSize: 14,
-                    ),
+                ),
+                const SizedBox(width: 8),
+                const Icon(
+                  Icons.trending_up,
+                  color: Colors.green,
+                  size: 10,
+                ),
+                const SizedBox(width: 4),
+                Text(
+                  "${0} deliveries",
+                  style: const TextStyle(
+                    fontSize: 8,
+                    color: AppColors.lessImportant,
                   ),
-                  const SizedBox(width: 8),
-                  const Icon(
-                    Icons.trending_up,
-                    color: Colors.green,
-                    size: 14,
-                  ),
-                  const SizedBox(width: 4),
-                  Text(
-                    "${0} deliveries",
-                    style: const TextStyle(
-                      fontSize: 13,
-                      color: AppColors.lessImportant,
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
+                ),
+              ],
+            ),
+          ],
         ),
       ],
     );
   }
 
-
-Widget _buildDestination() {
+  Widget _buildDestination() {
     return Row(
       // mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -465,16 +396,15 @@ Widget _buildDestination() {
         const SizedBox(
           width: 8,
         ),
-         const CustomIcon(
+        const CustomIcon(
             iconPath: "assets/icon/arrow-up-right.svg",
             size: 14,
             color: AppColors.lessImportant),
         // Spacer(),
-         const SizedBox(
+        const SizedBox(
           width: 8,
         ),
         _buildToDestination(),
-        
       ],
     );
   }
@@ -482,20 +412,19 @@ Widget _buildDestination() {
   Widget _buildFromDestination() {
     return Row(
       children: [
-           const Icon(
-                  Icons.circle,
-                  size: 12,
-                  color: AppColors.blue,
-                ),
-        const SizedBox(width: 5,),
-        Text(
-            truncateText(widget.shipment.from),
+        const Icon(
+          Icons.circle,
+          size: 12,
+          color: AppColors.blue700,
+        ),
+        const SizedBox(
+          width: 4,
+        ),
+        Text(truncateText(widget.shipment.from),
             style: const TextStyle(
                 color: AppColors.headingText,
-                fontSize: 14,
-                fontWeight: FontWeight.bold
-                )
-          ),
+                fontSize: 12,
+                fontWeight: FontWeight.bold)),
       ],
     );
   }
@@ -503,68 +432,91 @@ Widget _buildDestination() {
   Widget _buildToDestination() {
     return Row(
       children: [
-         const Icon(
-                  Icons.circle,
-                  size: 12,
-                  color: AppColors.succes,
-                ),
+        const Icon(
+          Icons.circle,
+          size: 12,
+          color: AppColors.purple700,
+        ),
         const SizedBox(
-          width: 5,
+          width: 4,
         ),
         Text(truncateText(widget.shipment.to),
             style: const TextStyle(
                 color: AppColors.headingText,
-                fontSize: 14,
+                fontSize: 12,
                 fontWeight: FontWeight.bold)),
       ],
     );
   }
 
   Widget _buildDetailsGrid() {
+    Shipment? shipment;
+    Trip? trip;
+    if (widget.shipment is Shipment) {
+      shipment = widget.shipment as Shipment;
+    }
+    else if (widget.shipment is Trip) {
+      trip = widget.shipment as Trip;
+    }
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.start,
       children: [
         _buildDetailCard(
-            "assets/icon/time.svg",
-            "DELIVERY",
-            widget.shipment.date,
-            AppColors.blue,
+          "assets/icon/time.svg",
+          "DELIVERY",
+          widget.shipment.date,
+          AppColors.blue,
         ),
         // const SizedBox(width: 12),
+        if (trip != null)
+          _buildDetailCard(
+          "assets/icon/weight.svg",
+          "AVAILABLE WEIGHT",
+          "${trip.weight} kg",
+          Colors.purple,
+        ),
+        if (shipment != null)
         _buildDetailCard(
-            "assets/icon/weight.svg",
-            "WEIGHT",
-            "${widget.shipment.weight} kg",
-            Colors.purple,
+          "assets/icon/weight.svg",
+          "WEIGHT",
+          "${shipment.weight} kg",
+          Colors.purple,
         ),
       ],
     );
   }
 
-  Widget _buildDetailCard(String icon, String label, String value, Color color) {
+  Widget _buildDetailCard(
+      String icon, String label, String value, Color color) {
     return Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          CustomIcon(
-                iconPath: icon,
-                size: 16,
-                color: color,
-              ),
-          const SizedBox(width: 6),
-          Text(
-            value,
-            style: const TextStyle(
-              fontSize: 12,
-              fontWeight: FontWeight.w600,
-              color: AppColors.headingText,
-            ),
+      crossAxisAlignment: CrossAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        CustomIcon(
+          iconPath: icon,
+          size: 14,
+          color: color,
+        ),
+        const SizedBox(width: 6),
+        Text(
+          value,
+          style: const TextStyle(
+            fontSize: 10,
+            fontWeight: FontWeight.w600,
+            color: AppColors.headingText,
           ),
-        ],
+        ),
+      ],
     );
   }
 
   Widget _buildPriceAndAction() {
-    return Row(
+    Trip? trip;
+   if (widget.shipment is Trip) {
+      trip = widget.shipment as Trip;
+    }
+    return  Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Column(
@@ -579,7 +531,7 @@ Widget _buildDestination() {
                 letterSpacing: 0.8,
               ),
             ),
-            const SizedBox(height: 2),
+            // const SizedBox(height: 2),
             Row(
               crossAxisAlignment: CrossAxisAlignment.baseline,
               textBaseline: TextBaseline.alphabetic,
@@ -610,7 +562,12 @@ Widget _buildDestination() {
             ),
           ],
         ),
-        GestureDetector(
+        const SizedBox(width: 70),
+        if (trip != null)
+        Positioned(
+          right: 0,
+          bottom: 16,
+          child: GestureDetector(
           onTap: widget.onPressed,
           child: AnimatedContainer(
             duration: const Duration(milliseconds: 200),
@@ -637,7 +594,7 @@ Widget _buildDestination() {
               ),
             ),
           ),
-        ),
+        )),
       ],
     );
   }

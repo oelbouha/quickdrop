@@ -16,11 +16,22 @@ class _HomeScreenState extends State<HomeScreen> {
   int selectedIndex = 0;
   bool _isLoading = true;
   String? userPhotoUrl;
+  UserData? user;
 
   @override
   void initState() {
     super.initState();
 
+    user = Provider.of<UserProvider>(context, listen: false).user;
+    if (user == null) {
+      // If user is null, redirect to login
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) {
+          context.go("/login");
+        }
+      });
+      return;
+    }
     userPhotoUrl =
         Provider.of<UserProvider>(context, listen: false).user?.photoUrl;
     if (userPhotoUrl == null || userPhotoUrl!.isEmpty) {
@@ -557,15 +568,15 @@ Widget _buildListingsHeader() {
             color: AppColors.blue600,
             size: 16,
           ),
-          // SizedBox(width: 4),
-          // Text(
-          //   "Filter",
-          //   style: TextStyle(
-          //     color: AppColors.blue600,
-          //     fontSize: 14,
-          //     fontWeight: FontWeight.w600,
-          //   ),
-          // ),
+          SizedBox(width: 4),
+          Text(
+            "Filter",
+            style: TextStyle(
+              color: AppColors.blue600,
+              fontSize: 14,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
         ],
       ),
     ),
@@ -576,7 +587,7 @@ Widget _buildListingsHeader() {
     return Row(
       children: [
         UserProfileCard(
-          header: "Welcome, Alex Johnson!",
+          header: 'Welcome, ${user?.firstName ?? 'Guest'}',
           photoUrl: userPhotoUrl!,
           avatarSize: 24,
           subHeader: "⭐ 4.8 rating",
@@ -721,8 +732,15 @@ Widget _buildListingsHeader() {
                   }
                   return Column(
                     children: [
-                      TripCard(trip: trip, userData: userData),
-                      const SizedBox(height: 16),
+                      ShipmentCard(
+                        shipment: trip, 
+                        userData: userData,
+                        onPressed: () {
+                        // context.push(
+                        //     '/trip-details?tripId=${trip.id}&userId=${trip.userId}');
+                      },
+                    ),
+                      const SizedBox(height: 16), 
                     ],
                   );
                 },
@@ -804,33 +822,33 @@ Widget _buildListingsHeader() {
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: 24),
-          Container(
-            decoration: BoxDecoration(
-              gradient: const LinearGradient(
-                colors: [AppColors.blueStart, AppColors.purpleStart],
-              ),
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: ElevatedButton(
-              onPressed: () => _showRequestSheet(),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.transparent,
-                shadowColor: Colors.transparent,
-                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-              ),
-              child: Text(
-                buttonText,
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-            ),
-          ),
+          // Container(
+          //   decoration: BoxDecoration(
+          //     gradient: const LinearGradient(
+          //       colors: [AppColors.blueStart, AppColors.purpleStart],
+          //     ),
+          //     borderRadius: BorderRadius.circular(12),
+          //   ),
+          //   child: ElevatedButton(
+          //     onPressed: () => _showRequestSheet(),
+          //     style: ElevatedButton.styleFrom(
+          //       backgroundColor: Colors.transparent,
+          //       shadowColor: Colors.transparent,
+          //       padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+          //       shape: RoundedRectangleBorder(
+          //         borderRadius: BorderRadius.circular(12),
+          //       ),
+          //     ),
+          //     child: Text(
+          //       buttonText,
+          //       style: const TextStyle(
+          //         color: Colors.white,
+          //         fontSize: 16,
+          //         fontWeight: FontWeight.w600,
+          //       ),
+          //     ),
+          //   ),
+          // ),
         ],
       ),
     );

@@ -13,6 +13,7 @@ class UserProfileCard extends StatelessWidget {
   final double avatarSize;
   final Color subHeaderColor;
   final Color headerColor;
+  final Color borderColor;
 
   const UserProfileCard({
     super.key,
@@ -21,8 +22,9 @@ class UserProfileCard extends StatelessWidget {
     required this.photoUrl,
     this.subHeader = "",
     required this.headerFontSize,
-     this.subHeaderFontSize = 12,
+    this.subHeaderFontSize = 12,
     required this.avatarSize,
+    this.borderColor = AppColors.blue,
     this.subHeaderColor = AppColors.lessImportant,
     this.headerColor = AppColors.headingText,
   });
@@ -48,7 +50,7 @@ class UserProfileCard extends StatelessWidget {
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(24),
                   border: Border.all(
-                    color: AppColors.blue.withOpacity(0.3),
+                    color: borderColor.withOpacity(0.3),
                     width: 3,
                   ),
                 ),
@@ -59,7 +61,7 @@ class UserProfileCard extends StatelessWidget {
                     fit: BoxFit.cover,
                     errorBuilder: (context, error, stackTrace) {
                       return Container(
-                        color: AppColors.blue.withOpacity(0.1),
+                        color: borderColor.withOpacity(0.1),
                         child: const Icon(
                           Icons.person,
                           color: AppColors.blue,

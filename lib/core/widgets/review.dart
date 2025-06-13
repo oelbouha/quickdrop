@@ -6,7 +6,7 @@ import 'package:quickdrop_app/features/models/review_model.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
 class ReviewDialog extends StatefulWidget {
-  final Map<String, dynamic> recieverUser;
+  final UserData recieverUser;
 
   const ReviewDialog({
     super.key,
@@ -38,7 +38,7 @@ class _ReviewDialogState extends State<ReviewDialog> {
       }
 
       ReviewModel review = ReviewModel(
-        receiverId: widget.recieverUser["uid"],
+        receiverId: widget.recieverUser.uid,
         senderId: user.uid,
         date: DateFormat('dd/MM/yyyy').format(DateTime.now()).toString(),
         message: message,

@@ -6,7 +6,7 @@ export 'package:quickdrop_app/core/widgets/review.dart';
 
 class CompletedItemCard extends StatefulWidget {
  final TransportItem item;
-  final Map<String, dynamic> user;
+  final UserData user;
   final VoidCallback onPressed;
 
   const CompletedItemCard({super.key, 
@@ -72,10 +72,10 @@ class CompletedItemCardState extends State<CompletedItemCard> {
       child: Row(
       children: [
         UserProfileCard(
-          header: widget.user['displayName'],
+          header: widget.user.displayName ?? "Unknown user",
           onPressed: () => print("user profile  Clicked"),
           subHeader: widget.item is Shipment ?  "Package Carrier" : "Package owner", 
-          photoUrl: widget.user['photoUrl'],
+          photoUrl: widget.user.photoUrl ?? AppTheme.defaultProfileImage,
           headerFontSize: 14,
           subHeaderFontSize: 10,
           avatarSize: 18,
@@ -178,7 +178,7 @@ class CompletedItemCardState extends State<CompletedItemCard> {
         size: 20,
         color: Colors.white,
       ),
-      label: const Text("Rate trip", style: TextStyle(color: AppColors.white),),
+      label: const Text("Rate trip", style: TextStyle(color: AppColors.white, fontSize: 12),),
       style: ElevatedButton.styleFrom(
         backgroundColor: AppColors.rateBackground,
         shape: RoundedRectangleBorder(

@@ -65,14 +65,19 @@ class UpdateUserInfoScreenState extends State<UpdateUserInfoScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: AppColors.background,
+        backgroundColor: AppColors.white,
         appBar: AppBar(
-          title: const Text(
-            'personal information',
-            style: TextStyle(color: AppColors.white),
-          ),
-          backgroundColor: AppColors.barColor,
+          // title: const Text(
+          //   'personal information',
+          //   style: TextStyle(color: AppColors.dark),
+          // ),
+          backgroundColor: AppColors.white,
           centerTitle: true,
+          iconTheme: const IconThemeData(
+            color: Colors.black, // Set the arrow back color to black
+          ),
+          systemOverlayStyle: SystemUiOverlayStyle.dark, // Ensures status bar icons are dark
+       
         ),
         body: SingleChildScrollView(child:  Padding(
             padding: const EdgeInsets.all(16), child: _buildUpdateScreen())));
@@ -84,71 +89,64 @@ class UpdateUserInfoScreenState extends State<UpdateUserInfoScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              "First name",
-              style: TextStyle(
-                  color: AppColors.headingText, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(
-              height: 2,
-            ),
-            CustomTextField(
-              controller: firstNameController,
-              hintText: firstNameController.text,
-              backgroundColor: AppColors.cardBackground,
-              validator: Validators.name,
-            ),
-            const SizedBox(
-              height: 15,
-            ),
              const Text(
-              "Last name",
+              "Update your information",
               style: TextStyle(
-                  color: AppColors.headingText, fontWeight: FontWeight.bold),
+                  color: AppColors.headingText,
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold),
             ),
             const SizedBox(
-              height: 2,
+              height: 20,
             ),
-            CustomTextField(
-              controller: lastNameController,
-              hintText: lastNameController.text,
-              backgroundColor: AppColors.cardBackground,
-              validator: Validators.name,
-            ),
-            const SizedBox(
-              height: 15,
-            ),
-             const Text(
-              "Phone number",
-              style: TextStyle(
-                  color: AppColors.headingText, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(
-              height: 2,
-            ),
-            CustomTextField(
-              controller: phoneNumberController,
-              hintText: phoneNumberController.text,
-              backgroundColor: AppColors.cardBackground,
-              validator: Validators.name,
-            ),
-            const SizedBox(
-              height: 15,
-            ),
-            const Text(
-              "Email",
-              style: TextStyle(
-                  color: AppColors.headingText, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(
-              height: 2,
-            ),
-            CustomTextField(
+              TextFieldWithHeader(
+                  controller: firstNameController,
+                  headerText: 'Full Name',
+                  hintText: 'First name on ID',
+                  obsecureText: false,
+                  iconPath: "assets/icon/user.svg",
+                  isRequired: false,
+                  validator: Validators.name,
+                ),
+                const SizedBox(height: 8),
+                TextFieldWithoutHeader(
+                  controller: lastNameController,
+                  hintText: 'Last name on ID',
+                  obsecureText: false,
+                  validator: Validators.name,
+              ),
+               const SizedBox(height: 6),
+              const Text("Make sure this matches the name on your government ID or passport.",
+                style: TextStyle(
+                  color: AppColors.headingText,
+                  fontSize: 12,
+                  fontWeight: FontWeight.w400,
+                ),
+              ),
+            const SizedBox(height: 30),
+            TextFieldWithHeader(
               controller: emailController,
-              hintText: emailController.text,
-              backgroundColor: AppColors.cardBackground,
+              hintText: 'example@gmail.com',
+              isRequired: false,
+              headerText: 'Email',
+              obsecureText: false,
+              iconPath: "assets/icon/email.svg",
               validator: Validators.email,
             ),
+
+            const SizedBox(height: 30),
+            TextFieldWithHeader(
+              controller: phoneNumberController,
+              hintText: '06 000 00 00',
+              isRequired: false,
+              headerText: 'Phone number',
+              obsecureText: false,
+              iconPath: "assets/icon/email.svg",
+              validator: Validators.phone,
+            ),
+           
+           
+          
             const SizedBox(
               height: 20,
             ),

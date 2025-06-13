@@ -98,17 +98,14 @@ class BottomNavScreen extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(2),
       width: 48,
-      height: 25,
+      height: 24,
       decoration: BoxDecoration(
-        color: isSelected ? Colors.black.withOpacity(0.8): null,
-          gradient: isSelected ? const LinearGradient(
-          colors: [AppColors.blueStart, AppColors.purpleStart],
-        ) : null,
+          color: isSelected ? AppColors.blue600.withOpacity(0.4) : null,
           borderRadius: BorderRadius.circular(20)),
       child: CustomIcon(
         iconPath: iconPath,
         size: 20,
-        color: isSelected ? const Color.fromARGB(255, 255, 255, 255) : AppColors.navTextInactive,
+        color: isSelected ? AppColors.blue600 : AppColors.navTextInactive,
       ),
     );
   }

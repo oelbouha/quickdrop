@@ -10,6 +10,7 @@ abstract class TransportItem {
   final String date;
   final String userId;
   final String status;
+  
 
   String getTransportType();
 

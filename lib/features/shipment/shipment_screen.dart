@@ -204,7 +204,8 @@ class _ShipmentScreenState extends State<ShipmentScreen>
                         const SizedBox(height: AppTheme.gapBetweenCards),
                       OngoingItemCard(
                           item: ongoingShipments[index],
-                          user: userData.toMap()),
+                          user: userData
+                      ),
                       const SizedBox(height: AppTheme.gapBetweenCards),
                     ],
                   );
@@ -245,7 +246,7 @@ class _ShipmentScreenState extends State<ShipmentScreen>
                         const SizedBox(height: AppTheme.gapBetweenCards),
                       CompletedItemCard(
                           item: pastShipments[index],
-                          user: userData.toMap(),
+                          user: userData,
                           onPressed: () {
                             removeShipment(pastShipments[index].id!);
                           }),

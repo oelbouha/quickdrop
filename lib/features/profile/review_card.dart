@@ -47,10 +47,10 @@ class ReviewCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             UserProfileCard(
-              header: user.displayName!,
+              header: user.displayName ?? "Unknown user",
               onPressed: () => print("user profile  Clicked"),
               subHeader: review.date,
-              photoUrl: user.photoUrl!,
+              photoUrl: user.photoUrl ?? AppTheme.defaultProfileImage,
               headerFontSize: 14,
               subHeaderFontSize: 10,
               avatarSize: 18,
