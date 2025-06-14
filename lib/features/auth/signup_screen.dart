@@ -35,24 +35,28 @@ class _SingupPageState extends State<SignUpScreen> {
   bool _isEmailLoading = false;
 
   Future<void> _createStatsIfNewUser(String userId) async {
-    bool userExist = await doesUserExist(userId);
-    if (userExist == false) {
-      print("user does not exist");
-      StatisticsModel stats = StatisticsModel(
-          pendingShipments: 0,
-          ongoingShipments: 0,
-          completedShipments: 0,
-          reviewCount: 0,
-          id: userId,
-          userId: userId);
       try {
-        Provider.of<StatisticsProvider>(context, listen: false)
-            .addStatictics(userId, stats);
+        bool userExist = await doesUserExist(userId);
+        if (userExist == false) {
+          // print("user does not exist");
+          StatisticsModel stats = StatisticsModel(
+              pendingShipments: 0,
+              ongoingShipments: 0,
+              completedShipments: 0,
+              reviewCount: 0,
+              id: userId,
+              userId: userId);
+            if (!mounted) return;
+            Provider.of<StatisticsProvider>(context, listen: false)
+                .addStatictics(userId, stats);
+      }
       } catch (e) {
-        AppUtils.showError(context, "failed to create statistics");
+        if (mounted) {
+          AppUtils.showError(context, "failed to create statistics");
+        }
         rethrow;
       }
-    }
+    
   }
 
   Future<bool> doesUserExist(String uid) async {
@@ -94,12 +98,14 @@ class _SingupPageState extends State<SignUpScreen> {
           createdAt: DateFormat('dd/MM/yyyy').format(DateTime.now()).toString(),
         );
         try {
-          _createStatsIfNewUser(userCredential.user!.uid);
-          // bool userExist = await doesUserExist(user.uid);
-          final userProvider =
-              Provider.of<UserProvider>(context, listen: false);
+          await _createStatsIfNewUser(userCredential.user!.uid);
+          
+          if (!mounted) return; 
+          
+          final userProvider = Provider.of<UserProvider>(context, listen: false);
           userProvider.setUser(user);
-          userProvider.saveUserToFirestore(user);
+          await userProvider.saveUserToFirestore(user); 
+          
           if (mounted) {
             context.go('/home');
           }
