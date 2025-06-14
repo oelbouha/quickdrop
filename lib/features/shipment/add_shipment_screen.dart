@@ -105,18 +105,41 @@ class _AddShipmentScreenState extends State<AddShipmentScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: AppColors.background,
-        appBar: AppBar(
-          backgroundColor: AppColors.appBarBackground,
-          title: const Text(
-            "Add your Shipment",
-            style: TextStyle(
-                color: AppColors.appBarText,
-                fontWeight: FontWeight.bold,
-                fontSize: 18),
+         appBar: AppBar(
+        backgroundColor: AppColors.background,
+        elevation: 0,
+        leading: IconButton(
+          icon: Container(
+            padding: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              // color: Colors.white.withOpacity(0.9),
+              borderRadius: BorderRadius.circular(12),
+              // boxShadow: [
+              //   BoxShadow(
+              //     color: Colors.black.withOpacity(0.1),
+              //     blurRadius: 8,
+              //     offset: const Offset(0, 2),
+              //   ),
+              // ],
+            ),
+            child: const Icon(Icons.arrow_back, color: Color(0xFF1F2937)),
           ),
+          onPressed: () => Navigator.pop(context),
         ),
+      ),
         body: SingleChildScrollView(
-            child: Padding(
+            child: Container(
+              decoration: const BoxDecoration(
+          // gradient: LinearGradient(
+          //   begin: Alignment.topLeft,
+          //   end: Alignment.bottomRight,
+          //   colors: [
+          //     Color(0xFFEFF6FF),
+          //     Color(0xFFFFFFFF),
+          //     Color(0xFFFAF5FF),
+          //   ],
+          // ),
+        ),
                 padding: const EdgeInsets.all(AppTheme.homeScreenPadding),
                 child: Form(
                   key: _formKey,
@@ -124,39 +147,29 @@ class _AddShipmentScreenState extends State<AddShipmentScreen> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text(
-                        "List Your Package",
-                        style: TextStyle(
-                            color: AppColors.headingText,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 18),
-                      ),
-                      const Text(
-                        "Complete the form below to create a new delivery request",
-                        style: TextStyle(color: AppColors.headingText),
-                      ),
+                      _buildHeader(),
                       const SizedBox(
-                        height: 25,
+                        height: 32,
                       ),
                       _buildPackageDetails(),
                       const SizedBox(
-                        height: 25,
+                        height: 24,
                       ),
                       _buildPackageDemensions(),
                       const SizedBox(
-                        height: 25,
+                        height: 24,
                       ),
                       _buildPackageDestination(),
                       const SizedBox(
-                        height: 25,
+                        height: 24,
                       ),
-                      _buildImage(),
-                      const SizedBox(
-                        height: 25,
-                      ),
+                      // _buildImage(),
+                      // const SizedBox(
+                      //   height: 24,
+                      // ),
                       _buildTimingDetails(),
                       const SizedBox(
-                        height: 25,
+                        height: 32,
                       ),
                       LoginButton(
                           hintText: "List Package",
@@ -168,6 +181,31 @@ class _AddShipmentScreenState extends State<AddShipmentScreen> {
                     ],
                   ),
                 ))));
+  }
+
+ Widget _buildHeader() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text(
+          'Add Your Shipment',
+          style: TextStyle(
+            fontSize: 28,
+            fontWeight: FontWeight.bold,
+            color: Color(0xFF1F2937),
+          ),
+        ),
+        const SizedBox(height: 8),
+        Text(
+          'Complete the form below to create a new delivery request',
+          style: TextStyle(
+            fontSize: 16,
+            color: Colors.grey[600],
+          ),
+          // textAlign: TextAlign.start,
+        ),
+      ],
+    );
   }
 
   Future<void> _pickImage() async {
@@ -201,35 +239,28 @@ class _AddShipmentScreenState extends State<AddShipmentScreen> {
     return Container(
         padding: const EdgeInsets.all(AppTheme.addShipmentPadding),
         decoration: BoxDecoration(
-            border: Border.all(
-                color: AppColors.lessImportant,
-                width: AppTheme.textFieldBorderWidth),
+           
             color: AppColors.cardBackground,
-            borderRadius: BorderRadius.circular(AppTheme.cardRadius)),
+            borderRadius: BorderRadius.circular(AppTheme.cardRadius),
+          boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.1),
+                  blurRadius: 8,
+                  offset: const Offset(0, 2),
+                ),
+              ],
+          ),
         child: Column(
           // mainAxisSize: MainAxisSize.max,
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Row(
-              children: [
-                CustomIcon(
-                  iconPath: "assets/icon/package.svg",
-                  size: 20,
-                  color: AppColors.blue,
-                ),
-                SizedBox(
-                  width: 8,
-                ),
-                Text(
-                  "Package details",
-                  style: TextStyle(
-                      color: AppColors.headingText,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 20),
-                ),
-              ],
-            ),
+             buildIconcard(
+                backgroundColor: AppColors.contactBackground,
+                color: AppColors.blue700,
+                icon: "assets/icon/package.svg",
+                title: "Package details"
+              ),
             const SizedBox(
               height: 10,
             ),
@@ -237,7 +268,7 @@ class _AddShipmentScreenState extends State<AddShipmentScreen> {
             TextFieldWithHeader(
               controller: packageNameController,
               headerText: "Packge Name",
-              hintText: "phone case, book, etc",
+              hintText: "e.g, phone case, book, etc",
               obsecureText: false ,
               keyboardType: TextInputType.text,
               validator: Validators.notEmpty,
@@ -246,20 +277,20 @@ class _AddShipmentScreenState extends State<AddShipmentScreen> {
               height: 10,
             ),
             
-            TextWithRequiredIcon(text: "Package description"),
-            CustomTextField(
+            TextFieldWithHeader(
               controller: descriptionController,
-              hintText: "Describe your package content",
-              backgroundColor: AppColors.cardBackground,
+              hintText: "Describe your package content...",
+              headerText: "Package description",
               maxLines: 3,
               validator: Validators.notEmpty,
             ),
+          
             const SizedBox(
               height: 10,
             ),
             TextFieldWithHeader(
               controller: priceController,
-              hintText: "Price",
+              hintText: "0.00",
               headerText: "Price",
               validator: Validators.notEmpty,
               keyboardType: TextInputType.number,
@@ -283,41 +314,34 @@ class _AddShipmentScreenState extends State<AddShipmentScreen> {
     return Container(
         padding: const EdgeInsets.all(AppTheme.addShipmentPadding),
         decoration: BoxDecoration(
-            border: Border.all(
-                color: AppColors.lessImportant,
-                width: AppTheme.textFieldBorderWidth),
+           
             color: AppColors.cardBackground,
-            borderRadius: BorderRadius.circular(AppTheme.cardRadius)),
+            borderRadius: BorderRadius.circular(AppTheme.cardRadius),
+             boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.1),
+                  blurRadius: 8,
+                  offset: const Offset(0, 2),
+                ),
+              ],
+            ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Row(
-              children: [
-                CustomIcon(
-                  iconPath: "assets/icon/package.svg",
-                  size: 20,
-                  color: AppColors.blue,
-                ),
-                SizedBox(
-                  width: 8,
-                ),
-                Text(
-                  "Package Demensions",
-                  style: TextStyle(
-                      color: AppColors.headingText,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 20),
-                ),
-              ],
-            ),
+             buildIconcard(
+                backgroundColor: const Color(0xFFEDE9FE),
+                color: const Color(0xFF8B5CF6),
+                icon: "assets/icon/package.svg",
+                title: "Package Dimensions"
+              ),
             const SizedBox(
               height: 10,
             ),
              TextFieldWithHeader(
               controller: weightController,
-              hintText: "Weight",
-              headerText: "Weight in kg",
+              hintText: "0.0",
+              headerText: "Weight (kg)",
               keyboardType: TextInputType.number,
               validator: Validators.notEmpty,
             ),
@@ -327,8 +351,8 @@ class _AddShipmentScreenState extends State<AddShipmentScreen> {
            
             TextFieldWithHeader(
               controller: packageQuantityController,
-              hintText: "Quantity",
-              headerText: "Package Quantity",
+              hintText: "0",
+              headerText: "Quantity",
               keyboardType: TextInputType.number,
               validator: Validators.notEmpty,
             ),
@@ -337,7 +361,7 @@ class _AddShipmentScreenState extends State<AddShipmentScreen> {
             ),
            
               const Text(
-              "Demensions (cm)",
+              "Demensions (cm)-optional",
               style: TextStyle(
                   color: AppColors.headingText, fontWeight: FontWeight.bold, fontSize: 16),
             ),
@@ -349,17 +373,17 @@ class _AddShipmentScreenState extends State<AddShipmentScreen> {
                 Expanded(
                   child: TextFieldWithHeader(
                     controller: lengthController,
-                    hintText: "Length (cm)",
+                    hintText: "0",
                     headerText: "Length ",
                     keyboardType: TextInputType.number,
                     isRequired: false,
                   ),
                 ),
-                const SizedBox(width: 8), // Add spacing between inputs
+                const SizedBox(width: 8), 
                 Expanded(
                   child: TextFieldWithHeader(
                     controller: widthController,
-                    hintText: "Width",
+                    hintText: "0",
                     headerText: "Width",
                     isRequired: false,
                     keyboardType: TextInputType.number,
@@ -369,7 +393,7 @@ class _AddShipmentScreenState extends State<AddShipmentScreen> {
                 Expanded(
                   child: TextFieldWithHeader(
                     controller: heightController,
-                    hintText: "Height",
+                    hintText: "0",
                     headerText: "Height",
                     isRequired: false,
                     keyboardType: TextInputType.number,
@@ -388,35 +412,26 @@ class _AddShipmentScreenState extends State<AddShipmentScreen> {
     return Container(
         padding: const EdgeInsets.all(AppTheme.addShipmentPadding),
         decoration: BoxDecoration(
-            border: Border.all(
-                color: AppColors.lessImportant,
-                width: AppTheme.textFieldBorderWidth),
+           
             color: AppColors.cardBackground,
-            borderRadius: BorderRadius.circular(AppTheme.cardRadius)),
+            borderRadius: BorderRadius.circular(AppTheme.cardRadius), boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.1),
+                  blurRadius: 8,
+                  offset: const Offset(0, 2),
+                ),
+              ],),
         child: Column(
           // mainAxisSize: MainAxisSize.max,
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Row(
-              children: [
-                CustomIcon(
-                  iconPath: "assets/icon/map-point.svg",
-                  size: 20,
-                  color: AppColors.blue,
-                ),
-                SizedBox(
-                  width: 8,
-                ),
-                Text(
-                  "Pickup & Delivery locations",
-                  style: TextStyle(
-                      color: AppColors.headingText,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 20),
-                ),
-              ],
-            ),
+             buildIconcard(
+                backgroundColor: const Color(0xFFD1FAE5),
+                color: const Color(0xFF10B981),
+                icon: "assets/icon/map-point.svg",
+                title: "Delivery Locations"
+              ),
             const SizedBox(
               height: 10,
             ),
@@ -437,6 +452,36 @@ class _AddShipmentScreenState extends State<AddShipmentScreen> {
               headerText: "Delivery Location",
               validator: Validators.notEmpty,
             ),
+            const SizedBox(height: 16,),
+            Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              gradient: const LinearGradient(
+                colors: [Color(0xFFEFF6FF), Color(0xFFD1FAE5)],
+              ),
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(color: const Color(0xFFBFDBFE)),
+            ),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                const Icon(Icons.tips_and_updates, color: Color(0xFF3B82F6), size: 20),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Text(
+                    'Tip: Include landmarks, building numbers, and contact information for smoother pickup and delivery.',
+                    style: TextStyle(
+                      fontSize: 13,
+                      color: Colors.grey[700],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+
+
           ],
         ));
   }
@@ -445,37 +490,40 @@ class _AddShipmentScreenState extends State<AddShipmentScreen> {
     return Container(
         padding: const EdgeInsets.all(AppTheme.addShipmentPadding),
         decoration: BoxDecoration(
-            border: Border.all(
-                color: AppColors.lessImportant,
-                width: AppTheme.textFieldBorderWidth),
+           
             color: AppColors.cardBackground,
-            borderRadius: BorderRadius.circular(AppTheme.cardRadius)),
+            borderRadius: BorderRadius.circular(AppTheme.cardRadius), boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.1),
+                  blurRadius: 8,
+                  offset: const Offset(0, 2),
+                ),
+              ],),
         child: Column(
           // mainAxisSize: MainAxisSize.max,
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Row(
-              children: [
-                CustomIcon(
-                  iconPath: "assets/icon/time.svg",
-                  size: 20,
-                  color: AppColors.blue,
-                ),
-                SizedBox(
-                  width: 8,
-                ),
-                Text(
-                  "Timing",
-                  style: TextStyle(
-                      color: AppColors.headingText,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 20),
-                ),
-              ],
+            buildIconcard(
+                backgroundColor: const Color(0xFFFEF3C7),
+                color: const Color(0xFFF59E0B),
+                icon: "assets/icon/camera-add.svg",
+                title: "Package Image & Timing"
+              ),
+              const SizedBox(
+              height: 16,
+            ),
+            
+             TextWithRequiredIcon(text: "Package image"),
+
+            ImageUpload(
+              onPressed: _pickImage,
+              backgroundColor: AppColors.cardBackground,
+              controller: dateController,
+              hintText: "",
             ),
             const SizedBox(
-              height: 10,
+              height: 20,
             ),
             
             TextWithRequiredIcon(text: "Preferred Pickup Time"),
@@ -487,6 +535,44 @@ class _AddShipmentScreenState extends State<AddShipmentScreen> {
               hintText: dateController.text,
               validator: Validators.notEmpty,
             ),
+
+            const SizedBox(height: 16,),
+             Container(
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    gradient: const LinearGradient(
+                      colors: [Color(0xFFFEF3C7), Color(0xFFFEF9C3)],
+                    ),
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(color: const Color(0xFFFCD34D)),
+                  ),
+                  child: Column(
+                    children: [
+                      const Row(
+                        children: [
+                          Icon(Icons.schedule, color: Color(0xFFF59E0B), size: 20),
+                          SizedBox(width: 8),
+                          Text(
+                            'Timing Note',
+                            style: TextStyle(
+                              fontWeight: FontWeight.w600,
+                              color: Color(0xFF92400E),
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        'We\'ll contact you to confirm the exact pickup time within your preferred date.',
+                        style: TextStyle(
+                          fontSize: 13,
+                          color: Colors.orange[800],
+                        ),
+                      ),
+                    ],)
+                  ),
+
+
           ],
         ));
   }
@@ -495,11 +581,15 @@ class _AddShipmentScreenState extends State<AddShipmentScreen> {
     return Container(
         padding: const EdgeInsets.all(AppTheme.addShipmentPadding),
         decoration: BoxDecoration(
-            border: Border.all(
-                color: AppColors.lessImportant,
-                width: AppTheme.textFieldBorderWidth),
+           
             color: AppColors.cardBackground,
-            borderRadius: BorderRadius.circular(AppTheme.cardRadius)),
+            borderRadius: BorderRadius.circular(AppTheme.cardRadius), boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.1),
+                  blurRadius: 8,
+                  offset: const Offset(0, 2),
+                ),
+              ],),
         child: Column(
           // mainAxisSize: MainAxisSize.max,
           mainAxisAlignment: MainAxisAlignment.start,
@@ -540,4 +630,36 @@ class _AddShipmentScreenState extends State<AddShipmentScreen> {
         ));
   }
 
+}
+
+
+Widget buildIconcard({
+  required icon,
+  required backgroundColor,
+  required color,
+  required title
+}){
+  return Row(
+    children: [Container(
+    padding : const EdgeInsets.all(8),
+    decoration: BoxDecoration(
+        color: backgroundColor,
+        borderRadius: BorderRadius.circular(8)
+    ),
+    child: CustomIcon(
+        iconPath: icon,
+        size: 20,
+        color: color,
+      ),
+  ),const  SizedBox(
+                  width: 8,
+                ),
+      Text(
+        title,
+        style: TextStyle(
+            color: AppColors.headingText,
+            fontWeight: FontWeight.bold,
+            fontSize: 20),
+      ),
+  ]);
 }

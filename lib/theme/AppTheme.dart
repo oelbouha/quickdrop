@@ -15,7 +15,7 @@ class AppTheme {
   static const double historyCardPadding = 16;
   static const double tabBarRadius = 25;
   static const double textFeildRadius = 10;
-  static const double textFieldBorderWidth = 1.0;
+  static const double textFieldBorderWidth = 0.8;
   static const double addShipmentPadding = 16;
   static const double cardButtonRadius = 8;
   static const double inputTextHeight = 50;

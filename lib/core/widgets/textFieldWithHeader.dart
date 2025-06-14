@@ -10,100 +10,100 @@ class TextFieldWithHeader extends StatelessWidget {
   final bool obsecureText;
   final bool isRequired;
   final String iconPath;
-  final TextInputType keyboardType; 
+  final TextInputType keyboardType;
   final String? Function(String?)? validator;
   final void Function(String)? onChanged;
+  int maxLines;
 
-
-  const TextFieldWithHeader({
+   TextFieldWithHeader({
     super.key,
     required this.controller,
     required this.hintText,
     this.iconPath = "d  ",
-    required this.headerText ,
-     this.obsecureText = false,
+    required this.headerText,
+    this.obsecureText = false,
     this.keyboardType = TextInputType.text,
     this.validator,
+    this.maxLines = 1,
     this.isRequired = true,
     this.onChanged,
   });
 
   @override
-  
   @override
-Widget build(BuildContext context) {
-  return Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Text(
-            headerText,
-            style: const TextStyle(
-              color: AppColors.headingText,
-              fontSize: 16,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-          if (isRequired)
-            const Text(
-              ' *',
-              style: TextStyle(
-                color: Colors.red,
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Text(
+              headerText,
+              style: const TextStyle(
+                color: AppColors.headingText,
                 fontSize: 16,
-                fontWeight: FontWeight.bold,
+                fontWeight: FontWeight.w600,
               ),
             ),
-        ],
-      ),
-      const SizedBox(height: 2),
-      TextFormField(
-        controller: controller,
-        obscureText: obsecureText,
-        validator: validator,
-        onChanged: onChanged,
-        keyboardType: keyboardType,
-        style: const TextStyle(color: AppColors.shipmentText),
-        decoration: InputDecoration(
-          hintText: hintText,
-          hintStyle: const TextStyle(
-            color: AppColors.lessImportant,
-          ),
-          filled: true,
-          fillColor: AppColors.white,
-          enabledBorder: OutlineInputBorder(
-            borderSide: const BorderSide(
-              color: AppColors.lessImportant,
-              width: AppTheme.textFieldBorderWidth,
+            if (isRequired)
+              const Text(
+                ' *',
+                style: TextStyle(
+                  color: Colors.red,
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+          ],
+        ),
+        const SizedBox(height: 2),
+        TextFormField(
+          maxLines: maxLines,
+          controller: controller,
+          obscureText: obsecureText,
+          validator: validator,
+          onChanged: onChanged,
+          keyboardType: keyboardType,
+          style: const TextStyle(color: AppColors.shipmentText),
+          decoration: InputDecoration(
+            hintText: hintText,
+            hintStyle: TextStyle(
+              color: Colors.grey[400],
             ),
-            borderRadius: BorderRadius.circular(AppTheme.textFeildRadius),
-          ),
-          focusedBorder: OutlineInputBorder(
-            borderSide: const BorderSide(
-              color: AppColors.blue,
-              width: AppTheme.textFieldBorderWidth,
+            filled: true,
+            fillColor: AppColors.white,
+            enabledBorder: OutlineInputBorder(
+              borderSide: const BorderSide(
+                color: Color(0xFFE5E7EB),
+                // width: AppTheme.textFieldBorderWidth,
+              ),
+              borderRadius: BorderRadius.circular(AppTheme.textFeildRadius),
             ),
-            borderRadius: BorderRadius.circular(AppTheme.cardRadius),
-          ),
-          errorBorder: OutlineInputBorder(
-            borderSide: const BorderSide(
-              color: AppColors.error,
-              width: AppTheme.textFieldBorderWidth,
+            focusedBorder: OutlineInputBorder(
+              borderSide: const BorderSide(
+                color: AppColors.blue,
+                // width: AppTheme.textFieldBorderWidth,
+              ),
+              borderRadius: BorderRadius.circular(AppTheme.cardRadius),
             ),
-            borderRadius: BorderRadius.circular(AppTheme.cardRadius),
-          ),
-          focusedErrorBorder: OutlineInputBorder(
-            borderSide: const BorderSide(
-              color: AppColors.error,
-              width: AppTheme.textFieldBorderWidth,
+            errorBorder: OutlineInputBorder(
+              borderSide: const BorderSide(
+                color: AppColors.error,
+                // width: AppTheme.textFieldBorderWidth,
+              ),
+              borderRadius: BorderRadius.circular(AppTheme.cardRadius),
             ),
-            borderRadius: BorderRadius.circular(AppTheme.cardRadius),
+            focusedErrorBorder: OutlineInputBorder(
+              borderSide: const BorderSide(
+                color: AppColors.error,
+                // width: AppTheme.textFieldBorderWidth,
+              ),
+              borderRadius: BorderRadius.circular(AppTheme.cardRadius),
+            ),
           ),
         ),
-      ),
-    ],
-  );
-}
-
+      ],
+    );
+  }
 }
