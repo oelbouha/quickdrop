@@ -21,7 +21,9 @@ class _ShipmentScreenState extends State<ShipmentScreen>
     super.initState();
 
     _tabController = TabController(length: 3, vsync: this);
-    userPhotoUrl = Provider.of<UserProvider>(context, listen: false).user?.photoUrl ?? AppTheme.defaultProfileImage;
+    userPhotoUrl =
+        Provider.of<UserProvider>(context, listen: false).user?.photoUrl ??
+            AppTheme.defaultProfileImage;
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       try {
         user = Provider.of<UserProvider>(context, listen: false).user;
@@ -37,12 +39,11 @@ class _ShipmentScreenState extends State<ShipmentScreen>
           await Provider.of<UserProvider>(context, listen: false)
               .fetchUsersData(userIds);
         }
-
-      
       } catch (e) {
-        if (mounted) AppUtils.showError(context, "Failed to fetch Shipments");
-      }
-      finally {
+        if (mounted)
+          AppUtils.showDialog(
+              context, "Failed to fetch Shipments", AppColors.error);
+      } finally {
         // Ensure the loading state is updated even if an error occurs
         if (mounted) {
           setState(() {
@@ -66,12 +67,14 @@ class _ShipmentScreenState extends State<ShipmentScreen>
                 .deleteShipment(id);
             await Provider.of<DeliveryRequestProvider>(context, listen: false)
                 .deleteRequestsByShipmentId(id);
-            AppUtils.showSuccess(context, 'Shipment deleted succusfully');
+            AppUtils.showDialog(
+                context, 'Shipment deleted succusfully', AppColors.succes);
             Provider.of<StatisticsProvider>(context, listen: false)
                 .decrementField(user!.uid, "pendingShipments");
           } catch (e) {
             if (mounted)
-              AppUtils.showError(context, 'Failed to delete shipment: $e');
+              AppUtils.showDialog(
+                  context, 'Failed to delete shipment: $e', AppColors.error);
           } finally {
             Navigator.pop(context);
           }
@@ -101,9 +104,14 @@ class _ShipmentScreenState extends State<ShipmentScreen>
         title: "Shipments",
       ),
       body: _isLoading
-          ?  const Center(child:  CircularProgressIndicator(color: AppColors.blue700,),)
+          ? const Center(
+              child: CircularProgressIndicator(
+                color: AppColors.blue700,
+              ),
+            )
           : Consumer<ShipmentProvider>(builder: (context, provider, child) {
-              final user = Provider.of<UserProvider>(context, listen: false).user;
+              final user =
+                  Provider.of<UserProvider>(context, listen: false).user;
               if (user == null) {
                 return const Center(
                     child: Text('Please log in to view shipments'));
@@ -203,9 +211,7 @@ class _ShipmentScreenState extends State<ShipmentScreen>
                       if (index == 0)
                         const SizedBox(height: AppTheme.gapBetweenCards),
                       OngoingItemCard(
-                          item: ongoingShipments[index],
-                          user: userData
-                      ),
+                          item: ongoingShipments[index], user: userData),
                       const SizedBox(height: AppTheme.gapBetweenCards),
                     ],
                   );

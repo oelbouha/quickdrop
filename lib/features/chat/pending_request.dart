@@ -1,4 +1,3 @@
-
 import 'package:quickdrop_app/core/utils/imports.dart';
 import 'package:quickdrop_app/core/widgets/destination.dart';
 
@@ -24,7 +23,7 @@ class DeliveryRequestState extends State<PendingRequest> {
       await Provider.of<DeliveryRequestProvider>(context, listen: false)
           .deleteRequest(widget.request.id!);
     } catch (e) {
-      if (mounted) AppUtils.showError(context, "Failed to refuse request");
+      if (mounted) AppUtils.showDialog(context, "Failed to refuse request", AppColors.error);
     }
   }
 
@@ -66,7 +65,7 @@ class DeliveryRequestState extends State<PendingRequest> {
           onPressed: () => {
             // context.push(
             // '/profile/${widget.user.uid}',
-          // )
+            // )
           },
           // subHeader: "Carrier: Ahmed K.",
           headerFontSize: 14,
@@ -112,7 +111,6 @@ class DeliveryRequestState extends State<PendingRequest> {
 
   Widget _buildButtons() {
     return Row(children: [
-      
       ElevatedButton(
         onPressed: _refuseRequest,
         style: ElevatedButton.styleFrom(
@@ -153,7 +151,7 @@ class DeliveryRequestState extends State<PendingRequest> {
     return Row(
       children: [
         const Text('price ',
-            style:  TextStyle(
+            style: TextStyle(
                 color: AppColors.headingText,
                 fontSize: 14,
                 fontWeight: FontWeight.bold)),

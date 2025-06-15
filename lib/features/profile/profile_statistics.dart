@@ -45,7 +45,7 @@ class ProfileStatisticsState extends State<ProfileStatistics> {
         });
       } catch (e) {
         if (mounted) {
-          AppUtils.showError(context, "Failed to fetch Shipments analytics");
+          AppUtils.showDialog(context, "Failed to fetch Shipments analytics", AppColors.error);
         }
       }
     });
@@ -217,8 +217,7 @@ class ProfileStatisticsState extends State<ProfileStatistics> {
                   fontWeight: FontWeight.w600,
                   color: AppColors.headingText)),
           const SizedBox(width: 10),
-          Text(
-              '(${reviewProvider.reviews.length.toString()})',
+          Text('(${reviewProvider.reviews.length.toString()})',
               style: const TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.w600,
@@ -259,72 +258,72 @@ class ProfileStatisticsState extends State<ProfileStatistics> {
     final user = userProvider.user;
     // print("photo ${user!.photoUrl}");
     return Container(
-            width: double.infinity,
-            padding: const EdgeInsets.only(
-              left: AppTheme.cardPadding,
-              right: AppTheme.cardPadding,
-              top: AppTheme.cardPadding,
-              bottom: AppTheme.cardPadding,
-            ),
-            decoration: const BoxDecoration(
-              gradient:  LinearGradient(
-                colors: [AppColors.blueStart, AppColors.purpleEnd],
-              ),
-            ),
-            child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Stack(
-          children: [
-            Container(
-              width: 100,
-              height: 100,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(80),
-                border: Border.all(
-                  color: const Color.fromARGB(255, 255, 255, 255).withOpacity(0.3),
-                  width: 3,
-                ),
-              ),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(80),
-                child: Image.network(
-                  user?.photoUrl ?? AppTheme.defaultProfileImage,
-                  fit: BoxFit.cover,
-                  errorBuilder: (context, error, stackTrace) {
-                    return Container(
-                      color: const Color.fromARGB(255, 255, 255, 255).withOpacity(0.1),
-                      child: const Icon(
-                        Icons.person,
-                        color: AppColors.white,
-                        size: 50,
-                      ),
-                    );
-                  },
-                ),
-              ),
-            ),
-          ],
+        width: double.infinity,
+        padding: const EdgeInsets.only(
+          left: AppTheme.cardPadding,
+          right: AppTheme.cardPadding,
+          top: AppTheme.cardPadding,
+          bottom: AppTheme.cardPadding,
         ),
-                  const SizedBox(width: 15),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(user?.displayName ?? 'Guest',
-                        style: const TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                            color: AppColors.white),
-                      ),
-                       Text(
-                       "Member since ${user?.createdAt!}",
-                        style: const TextStyle(
-                            fontSize: 12, color: AppColors.lessImportant),
-                      ),
-                    ],
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            colors: [AppColors.blueStart, AppColors.purpleEnd],
+          ),
+        ),
+        child: Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
+          Stack(
+            children: [
+              Container(
+                width: 100,
+                height: 100,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(80),
+                  border: Border.all(
+                    color: const Color.fromARGB(255, 255, 255, 255)
+                        .withOpacity(0.3),
+                    width: 3,
                   ),
-                ]));
+                ),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(80),
+                  child: Image.network(
+                    user?.photoUrl ?? AppTheme.defaultProfileImage,
+                    fit: BoxFit.cover,
+                    errorBuilder: (context, error, stackTrace) {
+                      return Container(
+                        color: const Color.fromARGB(255, 255, 255, 255)
+                            .withOpacity(0.1),
+                        child: const Icon(
+                          Icons.person,
+                          color: AppColors.white,
+                          size: 50,
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(width: 15),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                user?.displayName ?? 'Guest',
+                style: const TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.white),
+              ),
+              Text(
+                "Member since ${user?.createdAt!}",
+                style: const TextStyle(
+                    fontSize: 12, color: AppColors.lessImportant),
+              ),
+            ],
+          ),
+        ]));
   }
-
 }

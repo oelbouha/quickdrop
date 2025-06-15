@@ -33,27 +33,29 @@ class _ReviewDialogState extends State<ReviewDialog> {
 
       final user = FirebaseAuth.instance.currentUser;
       if (user == null) {
-        AppUtils.showError(context, 'Please log in to list a shipment');
+        AppUtils.showDialog(
+            context, 'Please log in to list a shipment', AppColors.error);
         return;
       }
 
       ReviewModel review = ReviewModel(
-        receiverId: widget.recieverUser.uid,
-        senderId: user.uid,
-        date: DateFormat('dd/MM/yyyy').format(DateTime.now()).toString(),
-        message: message,
-        rating: _rating
-      );
+          receiverId: widget.recieverUser.uid,
+          senderId: user.uid,
+          date: DateFormat('dd/MM/yyyy').format(DateTime.now()).toString(),
+          message: message,
+          rating: _rating);
 
       reviewProvider.addReview(review);
 
-      AppUtils.showSuccess(context, "Review Submitted succesfully!");
+      AppUtils.showDialog(
+          context, "Review Submitted succesfully!", AppColors.succes);
     } catch (e) {
-     
-      if (mounted) AppUtils.showError(context, "Failed to submit review ");
+      if (mounted)
+        AppUtils.showDialog(
+            context, "Failed to submit review ", AppColors.error);
       // print(e);
     } finally {
-       Navigator.pop(context);
+      Navigator.pop(context);
       setState(() {
         _isLoading = true;
       });

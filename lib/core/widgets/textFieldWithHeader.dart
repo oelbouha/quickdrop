@@ -57,7 +57,7 @@ class TextFieldWithHeader extends StatelessWidget {
               ),
           ],
         ),
-        const SizedBox(height: 2),
+        const SizedBox(height: 4),
         TextFormField(
           maxLines: maxLines,
           controller: controller,
@@ -75,7 +75,7 @@ class TextFieldWithHeader extends StatelessWidget {
             fillColor: AppColors.white,
             enabledBorder: OutlineInputBorder(
               borderSide: const BorderSide(
-                color: Color(0xFFE5E7EB),
+                color: AppColors.lessImportant,
                 // width: AppTheme.textFieldBorderWidth,
               ),
               borderRadius: BorderRadius.circular(AppTheme.textFeildRadius),

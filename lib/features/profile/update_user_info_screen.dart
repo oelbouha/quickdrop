@@ -43,18 +43,18 @@ class UpdateUserInfoScreenState extends State<UpdateUserInfoScreen> {
           firstName: firstNameController.text,
           lastName: lastNameController.text,
           phoneNumber: phoneNumberController.text,
-
         );
         await Provider.of<UserProvider>(context, listen: false)
             .updateUserInfo(updatedUser);
         if (mounted) {
-          AppUtils.showSuccess(context, "Information updated succesfully!");
+          AppUtils.showDialog(
+              context, "Information updated succesfully!", AppColors.succes);
           Navigator.pop(context);
         }
       } catch (e) {
         if (mounted) {
-          AppUtils.showError(
-              context, "Failed to update information try again !");
+          AppUtils.showDialog(context,
+              "Failed to update information try again !", AppColors.error);
         }
       } finally {
         setState(() => _isLoading = false);
@@ -76,11 +76,13 @@ class UpdateUserInfoScreenState extends State<UpdateUserInfoScreen> {
           iconTheme: const IconThemeData(
             color: Colors.black, // Set the arrow back color to black
           ),
-          systemOverlayStyle: SystemUiOverlayStyle.dark, // Ensures status bar icons are dark
-       
+          systemOverlayStyle:
+              SystemUiOverlayStyle.dark, // Ensures status bar icons are dark
         ),
-        body: SingleChildScrollView(child:  Padding(
-            padding: const EdgeInsets.all(16), child: _buildUpdateScreen())));
+        body: SingleChildScrollView(
+            child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: _buildUpdateScreen())));
   }
 
   Widget _buildUpdateScreen() {
@@ -89,7 +91,7 @@ class UpdateUserInfoScreenState extends State<UpdateUserInfoScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-             const Text(
+            const Text(
               "Update your information",
               style: TextStyle(
                   color: AppColors.headingText,
@@ -99,30 +101,31 @@ class UpdateUserInfoScreenState extends State<UpdateUserInfoScreen> {
             const SizedBox(
               height: 20,
             ),
-              TextFieldWithHeader(
-                  controller: firstNameController,
-                  headerText: 'Full Name',
-                  hintText: 'First name on ID',
-                  obsecureText: false,
-                  iconPath: "assets/icon/user.svg",
-                  isRequired: false,
-                  validator: Validators.name,
-                ),
-                const SizedBox(height: 8),
-                TextFieldWithoutHeader(
-                  controller: lastNameController,
-                  hintText: 'Last name on ID',
-                  obsecureText: false,
-                  validator: Validators.name,
+            TextFieldWithHeader(
+              controller: firstNameController,
+              headerText: 'Full Name',
+              hintText: 'First name on ID',
+              obsecureText: false,
+              iconPath: "assets/icon/user.svg",
+              isRequired: false,
+              validator: Validators.name,
+            ),
+            const SizedBox(height: 8),
+            TextFieldWithoutHeader(
+              controller: lastNameController,
+              hintText: 'Last name on ID',
+              obsecureText: false,
+              validator: Validators.name,
+            ),
+            const SizedBox(height: 6),
+            const Text(
+              "Make sure this matches the name on your government ID or passport.",
+              style: TextStyle(
+                color: AppColors.headingText,
+                fontSize: 12,
+                fontWeight: FontWeight.w400,
               ),
-               const SizedBox(height: 6),
-              const Text("Make sure this matches the name on your government ID or passport.",
-                style: TextStyle(
-                  color: AppColors.headingText,
-                  fontSize: 12,
-                  fontWeight: FontWeight.w400,
-                ),
-              ),
+            ),
             const SizedBox(height: 30),
             TextFieldWithHeader(
               controller: emailController,
@@ -133,7 +136,6 @@ class UpdateUserInfoScreenState extends State<UpdateUserInfoScreen> {
               iconPath: "assets/icon/email.svg",
               validator: Validators.email,
             ),
-
             const SizedBox(height: 30),
             TextFieldWithHeader(
               controller: phoneNumberController,
@@ -144,9 +146,6 @@ class UpdateUserInfoScreenState extends State<UpdateUserInfoScreen> {
               iconPath: "assets/icon/email.svg",
               validator: Validators.phone,
             ),
-           
-           
-          
             const SizedBox(
               height: 20,
             ),

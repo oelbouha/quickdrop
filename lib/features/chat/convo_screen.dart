@@ -9,7 +9,6 @@ class ConversationScreen extends StatefulWidget {
     required this.user,
   });
 
- 
   @override
   State<ConversationScreen> createState() => _ConversationScreenState();
 }
@@ -17,13 +16,13 @@ class ConversationScreen extends StatefulWidget {
 class _ConversationScreenState extends State<ConversationScreen> {
   TextEditingController messageController = TextEditingController();
 
- @override
+  @override
   void initState() {
     super.initState();
     // update the message seen status when the screen is opened
-    final chatId = getChatId(
-        FirebaseAuth.instance.currentUser!.uid, widget.user['uid']);
-      Provider.of<ChatProvider>(context, listen: false)
+    final chatId =
+        getChatId(FirebaseAuth.instance.currentUser!.uid, widget.user['uid']);
+    Provider.of<ChatProvider>(context, listen: false)
         .markMessageAsSeen(chatId)
         .then((_) {
       // print("Message seen status updated");
@@ -48,7 +47,8 @@ class _ConversationScreenState extends State<ConversationScreen> {
       messageController.clear();
     } catch (e) {
       // print("Error sending message: $e");
-      if (mounted) AppUtils.showError(context, "Failed to send message ${e.toString()}");
+      if (mounted)
+        AppUtils.showDialog(context, "Failed to send message ${e.toString()}", AppColors.error);
     }
   }
 
@@ -86,23 +86,23 @@ class _ConversationScreenState extends State<ConversationScreen> {
           // ],
           backgroundColor: AppColors.blue600,
         ),
-        body: Column(
-          children: [
-            Expanded(
+        body: Column(children: [
+          Expanded(
               child: Padding(
-                padding: const EdgeInsets.only(
-                  left: AppTheme.homeScreenPadding,
-                  right: AppTheme.homeScreenPadding,
-                  // top: 6.0,
-                ),
-                child: StreamBuilder(
-                  stream: chatProvider.getMessages(chatId),
+                  padding: const EdgeInsets.only(
+                    left: AppTheme.homeScreenPadding,
+                    right: AppTheme.homeScreenPadding,
+                    // top: 6.0,
+                  ),
+                  child: StreamBuilder(
+                    stream: chatProvider.getMessages(chatId),
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
                         // return const Center(child: CircularProgressIndicator());
                       }
                       if (snapshot.hasError) {
-                        return const Center(child: Text("Error loading messages"));
+                        return const Center(
+                            child: Text("Error loading messages"));
                       }
                       if (!snapshot.hasData || snapshot.data!.isEmpty) {
                         return const Center(child: Text("No messages yet"));
@@ -115,53 +115,61 @@ class _ConversationScreenState extends State<ConversationScreen> {
                           final message = messages[index];
                           final isMe = message.senderId ==
                               FirebaseAuth.instance.currentUser?.uid;
-                          return Column(
-                            children: [
-                              Align(
-                                alignment: isMe ? Alignment.centerRight : Alignment.centerLeft,
-                                child: Column(
+                          return Column(children: [
+                            Align(
+                              alignment: isMe
+                                  ? Alignment.centerRight
+                                  : Alignment.centerLeft,
+                              child: Column(
                                   mainAxisAlignment: MainAxisAlignment.end,
                                   crossAxisAlignment: CrossAxisAlignment.end,
-                                  children: [ 
+                                  children: [
                                     if (index == messages.length - 1) ...[
                                       const SizedBox(height: 25),
                                     ],
                                     Container(
-                                      margin:  EdgeInsets.only(
-                                          top: 0,
-                                          bottom: 5,
-                                          left: isMe ? 50 : 0,
-                                          right: isMe ? 0 : 50,
-                                        ),
+                                      margin: EdgeInsets.only(
+                                        top: 0,
+                                        bottom: 5,
+                                        left: isMe ? 50 : 0,
+                                        right: isMe ? 0 : 50,
+                                      ),
                                       padding: const EdgeInsets.all(10),
                                       decoration: BoxDecoration(
-                                        color: isMe ? AppColors.blue : AppColors.lessImportant,
+                                        color: isMe
+                                            ? AppColors.blue
+                                            : AppColors.lessImportant,
                                         borderRadius: BorderRadius.only(
                                           topLeft: const Radius.circular(20),
                                           topRight: const Radius.circular(20),
-                                          bottomLeft:
-                                              isMe ? const Radius.circular(20) : Radius.zero,
-                                          bottomRight:
-                                              isMe ? Radius.zero : const Radius.circular(20),
+                                          bottomLeft: isMe
+                                              ? const Radius.circular(20)
+                                              : Radius.zero,
+                                          bottomRight: isMe
+                                              ? Radius.zero
+                                              : const Radius.circular(20),
                                         ),
                                       ),
                                       child: Text(
                                         message.text,
                                         style: TextStyle(
-                                          color: isMe ? Colors.white : Colors.black),
-                                    ),    
-                                ),
-                               
-                                if (index == 0 && message.seen && isMe) ...[
-                                  const Text(
-                                    "Seen",
-                                    style: TextStyle(
-                                        color: AppColors.headingText, fontSize: 10, fontWeight: FontWeight.bold),
+                                            color: isMe
+                                                ? Colors.white
+                                                : Colors.black),
+                                      ),
+                                    ),
+                                    if (index == 0 && message.seen && isMe) ...[
+                                      const Text(
+                                        "Seen",
+                                        style: TextStyle(
+                                            color: AppColors.headingText,
+                                            fontSize: 10,
+                                            fontWeight: FontWeight.bold),
                                         textAlign: TextAlign.end,
-                                  )]
-                            ]
+                                      )
+                                    ]
+                                  ]),
                             ),
-                          ),
                             // const SizedBox(height: 5),
                             //   const Text(
                             //     "12:00 PM",
@@ -169,73 +177,67 @@ class _ConversationScreenState extends State<ConversationScreen> {
                             //         color: AppColors.lessImportant, fontSize: 10),
                             //   ),
                             // const SizedBox(height: 5),
-
                           ]);
                         },
                       );
                     },
-          ))
-          ),
+                  ))),
           Padding(
               padding: const EdgeInsets.all(8.0),
               child: Row(children: [
                 Expanded(
                     child: TextFormField(
-
-                      controller: messageController,
-                      onChanged: (text) {
-                        // Handle text input
-                        // print("Text input: $text");
-                      },
-                      style: const TextStyle(
-                        color: AppColors.headingText,
-                        fontSize: 14,
-                      ),
-                      decoration:  InputDecoration(
-                        
-                      suffixIcon: Padding (
-
+                  controller: messageController,
+                  onChanged: (text) {
+                    // Handle text input
+                    // print("Text input: $text");
+                  },
+                  style: const TextStyle(
+                    color: AppColors.headingText,
+                    fontSize: 14,
+                  ),
+                  decoration: InputDecoration(
+                    suffixIcon: Padding(
                         padding: const EdgeInsets.only(
                           right: 8.0,
                           top: 4.0,
                           bottom: 4.0,
                         ),
                         child: Container(
-                        decoration: BoxDecoration(
-                          color: AppColors.blue,
-                          borderRadius: BorderRadius.circular(30),
-                        ),
-                        child: IconButton(
-                        icon:  const CustomIcon(
-                          iconPath: "assets/icon/send.svg",
-                          color: AppColors.white,
-                          size: 30,
-                        ),
-                        onPressed: _sendMessage
-                      ))),
-                      filled: true,
-                      fillColor: AppColors.blue.withOpacity(0.2),
-                      hintText: 'Message...',
-                      border: const OutlineInputBorder(
-                        // borderSide: BorderSide.none, // Removes visible border
-                        borderRadius: BorderRadius.all(Radius.circular(
-                            AppTheme.chatInputRadius)), // Adds border radius
-                      ),
-                      enabledBorder:  OutlineInputBorder(
-                        borderSide:  BorderSide(color: AppColors.blue.withOpacity(0.1), width: 1.0),
-                        borderRadius: const BorderRadius.all(
-                            Radius.circular(AppTheme.chatInputRadius)),
-                      ),
-                      focusedBorder:  OutlineInputBorder(
-                        borderSide:  BorderSide(color: AppColors.blue.withOpacity(0.1), width: 1.0),
-                        borderRadius: const BorderRadius.all(
-                            Radius.circular(AppTheme.chatInputRadius)),
-                      ),
+                            decoration: BoxDecoration(
+                              color: AppColors.blue,
+                              borderRadius: BorderRadius.circular(30),
+                            ),
+                            child: IconButton(
+                                icon: const CustomIcon(
+                                  iconPath: "assets/icon/send.svg",
+                                  color: AppColors.white,
+                                  size: 30,
+                                ),
+                                onPressed: _sendMessage))),
+                    filled: true,
+                    fillColor: AppColors.blue.withOpacity(0.2),
+                    hintText: 'Message...',
+                    border: const OutlineInputBorder(
+                      // borderSide: BorderSide.none, // Removes visible border
+                      borderRadius: BorderRadius.all(Radius.circular(
+                          AppTheme.chatInputRadius)), // Adds border radius
                     ),
-                  )),
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                          color: AppColors.blue.withOpacity(0.1), width: 1.0),
+                      borderRadius: const BorderRadius.all(
+                          Radius.circular(AppTheme.chatInputRadius)),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                          color: AppColors.blue.withOpacity(0.1), width: 1.0),
+                      borderRadius: const BorderRadius.all(
+                          Radius.circular(AppTheme.chatInputRadius)),
+                    ),
+                  ),
+                )),
               ]))
-        ]
-        )
-      );
+        ]));
   }
 }

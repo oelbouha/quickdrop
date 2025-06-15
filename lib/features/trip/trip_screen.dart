@@ -30,12 +30,14 @@ class _TripScreenState extends State<TripScreen>
                 await Provider.of<DeliveryRequestProvider>(context,
                         listen: false)
                     .deleteRequestsByTripId(id);
-                AppUtils.showSuccess(context, 'Trip deleted succusfully!');
+                AppUtils.showDialog(
+                    context, 'Trip deleted succusfully!', AppColors.succes);
                 Provider.of<StatisticsProvider>(context, listen: false)
                     .decrementField(user!.uid, "pendingTrips");
               } catch (e) {
                 if (mounted) {
-                  AppUtils.showError(context, 'Failed to delete Trip: $e');
+                  AppUtils.showDialog(
+                      context, 'Failed to delete Trip: $e', AppColors.error);
                 }
               } finally {
                 if (mounted) Navigator.pop(context);
@@ -69,11 +71,11 @@ class _TripScreenState extends State<TripScreen>
           await Provider.of<UserProvider>(context, listen: false)
               .fetchUsersData(userIds);
         }
-
       } catch (e) {
-        if (mounted) AppUtils.showError(context, "Failed to fetch Shipments");
-      }
-      finally {
+        if (mounted)
+          AppUtils.showDialog(
+              context, "Failed to fetch Shipments", AppColors.error);
+      } finally {
         // Ensure the loading state is updated even if an error occurs
         if (mounted) {
           setState(() {
@@ -105,7 +107,11 @@ class _TripScreenState extends State<TripScreen>
         title: "Trips",
       ),
       body: _isLoading
-          ? const Center(child:  CircularProgressIndicator(color: AppColors.blue700,),)
+          ? const Center(
+              child: CircularProgressIndicator(
+                color: AppColors.blue700,
+              ),
+            )
           : Consumer<TripProvider>(builder: (context, provider, child) {
               final user = FirebaseAuth.instance.currentUser;
               if (user == null) {

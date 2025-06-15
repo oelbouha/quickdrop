@@ -43,23 +43,23 @@ class OngoingItemCardState extends State<OngoingItemCard> {
         await Provider.of<ShipmentProvider>(context, listen: false)
             .updateStatus(id, DeliveryStatus.completed);
         Provider.of<StatisticsProvider>(context, listen: false)
-              .incrementField(widget.item.userId, "completedShipments");
+            .incrementField(widget.item.userId, "completedShipments");
         Provider.of<StatisticsProvider>(context, listen: false)
-              .decrementField(widget.item.userId, "ongoingShipments");
+            .decrementField(widget.item.userId, "ongoingShipments");
 
         // print("shipment updated succsfully");
       }
       if (widget.item is Trip) {
         await Provider.of<TripProvider>(context, listen: false)
             .updateStatus(id, DeliveryStatus.completed);
-         Provider.of<StatisticsProvider>(context, listen: false)
-              .incrementField(widget.item.userId, "completedTrips");
         Provider.of<StatisticsProvider>(context, listen: false)
-              .decrementField(widget.item.userId, "ongoingTrips");
+            .incrementField(widget.item.userId, "completedTrips");
+        Provider.of<StatisticsProvider>(context, listen: false)
+            .decrementField(widget.item.userId, "ongoingTrips");
         // print("shipment updated succsfully");
       }
     } catch (e) {
-      if (mounted) AppUtils.showError(context, "Failed to update shipment");
+      if (mounted) AppUtils.showDialog(context, "Failed to update shipment", AppColors.error);
     }
   }
 
@@ -121,7 +121,6 @@ class OngoingItemCardState extends State<OngoingItemCard> {
                 padding: EdgeInsets.all(10),
                 decoration: BoxDecoration(
                   color: AppColors.contactBackground,
-                  
                   borderRadius: BorderRadius.circular(30),
                   boxShadow: [
                     BoxShadow(
@@ -132,21 +131,21 @@ class OngoingItemCardState extends State<OngoingItemCard> {
                   ],
                 ),
                 child: const CustomIcon(
-                iconPath: "assets/icon/chat-round-line.svg",
-                size: 24,
-                color: AppColors.blue,
-              ),
-              // label: const Text(
-              //   "Contact",
-              //   style: TextStyle(color: AppColors.blue, fontSize: 14),
-              // ),
-              // style: ElevatedButton.styleFrom(
-              //   elevation: 0,
-              //   backgroundColor: AppColors.contactBackground,
-              //   shape: RoundedRectangleBorder(
-              //     borderRadius:
-              //         BorderRadius.circular(30),
-              //   ),
+                  iconPath: "assets/icon/chat-round-line.svg",
+                  size: 24,
+                  color: AppColors.blue,
+                ),
+                // label: const Text(
+                //   "Contact",
+                //   style: TextStyle(color: AppColors.blue, fontSize: 14),
+                // ),
+                // style: ElevatedButton.styleFrom(
+                //   elevation: 0,
+                //   backgroundColor: AppColors.contactBackground,
+                //   shape: RoundedRectangleBorder(
+                //     borderRadius:
+                //         BorderRadius.circular(30),
+                //   ),
                 // padding: const EdgeInsets.symmetric(horizontal: 2, vertical: 2),
               ),
             ),
@@ -207,7 +206,7 @@ class OngoingItemCardState extends State<OngoingItemCard> {
             ),
             buildIconWithText(
                 iconPath: "weight.svg",
-                text: 'Weight ${widget.item.weight } kg'),
+                text: 'Weight ${widget.item.weight} kg'),
             const SizedBox(
               height: 6,
             ),

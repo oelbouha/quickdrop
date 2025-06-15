@@ -27,7 +27,8 @@ class _AddTripScreenState extends State<AddTripScreen> {
 
       final user = FirebaseAuth.instance.currentUser;
       if (user == null) {
-        AppUtils.showError(context, 'Please log in to list a shipment');
+        AppUtils.showDialog(
+            context, 'Please log in to list a shipment', AppColors.error);
         return;
       }
 
@@ -42,19 +43,22 @@ class _AddTripScreenState extends State<AddTripScreen> {
         await Provider.of<TripProvider>(context, listen: false).addTrip(trip);
         if (mounted) {
           Navigator.pop(context);
-          AppUtils.showSuccess(context, 'Trip listed Successfully!');
-           Provider.of<StatisticsProvider>(context, listen: false)
+          AppUtils.showDialog(
+              context, 'Trip listed Successfully!', AppColors.succes);
+          Provider.of<StatisticsProvider>(context, listen: false)
               .incrementField(user.uid, "pendingTrips");
         }
       } catch (e) {
-        if (mounted) AppUtils.showError(context, 'Failed to list Trip ${e}');
+        if (mounted)
+          AppUtils.showDialog(
+              context, 'Failed to list Trip ${e}', AppColors.error);
       } finally {
         setState(() {
           _isListButtonLoading = false;
         });
       }
     } else {
-      AppUtils.showError(context, 'some fields are empty');
+      AppUtils.showDialog(context, 'some fields are empty', AppColors.error);
     }
     setState(() {
       _isListButtonLoading = false;
@@ -171,8 +175,7 @@ class _AddTripScreenState extends State<AddTripScreen> {
             const SizedBox(
               height: 10,
             ),
-
-           TextFieldWithHeader(
+            TextFieldWithHeader(
               controller: priceController,
               hintText: "Available weight",
               headerText: "Available Weight",
@@ -193,7 +196,7 @@ class _AddTripScreenState extends State<AddTripScreen> {
         ));
   }
 
- Widget _buildPackageDestination() {
+  Widget _buildPackageDestination() {
     return Container(
         padding: const EdgeInsets.all(AppTheme.addShipmentPadding),
         decoration: BoxDecoration(
@@ -229,7 +232,6 @@ class _AddTripScreenState extends State<AddTripScreen> {
             const SizedBox(
               height: 10,
             ),
-           
             TextFieldWithHeader(
               controller: fromController,
               hintText: "Enter pickup location ",
@@ -239,7 +241,6 @@ class _AddTripScreenState extends State<AddTripScreen> {
             const SizedBox(
               height: 10,
             ),
-            
             TextFieldWithHeader(
               controller: toController,
               hintText: "Enter delivery location",
@@ -249,7 +250,6 @@ class _AddTripScreenState extends State<AddTripScreen> {
           ],
         ));
   }
-
 
   Widget _buildTimingDetails() {
     return Container(
@@ -287,9 +287,7 @@ class _AddTripScreenState extends State<AddTripScreen> {
             const SizedBox(
               height: 10,
             ),
-            
             TextWithRequiredIcon(text: "Preferred Pickup Time"),
-
             DateTextField(
               controller: dateController,
               backgroundColor: AppColors.cardBackground,
@@ -300,6 +298,4 @@ class _AddTripScreenState extends State<AddTripScreen> {
           ],
         ));
   }
-
-
 }

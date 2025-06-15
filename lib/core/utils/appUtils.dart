@@ -1,21 +1,21 @@
-
 import 'package:quickdrop_app/core/utils/imports.dart';
 
 class AppUtils {
-  static void showLoading(BuildContext context) {
-    showDialog(
-        context: context,
-        barrierDismissible: false,
-        builder: (context) {
-          return const Center(
-              child: CircularProgressIndicator(
-            strokeWidth: 2,
-            color: Colors.blue,
-          ));
-        });
-  }
+  // static void showLoading(BuildContext context) {
+  //   showDialog(
+  //       context: context,
+  //       barrierDismissible: false,
+  //       builder: (context) {
+  //         return const Center(
+  //             child: CircularProgressIndicator(
+  //           strokeWidth: 2,
+  //           color: Colors.blue,
+  //         ));
+  //       });
+  // }
 
- static void showError(BuildContext context, String message) {
+  static void showDialog(
+      BuildContext context, String message, Color backgroundColor) {
     // Clear any existing SnackBar
     ScaffoldMessenger.of(context).removeCurrentSnackBar();
 
@@ -36,100 +36,48 @@ class AppUtils {
                 message,
                 style: const TextStyle(
                   color: Colors.white,
-                  fontSize: 16,
+                  fontSize: 14,
                   fontWeight: FontWeight.w500,
                 ),
+                maxLines: 3,
+                overflow: TextOverflow.ellipsis,
+                softWrap: true,
               ),
+            ),
+            IconButton(
+              icon: const Icon(
+                Icons.close,
+                color: Colors.white,
+                size: 20,
+              ),
+              onPressed: () {
+                ScaffoldMessenger.of(context).hideCurrentSnackBar();
+              },
+              padding: EdgeInsets.zero,
+              constraints: const BoxConstraints(),
             ),
           ],
         ),
-        backgroundColor: AppColors.error,
-        behavior: SnackBarBehavior.floating, // Allows custom positioning
-        margin: const EdgeInsets.only(
-          top: 60,
-          left: 16,
-          right: 16,
-          bottom: 16
-        ), // Position at top with margins
-        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 12),
-        duration: const Duration(seconds: 3), // Auto-dismiss after 3 seconds
+        backgroundColor: backgroundColor,
+        behavior: SnackBarBehavior.floating,
+        margin: const EdgeInsets.only(top: 60, left: 16, right: 16, bottom: 16),
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 10),
+        duration: const Duration(seconds: 5),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12),
         ),
-        elevation: 1, // Adds shadow
-        action: SnackBarAction(
-          label: '',
-          onPressed: () {
-            // Dismiss when close button is pressed
-            ScaffoldMessenger.of(context).hideCurrentSnackBar();
-          },
-          textColor: Colors.white,
-        ),
+        elevation: 1,
+        // Remove the SnackBarAction as it's causing layout issues
       ),
     );
   }
-
-static void showSuccess(BuildContext context, String message) {
-    // Clear any existing SnackBar
-    ScaffoldMessenger.of(context).removeCurrentSnackBar();
-
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Row(
-          children: [
-            // Success icon
-            const Icon(
-              Icons.check_circle_outline,
-              color: Colors.white,
-              size: 24,
-            ),
-            const SizedBox(width: 12),
-            // Message
-            Expanded(
-              child: Text(
-                message,
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 16,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-            ),
-          ],
-        ),
-        backgroundColor: AppColors.succes,
-        behavior: SnackBarBehavior.floating, // Allows custom positioning
-        margin: const EdgeInsets.only(
-          top: 60,
-          left: 16,
-          right: 16,
-          bottom: 16
-        ), // Position at top with margins
-        // padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 12),
-        duration: const Duration(seconds: 4), // Auto-dismiss after 3 seconds
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
-        elevation: 1, // Adds shadow
-        action: SnackBarAction(
-          label: '',
-          onPressed: () {
-            // Dismiss when close button is pressed
-            ScaffoldMessenger.of(context).hideCurrentSnackBar();
-          },
-          textColor: Colors.white,
-        ),
-      ),
-    );
-  }
-
 }
 
-
-
-
 Widget Message(BuildContext context, String message) {
-  return Text(message, style: TextStyle(color: AppColors.headingText),);
+  return Text(
+    message,
+    style: TextStyle(color: AppColors.headingText),
+  );
 }
 
 String truncateText(String text, {int maxLength = 10}) {
@@ -161,4 +109,3 @@ Widget buildIconWithText({
     ],
   );
 }
-
