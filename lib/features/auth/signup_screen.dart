@@ -205,14 +205,9 @@ class _SingupPageState extends State<SignUpScreen> {
               validator: Validators.name,
             ),
             const SizedBox(height: 6),
-            const Text(
-              "Make sure this matches the name on your government ID or passport.",
-              style: TextStyle(
-                color: AppColors.headingText,
-                fontSize: 12,
-                fontWeight: FontWeight.w400,
-              ),
-            ),
+            
+
+            TipWidget(message: "Make sure this matches the name on your government ID or passport."),
             const SizedBox(height: 15),
             TextFieldWithHeader(
               controller: birthdayController,
@@ -225,14 +220,8 @@ class _SingupPageState extends State<SignUpScreen> {
               validator: Validators.notEmpty,
             ),
             const SizedBox(height: 8),
-            const Text(
-              "To Sign up, you must be at least 18 years old. other peaaple  who use quickdrop won't see your birthday.",
-              style: TextStyle(
-                color: AppColors.headingText,
-                fontSize: 12,
-                fontWeight: FontWeight.w400,
-              ),
-            ),
+
+            TipWidget(message: "To Sign up, you must be at least 18 years old. other peaaple  who use quickdrop won't see your birthday.",),
             const SizedBox(height: 15),
             TextFieldWithHeader(
               controller: emailController,
