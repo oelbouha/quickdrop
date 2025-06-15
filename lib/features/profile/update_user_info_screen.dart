@@ -118,14 +118,7 @@ class UpdateUserInfoScreenState extends State<UpdateUserInfoScreen> {
               validator: Validators.name,
             ),
             const SizedBox(height: 6),
-            const Text(
-              "Make sure this matches the name on your government ID or passport.",
-              style: TextStyle(
-                color: AppColors.headingText,
-                fontSize: 12,
-                fontWeight: FontWeight.w400,
-              ),
-            ),
+            TipWidget(message: "Make sure this matches the name on your government ID or passport."),
             const SizedBox(height: 30),
             TextFieldWithHeader(
               controller: emailController,
