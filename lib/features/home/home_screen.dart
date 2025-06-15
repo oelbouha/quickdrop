@@ -4,7 +4,6 @@ import 'package:quickdrop_app/features/profile/profile_screen.dart';
 import 'package:quickdrop_app/core/widgets/app_header.dart';
 import 'package:quickdrop_app/core/widgets/home_page_skeleton.dart';
 
-
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
 
@@ -56,7 +55,7 @@ class _HomeScreenState extends State<HomeScreen> {
             .fetchUsersData(tripUserIds);
       } catch (e) {
         if (mounted) {
-          AppUtils.showError(context, 'Error fetching shipments: $e');
+          AppUtils.showDialog(context, 'Error fetching shipments: $e', AppColors.error);
         }
       } finally {
         setState(() {
@@ -69,67 +68,73 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return AnnotatedRegion<SystemUiOverlayStyle>(
-    value: SystemUiOverlayStyle.dark, 
-    child:Scaffold(
-      body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              AppColors.backgroundStart,
-              AppColors.backgroundMiddle,
-              AppColors.backgroundEnd,
-            ],
-            stops: [0.0, 0.5, 1.0],
-          ),
-        ),
-        child: SafeArea( child:_isLoading ? const HomePageSkeleton()
-             : Column(
-              children: [
-                // App Bar
-                Container(
-                  // color: Colors.white.withOpacity(0.8),
-                  child: Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: _buildAppBar(),
-                  ),
-                ),
-                Expanded(
-                  child: SingleChildScrollView(
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        const SizedBox(height: 24),
-                        _buildHeroSection(),
-                        const SizedBox(height: 32),
-                        _buildValuePropsRow(),
-                        const SizedBox(height: 32),
-                        _buildOurServices(),
-                        // const SizedBox(height: 32),
-                        // _buildToggleButtons(),
-                        const SizedBox(height: 24),
-                        _buildListingsHeader(),
-                        const SizedBox(height: 16),
-                        Consumer3<ShipmentProvider, TripProvider, UserProvider>(
-                          builder: (context, shipmentProvider, tripProvider, userProvider, child) {
-                            return IndexedStack(
-                              index: selectedIndex,
-                              children: [
-                                _buildShipmentListings(shipmentProvider.activeShipments),
-                                _buildTripListings(tripProvider.activeTrips),
-                              ],
-                            );
-                          }
-                        ),
-                        const SizedBox(height: 100), // Extra space for FAB
-                      ],
-                    ),
-                  ),
-                ),
+      value: SystemUiOverlayStyle.dark,
+      child: Scaffold(
+        body: Container(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                AppColors.backgroundStart,
+                AppColors.backgroundMiddle,
+                AppColors.backgroundEnd,
               ],
+              stops: [0.0, 0.5, 1.0],
             ),
+          ),
+          child: SafeArea(
+            child: _isLoading
+                ? const HomePageSkeleton()
+                : Column(
+                    children: [
+                      // App Bar
+                      Container(
+                        // color: Colors.white.withOpacity(0.8),
+                        child: Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: _buildAppBar(),
+                        ),
+                      ),
+                      Expanded(
+                        child: SingleChildScrollView(
+                          padding: const EdgeInsets.symmetric(horizontal: 20),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              const SizedBox(height: 24),
+                              _buildHeroSection(),
+                              const SizedBox(height: 32),
+                              _buildValuePropsRow(),
+                              const SizedBox(height: 32),
+                              _buildOurServices(),
+                              // const SizedBox(height: 32),
+                              // _buildToggleButtons(),
+                              const SizedBox(height: 24),
+                              _buildListingsHeader(),
+                              const SizedBox(height: 16),
+                              Consumer3<ShipmentProvider, TripProvider,
+                                      UserProvider>(
+                                  builder: (context, shipmentProvider,
+                                      tripProvider, userProvider, child) {
+                                return IndexedStack(
+                                  index: selectedIndex,
+                                  children: [
+                                    _buildShipmentListings(
+                                        shipmentProvider.activeShipments),
+                                    _buildTripListings(
+                                        tripProvider.activeTrips),
+                                  ],
+                                );
+                              }),
+                              const SizedBox(
+                                  height: 100), // Extra space for FAB
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
           ),
         ),
       ),
@@ -208,7 +213,7 @@ class _HomeScreenState extends State<HomeScreen> {
               style: TextStyle(
                 color: AppColors.textMuted,
                 fontSize: 16,
-                                  fontWeight: FontWeight.w500,
+                fontWeight: FontWeight.w500,
               ),
             ),
           ],
@@ -305,15 +310,11 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _buildOurServiceCard(String title, String description, String iconPath, List<Color> gradientColors) {
+  Widget _buildOurServiceCard(String title, String description, String iconPath,
+      List<Color> gradientColors) {
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.only(
-        left: 12,
-        right: 12,
-        top: 20,
-        bottom: 20
-      ),
+      padding: const EdgeInsets.only(left: 12, right: 12, top: 20, bottom: 20),
       decoration: BoxDecoration(
         gradient: LinearGradient(
           begin: Alignment.topLeft,
@@ -475,113 +476,111 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-
-Widget _buildListingsHeader() {
-  return Row(
-    children: [
-      Text(
-        "Recent ${selectedIndex == 0 ? 'Shipments' : 'Trips'}",
-        style: const TextStyle(
-          color: AppColors.textPrimary,
-          fontSize: 14,
-          fontWeight: FontWeight.bold,
+  Widget _buildListingsHeader() {
+    return Row(
+      children: [
+        Text(
+          "Recent ${selectedIndex == 0 ? 'Shipments' : 'Trips'}",
+          style: const TextStyle(
+            color: AppColors.textPrimary,
+            fontSize: 14,
+            fontWeight: FontWeight.bold,
+          ),
         ),
-      ),
-      const Spacer(),
-      _showPopUpMenu(),
-    ],
-  );
-} 
+        const Spacer(),
+        _showPopUpMenu(),
+      ],
+    );
+  }
 
   Widget _showPopUpMenu() {
-  return  Theme(
-    data: Theme.of(context).copyWith(
-      popupMenuTheme: PopupMenuThemeData(
-        color: AppColors.white, 
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12), 
-        ),
-      ),
-    ),
-    child: PopupMenuButton<int>(
-      onSelected: (value) {
-        setState(() {
-          selectedIndex = value;
-        });
-      },
-    itemBuilder: (BuildContext context) => <PopupMenuEntry<int>>[
-      
-      const PopupMenuItem<int>(
-        value: 0,
-        child: Row(
-          children: [
-            CustomIcon(
-              iconPath: "assets/icon/package.svg",
-              size: 20,
-              color: AppColors.blue600,
+    return Theme(
+        data: Theme.of(context).copyWith(
+          popupMenuTheme: PopupMenuThemeData(
+            color: AppColors.white,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
             ),
-            SizedBox(width: 8),
-            Text(
-              'Shipments',
-              style: TextStyle(
-                color: AppColors.textPrimary,
-                fontSize: 14,
-                fontWeight: FontWeight.w600,
+          ),
+        ),
+        child: PopupMenuButton<int>(
+          onSelected: (value) {
+            setState(() {
+              selectedIndex = value;
+            });
+          },
+          itemBuilder: (BuildContext context) => <PopupMenuEntry<int>>[
+            const PopupMenuItem<int>(
+              value: 0,
+              child: Row(
+                children: [
+                  CustomIcon(
+                    iconPath: "assets/icon/package.svg",
+                    size: 20,
+                    color: AppColors.blue600,
+                  ),
+                  SizedBox(width: 8),
+                  Text(
+                    'Shipments',
+                    style: TextStyle(
+                      color: AppColors.textPrimary,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const PopupMenuItem<int>(
+              value: 1,
+              child: Row(
+                children: [
+                  CustomIcon(
+                    iconPath: "assets/icon/car.svg",
+                    size: 20,
+                    color: AppColors.blue600,
+                  ),
+                  SizedBox(width: 8),
+                  Text(
+                    'Trips',
+                    style: TextStyle(
+                      color: AppColors.textPrimary,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ],
               ),
             ),
           ],
-        ),
-      ),
-      const PopupMenuItem<int>(
-        value: 1,
-        child: Row(
-          children: [
-            CustomIcon(
-              iconPath: "assets/icon/car.svg",
-              size: 20,
-              color: AppColors.blue600,
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+            decoration: BoxDecoration(
+              color: AppColors.hoverBlue50,
+              borderRadius: BorderRadius.circular(12),
             ),
-            SizedBox(width: 8),
-            Text(
-              'Trips',
-              style: TextStyle(
-                color: AppColors.textPrimary,
-                fontSize: 14,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-          ],
-        ),
-      ),
-    ],
-    child: Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-      decoration: BoxDecoration(
-        color: AppColors.hoverBlue50,
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: const Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(
-            Icons.tune,
-            color: AppColors.blue600,
-            size: 16,
-          ),
-          SizedBox(width: 4),
-          Text(
-            "Filter",
-            style: TextStyle(
-              color: AppColors.blue600,
-              fontSize: 14,
-              fontWeight: FontWeight.w600,
+            child: const Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(
+                  Icons.tune,
+                  color: AppColors.blue600,
+                  size: 16,
+                ),
+                SizedBox(width: 4),
+                Text(
+                  "Filter",
+                  style: TextStyle(
+                    color: AppColors.blue600,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ],
             ),
           ),
-        ],
-      ),
-    ),
-  ));
-}
+        ));
+  }
 
   Widget _buildAppBar() {
     return Row(
@@ -628,11 +627,11 @@ Widget _buildListingsHeader() {
         ),
         child: Stack(
           children: [
-              CustomIcon(
-                  iconPath: icon,
-                  color: AppColors.textSecondary,
-                  size: 24,
-                ),
+            CustomIcon(
+              iconPath: icon,
+              color: AppColors.textSecondary,
+              size: 24,
+            ),
             if (hasNotification)
               Positioned(
                 right: 0,
@@ -652,7 +651,6 @@ Widget _buildListingsHeader() {
     );
   }
 
-  
   Widget _buildRequesBody() {
     return const Padding(
       padding: EdgeInsets.all(24.0),
@@ -733,14 +731,14 @@ Widget _buildListingsHeader() {
                   return Column(
                     children: [
                       ShipmentCard(
-                        shipment: trip, 
+                        shipment: trip,
                         userData: userData,
                         onPressed: () {
-                        // context.push(
-                        //     '/trip-details?tripId=${trip.id}&userId=${trip.userId}');
-                      },
-                    ),
-                      const SizedBox(height: 16), 
+                          // context.push(
+                          //     '/trip-details?tripId=${trip.id}&userId=${trip.userId}');
+                        },
+                      ),
+                      const SizedBox(height: 16),
                     ],
                   );
                 },

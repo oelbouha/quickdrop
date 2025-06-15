@@ -55,10 +55,10 @@ class _LoginPageState extends State<LoginPage> {
     // bool userExist = await doesUserExist(user.uid);
     final userProvider = Provider.of<UserProvider>(context, listen: false);
     // if (userExist == false) {
-      // userProvider.setUser(user);
-      // userProvider.saveUserToFirestore(user);
+    // userProvider.setUser(user);
+    // userProvider.saveUserToFirestore(user);
     // } else {
-      await userProvider.fetchUser(user.uid);
+    await userProvider.fetchUser(user.uid);
     // }
   }
 
@@ -85,7 +85,7 @@ class _LoginPageState extends State<LoginPage> {
 
       GoogleSignInAccount? googleUser = await googleSignIn.signIn();
       if (googleUser == null) {
-        AppUtils.showError(context, 'Google Sign-In failed');
+        AppUtils.showDialog(context, 'Google Sign-In failed', AppColors.error);
         return;
       }
 
@@ -107,17 +107,17 @@ class _LoginPageState extends State<LoginPage> {
         }
       } catch (e) {
         if (mounted) {
-          AppUtils.showError(context, "failed to log in user $e");
+          AppUtils.showDialog(context, "failed to log in user $e", AppColors.error);
           return;
         }
       }
     } on FirebaseAuthException catch (e) {
       if (mounted) {
-        AppUtils.showError(context, 'Google Sign-In failed: ${e.message}');
+        AppUtils.showDialog(context, 'Google Sign-In failed: ${e.message}', AppColors.error);
       }
     } catch (e) {
       if (mounted) {
-        AppUtils.showError(context, 'An unexpected error occurred: $e');
+        AppUtils.showDialog(context, 'An unexpected error occurred: $e', AppColors.error);
       }
     } finally {
       setState(() {
@@ -131,7 +131,6 @@ class _LoginPageState extends State<LoginPage> {
 
     // Validate the form
     if (_formKey.currentState!.validate()) {
-     
       setState(() => _isEmailLoading = true);
       try {
         final email = emailController.text.trim();
@@ -151,11 +150,10 @@ class _LoginPageState extends State<LoginPage> {
           if (mounted) context.go('/home');
         } catch (e) {
           if (mounted) {
-            AppUtils.showError(context, "failed to log in user $e");
+            AppUtils.showDialog(context, "failed to log in user $e", AppColors.error);
             return;
           }
         }
-
       } on FirebaseAuthException catch (e) {
         String errorMessage;
         switch (e.code) {
@@ -174,41 +172,39 @@ class _LoginPageState extends State<LoginPage> {
           default:
             errorMessage = e.message ?? 'An error occurred during login.';
         }
-        AppUtils.showError(context, errorMessage);
+        AppUtils.showDialog(context, errorMessage, AppColors.error);
       } finally {
         setState(() => _isEmailLoading = false);
       }
     }
   }
 
+  Future<void> saveCredentials(String email, String password) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('email', email);
+    await prefs.setString('password', password);
+  }
 
-Future<void> saveCredentials(String email, String password) async {
-  final prefs = await SharedPreferences.getInstance();
-  await prefs.setString('email', email);
-  await prefs.setString('password', password);
-}
+  Future<Map<String, String>> getSavedCredentials() async {
+    final prefs = await SharedPreferences.getInstance();
+    final email = prefs.getString('email') ?? '';
+    final password = prefs.getString('password') ?? '';
+    return {'email': email, 'password': password};
+  }
 
-Future<Map<String, String>> getSavedCredentials() async {
-  final prefs = await SharedPreferences.getInstance();
-  final email = prefs.getString('email') ?? '';
-  final password = prefs.getString('password') ?? '';
-  return {'email': email, 'password': password};
-}
+  @override
+  void initState() {
+    super.initState();
+    _loadSavedCredentials();
+  }
 
-@override
-void initState() {
-  super.initState();
-  _loadSavedCredentials();
-}
-
-void _loadSavedCredentials() async {
-  final creds = await getSavedCredentials();
-  setState(() {
-    emailController.text = creds['email']!;
-    passwordController.text = creds['password']!;
-  });
-}
-
+  void _loadSavedCredentials() async {
+    final creds = await getSavedCredentials();
+    setState(() {
+      emailController.text = creds['email']!;
+      passwordController.text = creds['password']!;
+    });
+  }
 
   @override
   void dispose() {
@@ -220,33 +216,34 @@ void _loadSavedCredentials() async {
   @override
   Widget build(BuildContext context) {
     return AnnotatedRegion<SystemUiOverlayStyle>(
-    value: SystemUiOverlayStyle.dark, 
-    child:Scaffold(
-        backgroundColor: AppColors.background,
-        resizeToAvoidBottomInset: false,
-        body: Container(
-            padding: const EdgeInsets.all(AppTheme.homeScreenPadding),
-              decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: [
-                  AppColors.backgroundStart,
-                  AppColors.backgroundMiddle,
-                  AppColors.backgroundEnd,
-                ],
-                stops: [0.0, 0.5, 1.0],
-              ),
-            ),
-            child: Center(
-                child: Column(
-              children: [
-                Expanded(
-                  child: Center(
-                      child: SingleChildScrollView(child: _buildLogInScreen())),
+        value: SystemUiOverlayStyle.dark,
+        child: Scaffold(
+            backgroundColor: AppColors.background,
+            resizeToAvoidBottomInset: false,
+            body: Container(
+                padding: const EdgeInsets.all(AppTheme.homeScreenPadding),
+                decoration: const BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [
+                      AppColors.backgroundStart,
+                      AppColors.backgroundMiddle,
+                      AppColors.backgroundEnd,
+                    ],
+                    stops: [0.0, 0.5, 1.0],
+                  ),
                 ),
-              ],
-            )))));
+                child: Center(
+                    child: Column(
+                  children: [
+                    Expanded(
+                      child: Center(
+                          child: SingleChildScrollView(
+                              child: _buildLogInScreen())),
+                    ),
+                  ],
+                )))));
   }
 
   Widget _buildLogInScreen() {
@@ -261,12 +258,10 @@ void _loadSavedCredentials() async {
               style: TextStyle(
                   color: AppColors.dark,
                   fontSize: 24,
-                  fontWeight: FontWeight.w600
-              ),
+                  fontWeight: FontWeight.w600),
               textAlign: TextAlign.start,
             ),
-            
-             const SizedBox(
+            const SizedBox(
               height: 25,
             ),
             AuthButton(
@@ -276,7 +271,7 @@ void _loadSavedCredentials() async {
               isLoading: _isGoogleLoading,
               backgroundColor: AppColors.background,
             ),
-             const SizedBox(
+            const SizedBox(
               height: 15,
             ),
             const Row(
@@ -292,8 +287,7 @@ void _loadSavedCredentials() async {
                 ),
                 Text(
                   "or",
-                  style:
-                      TextStyle(color: AppColors.shipmentText, fontSize: 12),
+                  style: TextStyle(color: AppColors.shipmentText, fontSize: 12),
                 ),
                 SizedBox(
                   width: 12,
@@ -311,30 +305,29 @@ void _loadSavedCredentials() async {
             ),
             const Text(
               "Email",
-              style:  TextStyle(
+              style: TextStyle(
                 color: AppColors.shipmentText,
                 fontSize: 16,
                 fontWeight: FontWeight.w600,
               ),
               textAlign: TextAlign.start,
             ),
-              IconTextField(
-                controller: emailController,
-                keyboardType: TextInputType.emailAddress,
-                hintText: 'example@gmail.com',
-                obsecureText: false,
-                iconPath: "assets/icon/email.svg",
-                validator: Validators.email,
+            IconTextField(
+              controller: emailController,
+              keyboardType: TextInputType.emailAddress,
+              hintText: 'example@gmail.com',
+              obsecureText: false,
+              iconPath: "assets/icon/email.svg",
+              validator: Validators.email,
             ),
-
             const SizedBox(height: 15),
             const Text(
               "Password",
-               style: const TextStyle(
-                  color: AppColors.shipmentText,
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                ),
+              style: const TextStyle(
+                color: AppColors.shipmentText,
+                fontSize: 16,
+                fontWeight: FontWeight.w600,
+              ),
               textAlign: TextAlign.start,
             ),
             PasswordTextfield(
@@ -352,13 +345,11 @@ void _loadSavedCredentials() async {
             const SizedBox(
               height: 10,
             ),
-             textWithLink(
-              text: "Don't have an account? ", 
-              textLink: "sign up",
-              navigatTo: '/signup',
-              context: context
-            ),
-           
+            textWithLink(
+                text: "Don't have an account? ",
+                textLink: "sign up",
+                navigatTo: '/signup',
+                context: context),
           ],
         ));
   }

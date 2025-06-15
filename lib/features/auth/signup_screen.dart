@@ -35,28 +35,27 @@ class _SingupPageState extends State<SignUpScreen> {
   bool _isEmailLoading = false;
 
   Future<void> _createStatsIfNewUser(String userId) async {
-      try {
-        bool userExist = await doesUserExist(userId);
-        if (userExist == false) {
-          // print("user does not exist");
-          StatisticsModel stats = StatisticsModel(
-              pendingShipments: 0,
-              ongoingShipments: 0,
-              completedShipments: 0,
-              reviewCount: 0,
-              id: userId,
-              userId: userId);
-            if (!mounted) return;
-            Provider.of<StatisticsProvider>(context, listen: false)
-                .addStatictics(userId, stats);
+    try {
+      bool userExist = await doesUserExist(userId);
+      if (userExist == false) {
+        // print("user does not exist");
+        StatisticsModel stats = StatisticsModel(
+            pendingShipments: 0,
+            ongoingShipments: 0,
+            completedShipments: 0,
+            reviewCount: 0,
+            id: userId,
+            userId: userId);
+        if (!mounted) return;
+        Provider.of<StatisticsProvider>(context, listen: false)
+            .addStatictics(userId, stats);
       }
-      } catch (e) {
-        if (mounted) {
-          AppUtils.showError(context, "failed to create statistics");
-        }
-        rethrow;
+    } catch (e) {
+      if (mounted) {
+        AppUtils.showDialog(context, "failed to create statistics", AppColors.error);
       }
-    
+      rethrow;
+    }
   }
 
   Future<bool> doesUserExist(String uid) async {
@@ -99,19 +98,20 @@ class _SingupPageState extends State<SignUpScreen> {
         );
         try {
           await _createStatsIfNewUser(userCredential.user!.uid);
-          
-          if (!mounted) return; 
-          
-          final userProvider = Provider.of<UserProvider>(context, listen: false);
+
+          if (!mounted) return;
+
+          final userProvider =
+              Provider.of<UserProvider>(context, listen: false);
           userProvider.setUser(user);
-          await userProvider.saveUserToFirestore(user); 
-          
+          await userProvider.saveUserToFirestore(user);
+
           if (mounted) {
             context.go('/home');
           }
         } catch (e) {
           if (mounted) {
-            AppUtils.showError(context, "failed to signup user $e");
+            AppUtils.showDialog(context, "failed to signup user $e", AppColors.error);
             return;
           }
         }
@@ -124,7 +124,7 @@ class _SingupPageState extends State<SignUpScreen> {
           default:
             errorMessage = e.message ?? 'An error occurred during singup.';
         }
-        if (mounted) AppUtils.showError(context, errorMessage);
+        if (mounted) AppUtils.showDialog(context, errorMessage, AppColors.error);
       } finally {
         setState(() {
           _isEmailLoading = false;

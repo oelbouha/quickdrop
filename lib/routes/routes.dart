@@ -53,7 +53,7 @@ class AppRouter {
           '/privacy-policy',
           '/terms-of-service',
         };
-        // return '/verify-phone';
+        return '/add-shipment';
         // Debugging prints
         // print("isLoggingIn: $isLoggingIn");
         // print("currentPath: $currentPath");

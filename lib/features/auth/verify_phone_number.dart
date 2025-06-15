@@ -49,7 +49,7 @@ class _VerifyPhoneScreenState extends State<VerifyPhoneScreen> {
 
       await FirebaseAuth.instance.signInWithCredential(credential);
 
-      AppUtils.showError(context, widget.phoneNumber!); // Can rename later
+      AppUtils.showDialog(context, widget.phoneNumber!, AppColors.error); // Can rename later
       context.pushNamed(
         'create-account',
         queryParameters: {'phoneNumber': widget.phoneNumber},

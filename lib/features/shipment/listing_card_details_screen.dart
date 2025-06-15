@@ -23,11 +23,11 @@ class _ListingCardDetailsState extends State<ListingCardDetails> {
     if (_isLoading) return;
 
     if (trip == null) {
-      AppUtils.showError(context, 'Please select a trip');
+      AppUtils.showDialog(context, 'Please select a trip', AppColors.error);
       return;
     }
     if (trip.id == null) {
-      AppUtils.showError(context, 'Selected trip is invalid');
+      AppUtils.showDialog(context, 'Selected trip is invalid', AppColors.error);
       return;
     }
     if (_formKey.currentState!.validate()) {
@@ -37,7 +37,8 @@ class _ListingCardDetailsState extends State<ListingCardDetails> {
         });
         final user = FirebaseAuth.instance.currentUser;
         if (user == null) {
-          AppUtils.showError(context, 'Please log in to list a shipment');
+          AppUtils.showDialog(
+              context, 'Please log in to list a shipment', AppColors.error);
           return;
         }
         final DeliveryRequest request = DeliveryRequest(
@@ -58,12 +59,14 @@ class _ListingCardDetailsState extends State<ListingCardDetails> {
           setState(() {
             _selectedTrip = null;
           });
-          AppUtils.showSuccess(context, 'Request sent successfully');
+          AppUtils.showDialog(
+              context, 'Request sent successfully', AppColors.succes);
         }
       } catch (e) {
         if (mounted) {
           Navigator.pop(context);
-          AppUtils.showError(context, 'Failed to send request $e');
+          AppUtils.showDialog(
+              context, 'Failed to send request $e', AppColors.error);
         }
       } finally {
         setState(() {
@@ -78,55 +81,54 @@ class _ListingCardDetailsState extends State<ListingCardDetails> {
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
-      backgroundColor: AppColors.barColor,
-      title: const Text(
-        "Shipment Details",
-        style: TextStyle(
-            color: AppColors.white,
-            fontWeight: FontWeight.bold,
-            fontSize: 18),
-      ),
-      ),
-     body: Stack(
-    children: [
-      SingleChildScrollView(
-        child: Container(
-          color: AppColors.background,
-          child: Column(
-            children: [
-              _displayImage(),
-              _buildUserProfile(),
-              _buildDescription(),
-              const SizedBox(height: 20),
-              _buildDetails(),
-              const SizedBox(height: 80), // space for bottom bar
-            ],
-          ),
+        backgroundColor: AppColors.barColor,
+        title: const Text(
+          "Shipment Details",
+          style: TextStyle(
+              color: AppColors.white,
+              fontWeight: FontWeight.bold,
+              fontSize: 18),
         ),
       ),
-      Positioned(
-        left: 0,
-        right: 0,
-        bottom: 0,
-        child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-          decoration: BoxDecoration(
-            color: Colors.white,
-             border: Border(
-              top: BorderSide(
-                color: AppColors.lessImportant,
-                width: 1,
+      body: Stack(
+        children: [
+          SingleChildScrollView(
+            child: Container(
+              color: AppColors.background,
+              child: Column(
+                children: [
+                  _displayImage(),
+                  _buildUserProfile(),
+                  _buildDescription(),
+                  const SizedBox(height: 20),
+                  _buildDetails(),
+                  const SizedBox(height: 80), // space for bottom bar
+                ],
               ),
             ),
           ),
-          child: _buildPriceAndAction()
-        ),
+          Positioned(
+            left: 0,
+            right: 0,
+            bottom: 0,
+            child: Container(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  border: Border(
+                    top: BorderSide(
+                      color: AppColors.lessImportant,
+                      width: 1,
+                    ),
+                  ),
+                ),
+                child: _buildPriceAndAction()),
+          ),
+        ],
       ),
-    ],
-  ),
     );
   }
-
 
   Widget _buildPriceAndAction() {
     return Row(
@@ -207,8 +209,6 @@ class _ListingCardDetailsState extends State<ListingCardDetails> {
     );
   }
 
-
-
   Widget _displayImage() {
     return Row(
       children: [
@@ -268,7 +268,8 @@ class _ListingCardDetailsState extends State<ListingCardDetails> {
                   width: 10,
                 ),
                 Text("Destination",
-                    style: TextStyle(color: AppColors.headingText, fontSize: 20)),
+                    style:
+                        TextStyle(color: AppColors.headingText, fontSize: 20)),
               ],
             ),
             Row(
@@ -298,7 +299,8 @@ class _ListingCardDetailsState extends State<ListingCardDetails> {
                   width: 10,
                 ),
                 Text("Estimated Delivery",
-                    style: TextStyle(color: AppColors.headingText, fontSize: 20)),
+                    style:
+                        TextStyle(color: AppColors.headingText, fontSize: 20)),
               ],
             ),
             Row(
@@ -307,8 +309,8 @@ class _ListingCardDetailsState extends State<ListingCardDetails> {
                   width: 15,
                 ),
                 Text(widget.shipment.date,
-                    style:
-                        const TextStyle(color: AppColors.headingText, fontSize: 18)),
+                    style: const TextStyle(
+                        color: AppColors.headingText, fontSize: 18)),
               ],
             ),
             const SizedBox(
@@ -325,7 +327,8 @@ class _ListingCardDetailsState extends State<ListingCardDetails> {
                   width: 10,
                 ),
                 Text("Weight",
-                    style: TextStyle(color: AppColors.headingText, fontSize: 20)),
+                    style:
+                        TextStyle(color: AppColors.headingText, fontSize: 20)),
               ],
             ),
             Row(
@@ -334,8 +337,8 @@ class _ListingCardDetailsState extends State<ListingCardDetails> {
                   width: 15,
                 ),
                 Text('${widget.shipment.weight} kg',
-                    style:
-                        const TextStyle(color: AppColors.headingText, fontSize: 18)),
+                    style: const TextStyle(
+                        color: AppColors.headingText, fontSize: 18)),
               ],
             ),
             const SizedBox(
@@ -352,7 +355,8 @@ class _ListingCardDetailsState extends State<ListingCardDetails> {
                   width: 10,
                 ),
                 Text("Quantity & Type",
-                    style: TextStyle(color: AppColors.headingText, fontSize: 20)),
+                    style:
+                        TextStyle(color: AppColors.headingText, fontSize: 20)),
               ],
             ),
             Row(
@@ -361,8 +365,8 @@ class _ListingCardDetailsState extends State<ListingCardDetails> {
                   width: 15,
                 ),
                 Text('${widget.shipment.weight} x ${widget.shipment.type}',
-                    style:
-                        const TextStyle(color: AppColors.headingText, fontSize: 18)),
+                    style: const TextStyle(
+                        color: AppColors.headingText, fontSize: 18)),
               ],
             ),
             const SizedBox(
@@ -544,7 +548,8 @@ class _ListingCardDetailsState extends State<ListingCardDetails> {
                             value: trip,
                             child: Text(
                               "${trip.from} to ${trip.to} - ${trip.date}",
-                              style: const TextStyle(color: AppColors.headingText),
+                              style:
+                                  const TextStyle(color: AppColors.headingText),
                             ),
                           );
                         }).toList(),
@@ -587,8 +592,10 @@ class _ListingCardDetailsState extends State<ListingCardDetails> {
                       if (_formKey.currentState!.validate()) {
                         _sendDeliveryRequest(_selectedTrip);
                       } else {
-                        AppUtils.showError(
-                            context, 'Please complete all required fields');
+                        AppUtils.showDialog(
+                            context,
+                            'Please complete all required fields',
+                            AppColors.error);
                       }
                     }),
                 const SizedBox(

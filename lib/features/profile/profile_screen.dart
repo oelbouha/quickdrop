@@ -26,14 +26,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 _isSignoutLoading = true;
               });
               try {
-                AppUtils.showLoading(context);
+                // AppUtils.showLoading(context);
                 await FirebaseAuth.instance.signOut();
                 if (mounted) {
                   Provider.of<UserProvider>(context, listen: false).clearUser();
                   context.go("/login");
                 }
               } on FirebaseException catch (e) {
-                AppUtils.showError(context, 'Error signing out: $e');
+                AppUtils.showDialog(context, 'Error signing out: $e', AppColors.error);
               } finally {
                 setState(() {
                   _isSignoutLoading = false;
@@ -123,7 +123,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
           hintText: "Payment methods",
           iconPath: "assets/icon/money.svg",
         ),
-        
         const SizedBox(height: AppTheme.cardPadding),
         const Text(
           "Resources",
@@ -199,7 +198,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               bottom: AppTheme.cardPadding,
             ),
             decoration: const BoxDecoration(
-              gradient:  LinearGradient(
+              gradient: LinearGradient(
                 colors: [AppColors.blueStart, AppColors.purpleEnd],
               ),
             ),
@@ -207,50 +206,53 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Stack(
-          children: [
-            Container(
-              width: 100,
-              height: 100,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(80),
-                border: Border.all(
-                  color: const Color.fromARGB(255, 255, 255, 255).withOpacity(0.3),
-                  width: 3,
-                ),
-              ),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(80),
-                child: Image.network(
-                  user?.photoUrl ?? AppTheme.defaultProfileImage,
-                  fit: BoxFit.cover,
-                  errorBuilder: (context, error, stackTrace) {
-                    return Container(
-                      color: const Color.fromARGB(255, 255, 255, 255).withOpacity(0.1),
-                      child: const Icon(
-                        Icons.person,
-                        color: AppColors.white,
-                        size: 50,
+                    children: [
+                      Container(
+                        width: 100,
+                        height: 100,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(80),
+                          border: Border.all(
+                            color: const Color.fromARGB(255, 255, 255, 255)
+                                .withOpacity(0.3),
+                            width: 3,
+                          ),
+                        ),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(80),
+                          child: Image.network(
+                            user?.photoUrl ?? AppTheme.defaultProfileImage,
+                            fit: BoxFit.cover,
+                            errorBuilder: (context, error, stackTrace) {
+                              return Container(
+                                color: const Color.fromARGB(255, 255, 255, 255)
+                                    .withOpacity(0.1),
+                                child: const Icon(
+                                  Icons.person,
+                                  color: AppColors.white,
+                                  size: 50,
+                                ),
+                              );
+                            },
+                          ),
+                        ),
                       ),
-                    );
-                  },
-                ),
-              ),
-            ),
-          ],
-        ),
+                    ],
+                  ),
                   const SizedBox(width: 15),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text(user?.displayName ?? 'Guest',
+                      Text(
+                        user?.displayName ?? 'Guest',
                         style: const TextStyle(
                             fontSize: 20,
                             fontWeight: FontWeight.bold,
                             color: AppColors.white),
                       ),
-                       Text(
-                       "Member since ${user?.createdAt!}",
+                      Text(
+                        "Member since ${user?.createdAt!}",
                         style: const TextStyle(
                             fontSize: 12, color: AppColors.lessImportant),
                       ),
@@ -258,7 +260,4 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ),
                 ])));
   }
-
-
-
 }

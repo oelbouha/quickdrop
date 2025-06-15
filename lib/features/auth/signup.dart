@@ -22,46 +22,45 @@ class _SignupState extends State<Signup> {
   bool _isGoogleLoading = false;
 
   void _signupUserWithEmail() async {
-  if (_isEmailLoading) return;
-  setState(() {
-    _isEmailLoading = true;
-  });
-
-  final phone = phoneNumberController.text.trim();
-  if (phone.isEmpty) {
-    AppUtils.showError(context, "Please enter your phone number");
+    if (_isEmailLoading) return;
     setState(() {
-      _isEmailLoading = false;
+      _isEmailLoading = true;
     });
-    return;
+
+    final phone = phoneNumberController.text.trim();
+    if (phone.isEmpty) {
+      AppUtils.showDialog(context, "Please enter your phone number", AppColors.error);
+      setState(() {
+        _isEmailLoading = false;
+      });
+      return;
+    }
+
+    await FirebaseAuth.instance.verifyPhoneNumber(
+      phoneNumber: phone,
+      verificationCompleted: (PhoneAuthCredential credential) async {
+        // Auto-retrieval or instant verification
+        await FirebaseAuth.instance.signInWithCredential(credential);
+      },
+      verificationFailed: (FirebaseAuthException e) {
+        setState(() => _isEmailLoading = false);
+        AppUtils.showDialog(context, 'Phone verification failed: ${e.message}', AppColors.error);
+      },
+      codeSent: (String verificationId, int? resendToken) {
+        setState(() => _isEmailLoading = false);
+        context.pushNamed(
+          'verify-number',
+          queryParameters: {
+            'phoneNumber': phone,
+            'verificationId': verificationId,
+          },
+        );
+      },
+      codeAutoRetrievalTimeout: (String verificationId) {
+        // Optionally handle timeout
+      },
+    );
   }
-
-  await FirebaseAuth.instance.verifyPhoneNumber(
-    phoneNumber: phone,
-    verificationCompleted: (PhoneAuthCredential credential) async {
-      // Auto-retrieval or instant verification
-      await FirebaseAuth.instance.signInWithCredential(credential);
-    },
-    verificationFailed: (FirebaseAuthException e) {
-      setState(() => _isEmailLoading = false);
-      AppUtils.showError(context, 'Phone verification failed: ${e.message}');
-    },
-    codeSent: (String verificationId, int? resendToken) {
-      setState(() => _isEmailLoading = false);
-      context.pushNamed(
-        'verify-number',
-        queryParameters: {
-          'phoneNumber': phone,
-          'verificationId': verificationId,
-        },
-      );
-    },
-    codeAutoRetrievalTimeout: (String verificationId) {
-      // Optionally handle timeout
-    },
-  );
-}
-
 
   Future<void> _createStatsIfNewUser(String userId) async {
     bool userExist = await doesUserExist(userId);
@@ -143,16 +142,16 @@ class _SignupState extends State<Signup> {
         }
       } catch (e) {
         if (mounted) {
-          AppUtils.showError(context, "failed to log in user $e");
+          AppUtils.showDialog(context, "failed to log in user $e", AppColors.error);
           return;
         }
       }
     } on FirebaseAuthException catch (e) {
       if (mounted)
-        AppUtils.showError(context, 'Google Sign-In failed: ${e.message}');
+        AppUtils.showDialog(context, 'Google Sign-In failed: ${e.message}', AppColors.error);
     } catch (e) {
       if (mounted)
-        AppUtils.showError(context, 'An unexpected error occurred: $e');
+        AppUtils.showDialog(context, 'An unexpected error occurred: $e', AppColors.error);
     } finally {
       setState(() {
         _isGoogleLoading = false;
@@ -168,36 +167,37 @@ class _SignupState extends State<Signup> {
   @override
   Widget build(BuildContext context) {
     return AnnotatedRegion<SystemUiOverlayStyle>(
-    value: SystemUiOverlayStyle.dark, 
-    child:Scaffold(
-        backgroundColor: AppColors.background,
-        resizeToAvoidBottomInset: false,
-        // appBar: AppBar(
-        //   backgroundColor: AppColors.background,
-        // ),
-        body: Container(
-            padding: const EdgeInsets.all(AppTheme.homeScreenPadding),
-             decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: [
-                  AppColors.backgroundStart,
-                  AppColors.backgroundMiddle,
-                  AppColors.backgroundEnd,
-                ],
-                stops: [0.0, 0.5, 1.0],
-              ),
-            ),
-            child: Center(
-                child: Column(
-              children: [
-                Expanded(
-                  child: Center(
-                      child: SingleChildScrollView(child: _buildLogInScreen())),
+        value: SystemUiOverlayStyle.dark,
+        child: Scaffold(
+            backgroundColor: AppColors.background,
+            resizeToAvoidBottomInset: false,
+            // appBar: AppBar(
+            //   backgroundColor: AppColors.background,
+            // ),
+            body: Container(
+                padding: const EdgeInsets.all(AppTheme.homeScreenPadding),
+                decoration: const BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [
+                      AppColors.backgroundStart,
+                      AppColors.backgroundMiddle,
+                      AppColors.backgroundEnd,
+                    ],
+                    stops: [0.0, 0.5, 1.0],
+                  ),
                 ),
-              ],
-            )))));
+                child: Center(
+                    child: Column(
+                  children: [
+                    Expanded(
+                      child: Center(
+                          child: SingleChildScrollView(
+                              child: _buildLogInScreen())),
+                    ),
+                  ],
+                )))));
   }
 
   Widget _buildLogInScreen() {
@@ -280,10 +280,10 @@ class _SignupState extends State<Signup> {
           height: 30,
         ),
         textWithLink(
-          text: "Already have an account? ",
-          textLink: "sign in",
-          navigatTo: '/login',
-          context: context),
+            text: "Already have an account? ",
+            textLink: "sign in",
+            navigatTo: '/login',
+            context: context),
       ],
     );
   }

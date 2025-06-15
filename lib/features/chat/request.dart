@@ -5,7 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Request extends StatefulWidget {
   final DeliveryRequest request;
-  final  UserData user;
+  final UserData user;
   final Shipment shipment;
 
   const Request({
@@ -25,7 +25,9 @@ class DeliveryRequestState extends State<Request> {
       await Provider.of<DeliveryRequestProvider>(context, listen: false)
           .deleteRequest(widget.request.id!);
     } catch (e) {
-      if (mounted) AppUtils.showError(context, "Failed to refuse request");
+      if (mounted)
+        AppUtils.showDialog(
+            context, "Failed to refuse request", AppColors.error);
     }
   }
 
@@ -57,25 +59,30 @@ class DeliveryRequestState extends State<Request> {
         });
 
         // Update the request document
-        final requestProvider = Provider.of<DeliveryRequestProvider>(context, listen: false);
+        final requestProvider =
+            Provider.of<DeliveryRequestProvider>(context, listen: false);
         transaction.update(requestRef, {'status': DeliveryStatus.accepted});
         requestProvider.markRequestAsAccepted(widget.request.id!);
 
         if (mounted) {
-          AppUtils.showSuccess(context, "Request accepted successfully");
-          await requestProvider.deleteActiveRequestsByShipmentId(widget.request.shipmentId, widget.request.id!);
-            Provider.of<StatisticsProvider>(context, listen: false)
+          AppUtils.showDialog(
+              context, "Request accepted successfully", AppColors.succes);
+          await requestProvider.deleteActiveRequestsByShipmentId(
+              widget.request.shipmentId, widget.request.id!);
+          Provider.of<StatisticsProvider>(context, listen: false)
               .incrementField(widget.request.receiverId, "ongoingShipments");
           Provider.of<StatisticsProvider>(context, listen: false)
-                .decrementField(widget.request.receiverId, "pendingShipments");
+              .decrementField(widget.request.receiverId, "pendingShipments");
           Provider.of<StatisticsProvider>(context, listen: false)
               .incrementField(widget.request.senderId, "ongoingTrips");
           Provider.of<StatisticsProvider>(context, listen: false)
-                .decrementField(widget.request.senderId, "pendingTrips");
+              .decrementField(widget.request.senderId, "pendingTrips");
         }
       });
     } catch (e) {
-      if (mounted) AppUtils.showError(context, "Failed to accept request");
+      if (mounted)
+        AppUtils.showDialog(
+            context, "Failed to accept request", AppColors.error);
     }
   }
 
