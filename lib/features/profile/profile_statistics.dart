@@ -45,7 +45,8 @@ class ProfileStatisticsState extends State<ProfileStatistics> {
         });
       } catch (e) {
         if (mounted) {
-          AppUtils.showDialog(context, "Failed to fetch Shipments analytics", AppColors.error);
+          AppUtils.showDialog(
+              context, "Failed to fetch Shipments analytics", AppColors.error);
         }
       }
     });
@@ -53,7 +54,6 @@ class ProfileStatisticsState extends State<ProfileStatistics> {
 
   @override
   Widget build(BuildContext context) {
-    final reviews = Provider.of<ReviewProvider>(context, listen: false).reviews;
     return Scaffold(
         backgroundColor: AppColors.background,
         appBar: AppBar(
@@ -84,11 +84,10 @@ class ProfileStatisticsState extends State<ProfileStatistics> {
               ])));
   }
 
-
-Widget _buildContent() {
+  Widget _buildContent() {
     return Column(
       children: [
-        const SizedBox(height: 24),
+        // const SizedBox(height: 24),
         _buildStatisticsSection(),
         const SizedBox(height: 32),
         _buildReviewsSection(),
@@ -97,7 +96,7 @@ Widget _buildContent() {
     );
   }
 
- Widget _buildStatCard({
+  Widget _buildStatCard({
     required String title,
     required String value,
     required Color backgroundColor,
@@ -148,7 +147,7 @@ Widget _buildContent() {
     );
   }
 
-   Widget _buildShipmentsStats() {
+  Widget _buildShipmentsStats() {
     return Consumer<StatisticsProvider>(
       builder: (context, statsProvider, child) {
         final stats = statsProvider.stats;
@@ -179,7 +178,7 @@ Widget _buildContent() {
     );
   }
 
- Widget _buildStatisticsSection() {
+  Widget _buildStatisticsSection() {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16),
       child: Column(
@@ -260,8 +259,8 @@ Widget _buildContent() {
       children: cards.map((card) => Expanded(child: card)).toList(),
     );
   }
-  
- Widget _buildReviewsSection() {
+
+  Widget _buildReviewsSection() {
     return Consumer<ReviewProvider>(
       builder: (context, reviewProvider, child) {
         final reviews = reviewProvider.reviews;
@@ -288,7 +287,8 @@ Widget _buildContent() {
                   ),
                   const SizedBox(width: 8),
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                     decoration: BoxDecoration(
                       color: AppColors.blue.withOpacity(0.1),
                       borderRadius: BorderRadius.circular(12),
@@ -327,7 +327,7 @@ Widget _buildContent() {
         final review = reviews[index];
         final userData = Provider.of<UserProvider>(context, listen: false)
             .getUserById(review.senderId);
-        
+
         return Container(
           decoration: BoxDecoration(
             color: AppColors.white,
@@ -344,7 +344,7 @@ Widget _buildContent() {
         );
       },
     );
-  }  
+  }
 
   Widget _buildEmptyReviews() {
     return Container(
@@ -386,7 +386,7 @@ Widget _buildContent() {
       ),
     );
   }
-  
+
   Widget _buildUserStatus() {
     final userProvider = Provider.of<UserProvider>(context);
     final user = userProvider.user;
@@ -396,8 +396,8 @@ Widget _buildContent() {
         padding: const EdgeInsets.only(
           left: AppTheme.cardPadding,
           right: AppTheme.cardPadding,
-          top: AppTheme.cardPadding,
-          bottom: AppTheme.cardPadding,
+          top: AppTheme.cardPadding * 2,
+          bottom: AppTheme.cardPadding * 2,
         ),
         decoration: const BoxDecoration(
           gradient: LinearGradient(
@@ -405,59 +405,118 @@ Widget _buildContent() {
           ),
         ),
         child: Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
-          Stack(
-            children: [
-              Container(
-                width: 100,
-                height: 100,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(80),
-                  border: Border.all(
-                    color: const Color.fromARGB(255, 255, 255, 255)
-                        .withOpacity(0.3),
-                    width: 3,
-                  ),
-                ),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(80),
-                  child: Image.network(
-                    user?.photoUrl ?? AppTheme.defaultProfileImage,
-                    fit: BoxFit.cover,
-                    errorBuilder: (context, error, stackTrace) {
-                      return Container(
-                        color: const Color.fromARGB(255, 255, 255, 255)
-                            .withOpacity(0.1),
-                        child: const Icon(
-                          Icons.person,
-                          color: AppColors.white,
-                          size: 50,
-                        ),
-                      );
-                    },
-                  ),
-                ),
-              ),
-            ],
-          ),
+          _buildProfileImage(user),
           const SizedBox(width: 15),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                user?.displayName ?? 'Guest',
-                style: const TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    color: AppColors.white),
-              ),
-              Text(
-                "Member since ${user?.createdAt!}",
-                style: const TextStyle(
-                    fontSize: 12, color: AppColors.lessImportant),
+          _buildUserInfo(user),
+          const SizedBox(
+            height: 16,
+          ),
+          _buildStatsPreview(),
+        ]));
+  }
+
+  Widget _buildStatsPreview() {
+
+    final stats = Provider.of<StatisticsProvider>(context, listen: false).stats;
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+      decoration: BoxDecoration(
+        color: Colors.white.withOpacity(0.15),
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(
+          color: Colors.white.withOpacity(0.2),
+        ),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          const Icon(
+            Icons.analytics_outlined,
+            color: Colors.white,
+            size: 16,
+          ),
+          const SizedBox(width: 8),
+           Text(
+            '${stats?.completedShipments ?? 0} deliveries',
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 14,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+          const SizedBox(width: 8),
+          Icon(
+            Icons.trending_up,
+            color: AppColors.succes.withOpacity(0.8),
+            size: 12,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildUserInfo(user) {
+    return Column(
+      children: [
+        Text(
+          user?.displayName ?? 'Guest',
+          style: const TextStyle(
+            fontSize: 22,
+            fontWeight: FontWeight.bold,
+            color: AppColors.white,
+          ),
+        ),
+        const SizedBox(height: 4),
+        Text(
+          "Member since ${user?.createdAt ?? 'N/A'}",
+          style: const TextStyle(
+            fontSize: 14,
+            color: AppColors.lessImportant,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildProfileImage(user) {
+    return Stack(
+      children: [
+        Container(
+          width: 110,
+          height: 110,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(55),
+            border: Border.all(
+              color: Colors.white.withOpacity(0.3),
+              width: 3,
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.2),
+                blurRadius: 10,
+                offset: const Offset(0, 4),
               ),
             ],
           ),
-        ]));
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(55),
+            child: Image.network(
+              user?.photoUrl ?? AppTheme.defaultProfileImage,
+              fit: BoxFit.cover,
+              errorBuilder: (context, error, stackTrace) {
+                return Container(
+                  color: Colors.white.withOpacity(0.1),
+                  child: const Icon(
+                    Icons.person,
+                    color: AppColors.white,
+                    size: 50,
+                  ),
+                );
+              },
+            ),
+          ),
+        ),
+      ],
+    );
   }
 }
