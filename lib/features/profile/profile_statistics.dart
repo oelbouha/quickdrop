@@ -80,179 +80,313 @@ class ProfileStatisticsState extends State<ProfileStatistics> {
                 // const SizedBox(height: AppTheme.cardPadding),
                 _buildUserStatus(),
                 const SizedBox(height: AppTheme.cardPadding),
-                Container(
-                    margin: const EdgeInsets.only(
-                        left: AppTheme.homeScreenPadding,
-                        right: AppTheme.homeScreenPadding),
-                    child: Column(children: [
-                      const Row(children: [
-                        CustomIcon(
-                          iconPath: "assets/icon/package.svg",
-                          size: 22,
-                          color: AppColors.blue,
-                        ),
-                        SizedBox(width: 10),
-                        Text("Shipments Statistics",
-                            style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w600,
-                                color: AppColors.headingText)),
-                      ]),
-                      const SizedBox(height: 10),
-                      _buildShipmentsStats(),
-                      const SizedBox(height: 25),
-                      const Row(children: [
-                        CustomIcon(
-                          iconPath: "assets/icon/car.svg",
-                          size: 22,
-                          color: AppColors.blue,
-                        ),
-                        SizedBox(width: 10),
-                        Text("Trips Statistics",
-                            style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w600,
-                                color: AppColors.headingText)),
-                      ]),
-                      _buildTripsStats(),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      _buildReviews(reviews),
-                    ]))
+                _buildContent()
               ])));
+  }
+
+
+Widget _buildContent() {
+    return Column(
+      children: [
+        const SizedBox(height: 24),
+        _buildStatisticsSection(),
+        const SizedBox(height: 32),
+        _buildReviewsSection(),
+        const SizedBox(height: 24),
+      ],
+    );
+  }
+
+ Widget _buildStatCard({
+    required String title,
+    required String value,
+    required Color backgroundColor,
+    required Color textColor,
+    required IconData icon,
+  }) {
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 4),
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: backgroundColor,
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 4,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Column(
+        children: [
+          Icon(
+            icon,
+            color: textColor,
+            size: 24,
+          ),
+          const SizedBox(height: 8),
+          Text(
+            value,
+            style: TextStyle(
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
+              color: textColor,
+            ),
+          ),
+          const SizedBox(height: 4),
+          Text(
+            title,
+            style: TextStyle(
+              fontSize: 12,
+              color: textColor.withOpacity(0.8),
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+   Widget _buildShipmentsStats() {
+    return Consumer<StatisticsProvider>(
+      builder: (context, statsProvider, child) {
+        final stats = statsProvider.stats;
+        return _buildStatsRow([
+          _buildStatCard(
+            title: "Pending",
+            value: stats?.pendingShipments.toString() ?? "0",
+            backgroundColor: AppColors.contactBackground,
+            textColor: AppColors.blue,
+            icon: Icons.pending_actions,
+          ),
+          _buildStatCard(
+            title: "Ongoing",
+            value: stats?.ongoingShipments.toString() ?? "0",
+            backgroundColor: AppColors.ongoingstatusBackground,
+            textColor: AppColors.ongoingStatusText,
+            icon: Icons.local_shipping,
+          ),
+          _buildStatCard(
+            title: "Completed",
+            value: stats?.completedShipments.toString() ?? "0",
+            backgroundColor: AppColors.completedstatusBackground,
+            textColor: AppColors.completedStatusText,
+            icon: Icons.check_circle,
+          ),
+        ]);
+      },
+    );
+  }
+
+ Widget _buildStatisticsSection() {
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _buildSectionHeader(
+            icon: "assets/icon/package.svg",
+            title: "Shipments Overview",
+          ),
+          const SizedBox(height: 16),
+          _buildShipmentsStats(),
+          const SizedBox(height: 32),
+          _buildSectionHeader(
+            icon: "assets/icon/car.svg",
+            title: "Trips Overview",
+          ),
+          const SizedBox(height: 16),
+          _buildTripsStats(),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSectionHeader({required String icon, required String title}) {
+    return Row(
+      children: [
+        CustomIcon(
+          iconPath: icon,
+          size: 24,
+          color: AppColors.blue,
+        ),
+        const SizedBox(width: 12),
+        Text(
+          title,
+          style: const TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.w600,
+            color: AppColors.headingText,
+          ),
+        ),
+      ],
+    );
   }
 
   Widget _buildTripsStats() {
     return Consumer<StatisticsProvider>(
       builder: (context, statsProvider, child) {
-        return (Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Expanded(
-                  child: StatisticCard(
-                hintText: "Pending",
-                backgroundColor: AppColors.contactBackground,
-                hintTextColor: AppColors.blue,
-                number: statsProvider.stats != null
-                    ? statsProvider.stats!.pendingTrips.toString()
-                    : "0",
-              )),
-              Expanded(
-                  child: StatisticCard(
-                hintText: "Ongoing",
-                backgroundColor: AppColors.ongoingstatusBackground,
-                hintTextColor: AppColors.ongoingStatusText,
-                number: statsProvider.stats != null
-                    ? statsProvider.stats!.ongoingTrips.toString()
-                    : "0",
-              )),
-              Expanded(
-                  child: StatisticCard(
-                hintText: "Comleted",
-                backgroundColor: AppColors.completedstatusBackground,
-                hintTextColor: AppColors.completedStatusText,
-                number: statsProvider.stats != null
-                    ? statsProvider.stats!.completedTrips.toString()
-                    : "0",
-              )),
-            ]));
-      },
-    );
-  }
-
-  Widget _buildShipmentsStats() {
-    return Consumer<StatisticsProvider>(
-      builder: (context, statsProvider, child) {
-        return (Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Expanded(
-                  child: StatisticCard(
-                hintText: "Pending",
-                backgroundColor: AppColors.contactBackground,
-                hintTextColor: AppColors.blue,
-                number: statsProvider.stats != null
-                    ? statsProvider.stats!.pendingShipments.toString()
-                    : "0",
-              )),
-              Expanded(
-                  child: StatisticCard(
-                hintText: "Ongoing",
-                backgroundColor: AppColors.ongoingstatusBackground,
-                hintTextColor: AppColors.ongoingStatusText,
-                number: statsProvider.stats != null
-                    ? statsProvider.stats!.ongoingShipments.toString()
-                    : "0",
-              )),
-              Expanded(
-                  child: StatisticCard(
-                hintText: "Comleted",
-                backgroundColor: AppColors.completedstatusBackground,
-                hintTextColor: AppColors.completedStatusText,
-                number: statsProvider.stats != null
-                    ? statsProvider.stats!.completedShipments.toString()
-                    : "0",
-              )),
-            ]));
-      },
-    );
-  }
-
-  Widget _buildReviews(List<ReviewModel> reviews) {
-    return Consumer2<ReviewProvider, StatisticsProvider>(
-        builder: (context, reviewProvider, statsProvider, child) {
-      // print("reviews length ::${reviewProvider.reviews.length}");
-      return Column(children: [
-        Row(children: [
-          const CustomIcon(
-            iconPath: "assets/icon/star.svg",
-            size: 22,
-            color: AppColors.blue,
+        final stats = statsProvider.stats;
+        return _buildStatsRow([
+          _buildStatCard(
+            title: "Pending",
+            value: stats?.pendingTrips.toString() ?? "0",
+            backgroundColor: AppColors.contactBackground,
+            textColor: AppColors.blue,
+            icon: Icons.pending_actions,
           ),
-          const SizedBox(width: 10),
-          const Text("Reviews",
-              style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                  color: AppColors.headingText)),
-          const SizedBox(width: 10),
-          Text('(${reviewProvider.reviews.length.toString()})',
-              style: const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                  color: AppColors.headingText)),
-        ]),
-        Container(
-          // margin: const EdgeInsets.only(
-          //     left: AppTheme.cardPadding, right: AppTheme.cardPadding),
-          color: AppColors.background,
-          child: reviewProvider.reviews.isEmpty
-              ? Center(child: Message(context, 'No Reviews'))
-              : ListView.builder(
-                  physics: const NeverScrollableScrollPhysics(),
-                  shrinkWrap: true,
-                  itemCount: reviewProvider.reviews.length,
-                  itemBuilder: (context, index) {
-                    final review = reviewProvider.reviews[index];
-                    final userData =
-                        Provider.of<UserProvider>(context, listen: false)
-                            .getUserById(review.senderId);
-                    return Column(
-                      children: [
-                        if (index == 0)
-                          const SizedBox(height: AppTheme.gapBetweenCards),
-                        ReviewCard(user: userData!, review: review),
-                        const SizedBox(height: AppTheme.gapBetweenCards),
-                      ],
-                    );
-                  },
-                ),
-        )
-      ]);
-    });
+          _buildStatCard(
+            title: "Ongoing",
+            value: stats?.ongoingTrips.toString() ?? "0",
+            backgroundColor: AppColors.ongoingstatusBackground,
+            textColor: AppColors.ongoingStatusText,
+            icon: Icons.directions_car,
+          ),
+          _buildStatCard(
+            title: "Completed",
+            value: stats?.completedTrips.toString() ?? "0",
+            backgroundColor: AppColors.completedstatusBackground,
+            textColor: AppColors.completedStatusText,
+            icon: Icons.check_circle,
+          ),
+        ]);
+      },
+    );
   }
 
+  Widget _buildStatsRow(List<Widget> cards) {
+    return Row(
+      children: cards.map((card) => Expanded(child: card)).toList(),
+    );
+  }
+  
+ Widget _buildReviewsSection() {
+    return Consumer<ReviewProvider>(
+      builder: (context, reviewProvider, child) {
+        final reviews = reviewProvider.reviews;
+        return Container(
+          margin: const EdgeInsets.symmetric(horizontal: 16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  const CustomIcon(
+                    iconPath: "assets/icon/star.svg",
+                    size: 24,
+                    color: AppColors.blue,
+                  ),
+                  const SizedBox(width: 12),
+                  const Text(
+                    "Reviews",
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w600,
+                      color: AppColors.headingText,
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    decoration: BoxDecoration(
+                      color: AppColors.blue.withOpacity(0.1),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Text(
+                      reviews.length.toString(),
+                      style: const TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600,
+                        color: AppColors.blue,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 16),
+              _buildReviewsList(reviews),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildReviewsList(List<ReviewModel> reviews) {
+    if (reviews.isEmpty) {
+      return _buildEmptyReviews();
+    }
+
+    return ListView.separated(
+      physics: const NeverScrollableScrollPhysics(),
+      shrinkWrap: true,
+      itemCount: reviews.length,
+      separatorBuilder: (context, index) => const SizedBox(height: 12),
+      itemBuilder: (context, index) {
+        final review = reviews[index];
+        final userData = Provider.of<UserProvider>(context, listen: false)
+            .getUserById(review.senderId);
+        
+        return Container(
+          decoration: BoxDecoration(
+            color: AppColors.white,
+            borderRadius: BorderRadius.circular(12),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.05),
+                blurRadius: 4,
+                offset: const Offset(0, 2),
+              ),
+            ],
+          ),
+          child: ReviewCard(user: userData!, review: review),
+        );
+      },
+    );
+  }  
+
+  Widget _buildEmptyReviews() {
+    return Container(
+      padding: const EdgeInsets.all(32),
+      decoration: BoxDecoration(
+        color: AppColors.white,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(
+          color: AppColors.borderGray200,
+          width: 1,
+        ),
+      ),
+      child: Column(
+        children: [
+          Icon(
+            Icons.star_border,
+            size: 48,
+            color: AppColors.textLight,
+          ),
+          const SizedBox(height: 16),
+          const Text(
+            'No Reviews Yet',
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.w600,
+              color: AppColors.headingText,
+            ),
+          ),
+          const SizedBox(height: 8),
+          const Text(
+            'Complete more trips to start receiving reviews from other users.',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize: 14,
+              color: AppColors.textMuted,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+  
   Widget _buildUserStatus() {
     final userProvider = Provider.of<UserProvider>(context);
     final user = userProvider.user;
