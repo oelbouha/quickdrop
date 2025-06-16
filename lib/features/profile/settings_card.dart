@@ -41,7 +41,7 @@ class SettingsCard extends StatelessWidget {
                 decoration: BoxDecoration(
                   color: iconColor == AppColors.lightGray 
                       ? AppColors.blueStart.withOpacity(0.1)
-                      : Colors.transparent,
+                      : AppColors.white.withOpacity(0.1),
                   borderRadius: BorderRadius.circular(10),
                 ),
                 child: Center(

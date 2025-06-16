@@ -227,7 +227,6 @@ class _ProfileScreenState extends State<ProfileScreen>
                   color: Colors.grey[200],
                   indent: 40,
                 ),
-              const SizedBox(height: 6),
               SettingsCard(
                 onTap: () {
                   context.push("/terms-of-service");
@@ -240,7 +239,6 @@ class _ProfileScreenState extends State<ProfileScreen>
                   color: Colors.grey[200],
                   indent: 40,
                 ),
-              const SizedBox(height: 6),
               SettingsCard(
                 onTap: () {
                   context.push("/privacy-policy");
@@ -253,7 +251,6 @@ class _ProfileScreenState extends State<ProfileScreen>
                   color: Colors.grey[200],
                   indent: 40,
                 ),
-              const SizedBox(height: 6),
               SettingsCard(
                 onTap: () {_showComingSoon("refer to your friend");},
                 hintText: "Refer to your friends",
