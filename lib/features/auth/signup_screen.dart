@@ -206,8 +206,13 @@ class _SingupPageState extends State<SignUpScreen> {
             ),
             const SizedBox(height: 6),
             
-
-            TipWidget(message: "Make sure this matches the name on your government ID or passport."),
+             buildInfoCard(
+              icon: Icons.info_outline,
+              title: "Name Tip",
+              message: "Make sure this matches the name on your government ID or passport.",
+              color: Colors.blue,
+            ),
+            // TipWidget(message: "Make sure this matches the name on your government ID or passport."),
             const SizedBox(height: 15),
             TextFieldWithHeader(
               controller: birthdayController,
@@ -220,8 +225,12 @@ class _SingupPageState extends State<SignUpScreen> {
               validator: Validators.notEmpty,
             ),
             const SizedBox(height: 8),
-
-            TipWidget(message: "To Sign up, you must be at least 18 years old. other peaaple  who use quickdrop won't see your birthday.",),
+             buildInfoCard(
+              icon: Icons.info_outline,
+              title: "Age Tip",
+              message: "To Sign up, you must be at least 18 years old. other peaaple  who use quickdrop won't see your birthday.",
+              color: Colors.blue,
+            ),
             const SizedBox(height: 15),
             TextFieldWithHeader(
               controller: emailController,

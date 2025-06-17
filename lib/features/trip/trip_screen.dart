@@ -18,31 +18,56 @@ class _TripScreenState extends State<TripScreen>
   late TabController _tabController;
 
   void removeTrip(String id) async {
-    showDialog(
+    final confirmed = await ConfirmationDialog.show(
         context: context,
-        builder: (context) => ConfirmationDialog(
-            message: AppTheme.deleteTripText,
-            header: "Delete trip",
-            onPressed: () async {
-              try {
-                await Provider.of<TripProvider>(context, listen: false)
-                    .deleteTrip(id);
-                await Provider.of<DeliveryRequestProvider>(context,
-                        listen: false)
-                    .deleteRequestsByTripId(id);
-                AppUtils.showDialog(
-                    context, 'Trip deleted succusfully!', AppColors.succes);
-                Provider.of<StatisticsProvider>(context, listen: false)
-                    .decrementField(user!.uid, "pendingTrips");
-              } catch (e) {
-                if (mounted) {
-                  AppUtils.showDialog(
-                      context, 'Failed to delete Trip: $e', AppColors.error);
-                }
-              } finally {
-                if (mounted) Navigator.pop(context);
-              }
-            }));
+        message: 'Are you sure you want to delete this shipment?',
+        header: 'Delete Shipment',
+        buttonHintText: 'Delete',
+        iconData: Icons.delete_outline,
+      );
+      if (!confirmed) return ; 
+
+      try {
+        await Provider.of<TripProvider>(context, listen: false)
+            .deleteTrip(id);
+        await Provider.of<DeliveryRequestProvider>(context, listen: false)
+            .deleteRequestsByTripId(id);
+        AppUtils.showDialog(
+            context, 'Trip deleted succusfully!', AppColors.succes);
+        Provider.of<StatisticsProvider>(context, listen: false)
+            .decrementField(user!.uid, "pendingTrips");
+      } catch (e) {
+        if (mounted) {
+          AppUtils.showDialog(
+              context, 'Failed to delete Trip: $e', AppColors.error);
+        }
+      } 
+      
+    // showDialog(
+    //     context: context,
+    //     builder: (context) => ConfirmationDialog(
+    //         message: AppTheme.deleteTripText,
+    //         header: "Delete trip",
+    //         onPressed: () async {
+    //           try {
+    //             await Provider.of<TripProvider>(context, listen: false)
+    //                 .deleteTrip(id);
+    //             await Provider.of<DeliveryRequestProvider>(context,
+    //                     listen: false)
+    //                 .deleteRequestsByTripId(id);
+    //             AppUtils.showDialog(
+    //                 context, 'Trip deleted succusfully!', AppColors.succes);
+    //             Provider.of<StatisticsProvider>(context, listen: false)
+    //                 .decrementField(user!.uid, "pendingTrips");
+    //           } catch (e) {
+    //             if (mounted) {
+    //               AppUtils.showDialog(
+    //                   context, 'Failed to delete Trip: $e', AppColors.error);
+    //             }
+    //           } finally {
+    //             if (mounted) Navigator.pop(context);
+    //           }
+    //         }));
   }
 
   @override
