@@ -56,31 +56,52 @@ class _ShipmentScreenState extends State<ShipmentScreen>
 
   void removeShipment(String id) async {
     //  print("Removing shipment with id: $id");
-    showDialog(
+     final confirmed = await ConfirmationDialogTypes.showDeleteConfirmation(
       context: context,
-      builder: (context) => ConfirmationDialog(
-        message: AppTheme.deleteShipmentText,
-        iconPath: "assets/icon/trash-bin.svg",
-        onPressed: () async {
-          try {
-            await Provider.of<ShipmentProvider>(context, listen: false)
-                .deleteShipment(id);
-            await Provider.of<DeliveryRequestProvider>(context, listen: false)
-                .deleteRequestsByShipmentId(id);
-            AppUtils.showDialog(
-                context, 'Shipment deleted succusfully', AppColors.succes);
-            Provider.of<StatisticsProvider>(context, listen: false)
-                .decrementField(user!.uid, "pendingShipments");
-          } catch (e) {
-            if (mounted)
-              AppUtils.showDialog(
-                  context, 'Failed to delete shipment: $e', AppColors.error);
-          } finally {
-            Navigator.pop(context);
-          }
-        },
-      ),
+      message: 'This action cannot be undone. Are you sure?',
     );
+
+      if (!confirmed) return ;
+      try {
+          await Provider.of<ShipmentProvider>(context, listen: false)
+              .deleteShipment(id);
+          await Provider.of<DeliveryRequestProvider>(context, listen: false)
+              .deleteRequestsByShipmentId(id);
+          AppUtils.showDialog(
+              context, 'Shipment deleted succusfully', AppColors.succes);
+          Provider.of<StatisticsProvider>(context, listen: false)
+              .decrementField(user!.uid, "pendingShipments");
+        } catch (e) {
+          if (mounted)
+            AppUtils.showDialog(
+                context, 'Failed to delete shipment: $e', AppColors.error);
+        } 
+      
+    // showDialog(
+    //   context: context,
+    //   builder: (context) => ConfirmationDialog(
+    //     message: AppTheme.deleteShipmentText,
+    //     iconPath: "assets/icon/trash-bin.svg",
+    //     onPressed: () async {
+    //       try {
+    //         await Provider.of<ShipmentProvider>(context, listen: false)
+    //             .deleteShipment(id);
+    //         await Provider.of<DeliveryRequestProvider>(context, listen: false)
+    //             .deleteRequestsByShipmentId(id);
+    //         AppUtils.showDialog(
+    //             context, 'Shipment deleted succusfully', AppColors.succes);
+    //         Provider.of<StatisticsProvider>(context, listen: false)
+    //             .decrementField(user!.uid, "pendingShipments");
+    //       } catch (e) {
+    //         if (mounted)
+    //           AppUtils.showDialog(
+    //               context, 'Failed to delete shipment: $e', AppColors.error);
+    //       } finally {
+    //         Navigator.pop(context);
+    //       }
+    //     },
+    //   ),
+    // );
   }
 
   @override

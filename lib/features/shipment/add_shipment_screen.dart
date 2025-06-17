@@ -1,9 +1,10 @@
 import 'dart:io'; // Import File class
-
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import 'package:quickdrop_app/core/utils/imports.dart';
 import 'package:quickdrop_app/core/widgets/dropDownTextField.dart';
+
+export 'package:quickdrop_app/core/widgets/tipWidget.dart';
 
 class AddShipmentScreen extends StatefulWidget {
   const AddShipmentScreen({Key? key}) : super(key: key);
@@ -35,6 +36,23 @@ class _AddShipmentScreenState extends State<AddShipmentScreen>
   late Animation<double> _fadeAnimation;
   late Animation<Offset> _slideAnimation;
 
+  int _currentStep = 0;
+  final _pageController = PageController();
+
+  final List<String> _stepTitles = [
+    'Package Details',
+    'Delivery Locations',
+    'Package Dimensions',
+    'Timing & Image',
+  ];
+
+  final List<IconData> _stepIcons = [
+    Icons.inventory_2_outlined,
+    Icons.location_on_outlined,
+    Icons.straighten_outlined,
+    Icons.schedule_outlined,
+  ];
+
   @override
   void initState() {
     super.initState();
@@ -45,6 +63,7 @@ class _AddShipmentScreenState extends State<AddShipmentScreen>
   void _initializeDefaults() {
     packageQuantityController.text = "1";
     weightController.text = "1";
+    typeController.text = "water";
   }
 
   void _setupAnimations() {
@@ -83,6 +102,20 @@ class _AddShipmentScreenState extends State<AddShipmentScreen>
   void dispose() {
     _fadeController.dispose();
     _slideController.dispose();
+    _pageController.dispose();
+    // Dispose all controllers
+    fromController.dispose();
+    toController.dispose();
+    weightController.dispose();
+    descriptionController.dispose();
+    dateController.dispose();
+    lengthController.dispose();
+    widthController.dispose();
+    heightController.dispose();
+    packageNameController.dispose();
+    packageQuantityController.dispose();
+    typeController.dispose();
+    priceController.dispose();
     super.dispose();
   }
 
@@ -100,34 +133,16 @@ class _AddShipmentScreenState extends State<AddShipmentScreen>
       setState(() {
         _isListButtonLoading = true;
       });
-      // final userProvider = Provider.of<UserProvider>(context);
-      // final user = userProvider.user;
 
       final user = FirebaseAuth.instance.currentUser;
       if (user == null) {
-        AppUtils.showDialog(context, 'Please log in to list a shipment', AppColors.error);
+        AppUtils.showDialog(
+            context, 'Please log in to list a shipment', AppColors.error);
+        setState(() {
+          _isListButtonLoading = false;
+        });
         return;
       }
-
-      // if (_selectedImage == null) {
-      //   AppUtils.showDialog(context, "Please select a package image", AppColors.error);
-      //   setState(() {
-      //     _isListButtonLoading = false;
-      //   });
-      //   return;
-      // }
-      // print("uploading file ${_selectedImage}");
-      // String? photoUrl =
-      //     await Provider.of<ShipmentProvider>(context, listen: false)
-      //         .uploadImageToFirebase(_selectedImage!);
-
-      // if (photoUrl == null) {
-      //   AppUtils.showDialog(context, "failed to upload image", AppColors.error);
-      //   setState(() {
-      //     _isListButtonLoading = false;
-      //   });
-      //   return;
-      // }
 
       Shipment shipment = Shipment(
         price: priceController.text,
@@ -145,6 +160,7 @@ class _AddShipmentScreenState extends State<AddShipmentScreen>
         imageUrl: null,
         userId: user.uid,
       );
+
       try {
         await Provider.of<ShipmentProvider>(context, listen: false)
             .addShipment(shipment);
@@ -152,8 +168,6 @@ class _AddShipmentScreenState extends State<AddShipmentScreen>
           Provider.of<StatisticsProvider>(context, listen: false)
               .incrementField(user.uid, "pendingShipments");
           await _showSuccessAnimation();
-          // Navigator.pop(context);
-          // AppUtils.showSuccess(context, 'Shipment listed Successfully!');
         }
       } catch (e) {
         if (mounted) {
@@ -181,8 +195,8 @@ class _AddShipmentScreenState extends State<AddShipmentScreen>
       builder: (dialogContext) {
         Future.delayed(const Duration(seconds: 2), () {
           if (mounted) {
-            Navigator.of(dialogContext).pop(); // close dialog
-            Navigator.of(context).pop(); // close screen
+            Navigator.of(dialogContext).pop();
+            Navigator.of(context).pop();
           }
         });
         return AlertDialog(
@@ -234,108 +248,337 @@ class _AddShipmentScreenState extends State<AddShipmentScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: AppColors.background,
-        appBar: AppBar(
-          backgroundColor: AppColors.white,
-          elevation: 0,
-          leading: IconButton(
-            icon: Container(
-              padding: const EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                // color: Colors.white.withOpacity(0.9),
-                borderRadius: BorderRadius.circular(12),
-                // boxShadow: [
-                //   BoxShadow(
-                //     color: Colors.black.withOpacity(0.1),
-                //     blurRadius: 8,
-                //     offset: const Offset(0, 2),
-                //   ),
-                // ],
-              ),
-              child: const Icon(Icons.arrow_back, color: Color(0xFF1F2937)),
-            ),
-            onPressed: () => Navigator.pop(context),
+      backgroundColor: AppColors.background,
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        elevation: 0,
+        title: const Text(
+          'Create Shipment',
+          style: TextStyle(
+            color: AppColors.headingText,
+            fontWeight: FontWeight.w600,
+            fontSize: 20,
           ),
         ),
-        body: SingleChildScrollView(
-            child: Container(
-                decoration: const BoxDecoration(
-                    // gradient: LinearGradient(
-                    //   begin: Alignment.topLeft,
-                    //   end: Alignment.bottomRight,
-                    //   colors: [
-                    //     Color(0xFFEFF6FF),
-                    //     Color(0xFFFFFFFF),
-                    //     Color(0xFFFAF5FF),
-                    //   ],
-                    // ),
+        centerTitle: true,
+        iconTheme: const IconThemeData(
+            color: Colors.black, // Set the arrow back color to black
+          ),
+          systemOverlayStyle:
+              SystemUiOverlayStyle.dark,
+      ),
+      body: Form(
+        key: _formKey,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            _buildProgressBar(),
+
+            Expanded(
+              child: AnimatedBuilder(
+                animation: _slideAnimation,
+                builder: (context, child) {
+                  return Transform.translate(
+                    offset: _slideAnimation.value,
+                    child: FadeTransition(
+                      opacity: _fadeAnimation,
+                      child: PageView(
+                        controller: _pageController,
+                        physics: const NeverScrollableScrollPhysics(),
+                        children: [
+                          _buildPackageDestination(),
+                          _buildPackageDetails(),
+                          _buildPackageDimensions(),
+                          _buildTimingDetails(),
+                        ],
+                      ),
                     ),
-                padding: const EdgeInsets.all(AppTheme.homeScreenPadding),
-                child: Form(
-                  key: _formKey,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      _buildHeader(),
-                      const SizedBox(
-                        height: 32,
-                      ),
-                      _buildPackageDestination(),
-                      const SizedBox(
-                        height: 24,
-                      ),
-                      _buildTimingDetails(),
-                      const SizedBox(
-                        height: 24,
-                      ),
-                      _buildPackageDetails(),
-                      const SizedBox(
-                        height: 24,
-                      ),
-                      // _buildImage(),
-                      // const SizedBox(
-                      //   height: 24,
-                      // ),
-                      _buildPackageDemensions(),
-                      const SizedBox(
-                        height: 32,
-                      ),
-                      LoginButton(
-                          hintText: "List Package",
-                          onPressed: _listShipment,
-                          isLoading: _isListButtonLoading),
-                      const SizedBox(
-                        height: 25,
-                      ),
-                    ],
-                  ),
-                ))));
+                  );
+                },
+              ),
+            ),
+
+            // Enhanced Navigation Buttons
+            _buildNavigationButtons(),
+          ],
+        ),
+      ),
+    );
   }
 
-  Widget _buildHeader() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Text(
-          'Add Your Shipment',
-          style: TextStyle(
-            fontSize: 28,
-            fontWeight: FontWeight.bold,
-            color: Color(0xFF1F2937),
+  Widget _buildProgressBar() {
+    return Container(
+        // alignment: ali,
+        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+        decoration: BoxDecoration(color: AppColors.background
+            // gradient: LinearGradient(
+            //   begin: Alignment.topLeft,
+            //   end: Alignment.bottomRight,
+            //   colors: [
+            //     AppColors.blue700,
+            //     Colors.purple,
+            //   ],
+            // ),
+            ),
+        child: Center(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // Step indicators with connecting lines
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: List.generate(_stepTitles.length, (index) {
+                  final isActive = _currentStep >= index;
+                  final isCurrent = _currentStep == index;
+
+                  return Flexible(
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        // Step circle
+                        AnimatedContainer(
+                          duration: const Duration(milliseconds: 300),
+                          width: isCurrent ? 36 : 28,
+                          height: isCurrent ? 36 : 28,
+                          decoration: BoxDecoration(
+                            color:
+                                isActive ? AppColors.blue700 : Colors.grey[300],
+                            shape: BoxShape.circle,
+                            boxShadow: isCurrent
+                                ? [
+                                    BoxShadow(
+                                      color: AppColors.blue700.withOpacity(0.3),
+                                      blurRadius: 8,
+                                      spreadRadius: 2,
+                                    ),
+                                  ]
+                                : null,
+                          ),
+                          child: Center(
+                            child: isActive && _currentStep > index
+                                ? const Icon(Icons.check,
+                                    color: Colors.white, size: 16)
+                                : Icon(
+                                    _stepIcons[index],
+                                    color: isActive
+                                        ? Colors.white
+                                        : Colors.grey[600],
+                                    size: isCurrent ? 18 : 16,
+                                  ),
+                          ),
+                        ),
+                        // Connecting line (except for last item)
+                        if (index < _stepTitles.length - 1)
+                          Flexible(
+                            child: Container(
+                              height: 2,
+                              margin: const EdgeInsets.symmetric(horizontal: 8),
+                              decoration: BoxDecoration(
+                                color: _currentStep > index
+                                    ? AppColors.blue700
+                                    : Colors.grey[300],
+                                borderRadius: BorderRadius.circular(1),
+                              ),
+                            ),
+                          ),
+                      ],
+                    ),
+                  );
+                }),
+              ),
+
+              // const SizedBox(height: 12),
+
+              // // Current step title
+              // AnimatedSwitcher(
+              //   duration: const Duration(milliseconds: 300),
+              //   child: Text(
+              //     _stepTitles[_currentStep],
+              //     key: ValueKey(_currentStep),
+              //     style: TextStyle(
+              //       fontSize: 16,
+              //       fontWeight: FontWeight.w600,
+              //       color: AppColors.headingText,
+              //     ),
+              //   ),
+              // ),
+
+              // const SizedBox(height: 8),
+
+              // Progress bar
+              // ClipRRect(
+              //   borderRadius: BorderRadius.circular(4),
+              //   child: LinearProgressIndicator(
+              //     value: (_currentStep + 1) / _stepTitles.length,
+              //     backgroundColor: Colors.grey[200],
+              //     valueColor: AlwaysStoppedAnimation<Color>(AppColors.blue700),
+              //     minHeight: 6,
+              //   ),
+              // ),
+            ],
           ),
-        ),
-        const SizedBox(height: 8),
-        Text(
-          'Complete the form below to create a new delivery request',
-          style: TextStyle(
-            fontSize: 16,
-            color: Colors.grey[600],
+        ));
+  }
+
+  Widget _buildNavigationButtons() {
+    return Container(
+      padding: const EdgeInsets.all(10),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 10,
+            offset: const Offset(0, -2),
           ),
-          // textAlign: TextAlign.start,
+        ],
+      ),
+      child: SafeArea(
+        child: Row(
+          children: [
+            // Back button
+            if (_currentStep > 0) ...[
+              Expanded(
+                flex: 2,
+                child: OutlinedButton.icon(
+                  onPressed: _goToPreviousStep,
+                  icon: const Icon(Icons.arrow_back, size: 18),
+                  label: const Text('Back'),
+                  style: OutlinedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    side: BorderSide(color: Colors.grey[300]!),
+                  ),
+                ),
+              ),
+              const SizedBox(width: 12),
+            ],
+
+            // Next/Submit button
+            Expanded(
+              flex: 3,
+              child: AnimatedContainer(
+                duration: const Duration(milliseconds: 200),
+                child: ElevatedButton.icon(
+                  onPressed: _isListButtonLoading
+                      ? null
+                      : (_currentStep == _stepTitles.length - 1
+                          ? _listShipment
+                          : _goToNextStep),
+                  icon: _isListButtonLoading
+                      ? const SizedBox(
+                          width: 18,
+                          height: 18,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            valueColor:
+                                AlwaysStoppedAnimation<Color>(Colors.white),
+                          ),
+                        )
+                      : Icon(
+                          _currentStep == _stepTitles.length - 1
+                              ? Icons.check
+                              : Icons.arrow_forward,
+                          size: 18,
+                        ),
+                  label: Text(
+                    _isListButtonLoading
+                        ? 'Processing...'
+                        : (_currentStep == _stepTitles.length - 1
+                            ? 'Create Shipment'
+                            : 'Continue'),
+                  ),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColors.blue700,
+                    foregroundColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    elevation: 2,
+                  ),
+                ),
+              ),
+            ),
+          ],
         ),
-      ],
+      ),
     );
+  }
+
+  bool _validateCurrentStep() {
+    switch (_currentStep) {
+      case 1: // Package Details
+        if (packageNameController.text.isEmpty) {
+          _showErrorWithAnimation('Package name is required');
+          return false;
+        }
+        if (descriptionController.text.isEmpty) {
+          _showErrorWithAnimation('Description is required');
+          return false;
+        }
+        if (typeController.text.isEmpty) {
+          _showErrorWithAnimation('Package type is required');
+          return false;
+        }
+        if (priceController.text.isEmpty) {
+          _showErrorWithAnimation('Price is required');
+          return false;
+        }
+        return true;
+      case 0: // Locations
+        if (fromController.text.isEmpty) {
+          _showErrorWithAnimation('Pickup location is required');
+          return false;
+        }
+        if (toController.text.isEmpty) {
+          _showErrorWithAnimation('Delivery location is required');
+          return false;
+        }
+        return true;
+      case 2: // Dimensions
+        if (weightController.text.isEmpty) {
+          _showErrorWithAnimation('Weight is required');
+          return false;
+        }
+        if (packageQuantityController.text.isEmpty) {
+          _showErrorWithAnimation('Quantity is required');
+          return false;
+        }
+        return true;
+      case 3: // Timing
+        if (dateController.text.isEmpty) {
+          _showErrorWithAnimation('Pickup date is required');
+          return false;
+        }
+        return true;
+      default:
+        return true;
+    }
+  }
+
+  void _goToNextStep() {
+    if (_validateCurrentStep()) {
+      HapticFeedback.lightImpact();
+      _pageController.nextPage(
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
+      );
+      setState(() => _currentStep++);
+    }
+  }
+
+  void _goToPreviousStep() {
+    HapticFeedback.lightImpact();
+    _pageController.previousPage(
+      duration: const Duration(milliseconds: 300),
+      curve: Curves.easeInOut,
+    );
+    setState(() => _currentStep--);
   }
 
   Future<void> _pickImage() async {
@@ -354,8 +597,21 @@ class _AddShipmentScreenState extends State<AddShipmentScreen>
     DateTime? pickedDate = await showDatePicker(
       context: context,
       initialDate: DateTime.now(),
-      firstDate: DateTime(2000),
-      lastDate: DateTime(2101),
+      firstDate: DateTime.now(),
+      lastDate: DateTime.now().add(const Duration(days: 365)),
+      builder: (context, child) {
+        return Theme(
+          data: Theme.of(context).copyWith(
+            colorScheme: ColorScheme.light(
+              primary: AppColors.blue700,
+              onPrimary: Colors.white,
+              surface: Colors.white,
+              onSurface: Colors.black,
+            ),
+          ),
+          child: child!,
+        );
+      },
     );
 
     if (pickedDate != null) {
@@ -365,386 +621,310 @@ class _AddShipmentScreenState extends State<AddShipmentScreen>
     }
   }
 
-  Widget _buildPackageDetails() {
-    return Container(
-        padding: const EdgeInsets.all(AppTheme.addShipmentPadding),
+  Widget _buildStepContainer({required Widget child}) {
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(16),
+      child: Container(
+        width: double.infinity,
+        padding: const EdgeInsets.all(24),
         decoration: BoxDecoration(
-          color: AppColors.cardBackground,
-          borderRadius: BorderRadius.circular(AppTheme.cardRadius),
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(16),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.08),
-              blurRadius: 8,
-              offset: Offset(0, 4),
+              color: Colors.black.withOpacity(0.05),
+              blurRadius: 10,
+              offset: const Offset(0, 4),
               spreadRadius: 0,
             ),
           ],
         ),
-        child: Column(
-          // mainAxisSize: MainAxisSize.max,
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            buildIconcard(
-                backgroundColor: AppColors.contactBackground,
-                color: AppColors.blue700,
-                icon: "assets/icon/package.svg",
-                title: "Package details"),
-            const SizedBox(
-              height: 10,
-            ),
-            TextFieldWithHeader(
-              controller: packageNameController,
-              headerText: "Packge Name",
-              hintText: "e.g, phone case, book, etc",
-              obsecureText: false,
-              keyboardType: TextInputType.text,
-              validator: Validators.notEmpty,
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            TextFieldWithHeader(
-              controller: descriptionController,
-              hintText: "Describe your package content...",
-              headerText: "Package description",
-              maxLines: 3,
-              validator: Validators.notEmpty,
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            TextFieldWithHeader(
-              controller: priceController,
-              hintText: "0.00",
-              headerText: "Price",
-              validator: Validators.notEmpty,
-              keyboardType: TextInputType.number,
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            TextWithRequiredIcon(text: "Package type"),
-            DropdownTextField(
-              validator: Validators.notEmpty,
-              controller: typeController,
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-          ],
-        ));
+        child: child,
+      ),
+    );
   }
 
-  Widget _buildPackageDemensions() {
-    return Container(
-        padding: const EdgeInsets.all(AppTheme.addShipmentPadding),
-        decoration: BoxDecoration(
-          color: AppColors.cardBackground,
-          borderRadius: BorderRadius.circular(AppTheme.cardRadius),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.1),
-              blurRadius: 8,
-              offset: const Offset(0, 2),
-            ),
-          ],
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            buildIconcard(
-                backgroundColor: const Color(0xFFEDE9FE),
-                color: const Color(0xFF8B5CF6),
-                icon: "assets/icon/package.svg",
-                title: "Package Dimensions"),
-            const SizedBox(
-              height: 10,
-            ),
-            TextFieldWithHeader(
-              controller: weightController,
-              hintText: "1.0",
-              headerText: "Weight (kg)",
-              keyboardType: TextInputType.number,
-              validator: Validators.notEmpty,
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            TextFieldWithHeader(
-              controller: packageQuantityController,
-              hintText: "1",
-              headerText: "Quantity",
-              keyboardType: TextInputType.number,
-              validator: Validators.notEmpty,
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            const Text(
-              "Demensions (cm)-optional",
-              style: TextStyle(
-                  color: AppColors.headingText,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 16),
-            ),
-            const SizedBox(
-              height: 4,
-            ),
-            Row(
-              children: [
-                Expanded(
-                  child: TextFieldWithHeader(
-                    controller: lengthController,
-                    hintText: "0",
-                    headerText: "Length ",
-                    keyboardType: TextInputType.number,
-                    isRequired: false,
-                  ),
+  Widget _buildPackageDetails() {
+    return _buildStepContainer(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _buildSectionHeader(
+            icon: Icons.inventory_2_outlined,
+            title: "Package Details",
+            color: AppColors.blue700,
+            backgroundColor: AppColors.blue700.withOpacity(0.1),
+          ),
+          const SizedBox(height: 24),
+
+          TextFieldWithHeader(
+            controller: packageNameController,
+            headerText: "Package Name",
+            hintText: "e.g., Phone case, Book, Documents",
+            obsecureText: false,
+            keyboardType: TextInputType.text,
+            validator: Validators.notEmpty,
+          ),
+          const SizedBox(height: 16),
+
+          TextFieldWithHeader(
+            controller: descriptionController,
+            hintText: "Describe your package content in detail...",
+            headerText: "Package Description",
+            maxLines: 3,
+            validator: Validators.notEmpty,
+          ),
+          const SizedBox(height: 16),
+          TextFieldWithHeader(
+            controller: priceController,
+            hintText: "0.00",
+            headerText: "Delivery Price (MAD)",
+            validator: Validators.notEmpty,
+            keyboardType: TextInputType.number,
+          ),
+          // Row(
+          //   children: [
+          //     Expanded(
+          //       child: TextFieldWithHeader(
+          //         controller: priceController,
+          //         hintText: "0.00",
+          //         headerText: "Delivery Price (MAD)",
+          //         validator: Validators.notEmpty,
+          //         keyboardType: TextInputType.number,
+          //       ),
+          //     ),
+          //     const SizedBox(width: 12),
+          //     Expanded(
+          //       child: Column(
+          //         crossAxisAlignment: CrossAxisAlignment.start,
+          //         children: [
+          //           TextWithRequiredIcon(text: "Package Type"),
+          //           const SizedBox(height: 4),
+          //           DropdownTextField(
+          //             validator: Validators.notEmpty,
+          //             controller: typeController,
+          //           ),
+          //         ],
+          //       ),
+          //     ),
+          //   ],
+          // ),
+
+          const SizedBox(height: 20),
+          buildInfoCard(
+            icon: Icons.info_outline,
+            title: "Pricing Tip",
+            message:
+                "Set a competitive price based on distance, package size, and urgency.",
+            color: Colors.blue,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildPackageDimensions() {
+    return _buildStepContainer(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _buildSectionHeader(
+            icon: Icons.straighten_outlined,
+            title: "Package Dimensions",
+            color: const Color(0xFF8B5CF6),
+            backgroundColor: const Color(0xFFEDE9FE),
+          ),
+          const SizedBox(height: 24),
+          Row(
+            children: [
+              Expanded(
+                child: TextFieldWithHeader(
+                  controller: weightController,
+                  hintText: "1.0",
+                  headerText: "Weight (kg)",
+                  keyboardType: TextInputType.number,
+                  validator: Validators.notEmpty,
                 ),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: TextFieldWithHeader(
-                    controller: widthController,
-                    hintText: "0",
-                    headerText: "Width",
-                    isRequired: false,
-                    keyboardType: TextInputType.number,
-                  ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: TextFieldWithHeader(
+                  controller: packageQuantityController,
+                  hintText: "1",
+                  headerText: "Quantity",
+                  keyboardType: TextInputType.number,
+                  validator: Validators.notEmpty,
                 ),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: TextFieldWithHeader(
-                    controller: heightController,
-                    hintText: "0",
-                    headerText: "Height",
-                    isRequired: false,
-                    keyboardType: TextInputType.number,
-                  ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 20),
+          Text(
+            "Dimensions (cm) - Optional",
+            style: TextStyle(
+              color: AppColors.headingText,
+              fontWeight: FontWeight.w600,
+              fontSize: 16,
+            ),
+          ),
+          const SizedBox(height: 12),
+          Row(
+            children: [
+              Expanded(
+                child: TextFieldWithHeader(
+                  controller: lengthController,
+                  hintText: "0",
+                  headerText: "Length",
+                  keyboardType: TextInputType.number,
+                  isRequired: false,
                 ),
-              ],
-            ),
-            const SizedBox(
-              height: 15,
-            ),
-          ],
-        ));
+              ),
+              const SizedBox(width: 8),
+              Expanded(
+                child: TextFieldWithHeader(
+                  controller: widthController,
+                  hintText: "0",
+                  headerText: "Width",
+                  isRequired: false,
+                  keyboardType: TextInputType.number,
+                ),
+              ),
+              const SizedBox(width: 8),
+              Expanded(
+                child: TextFieldWithHeader(
+                  controller: heightController,
+                  hintText: "0",
+                  headerText: "Height",
+                  isRequired: false,
+                  keyboardType: TextInputType.number,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 20),
+          buildInfoCard(
+            icon: Icons.scale_outlined,
+            title: "Accurate measurements help couriers prepare",
+            message:
+                "Providing dimensions helps couriers choose appropriate transport.",
+            color: Colors.purple,
+          ),
+        ],
+      ),
+    );
   }
 
   Widget _buildPackageDestination() {
-    return Container(
-        padding: const EdgeInsets.all(AppTheme.addShipmentPadding),
-        decoration: BoxDecoration(
-          color: AppColors.cardBackground,
-          borderRadius: BorderRadius.circular(AppTheme.cardRadius),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.1),
-              blurRadius: 8,
-              offset: const Offset(0, 2),
-            ),
-          ],
-        ),
-        child: Column(
-          // mainAxisSize: MainAxisSize.max,
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            buildIconcard(
-                backgroundColor: const Color(0xFFD1FAE5),
-                color: const Color(0xFF10B981),
-                icon: "assets/icon/map-point.svg",
-                title: "Delivery Locations"),
-            const SizedBox(
-              height: 10,
-            ),
-            TextFieldWithHeader(
-              controller: fromController,
-              hintText: "Enter pickup location ",
-              headerText: "Pickup Location",
-              validator: Validators.notEmpty,
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            TextFieldWithHeader(
-              controller: toController,
-              hintText: "Enter delivery location",
-              headerText: "Delivery Location",
-              validator: Validators.notEmpty,
-            ),
-            const SizedBox(
-              height: 16,
-            ),
-            TipWidget(message: 'Include landmarks, building numbers, and contact information for smoother pickup and delivery.',),
-                 
-          ],
-        ));
+    return _buildStepContainer(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _buildSectionHeader(
+            icon: Icons.location_on_outlined,
+            title: "Delivery Locations",
+            color: const Color(0xFF10B981),
+            backgroundColor: const Color(0xFFD1FAE5),
+          ),
+          const SizedBox(height: 24),
+          TextFieldWithHeader(
+            controller: fromController,
+            hintText: "Enter detailed pickup location",
+            headerText: "Pickup Location",
+            validator: Validators.notEmpty,
+          ),
+          const SizedBox(height: 16),
+          TextFieldWithHeader(
+            controller: toController,
+            hintText: "Enter detailed delivery location",
+            headerText: "Delivery Location",
+            validator: Validators.notEmpty,
+          ),
+          const SizedBox(height: 20),
+          buildInfoCard(
+            icon: Icons.location_on,
+            title: "Location Details Matter",
+            message:
+                "Include landmarks, building numbers, and floor details for smoother pickup and delivery.",
+            color: Colors.green,
+          ),
+        ],
+      ),
+    );
   }
 
   Widget _buildTimingDetails() {
-    return Container(
-        padding: const EdgeInsets.all(AppTheme.addShipmentPadding),
-        decoration: BoxDecoration(
-          color: AppColors.cardBackground,
-          borderRadius: BorderRadius.circular(AppTheme.cardRadius),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.1),
-              blurRadius: 8,
-              offset: const Offset(0, 2),
-            ),
-          ],
-        ),
-        child: Column(
-          // mainAxisSize: MainAxisSize.max,
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            buildIconcard(
-                backgroundColor: const Color(0xFFFEF3C7),
-                color: const Color(0xFFF59E0B),
-                icon: "assets/icon/camera-add.svg",
-                title: "Package Image & Timing"),
-            const SizedBox(
-              height: 16,
-            ),
-            TextWithRequiredIcon(text: "Package image"),
-            ImageUpload(
-              onPressed: _pickImage,
-              backgroundColor: AppColors.cardBackground,
-              controller: dateController,
-              hintText: "",
-            ),
-            const SizedBox(
-              height: 20,
-            ),
-            TextWithRequiredIcon(text: "Preferred Pickup Time"),
-            DateTextField(
-              controller: dateController,
-              backgroundColor: AppColors.cardBackground,
-              onTap: () => _selectDate(context),
-              hintText: dateController.text,
-              validator: Validators.notEmpty,
-            ),
-            const SizedBox(
-              height: 16,
-            ),
-            Container(
-                padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  gradient: const LinearGradient(
-                    colors: [Color(0xFFFEF3C7), Color(0xFFFEF9C3)],
-                  ),
-                  borderRadius: BorderRadius.circular(12),
-                  border: Border.all(color: const Color(0xFFFCD34D)),
-                ),
-                child: Column(
-                  children: [
-                    const Row(
-                      children: [
-                        Icon(Icons.schedule,
-                            color: Color(0xFFF59E0B), size: 20),
-                        SizedBox(width: 8),
-                        Text(
-                          'Timing Note',
-                          style: TextStyle(
-                            fontWeight: FontWeight.w600,
-                            color: Color(0xFF92400E),
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      'We\'ll contact you to confirm the exact pickup time within your preferred date.',
-                      style: TextStyle(
-                        fontSize: 13,
-                        color: Colors.orange[800],
-                      ),
-                    ),
-                  ],
-                )),
-          ],
-        ));
-  }
-
-  Widget _buildImage() {
-    return Container(
-        padding: const EdgeInsets.all(AppTheme.addShipmentPadding),
-        decoration: BoxDecoration(
-          color: AppColors.cardBackground,
-          borderRadius: BorderRadius.circular(AppTheme.cardRadius),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.1),
-              blurRadius: 8,
-              offset: const Offset(0, 2),
-            ),
-          ],
-        ),
-        child: Column(
-          // mainAxisSize: MainAxisSize.max,
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Row(
-              children: [
-                CustomIcon(
-                  iconPath: "assets/icon/camera-add.svg",
-                  size: 20,
-                  color: AppColors.blue,
-                ),
-                SizedBox(
-                  width: 8,
-                ),
-                Text(
-                  "Upload Image",
-                  style: TextStyle(
-                      color: AppColors.headingText,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 20),
-                ),
-              ],
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            TextWithRequiredIcon(text: "Package image"),
-            ImageUpload(
-              onPressed: _pickImage,
-              backgroundColor: AppColors.cardBackground,
-              controller: dateController,
-              hintText: "",
-            )
-          ],
-        ));
-  }
-}
-
-Widget buildIconcard(
-    {required icon, required backgroundColor, required color, required title}) {
-  return Row(children: [
-    Container(
-      padding: const EdgeInsets.all(8),
-      decoration: BoxDecoration(
-          color: backgroundColor, borderRadius: BorderRadius.circular(8)),
-      child: CustomIcon(
-        iconPath: icon,
-        size: 20,
-        color: color,
+    return _buildStepContainer(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _buildSectionHeader(
+            icon: Icons.schedule_outlined,
+            title: "Timing & Image",
+            color: const Color(0xFFF59E0B),
+            backgroundColor: const Color(0xFFFEF3C7),
+          ),
+          const SizedBox(height: 24),
+          TextWithRequiredIcon(text: "Package Image"),
+          const SizedBox(height: 8),
+          ImageUpload(
+            onPressed: _pickImage,
+            backgroundColor: AppColors.cardBackground,
+            controller: dateController,
+            hintText: "",
+          ),
+          const SizedBox(height: 20),
+          TextWithRequiredIcon(text: "Preferred Pickup Date"),
+          const SizedBox(height: 8),
+          DateTextField(
+            controller: dateController,
+            backgroundColor: AppColors.cardBackground,
+            onTap: () => _selectDate(context),
+            hintText: "Select pickup date",
+            validator: Validators.notEmpty,
+          ),
+          const SizedBox(height: 20),
+          buildInfoCard(
+            icon: Icons.schedule,
+            title: "Flexible Timing",
+            message:
+                "We'll contact you to confirm the exact pickup time within your preferred date.",
+            color: Colors.orange,
+          ),
+        ],
       ),
-    ),
-    const SizedBox(
-      width: 8,
-    ),
-    Text(
-      title,
-      style: TextStyle(
-          color: AppColors.headingText,
-          fontWeight: FontWeight.bold,
-          fontSize: 20),
-    ),
-  ]);
+    );
+  }
+
+  Widget _buildSectionHeader({
+    required IconData icon,
+    required String title,
+    required Color color,
+    required Color backgroundColor,
+  }) {
+    return Row(
+      children: [
+        Container(
+          padding: const EdgeInsets.all(12),
+          decoration: BoxDecoration(
+            color: backgroundColor,
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: Icon(
+            icon,
+            size: 24,
+            color: color,
+          ),
+        ),
+        const SizedBox(width: 12),
+        Text(
+          title,
+          style: TextStyle(
+            color: AppColors.headingText,
+            fontWeight: FontWeight.w600,
+            fontSize: 20,
+          ),
+        ),
+      ],
+    );
+  }
 }

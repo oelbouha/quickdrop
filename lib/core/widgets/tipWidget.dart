@@ -1,34 +1,48 @@
 
 import 'package:quickdrop_app/core/utils/imports.dart';
 
-Widget TipWidget({
-  required message,
-}) {
-  return Container(
-    padding: const EdgeInsets.all(16),
-    decoration: BoxDecoration(
-      gradient: const LinearGradient(
-        colors: [Color(0xFFEFF6FF), Color(0xFFD1FAE5)],
+  Widget buildInfoCard({
+    required IconData icon,
+    required String title,
+    required String message,
+    required Color color,
+  }) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: color.withOpacity(0.1),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: color.withOpacity(0.2)),
       ),
-      borderRadius: BorderRadius.circular(12),
-      border: Border.all(color: const Color(0xFFBFDBFE)),
-    ),
-    child: Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisAlignment: MainAxisAlignment.start,
-      children: [
-        const Icon(Icons.tips_and_updates, color: Color(0xFF3B82F6), size: 20),
-        const SizedBox(width: 8),
-        Expanded(
-          child: Text(
-            message,
-            style: TextStyle(
-              fontSize: 13,
-              color: Colors.grey[700],
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Icon(icon, color: color, size: 20),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title,
+                  style: TextStyle(
+                    fontWeight: FontWeight.w600,
+                    color: color.withOpacity(0.8),
+                    fontSize: 14,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  message,
+                  style: TextStyle(
+                    fontSize: 13,
+                    color: color.withOpacity(0.7),
+                  ),
+                ),
+              ],
             ),
           ),
-        ),
-      ],
-    ),
-  );
-}
+        ],
+      ),
+    );
+  }
