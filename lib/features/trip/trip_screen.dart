@@ -1,6 +1,7 @@
 import 'package:quickdrop_app/core/utils/imports.dart';
 import 'package:quickdrop_app/core/widgets/listing_skeleton.dart';
 import 'package:go_router/go_router.dart';
+import 'package:flutter/rendering.dart';
 
 class TripScreen extends StatefulWidget {
   const TripScreen({Key? key}) : super(key: key);
@@ -16,6 +17,9 @@ class _TripScreenState extends State<TripScreen>
   UserData? user;
   bool _isLoading = true;
   late TabController _tabController;
+
+  final ScrollController _scrollController = ScrollController();
+  bool _isExpanded = true;
 
   void removeTrip(String id) async {
     final confirmed = await ConfirmationDialog.show(
@@ -43,36 +47,12 @@ class _TripScreenState extends State<TripScreen>
         }
       } 
       
-    // showDialog(
-    //     context: context,
-    //     builder: (context) => ConfirmationDialog(
-    //         message: AppTheme.deleteTripText,
-    //         header: "Delete trip",
-    //         onPressed: () async {
-    //           try {
-    //             await Provider.of<TripProvider>(context, listen: false)
-    //                 .deleteTrip(id);
-    //             await Provider.of<DeliveryRequestProvider>(context,
-    //                     listen: false)
-    //                 .deleteRequestsByTripId(id);
-    //             AppUtils.showDialog(
-    //                 context, 'Trip deleted succusfully!', AppColors.succes);
-    //             Provider.of<StatisticsProvider>(context, listen: false)
-    //                 .decrementField(user!.uid, "pendingTrips");
-    //           } catch (e) {
-    //             if (mounted) {
-    //               AppUtils.showDialog(
-    //                   context, 'Failed to delete Trip: $e', AppColors.error);
-    //             }
-    //           } finally {
-    //             if (mounted) Navigator.pop(context);
-    //           }
-    //         }));
   }
 
   @override
   void initState() {
     super.initState();
+    _scrollController.addListener(_handleScroll);
     _tabController = TabController(length: 3, vsync: this);
     userPhotoUrl =
         Provider.of<UserProvider>(context, listen: false).user?.photoUrl;
@@ -109,6 +89,14 @@ class _TripScreenState extends State<TripScreen>
         }
       }
     });
+  }
+
+   void _handleScroll() {
+    if (_scrollController.position.userScrollDirection == ScrollDirection.reverse && _isExpanded) {
+      setState(() => _isExpanded = false);
+    } else if (_scrollController.position.userScrollDirection == ScrollDirection.forward && !_isExpanded) {
+      setState(() => _isExpanded = true);
+    }
   }
 
   @override
@@ -164,6 +152,7 @@ class _TripScreenState extends State<TripScreen>
 
               return TabBarView(
                 controller: _tabController,
+                
                 children: [
                   _buildActiveTrips(activeTrips),
                   _buildOngoingTrips(ongoingTrips),
@@ -172,9 +161,78 @@ class _TripScreenState extends State<TripScreen>
               );
             }),
       floatingActionButton: FloatButton(
+        expanded: _isExpanded,
         onTap: () => {context.push("/add-trip")},
         hintText: "Add trip",
         iconPath: "assets/icon/add.svg",
+      ),
+    );
+  }
+
+ Widget _buildEmptyState({
+    required IconData icon,
+    required String title,
+    required String subtitle,
+    required String buttonText,
+  }) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(48),
+      child: Column(
+        children: [
+          Icon(
+            icon,
+            size: 64,
+            color: AppColors.textLight,
+          ),
+          const SizedBox(height: 16),
+          Text(
+            title,
+            style: const TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.w600,
+              color: AppColors.textSecondary,
+            ),
+            textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: 8),
+          Text(
+            subtitle,
+            style: const TextStyle(
+              color: AppColors.textMuted,
+              fontSize: 16,
+            ),
+            textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: 24),
+          Container(
+            decoration: BoxDecoration(
+              gradient: const LinearGradient(
+                colors: [AppColors.blueStart, AppColors.purpleStart],
+              ),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: ElevatedButton(
+              onPressed: () => {context.push("/add-trip")},
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.transparent,
+                shadowColor: Colors.transparent,
+                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+              ),
+              child: Text(
+                buttonText,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -185,8 +243,14 @@ class _TripScreenState extends State<TripScreen>
           left: AppTheme.cardPadding, right: AppTheme.cardPadding),
       color: AppColors.background,
       child: activeTrips.isEmpty
-          ? Center(child: Message(context, 'No active trips'))
+          ? Center(child: _buildEmptyState(
+               icon: Icons.directions_car,
+                title: "No active trips",
+                subtitle: "Start earning by offering trip capacity!",
+                buttonText: "Post Trip",
+              ))
           : ListView.builder(
+             controller: _scrollController,
               itemCount: activeTrips.length,
               itemBuilder: (context, index) {
                 return Column(
@@ -212,8 +276,14 @@ class _TripScreenState extends State<TripScreen>
             left: AppTheme.cardPadding, right: AppTheme.cardPadding),
         color: AppColors.background,
         child: ongoingTrips.isEmpty
-            ? Center(child: Message(context, 'No ongoing trips'))
+            ? Center(child: _buildEmptyState(
+               icon: Icons.directions_car,
+                title: "No ovgoing trips",
+                subtitle: "Start earning by offering trip capacity!",
+                buttonText: "Post Trip",
+              ))
             : ListView.builder(
+               controller: _scrollController,
                 itemCount: ongoingTrips.length,
                 itemBuilder: (context, index) {
                   final trip = ongoingTrips[index];
@@ -249,8 +319,14 @@ class _TripScreenState extends State<TripScreen>
             left: AppTheme.cardPadding, right: AppTheme.cardPadding),
         color: AppColors.background,
         child: completedTrips.isEmpty
-            ? Center(child: Message(context, 'No completed trips'))
+            ? Center(child: _buildEmptyState(
+               icon: Icons.directions_car,
+                title: "No completed trips",
+                subtitle: "Start earning by offering trip capacity!",
+                buttonText: "Post Trip",
+              ))
             : ListView.builder(
+               controller: _scrollController,
                 itemCount: completedTrips.length,
                 itemBuilder: (context, index) {
                   final trip = completedTrips[index];
