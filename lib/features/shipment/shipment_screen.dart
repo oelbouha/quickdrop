@@ -77,37 +77,82 @@ class _ShipmentScreenState extends State<ShipmentScreen>
                 context, 'Failed to delete shipment: $e', AppColors.error);
         } 
       
-    // showDialog(
-    //   context: context,
-    //   builder: (context) => ConfirmationDialog(
-    //     message: AppTheme.deleteShipmentText,
-    //     iconPath: "assets/icon/trash-bin.svg",
-    //     onPressed: () async {
-    //       try {
-    //         await Provider.of<ShipmentProvider>(context, listen: false)
-    //             .deleteShipment(id);
-    //         await Provider.of<DeliveryRequestProvider>(context, listen: false)
-    //             .deleteRequestsByShipmentId(id);
-    //         AppUtils.showDialog(
-    //             context, 'Shipment deleted succusfully', AppColors.succes);
-    //         Provider.of<StatisticsProvider>(context, listen: false)
-    //             .decrementField(user!.uid, "pendingShipments");
-    //       } catch (e) {
-    //         if (mounted)
-    //           AppUtils.showDialog(
-    //               context, 'Failed to delete shipment: $e', AppColors.error);
-    //       } finally {
-    //         Navigator.pop(context);
-    //       }
-    //     },
-    //   ),
-    // );
+   
   }
 
   @override
   void dispose() {
     _tabController.dispose();
     super.dispose();
+  }
+
+
+  Widget _buildEmptyState({
+    required IconData icon,
+    required String title,
+    required String subtitle,
+    required String buttonText,
+  }) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(48),
+      child: Column(
+        children: [
+          Icon(
+            icon,
+            size: 64,
+            color: AppColors.textLight,
+          ),
+          const SizedBox(height: 16),
+          Text(
+            title,
+            style: const TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.w600,
+              color: AppColors.textSecondary,
+            ),
+            textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: 8),
+          Text(
+            subtitle,
+            style: const TextStyle(
+              color: AppColors.textMuted,
+              fontSize: 16,
+            ),
+            textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: 24),
+          Container(
+            decoration: BoxDecoration(
+              gradient: const LinearGradient(
+                colors: [AppColors.blueStart, AppColors.purpleStart],
+              ),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: ElevatedButton(
+              onPressed: () => {context.push("/add-shipment")},
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.transparent,
+                shadowColor: Colors.transparent,
+                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+              ),
+              child: Text(
+                buttonText,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
   @override
@@ -180,7 +225,12 @@ class _ShipmentScreenState extends State<ShipmentScreen>
             left: AppTheme.cardPadding, right: AppTheme.cardPadding),
         color: AppColors.background,
         child: activeShipments.isEmpty
-            ? Center(child: Message(context, 'No active shipments'))
+            ? Center(child: _buildEmptyState(
+                icon: Icons.inventory_2,
+                title: "No active shipments",
+                subtitle: "Be the first to post a shipment request!",
+                buttonText: "Post Shipment",
+              ))
             : ListView.builder(
                 itemCount: activeShipments.length,
                 itemBuilder: (context, index) {
@@ -211,7 +261,12 @@ class _ShipmentScreenState extends State<ShipmentScreen>
             left: AppTheme.cardPadding, right: AppTheme.cardPadding),
         color: AppColors.background,
         child: ongoingShipments.isEmpty
-            ? Center(child: Message(context, 'No ongoing shipments'))
+            ? Center(child: _buildEmptyState(
+                icon: Icons.inventory_2,
+                title: "No Ongoing shipments",
+                subtitle: "Be the first to post a shipment request!",
+                buttonText: "Post Shipment",
+              ))
             : ListView.builder(
                 itemCount: ongoingShipments.length,
                 itemBuilder: (context, index) {
@@ -250,7 +305,12 @@ class _ShipmentScreenState extends State<ShipmentScreen>
             left: AppTheme.cardPadding, right: AppTheme.cardPadding),
         color: AppColors.background,
         child: pastShipments.isEmpty
-            ? Center(child: Message(context, 'No completed shipments'))
+            ? Center(child: _buildEmptyState(
+                icon: Icons.inventory_2,
+                title: "No Completed shipments",
+                subtitle: "Be the first to post a shipment request!",
+                buttonText: "Post Shipment",
+              ))
             : ListView.builder(
                 itemCount: pastShipments.length,
                 itemBuilder: (context, index) {
