@@ -232,7 +232,7 @@ class _SignupState extends State<Signup> {
         const SizedBox(
           height: 6,
         ),
-        LoginButton(
+        Button(
           hintText: "Continue",
           onPressed: _signupUserWithEmail,
           isLoading: _isEmailLoading,
