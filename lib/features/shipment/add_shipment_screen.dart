@@ -64,6 +64,8 @@ class _AddShipmentScreenState extends State<AddShipmentScreen>
     packageQuantityController.text = "1";
     weightController.text = "1";
     typeController.text = "water";
+    fromController.text = "cassa";
+    toController.text = "martil";
   }
 
   void _setupAnimations() {
@@ -626,16 +628,15 @@ class _AddShipmentScreenState extends State<AddShipmentScreen>
       padding: const EdgeInsets.all(16),
       child: Container(
         width: double.infinity,
-        padding: const EdgeInsets.all(24),
+        padding: const EdgeInsets.all(20),
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(16),
           boxShadow: [
-            BoxShadow(
+             BoxShadow(
               color: Colors.black.withOpacity(0.05),
               blurRadius: 10,
               offset: const Offset(0, 4),
-              spreadRadius: 0,
             ),
           ],
         ),
@@ -673,6 +674,7 @@ class _AddShipmentScreenState extends State<AddShipmentScreen>
             headerText: "Package Description",
             maxLines: 3,
             validator: Validators.notEmpty,
+           
           ),
           const SizedBox(height: 16),
           TextFieldWithHeader(
@@ -828,16 +830,18 @@ class _AddShipmentScreenState extends State<AddShipmentScreen>
           const SizedBox(height: 24),
           TextFieldWithHeader(
             controller: fromController,
-            hintText: "Enter detailed pickup location",
+            hintText: "From",
             headerText: "Pickup Location",
             validator: Validators.notEmpty,
+             iconPath : "assets/icon/map-point.svg"
           ),
           const SizedBox(height: 16),
           TextFieldWithHeader(
             controller: toController,
-            hintText: "Enter detailed delivery location",
+            hintText: "To",
             headerText: "Delivery Location",
             validator: Validators.notEmpty,
+             iconPath : "assets/icon/map-point.svg"
           ),
           const SizedBox(height: 20),
           buildInfoCard(
@@ -911,17 +915,17 @@ class _AddShipmentScreenState extends State<AddShipmentScreen>
           ),
           child: Icon(
             icon,
-            size: 24,
+            size: 20,
             color: color,
           ),
         ),
         const SizedBox(width: 12),
         Text(
           title,
-          style: TextStyle(
+          style: const TextStyle(
             color: AppColors.headingText,
             fontWeight: FontWeight.w600,
-            fontSize: 20,
+            fontSize: 18,
           ),
         ),
       ],
