@@ -9,7 +9,7 @@ class TextFieldWithHeader extends StatelessWidget {
   final String headerText;
   final bool obsecureText;
   final bool isRequired;
-  final String iconPath;
+  final String? iconPath;
   final TextInputType keyboardType;
   final String? Function(String?)? validator;
   final void Function(String)? onChanged;
@@ -19,7 +19,7 @@ class TextFieldWithHeader extends StatelessWidget {
     super.key,
     required this.controller,
     required this.hintText,
-    this.iconPath = "d  ",
+    this.iconPath = null,
     required this.headerText,
     this.obsecureText = false,
     this.keyboardType = TextInputType.text,
@@ -71,12 +71,20 @@ class TextFieldWithHeader extends StatelessWidget {
             hintStyle: TextStyle(
               color: Colors.grey[400],
             ),
+            prefixIcon: iconPath != null ? Padding(
+                padding:  EdgeInsets.all(12),
+                child: CustomIcon(
+                  iconPath: iconPath!,
+                  size: 20,
+                  color: AppColors.lessImportant,
+                ),
+              ) : null,
             filled: true,
             fillColor: AppColors.white,
             enabledBorder: OutlineInputBorder(
-              borderSide: const BorderSide(
-                color: AppColors.lessImportant,
-                // width: AppTheme.textFieldBorderWidth,
+              borderSide:  BorderSide(
+                color: Colors.grey,
+                width: AppTheme.textFieldBorderWidth,
               ),
               borderRadius: BorderRadius.circular(AppTheme.textFeildRadius),
             ),
