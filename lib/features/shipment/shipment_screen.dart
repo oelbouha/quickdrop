@@ -1,3 +1,4 @@
+import 'package:flutter/rendering.dart';
 import 'package:quickdrop_app/core/utils/imports.dart';
 import 'package:quickdrop_app/core/widgets/listing_skeleton.dart';
 
@@ -10,6 +11,10 @@ class ShipmentScreen extends StatefulWidget {
 
 class _ShipmentScreenState extends State<ShipmentScreen>
     with SingleTickerProviderStateMixin {
+  
+   final ScrollController _scrollController = ScrollController();
+  bool _isExpanded = true;
+
   int selectedIndex = 0;
   bool _isLoading = true;
   UserData? user;
@@ -19,6 +24,8 @@ class _ShipmentScreenState extends State<ShipmentScreen>
   @override
   void initState() {
     super.initState();
+
+    _scrollController.addListener(_handleScroll);
 
     _tabController = TabController(length: 3, vsync: this);
     userPhotoUrl =
@@ -54,6 +61,14 @@ class _ShipmentScreenState extends State<ShipmentScreen>
     });
   }
 
+    void _handleScroll() {
+    if (_scrollController.position.userScrollDirection == ScrollDirection.reverse && _isExpanded) {
+      setState(() => _isExpanded = false);
+    } else if (_scrollController.position.userScrollDirection == ScrollDirection.forward && !_isExpanded) {
+      setState(() => _isExpanded = true);
+    }
+  }
+
   void removeShipment(String id) async {
     //  print("Removing shipment with id: $id");
      final confirmed = await ConfirmationDialogTypes.showDeleteConfirmation(
@@ -76,13 +91,12 @@ class _ShipmentScreenState extends State<ShipmentScreen>
             AppUtils.showDialog(
                 context, 'Failed to delete shipment: $e', AppColors.error);
         } 
-      
-   
   }
 
   @override
   void dispose() {
     _tabController.dispose();
+     _scrollController.dispose();
     super.dispose();
   }
 
@@ -208,6 +222,7 @@ class _ShipmentScreenState extends State<ShipmentScreen>
               );
             }),
       floatingActionButton: FloatButton(
+        expanded: _isExpanded,
         onTap: () {
           context.push("/add-shipment");
         },
@@ -232,6 +247,7 @@ class _ShipmentScreenState extends State<ShipmentScreen>
                 buttonText: "Post Shipment",
               ))
             : ListView.builder(
+               controller: _scrollController,
                 itemCount: activeShipments.length,
                 itemBuilder: (context, index) {
                   final shipment = activeShipments[index];
@@ -268,6 +284,7 @@ class _ShipmentScreenState extends State<ShipmentScreen>
                 buttonText: "Post Shipment",
               ))
             : ListView.builder(
+               controller: _scrollController,
                 itemCount: ongoingShipments.length,
                 itemBuilder: (context, index) {
                   final shipment = ongoingShipments[index];
@@ -312,6 +329,7 @@ class _ShipmentScreenState extends State<ShipmentScreen>
                 buttonText: "Post Shipment",
               ))
             : ListView.builder(
+               controller: _scrollController,
                 itemCount: pastShipments.length,
                 itemBuilder: (context, index) {
                   final trip = pastShipments[index];
