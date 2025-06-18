@@ -337,7 +337,7 @@ class _LoginPageState extends State<LoginPage> {
             const SizedBox(
               height: 25,
             ),
-            LoginButton(
+            Button(
               hintText: "Sign in",
               onPressed: _signInUserWithEmail,
               isLoading: _isEmailLoading,

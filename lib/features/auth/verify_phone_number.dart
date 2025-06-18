@@ -152,7 +152,7 @@ class _VerifyPhoneScreenState extends State<VerifyPhoneScreen> {
                   ),
                 ),
                 const SizedBox(height: 20),
-                LoginButton(
+                Button(
                   hintText: "Continue",
                   backgroundColor: AppColors.dark,
                   onPressed: () {

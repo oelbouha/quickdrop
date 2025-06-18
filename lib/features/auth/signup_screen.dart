@@ -261,7 +261,7 @@ class _SingupPageState extends State<SignUpScreen> {
                 children: [
                   const TextSpan(text: "By clicking "),
                   const TextSpan(
-                    text: "Agree and Continue, ",
+                    text: "Continue, ",
                     style: TextStyle(
                       fontWeight: FontWeight.w700,
                       color: AppColors.dark,
@@ -302,7 +302,7 @@ class _SingupPageState extends State<SignUpScreen> {
             const SizedBox(
               height: 20,
             ),
-            LoginButton(
+            Button(
                 hintText: "Continue",
                 backgroundColor: AppColors.dark,
                 onPressed: _singUpUserWithEmail,
