@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:quickdrop_app/theme/colors.dart';
 import 'package:quickdrop_app/theme/AppTheme.dart';
+import 'package:quickdrop_app/core/widgets/custom_svg.dart';
 
 class TextFieldWithoutHeader extends StatelessWidget {
   final TextEditingController controller;
   final String hintText;
+  final String? iconPath;
   final bool obsecureText;
   final bool isRequired;
   final TextInputType keyboardType;
@@ -14,6 +16,7 @@ class TextFieldWithoutHeader extends StatelessWidget {
   const TextFieldWithoutHeader({
     super.key,
     required this.controller,
+    this.iconPath = null,
     required this.hintText,
     this.obsecureText = false,
     this.keyboardType = TextInputType.text,
@@ -22,7 +25,7 @@ class TextFieldWithoutHeader extends StatelessWidget {
     this.onChanged,
   });
 
-  @override
+
   @override
   Widget build(BuildContext context) {
     return TextFormField(
@@ -38,6 +41,16 @@ class TextFieldWithoutHeader extends StatelessWidget {
           color: AppColors.lessImportant,
         ),
         filled: true,
+           
+         prefixIcon: iconPath != null ? Padding(
+                padding:  EdgeInsets.all(12),
+                child: CustomIcon(
+                  iconPath: iconPath!,
+                  size: 20,
+                  color: AppColors.lessImportant,
+               
+            ),
+              ) : null,
         fillColor: AppColors.white,
         enabledBorder: OutlineInputBorder(
           borderSide: const BorderSide(

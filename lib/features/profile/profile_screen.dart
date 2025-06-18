@@ -60,36 +60,7 @@ class _ProfileScreenState extends State<ProfileScreen>
           _isSignoutLoading = false;
         });
       }
-      
-    // showDialog(
-    //     context: context,
-    //     builder: (context) => ConfirmationDialog(
-    //         message: "Are you sure you want to log out",
-    //         buttonHintText: "Confirm",
-    //         iconPath: "assets/icon/logout.svg",
-    //         header: "Log Out",
-    //         onPressed: () async {
-    //           // Navigator.pop(context);
-    //           if (_isSignoutLoading) return;
-    //           setState(() {
-    //             _isSignoutLoading = true;
-    //           });
-    //           try {
-    //             // AppUtils.showLoading(context);
-    //             await FirebaseAuth.instance.signOut();
-    //             if (mounted) {
-    //               Provider.of<UserProvider>(context, listen: false).clearUser();
-    //               context.go("/login");
-    //             }
-    //           } on FirebaseException catch (e) {
-    //             AppUtils.showDialog(
-    //                 context, 'Error signing out: $e', AppColors.error);
-    //           } finally {
-    //             setState(() {
-    //               _isSignoutLoading = false;
-    //             });
-    //           }
-    //         }));
+          
   }
 
   @override

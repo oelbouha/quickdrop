@@ -7,7 +7,7 @@ class UpdateUserInfoScreen extends StatefulWidget {
   State<UpdateUserInfoScreen> createState() => UpdateUserInfoScreenState();
 }
 
-class UpdateUserInfoScreenState extends State<UpdateUserInfoScreen> 
+class UpdateUserInfoScreenState extends State<UpdateUserInfoScreen>
     with TickerProviderStateMixin {
   bool _isLoading = false;
   final firstNameController = TextEditingController();
@@ -15,16 +15,16 @@ class UpdateUserInfoScreenState extends State<UpdateUserInfoScreen>
   final phoneNumberController = TextEditingController();
   final emailController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
-  
+
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
-  
+
   UserData? user;
 
   @override
   void initState() {
     super.initState();
-    
+
     // Initialize animation
     _animationController = AnimationController(
       duration: const Duration(milliseconds: 800),
@@ -33,10 +33,10 @@ class UpdateUserInfoScreenState extends State<UpdateUserInfoScreen>
     _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
       CurvedAnimation(parent: _animationController, curve: Curves.easeInOut),
     );
-    
+
     user = Provider.of<UserProvider>(context, listen: false).user;
     _initializeFields();
-    
+
     // Start animation
     _animationController.forward();
   }
@@ -63,34 +63,43 @@ class UpdateUserInfoScreenState extends State<UpdateUserInfoScreen>
 
     // Haptic feedback
     HapticFeedback.lightImpact();
-    
+
     if (_formKey.currentState!.validate()) {
       // Show confirmation dialog
-      final confirmed = await _showConfirmationDialog();
+      final confirmed =  await ConfirmationDialog.show(
+        context: context,
+        message: 'Are you sure you want to update your information?',
+        header: 'Save Changes',
+        buttonHintText: 'save',
+        buttonColor: AppColors.blue700,
+        iconColor: AppColors.blue700,
+        iconData: Icons.save,
+      );
       if (!confirmed) return;
 
       setState(() => _isLoading = true);
-      
+
       try {
         final user = Provider.of<UserProvider>(context, listen: false).user;
         UserData updatedUser = UserData(
           uid: user!.uid,
-          displayName: '${firstNameController.text.trim()} ${lastNameController.text.trim()}',
+          displayName:
+              '${firstNameController.text.trim()} ${lastNameController.text.trim()}',
           email: emailController.text.trim(),
           firstName: firstNameController.text.trim(),
           lastName: lastNameController.text.trim(),
           phoneNumber: phoneNumberController.text.trim(),
         );
-        
+
         await Provider.of<UserProvider>(context, listen: false)
             .updateUserInfo(updatedUser);
-            
+
         if (mounted) {
           // Success haptic feedback
           HapticFeedback.mediumImpact();
-          
-          _showSuccessSnackBar();
-          
+
+          AppUtils.showDialog(context, "Information updated successfully!", AppColors.succes);
+
           // Delay navigation to show success message
           await Future.delayed(const Duration(milliseconds: 1500));
           Navigator.pop(context, true); // Return true to indicate success
@@ -98,7 +107,7 @@ class UpdateUserInfoScreenState extends State<UpdateUserInfoScreen>
       } catch (e) {
         if (mounted) {
           HapticFeedback.heavyImpact();
-          _showErrorSnackBar(e.toString());
+          AppUtils.showDialog(context, "Failed to update profile information", AppColors.error);
         }
       } finally {
         if (mounted) {
@@ -109,76 +118,6 @@ class UpdateUserInfoScreenState extends State<UpdateUserInfoScreen>
       // Validation failed haptic feedback
       HapticFeedback.heavyImpact();
     }
-  }
-
-  Future<bool> _showConfirmationDialog() async {
-    return await showDialog<bool>(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-          title: Row(
-            children: [
-              Icon(Icons.save, color: AppColors.blue),
-              const SizedBox(width: 8),
-              const Text('Save Changes'),
-            ],
-          ),
-          content: const Text('Are you sure you want to update your information?'),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(false),
-              child: Text('Cancel', style: TextStyle(color: Colors.grey[600])),
-            ),
-            ElevatedButton(
-              onPressed: () => Navigator.of(context).pop(true),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.blue,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-              ),
-              child: const Text('Save', style: TextStyle(color: Colors.white)),
-            ),
-          ],
-        );
-      },
-    ) ?? false;
-  }
-
-  void _showSuccessSnackBar() {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Row(
-          children: [
-            Icon(Icons.check_circle, color: Colors.white),
-            const SizedBox(width: 8),
-            const Text('Information updated successfully!'),
-          ],
-        ),
-        backgroundColor: AppColors.success,
-        behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-        margin: const EdgeInsets.all(16),
-      ),
-    );
-  }
-
-  void _showErrorSnackBar(String error) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Row(
-          children: [
-            Icon(Icons.error, color: Colors.white),
-            const SizedBox(width: 8),
-            Expanded(child: Text('Failed to update: ${error.length > 50 ? 'Please try again' : error}')),
-          ],
-        ),
-        backgroundColor: AppColors.error,
-        behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-        margin: const EdgeInsets.all(16),
-        duration: const Duration(seconds: 4),
-      ),
-    );
   }
 
   @override
@@ -233,7 +172,7 @@ class UpdateUserInfoScreenState extends State<UpdateUserInfoScreen>
 
   Widget _buildHeaderSection() {
     return Container(
-      padding: const EdgeInsets.all(24),
+      padding: const EdgeInsets.all(18),
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [AppColors.blue.withOpacity(0.1), Colors.white],
@@ -320,10 +259,11 @@ class UpdateUserInfoScreenState extends State<UpdateUserInfoScreen>
           ],
         ),
         const SizedBox(height: 16),
-        _buildInfoCard(
+        buildInfoCard(
           icon: Icons.info_outline,
           title: "Important",
-          message: "Make sure this matches the name on your government ID or passport.",
+          message:
+              "Make sure this matches the name on your government ID or passport.",
           color: Colors.blue,
         ),
       ],
@@ -398,51 +338,6 @@ class UpdateUserInfoScreenState extends State<UpdateUserInfoScreen>
     );
   }
 
-  Widget _buildInfoCard({
-    required IconData icon,
-    required String title,
-    required String message,
-    required Color color,
-  }) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: color.withOpacity(0.3)),
-      ),
-      child: Row(
-        children: [
-          Icon(icon, color: color, size: 20),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  title,
-                  style: TextStyle(
-                    fontWeight: FontWeight.w600,
-                    color: color,
-                    fontSize: 14,
-                  ),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  message,
-                  style: TextStyle(
-                    color: color.withOpacity(0.8),
-                    fontSize: 12,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
   Widget _buildSaveButton() {
     return Container(
       width: double.infinity,
@@ -450,9 +345,9 @@ class UpdateUserInfoScreenState extends State<UpdateUserInfoScreen>
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(16),
         gradient: LinearGradient(
-          colors: _isLoading 
-            ? [Colors.grey, Colors.grey] 
-            : [AppColors.blue, AppColors.blue.withOpacity(0.8)],
+          colors: _isLoading
+              ? [Colors.grey, Colors.grey]
+              : [AppColors.blue, AppColors.blue.withOpacity(0.8)],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
@@ -576,15 +471,17 @@ class _ImprovedTextFieldState extends State<ImprovedTextField> {
             hintStyle: TextStyle(color: Colors.grey[400]),
             prefixIcon: Icon(
               widget.icon,
-              color: _isFocused 
-                ? AppColors.blue700 
-                : _hasError 
-                  ? AppColors.error 
-                  : Colors.grey[400],
+              color: _isFocused
+                  ? AppColors.blue700
+                  : _hasError
+                      ? AppColors.error
+                      : Colors.grey[400],
               size: 20,
             ),
             filled: true,
-            fillColor: _isFocused ? AppColors.blue700.withOpacity(0.05) : Colors.grey[50],
+            fillColor: _isFocused
+                ? AppColors.blue700.withOpacity(0.05)
+                : Colors.grey[50],
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
               borderSide: BorderSide.none,
@@ -601,7 +498,8 @@ class _ImprovedTextFieldState extends State<ImprovedTextField> {
               borderRadius: BorderRadius.circular(12),
               borderSide: BorderSide(color: AppColors.error, width: 2),
             ),
-            contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+            contentPadding:
+                const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
           ),
           // onFocusChange: (focused) {
           //   setState(() {
