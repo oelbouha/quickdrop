@@ -5,7 +5,7 @@ class FloatButton extends StatelessWidget {
   final String hintText;
   final Color backgroundColor;
   final VoidCallback onTap;
-   final bool expanded;
+  final bool expanded;
 
   const FloatButton({
     super.key,
@@ -37,7 +37,7 @@ class FloatButton extends StatelessWidget {
           ],
         ),
         child: AnimatedSize(
-          duration: const Duration(milliseconds: 300),
+          duration: const Duration(milliseconds: 400),
           curve: Curves.easeInOut,
           child: Row(
             mainAxisSize: MainAxisSize.min,
