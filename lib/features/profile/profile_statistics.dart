@@ -16,7 +16,6 @@ class ProfileStatisticsState extends State<ProfileStatistics> {
   late int pendingShipments;
   late int ongoingShipments;
   late int completedShipments;
-  // List<NotificationModel> notifications = [];
 
   @override
   void initState() {
@@ -265,8 +264,9 @@ class ProfileStatisticsState extends State<ProfileStatistics> {
       builder: (context, reviewProvider, child) {
         final reviews = reviewProvider.reviews;
         return Container(
+          width: double.infinity,
           margin: const EdgeInsets.symmetric(horizontal: 16),
-          child: Column(
+          child: Expanded(child:Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Row(
@@ -308,7 +308,7 @@ class ProfileStatisticsState extends State<ProfileStatistics> {
               _buildReviewsList(reviews),
             ],
           ),
-        );
+        ));
       },
     );
   }
@@ -348,6 +348,7 @@ class ProfileStatisticsState extends State<ProfileStatistics> {
 
   Widget _buildEmptyReviews() {
     return Container(
+      width: double.infinity,
       padding: const EdgeInsets.all(32),
       decoration: BoxDecoration(
         color: AppColors.white,
