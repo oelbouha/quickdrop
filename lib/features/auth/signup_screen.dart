@@ -201,6 +201,7 @@ class _SingupPageState extends State<SignUpScreen> {
             TextFieldWithoutHeader(
               controller: lastNameController,
               hintText: 'Last name on ID',
+              iconPath: "assets/icon/user.svg",
               obsecureText: false,
               validator: Validators.name,
             ),
@@ -208,8 +209,8 @@ class _SingupPageState extends State<SignUpScreen> {
             
              buildInfoCard(
               icon: Icons.info_outline,
-              title: "Name Tip",
-              message: "Make sure this matches the name on your government ID or passport.",
+              title: "Important Note",
+              message: "Make sure your name matches your government ID. You must be 18+ to use QuickDrop.",
               color: Colors.blue,
             ),
             // TipWidget(message: "Make sure this matches the name on your government ID or passport."),
@@ -224,13 +225,13 @@ class _SingupPageState extends State<SignUpScreen> {
               keyboardType: TextInputType.datetime,
               validator: Validators.notEmpty,
             ),
-            const SizedBox(height: 8),
-             buildInfoCard(
-              icon: Icons.info_outline,
-              title: "Age Tip",
-              message: "To Sign up, you must be at least 18 years old. other peaaple  who use quickdrop won't see your birthday.",
-              color: Colors.blue,
-            ),
+            // const SizedBox(height: 8),
+            //  buildInfoCard(
+            //   icon: Icons.info_outline,
+            //   title: "Age Tip",
+            //   message: "To Sign up, you must be at least 18 years old. other peaaple  who use quickdrop won't see your birthday.",
+            //   color: Colors.blue,
+            // ),
             const SizedBox(height: 15),
             TextFieldWithHeader(
               controller: emailController,
@@ -245,7 +246,7 @@ class _SingupPageState extends State<SignUpScreen> {
             PasswordTextfield(
               controller: passwordController,
               validator: Validators.notEmpty,
-              showPrefix: false,
+              showPrefix: true,
             ),
             const SizedBox(
               height: 20,
@@ -302,7 +303,7 @@ class _SingupPageState extends State<SignUpScreen> {
               height: 20,
             ),
             LoginButton(
-                hintText: "Agree and Continue",
+                hintText: "Continue",
                 backgroundColor: AppColors.dark,
                 onPressed: _singUpUserWithEmail,
                 isLoading: _isEmailLoading),
