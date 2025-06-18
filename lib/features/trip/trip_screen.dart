@@ -110,6 +110,7 @@ class _TripScreenState extends State<TripScreen>
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: CustomAppBar(
+        expanded: _isExpanded,
         userPhotoUrl: userPhotoUrl!,
         tabController: _tabController,
         tabs: const [

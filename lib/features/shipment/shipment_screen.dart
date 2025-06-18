@@ -174,6 +174,7 @@ class _ShipmentScreenState extends State<ShipmentScreen>
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: CustomAppBar(
+        expanded: _isExpanded,
         userPhotoUrl: userPhotoUrl!,
         tabController: _tabController,
         tabs: const [

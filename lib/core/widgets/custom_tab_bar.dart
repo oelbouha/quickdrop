@@ -10,47 +10,64 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final TabController tabController;
   final List tabs;
   final String? title;
+  final bool expanded;
   const CustomAppBar({
     super.key,
     required this.userPhotoUrl,
     required this.tabController,
+    this.expanded = true,
     required this.tabs,
     required this.title,
   });
   @override
   Widget build(BuildContext context) {
-    return AppBar(
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 400),  
+       curve: Curves.easeInOut,
+        height: preferredSize.height,
+      child: AppBar(
       backgroundColor: AppColors.appBarBackground,
-      title: Text(
-        title!,
-        style: const TextStyle(
-          color: AppColors.appBarText,
-          fontWeight: FontWeight.bold,
-        ),
-      ),
-      elevation: 0,
-      actions: [
-        IconButton(
-          icon: const CustomIcon(
-            iconPath: "assets/icon/notification.svg",
-            size: 22,
-            color: AppColors.appBarIcons,
-          ),
-          tooltip: 'notification',
-          onPressed: () => context.push("/notification"),
-        ),
-        GestureDetector(
-          onTap: () => context.push("/profile"),
-          child: CircleAvatar(
-            radius: 18,
-            backgroundColor: AppColors.blue,
-            backgroundImage: userPhotoUrl.startsWith("http")
-                ? NetworkImage(userPhotoUrl)
-                : AssetImage(userPhotoUrl) as ImageProvider,
-          ),
-        ),
-        const SizedBox(width: 10),
-      ],
+       title:  AnimatedSize(
+        duration: const Duration(milliseconds: 400),
+        curve: Curves.easeInOut,
+        child: expanded
+          ? Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                title!,
+                style: const TextStyle(
+                  color: AppColors.appBarText,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              Row(
+                children: [
+                  IconButton(
+                    icon: const CustomIcon(
+                      iconPath: "assets/icon/notification.svg",
+                      size: 22,
+                      color: AppColors.appBarIcons,
+                    ),
+                    tooltip: 'notification',
+                    onPressed: () => context.push("/notification"),
+                  ),
+                  GestureDetector(
+                    onTap: () => context.push("/profile"),
+                    child: CircleAvatar(
+                      radius: 18,
+                      backgroundColor: AppColors.blue,
+                      backgroundImage: userPhotoUrl.startsWith("http")
+                          ? NetworkImage(userPhotoUrl)
+                          : AssetImage(userPhotoUrl) as ImageProvider,
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+                ],
+              ),
+            ],
+          )
+        : null),
       bottom: PreferredSize(
         preferredSize: const Size.fromHeight(48),
         child: Container(
@@ -82,11 +99,11 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
           ),
         ),
       ),
-    );
+    ));
   }
 
   @override
-  Size get preferredSize => Size.fromHeight(kToolbarHeight + 48);
+  Size get preferredSize => Size.fromHeight(expanded ? kToolbarHeight + 48: 48);
 }
 
 
