@@ -22,7 +22,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AnimatedContainer(
-      duration: const Duration(milliseconds: 400),  
+      duration: const Duration(milliseconds: 350),  
       curve: Curves.easeOut,
       height: expanded ? kToolbarHeight + 80 : 100,
       child: AppBar(
@@ -67,19 +67,16 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
         : null,
       bottom: PreferredSize(
         preferredSize: const Size.fromHeight(48),
-        child: Container(
-          height: 48,
-          color: AppColors.background,
+        child:  AnimatedSlide(
+            duration: const Duration(milliseconds: 350),
+            curve: Curves.easeInOutCubic,
+            offset: expanded ? Offset.zero : const Offset(0, -0.1),
+            
           child: TabBar(
             controller: tabController,
             labelColor: AppColors.tabTextActive,
             unselectedLabelColor: AppColors.tabTextInactive,
-            indicator: const UnderlineGradientIndicator(
-            gradient: LinearGradient(
-              colors: [AppColors.blueStart, AppColors.purpleStart],
-            ),
-            strokeWidth: 3,
-          ),
+            indicatorColor: AppColors.blueStart,
             tabAlignment: TabAlignment.fill,
             indicatorWeight: 2,
             indicatorSize: TabBarIndicatorSize.label,
@@ -103,52 +100,3 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Size get preferredSize => Size.fromHeight(expanded ? kToolbarHeight + 48: 48);
 }
-
-
-
-class UnderlineGradientIndicator extends Decoration {
-  final Gradient gradient;
-  final double strokeWidth;
-
-  const UnderlineGradientIndicator({
-    required this.gradient,
-    this.strokeWidth = 3,
-  });
-
-  @override
-  BoxPainter createBoxPainter([VoidCallback? onChanged]) {
-    return _UnderlinePainter(gradient, strokeWidth, BorderRadius.circular(8));
-  }
-}
-class _UnderlinePainter extends BoxPainter {
-  final Gradient gradient;
-  final double strokeWidth;
-  final BorderRadius borderRadius;
-
-  _UnderlinePainter(this.gradient, this.strokeWidth, this.borderRadius);
-
-  @override
-  void paint(Canvas canvas, Offset offset, ImageConfiguration config) {
-    final width = config.size?.width ?? 0;
-    final height = config.size?.height ?? 0;
-    final rect = Rect.fromLTWH(
-      offset.dx,
-      offset.dy + height - strokeWidth,
-      width,
-      strokeWidth,
-    );
-
-    final rrect = borderRadius.toRRect(rect);
-
-    final paint = Paint()
-      ..shader = gradient.createShader(rect)
-      ..style = PaintingStyle.fill;
-
-    canvas.drawRRect(rrect, paint);
-  }
-}
-
-
-
-
-

@@ -87,9 +87,10 @@ class _ShipmentScreenState extends State<ShipmentScreen>
           Provider.of<StatisticsProvider>(context, listen: false)
               .decrementField(user!.uid, "pendingShipments");
         } catch (e) {
-          if (mounted)
+          if (mounted) {
             AppUtils.showDialog(
                 context, 'Failed to delete shipment: $e', AppColors.error);
+                }
         } 
   }
 
@@ -249,6 +250,7 @@ class _ShipmentScreenState extends State<ShipmentScreen>
               ))
             : ListView.builder(
                controller: _scrollController,
+             physics: const BouncingScrollPhysics(),
                 itemCount: activeShipments.length,
                 itemBuilder: (context, index) {
                   final shipment = activeShipments[index];
@@ -285,6 +287,7 @@ class _ShipmentScreenState extends State<ShipmentScreen>
                 buttonText: "Post Shipment",
               ))
             : ListView.builder(
+              physics: const BouncingScrollPhysics(),
                controller: _scrollController,
                 itemCount: ongoingShipments.length,
                 itemBuilder: (context, index) {
@@ -330,6 +333,7 @@ class _ShipmentScreenState extends State<ShipmentScreen>
                 buttonText: "Post Shipment",
               ))
             : ListView.builder(
+              physics: const BouncingScrollPhysics(),
                controller: _scrollController,
                 itemCount: pastShipments.length,
                 itemBuilder: (context, index) {
