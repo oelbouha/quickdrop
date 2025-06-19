@@ -6,6 +6,15 @@ class Validators {
     }
     return null;
   }
+  static String? isNumber(String? value) {
+    if (value == null || value.trim().isEmpty) {
+      return 'This field cannot be empty';
+    }
+    if (!RegExp(r'^[0-9]+$').hasMatch(value)) {
+      return 'Enter a valid number';
+    }
+    return null;
+  }
 
   static String? phone(String? value) {
     if (value == null || value.trim().isEmpty) {

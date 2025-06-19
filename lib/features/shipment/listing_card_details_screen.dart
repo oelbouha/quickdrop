@@ -100,7 +100,6 @@ class _ListingCardDetailsState extends State<ListingCardDetails> {
   }
 
   Widget _buildSliverApp() {
-
     return  SliverAppBar(
             expandedHeight: _selectedShipment == null ? 100 : 300,
             pinned: true,

@@ -684,33 +684,6 @@ class _AddShipmentScreenState extends State<AddShipmentScreen>
             validator: Validators.notEmpty,
             keyboardType: TextInputType.number,
           ),
-          // Row(
-          //   children: [
-          //     Expanded(
-          //       child: TextFieldWithHeader(
-          //         controller: priceController,
-          //         hintText: "0.00",
-          //         headerText: "Delivery Price (MAD)",
-          //         validator: Validators.notEmpty,
-          //         keyboardType: TextInputType.number,
-          //       ),
-          //     ),
-          //     const SizedBox(width: 12),
-          //     Expanded(
-          //       child: Column(
-          //         crossAxisAlignment: CrossAxisAlignment.start,
-          //         children: [
-          //           TextWithRequiredIcon(text: "Package Type"),
-          //           const SizedBox(height: 4),
-          //           DropdownTextField(
-          //             validator: Validators.notEmpty,
-          //             controller: typeController,
-          //           ),
-          //         ],
-          //       ),
-          //     ),
-          //   ],
-          // ),
 
           const SizedBox(height: 20),
           buildInfoCard(
