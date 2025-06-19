@@ -23,14 +23,11 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) {
     return AnimatedContainer(
       duration: const Duration(milliseconds: 400),  
-       curve: Curves.easeInOut,
-        height: preferredSize.height,
+      curve: Curves.easeOut,
+      height: expanded ? kToolbarHeight + 80 : 100,
       child: AppBar(
       backgroundColor: AppColors.appBarBackground,
-       title:  AnimatedSize(
-        duration: const Duration(milliseconds: 400),
-        curve: Curves.easeInOut,
-        child: expanded
+       title:   expanded
           ? Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -67,10 +64,11 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
               ),
             ],
           )
-        : null),
+        : null,
       bottom: PreferredSize(
         preferredSize: const Size.fromHeight(48),
         child: Container(
+          height: 48,
           color: AppColors.background,
           child: TabBar(
             controller: tabController,
