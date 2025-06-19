@@ -145,9 +145,10 @@ class _LoginPageState extends State<LoginPage> {
           setUserData(userCredential);
 
           // Save credentials
-          await saveCredentials(email, password);
-
-          if (mounted) context.go('/home');
+          // await saveCredentials(email, password);
+          print("switching to home");
+          // if (mounted)  
+           context.go('/home');
         } catch (e) {
           if (mounted) {
             AppUtils.showDialog(context, "failed to log in user $e", AppColors.error);

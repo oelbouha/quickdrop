@@ -97,16 +97,18 @@ void _setupAnimations() {
       try {
         await Provider.of<TripProvider>(context, listen: false).addTrip(trip);
         if (mounted) {
-          Navigator.pop(context);
-          AppUtils.showDialog(
-              context, 'Trip listed Successfully!', AppColors.succes);
+          // Navigator.pop(context);
+          // AppUtils.showDialog(
+          //     context, 'Trip listed Successfully!', AppColors.succes);
           Provider.of<StatisticsProvider>(context, listen: false)
               .incrementField(user.uid, "pendingTrips");
+              await _showSuccessAnimation();
         }
       } catch (e) {
-        if (mounted)
+        if (mounted) {
           AppUtils.showDialog(
               context, 'Failed to list Trip ${e}', AppColors.error);
+        }
       } finally {
         setState(() {
           _isListButtonLoading = false;
@@ -134,6 +136,67 @@ void _setupAnimations() {
       });
     }
   }
+
+
+  Future<void> _showSuccessAnimation() async {
+    HapticFeedback.lightImpact();
+
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (dialogContext) {
+        Future.delayed(const Duration(seconds: 2), () {
+          if (mounted) {
+            Navigator.of(dialogContext).pop();
+            Navigator.of(context).pop();
+          }
+        });
+        return AlertDialog(
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TweenAnimationBuilder<double>(
+                tween: Tween(begin: 0.0, end: 1.0),
+                duration: const Duration(milliseconds: 600),
+                builder: (context, value, child) {
+                  return Transform.scale(
+                    scale: value,
+                    child: Container(
+                      padding: const EdgeInsets.all(20),
+                      decoration: BoxDecoration(
+                        color: AppColors.success.withOpacity(0.1),
+                        shape: BoxShape.circle,
+                      ),
+                      child: Icon(
+                        Icons.check_circle,
+                        color: AppColors.success,
+                        size: 64 * value,
+                      ),
+                    ),
+                  );
+                },
+              ),
+              const SizedBox(height: 24),
+              const Text(
+                'Trip Listed Successfully!',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 8),
+              Text(
+                'Your Trip has been added and is now visible to peaple looking to send or receive packages.',
+                style: TextStyle(fontSize: 14, color: AppColors.textMuted),
+                textAlign: TextAlign.center,
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
 
 void _initializeDefaults() {
     weightController.text = "1";
@@ -166,55 +229,107 @@ void _initializeDefaults() {
     return Scaffold(
         backgroundColor: AppColors.background,
         appBar: AppBar(
-          backgroundColor: AppColors.appBarBackground,
-          title: const Text(
-            "Add your trip",
-            style: TextStyle(color: AppColors.white),
-          ),
-        ),
-        body: SingleChildScrollView(
-          child: Padding(
-              padding: const EdgeInsets.all(AppTheme.homeScreenPadding),
-              child: Form(
-                  key: _formKey,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            _buildProgressBar(),
-
-            Expanded(
-              child: AnimatedBuilder(
-                animation: _slideAnimation,
-                builder: (context, child) {
-                  return Transform.translate(
-                    offset: _slideAnimation.value,
-                    child: FadeTransition(
-                      opacity: _fadeAnimation,
-                      child: PageView(
-                        controller: _pageController,
-                        physics: const NeverScrollableScrollPhysics(),
-                        children: [
-                          _buildPackageDestination(),
-                          _buildPackageDestails(),
-                          // _buildPackageDimensions(),
-                          _buildTimingDetails(),
-                        ],
-                      ),
-                    ),
-                  );
-                },
+          backgroundColor: Colors.white,
+            elevation: 0,
+            title: const Text(
+              'Create Trip',
+              style: TextStyle(
+                color: AppColors.headingText,
+                fontWeight: FontWeight.w600,
+                fontSize: 20,
               ),
             ),
-
-            // Enhanced Navigation Buttons
-            _buildNavigationButtons(),
-          ],
+            centerTitle: true,
+            iconTheme: const IconThemeData(
+                color: Colors.black, // Set the arrow back color to black
+              ),
+              systemOverlayStyle:
+                  SystemUiOverlayStyle.dark,
         ),
-              )
-            ),
-        ));
+        body:  Padding(
+              padding: const EdgeInsets.all(AppTheme.homeScreenPadding),
+              child: Form(
+              key: _formKey,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  _buildProgressBar(),
+
+                  Expanded(
+                    child: AnimatedBuilder(
+                      animation: _slideAnimation,
+                      builder: (context, child) {
+                        return Transform.translate(
+                          offset: _slideAnimation.value,
+                          child: FadeTransition(
+                            opacity: _fadeAnimation,
+                            child: PageView(
+                              controller: _pageController,
+                              physics: const NeverScrollableScrollPhysics(),
+                              children: [
+                                _buildPackageDestination(),
+                                _buildTripDetails(),
+                                _buildTimingDetails(),
+                              ],
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+
+                  // Enhanced Navigation Buttons
+                  _buildNavigationButtons(),
+                ],
+              ),
+                    )
+                  ),
+        );
   }
+
+
+  Widget _buildTripDetails() {
+    return _buildStepContainer(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _buildSectionHeader(
+            icon: Icons.inventory_2_outlined,
+            title: "Trip Details",
+            color: AppColors.blue700,
+            backgroundColor: AppColors.blue700.withOpacity(0.1),
+          ),
+          const SizedBox(height: 16),
+          TextFieldWithHeader(
+            controller: priceController,
+            hintText: "0.00",
+            headerText: "Delivery Price (MAD)",
+            validator: Validators.isNumber,
+            keyboardType: TextInputType.number,
+          ),
+          const SizedBox(height: 16),
+          TextFieldWithHeader(
+            controller: weightController,
+            hintText: "0.00",
+            headerText: "Available Weight (kg)",
+            validator: Validators.isNumber,
+            keyboardType: TextInputType.number,
+          ),
+
+          const SizedBox(height: 20),
+          buildInfoCard(
+            icon: Icons.info_outline,
+            title: "Pricing Tip",
+            message:
+                "Set a competitive price based on distance, package size, and urgency.",
+            color: Colors.blue,
+          ),
+        ],
+      ),
+    );
+  }
+
 
 
   void _showErrorWithAnimation(String message) {
@@ -226,14 +341,6 @@ void _initializeDefaults() {
 
   bool _validateCurrentStep() {
     switch (_currentStep) {
-      case 1: // Package Details
-       
-        
-        if (priceController.text.isEmpty) {
-          _showErrorWithAnimation('Price is required');
-          return false;
-        }
-        return true;
       case 0: // Locations
         if (fromController.text.isEmpty) {
           _showErrorWithAnimation('Pickup location is required');
@@ -244,12 +351,25 @@ void _initializeDefaults() {
           return false;
         }
         return true;
+      case 1: // Package Details
+        if (priceController.text.isEmpty) {
+          _showErrorWithAnimation('Price is required');
+          return false;
+        }
+        if (Validators.isNumber(priceController.text) != null) {
+          _showErrorWithAnimation('Price must be a number');
+          return false;
+        }
+        return true;
       case 2: // Dimensions
         if (weightController.text.isEmpty) {
           _showErrorWithAnimation('Weight is required');
           return false;
         }
-        
+        if (Validators.isNumber(weightController.text) != null) {
+          _showErrorWithAnimation('Weight must be a number');
+          return false;
+        }
         return true;
       case 3: // Timing
         if (dateController.text.isEmpty) {
@@ -451,197 +571,143 @@ void _initializeDefaults() {
                   );
                 }),
               ),
-
-              // const SizedBox(height: 12),
-
-              // // Current step title
-              // AnimatedSwitcher(
-              //   duration: const Duration(milliseconds: 300),
-              //   child: Text(
-              //     _stepTitles[_currentStep],
-              //     key: ValueKey(_currentStep),
-              //     style: TextStyle(
-              //       fontSize: 16,
-              //       fontWeight: FontWeight.w600,
-              //       color: AppColors.headingText,
-              //     ),
-              //   ),
-              // ),
-
-              // const SizedBox(height: 8),
-
-              // Progress bar
-              // ClipRRect(
-              //   borderRadius: BorderRadius.circular(4),
-              //   child: LinearProgressIndicator(
-              //     value: (_currentStep + 1) / _stepTitles.length,
-              //     backgroundColor: Colors.grey[200],
-              //     valueColor: AlwaysStoppedAnimation<Color>(AppColors.blue700),
-              //     minHeight: 6,
-              //   ),
-              // ),
             ],
           ),
         ));
   }
 
-  Widget _buildPackageDestails() {
-    return Container(
-        padding: const EdgeInsets.all(AppTheme.addShipmentPadding),
+
+
+
+
+  Widget _buildSectionHeader({
+    required IconData icon,
+    required String title,
+    required Color color,
+    required Color backgroundColor,
+  }) {
+    return Row(
+      children: [
+        Container(
+          padding: const EdgeInsets.all(12),
+          decoration: BoxDecoration(
+            color: backgroundColor,
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: Icon(
+            icon,
+            size: 20,
+            color: color,
+          ),
+        ),
+        const SizedBox(width: 12),
+        Text(
+          title,
+          style: const TextStyle(
+            color: AppColors.headingText,
+            fontWeight: FontWeight.w600,
+            fontSize: 18,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildStepContainer({required Widget child}) {
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(16),
+      child: Container(
+        width: double.infinity,
+        padding: const EdgeInsets.all(20),
         decoration: BoxDecoration(
-            border: Border.all(
-                color: AppColors.lessImportant,
-                width: AppTheme.textFieldBorderWidth),
-            color: AppColors.cardBackground,
-            borderRadius: BorderRadius.circular(AppTheme.cardRadius)),
-        child: Column(
-          // mainAxisSize: MainAxisSize.max,
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Row(
-              children: [
-                CustomIcon(
-                  iconPath: "assets/icon/map-point.svg",
-                  size: 20,
-                  color: AppColors.blue,
-                ),
-                SizedBox(
-                  width: 8,
-                ),
-                Text(
-                  "Trip Details",
-                  style: TextStyle(
-                      color: AppColors.headingText,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 20),
-                ),
-              ],
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            TextFieldWithHeader(
-              controller: priceController,
-              hintText: "Available weight",
-              headerText: "Available Weight",
-              validator: Validators.notEmpty,
-              keyboardType: TextInputType.number,
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            TextFieldWithHeader(
-              controller: priceController,
-              hintText: "Price",
-              headerText: "Price",
-              validator: Validators.notEmpty,
-              keyboardType: TextInputType.number,
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: [
+             BoxShadow(
+              color: Colors.black.withOpacity(0.05),
+              blurRadius: 10,
+              offset: const Offset(0, 4),
             ),
           ],
-        ));
+        ),
+        child: child,
+      ),
+    );
   }
 
   Widget _buildPackageDestination() {
-    return Container(
-        padding: const EdgeInsets.all(AppTheme.addShipmentPadding),
-        decoration: BoxDecoration(
-            border: Border.all(
-                color: AppColors.lessImportant,
-                width: AppTheme.textFieldBorderWidth),
-            color: AppColors.cardBackground,
-            borderRadius: BorderRadius.circular(AppTheme.cardRadius)),
-        child: Column(
-          // mainAxisSize: MainAxisSize.max,
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Row(
-              children: [
-                CustomIcon(
-                  iconPath: "assets/icon/map-point.svg",
-                  size: 20,
-                  color: AppColors.blue,
-                ),
-                SizedBox(
-                  width: 8,
-                ),
-                Text(
-                  "Pickup & Delivery Details",
-                  style: TextStyle(
-                      color: AppColors.headingText,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 20),
-                ),
-              ],
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            TextFieldWithHeader(
-              controller: fromController,
-              hintText: "Enter pickup location ",
-              headerText: "Pickup Location",
-              validator: Validators.notEmpty,
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            TextFieldWithHeader(
-              controller: toController,
-              hintText: "Enter delivery location",
-              headerText: "Delivery Location",
-              validator: Validators.notEmpty,
-            ),
-          ],
-        ));
+    return _buildStepContainer(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _buildSectionHeader(
+            icon: Icons.location_on_outlined,
+            title: "Trip Locations",
+            color: const Color(0xFF10B981),
+            backgroundColor: const Color(0xFFD1FAE5),
+          ),
+          const SizedBox(height: 24),
+          TextFieldWithHeader(
+            controller: fromController,
+            hintText: "From",
+            headerText: "Pickup Location",
+            validator: Validators.notEmpty,
+             iconPath : "assets/icon/map-point.svg"
+          ),
+          const SizedBox(height: 16),
+          TextFieldWithHeader(
+            controller: toController,
+            hintText: "To",
+            headerText: "Delivery Location",
+            validator: Validators.notEmpty,
+             iconPath : "assets/icon/map-point.svg"
+          ),
+          const SizedBox(height: 20),
+          buildInfoCard(
+            icon: Icons.location_on,
+            title: "Location Details Matter",
+            message:
+                "Include landmarks, building numbers, and floor details for smoother pickup and delivery.",
+            color: Colors.green,
+          ),
+        ],
+      ),
+    );
   }
 
+
   Widget _buildTimingDetails() {
-    return Container(
-        padding: const EdgeInsets.all(AppTheme.addShipmentPadding),
-        decoration: BoxDecoration(
-            border: Border.all(
-                color: AppColors.lessImportant,
-                width: AppTheme.textFieldBorderWidth),
-            color: AppColors.cardBackground,
-            borderRadius: BorderRadius.circular(AppTheme.cardRadius)),
-        child: Column(
-          // mainAxisSize: MainAxisSize.max,
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Row(
-              children: [
-                CustomIcon(
-                  iconPath: "assets/icon/time.svg",
-                  size: 20,
-                  color: AppColors.blue,
-                ),
-                SizedBox(
-                  width: 8,
-                ),
-                Text(
-                  "Timing",
-                  style: TextStyle(
-                      color: AppColors.headingText,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 20),
-                ),
-              ],
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            TextWithRequiredIcon(text: "Preferred Pickup Time"),
-            DateTextField(
-              controller: dateController,
-              backgroundColor: AppColors.cardBackground,
-              onTap: () => _selectDate(context),
-              hintText: dateController.text,
-              validator: Validators.notEmpty,
-            ),
-          ],
-        ));
+    return _buildStepContainer(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _buildSectionHeader(
+            icon: Icons.schedule_outlined,
+            title: "Timing",
+            color: const Color(0xFFF59E0B),
+            backgroundColor: const Color(0xFFFEF3C7),
+          ),
+        
+          const SizedBox(height: 20),
+          TextWithRequiredIcon(text: "Preferred Pickup Date"),
+          const SizedBox(height: 8),
+          DateTextField(
+            controller: dateController,
+            backgroundColor: AppColors.cardBackground,
+            onTap: () => _selectDate(context),
+            hintText: "Select pickup date",
+            validator: Validators.notEmpty,
+          ),
+          const SizedBox(height: 20),
+          buildInfoCard(
+            icon: Icons.schedule,
+            title: "Flexible Timing",
+            message:
+                "We'll contact you to confirm the exact pickup time within your preferred date.",
+            color: Colors.orange,
+          ),
+        ],
+      ),
+    );
   }
 }
