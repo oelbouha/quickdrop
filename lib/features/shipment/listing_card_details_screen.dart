@@ -2,7 +2,7 @@ import 'package:quickdrop_app/core/utils/imports.dart';
 import 'package:quickdrop_app/core/widgets/destination.dart';
 
 class ListingCardDetails extends StatefulWidget {
-  final Shipment shipment;
+  final TransportItem shipment;
   final UserData user;
 
   const ListingCardDetails(
@@ -16,8 +16,31 @@ class _ListingCardDetailsState extends State<ListingCardDetails> {
   final priceController = TextEditingController();
   final noteController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
+  bool _isTrip = false;
   bool _isLoading = false;
-  Trip? _selectedTrip;
+  Shipment? _selectedShipment ;
+  Trip? _selectedTrip ;
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.shipment is Shipment) {
+      _selectedShipment = widget.shipment as Shipment?;
+    }
+    // _isTrip = widget.shipment is Trip;
+    if (widget.shipment is Trip) {
+      _selectedTrip = widget.shipment as Trip?;
+    }
+
+    // print("is trip ${_isTrip}");
+  }
+
+  @override
+  void dispose() {
+    priceController.dispose();
+    noteController.dispose();
+    super.dispose();
+  }
 
   void _sendDeliveryRequest(Trip? trip) async {
     if (_isLoading) return;
@@ -76,54 +99,196 @@ class _ListingCardDetailsState extends State<ListingCardDetails> {
     }
   }
 
+  Widget _buildSliverApp() {
+
+    return  SliverAppBar(
+            expandedHeight: _selectedShipment == null ? 100 : 300,
+            pinned: true,
+            backgroundColor: AppColors.background,
+
+            flexibleSpace: _selectedShipment == null ? null : FlexibleSpaceBar(
+               background: _displayImage(),
+            ),
+            leading: Container(
+              margin: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: Colors.black.withOpacity(0.3),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: BackButton(color: Colors.white),
+            ),
+            actions: [
+              Container(
+                margin: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: Colors.black.withOpacity(0.3),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: IconButton(
+                  icon: const Icon(Icons.share, color: Colors.white),
+                  onPressed: () {
+                    // Share functionality
+                  },
+                ),
+              ),
+            ],
+            
+          );
+  }
+
   @override
   build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.background,
-      appBar: AppBar(
-        backgroundColor: AppColors.barColor,
-        title: const Text(
-          "Shipment Details",
-          style: TextStyle(
-              color: AppColors.white,
-              fontWeight: FontWeight.bold,
-              fontSize: 18),
-        ),
-      ),
-      body: Stack(
-        children: [
-          SingleChildScrollView(
-            child: Container(
-              color: AppColors.background,
+      body: CustomScrollView(
+        slivers: [
+          _buildSliverApp(),
+           SliverToBoxAdapter(
               child: Column(
                 children: [
-                  _displayImage(),
                   _buildUserProfile(),
                   _buildDescription(),
                   const SizedBox(height: 20),
-                  _buildDetails(),
-                  const SizedBox(height: 80), // space for bottom bar
+                  _buildDetailsSection(),
+                  const SizedBox(height: 150), // space for bottom bar
                 ],
+              ),
+          ),
+        ],
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      floatingActionButton: _buildPriceAndAction(),
+    );
+  }
+ Widget _buildDetailsSection() {
+
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: AppColors.cardBackground,
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(
+              alpha: 0.05,
+            ),
+            blurRadius: 10,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            "Package Details",
+            style: TextStyle(
+              color: AppColors.headingText,
+              fontWeight: FontWeight.bold,
+              fontSize: 20,
+            ),
+          ),
+          const SizedBox(height: 20),
+          _buildDetailItem(
+            icon: "assets/icon/delivery.svg",
+            title: "Route",
+            child: Destination(
+              from: widget.shipment.from,
+              to: widget.shipment.to,
+              fontSize: 16,
+              iconSize: 16,
+            ),
+          ),
+          _buildDetailItem(
+            icon: "assets/icon/calendar.svg",
+            title: "Delivery Date",
+            child: Text(
+              widget.shipment.date,
+              style: const TextStyle(
+                color: AppColors.headingText,
+                fontSize: 16,
               ),
             ),
           ),
-          Positioned(
-            left: 0,
-            right: 0,
-            bottom: 0,
-            child: Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  border: Border(
-                    top: BorderSide(
-                      color: AppColors.lessImportant,
-                      width: 1,
-                    ),
+          _buildDetailItem(
+            icon: "assets/icon/weight.svg",
+            title: _selectedShipment == null ? "Available Weight" : "Weight",
+            child: Text(
+              '${widget.shipment.weight} kg',
+              style: const TextStyle(
+                color: AppColors.headingText,
+                fontSize: 16,
+              ),
+            ),
+          ),
+          // _buildDetailItem(
+          //   icon: "assets/icon/package.svg",
+          //   title: "Package Type",
+          //   child: Text(
+          //     '${widget.shipment.weight} kg',
+          //     style: const TextStyle(
+          //       color: AppColors.headingText,
+          //       fontSize: 16,
+          //     ),
+          //   ),
+          // ),
+          if (_selectedShipment != null ) _buildDetailItem(
+            icon: "assets/icon/package.svg",
+            title: "Package type",  
+            child: Text(
+              '${_selectedShipment?.type } ',
+              style: const TextStyle(
+                color: AppColors.headingText,
+                fontSize: 16,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+
+   Widget _buildDetailItem({
+    required String icon,
+    required String title,
+    required Widget child,
+  }) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 16),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            padding: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              color: AppColors.blue.withOpacity(0.1),
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: CustomIcon(
+              iconPath: icon,
+              color: AppColors.blue,
+              size: 20,
+            ),
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title,
+                  style: const TextStyle(
+                    color: AppColors.lessImportant,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
                   ),
                 ),
-                child: _buildPriceAndAction()),
+                const SizedBox(height: 4),
+                child,
+              ],
+            ),
           ),
         ],
       ),
@@ -131,81 +296,99 @@ class _ListingCardDetailsState extends State<ListingCardDetails> {
   }
 
   Widget _buildPriceAndAction() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              "STARTING FROM",
-              style: TextStyle(
-                fontSize: 10,
-                fontWeight: FontWeight.w500,
-                color: AppColors.lessImportant,
-                letterSpacing: 0.8,
-              ),
-            ),
-            const SizedBox(height: 2),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.baseline,
-              textBaseline: TextBaseline.alphabetic,
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 16),
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.1),
+            blurRadius: 20,
+            offset: const Offset(0, -5),
+          ),
+        ],
+      ),
+      child: Row(
+        children: [
+          Expanded(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                ShaderMask(
-                  shaderCallback: (bounds) => const LinearGradient(
-                    colors: [AppColors.blue, Colors.purple],
-                  ).createShader(bounds),
-                  child: Text(
-                    widget.shipment.price,
-                    style: const TextStyle(
-                      fontSize: 32,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 4),
-                Text(
-                  "dh",
+                const Text(
+                  "Starting from",
                   style: TextStyle(
                     fontSize: 12,
                     fontWeight: FontWeight.w600,
-                    color: Colors.grey[400],
+                    color: AppColors.lessImportant,
+                    letterSpacing: 1,
                   ),
                 ),
-              ],
-            ),
-          ],
-        ),
-        GestureDetector(
-          onTap: _showRequestSheet,
-          child: AnimatedContainer(
-            duration: const Duration(milliseconds: 200),
-            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-            decoration: BoxDecoration(
-              gradient: const LinearGradient(
-                colors: [AppColors.blue, Colors.purple],
-              ),
-              borderRadius: BorderRadius.circular(16),
-              boxShadow: [
-                BoxShadow(
-                  color: AppColors.blue.withOpacity(0.3),
-                  blurRadius: 8,
-                  offset: const Offset(0, 4),
+                const SizedBox(height: 4),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.baseline,
+                  textBaseline: TextBaseline.alphabetic,
+                  children: [
+                    ShaderMask(
+                      shaderCallback: (bounds) => const LinearGradient(
+                        colors: [AppColors.blue, Colors.purple],
+                      ).createShader(bounds),
+                      child: Text(
+                        widget.shipment.price,
+                        style: const TextStyle(
+                          fontSize: 28,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 4),
+                    Text(
+                      "dh",
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.grey[400],
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
-            child: const Text(
-              "Make Offer",
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 12,
-                fontWeight: FontWeight.w600,
+          ),
+          const SizedBox(width: 16),
+          GestureDetector(
+            onTap: _showRequestSheet,
+            child: AnimatedContainer(
+              duration: const Duration(milliseconds: 200),
+              padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+              decoration: BoxDecoration(
+                gradient: const LinearGradient(
+                  colors: [AppColors.blue, Colors.purple],
+                ),
+                borderRadius: BorderRadius.circular(16),
+                boxShadow: [
+                  BoxShadow(
+                    color: AppColors.blue.withOpacity(0.4),
+                    blurRadius: 12,
+                    offset: const Offset(0, 6),
+                  ),
+                ],
+              ),
+              child: const Text(
+                "Make Offer",
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 
@@ -225,206 +408,32 @@ class _ListingCardDetailsState extends State<ListingCardDetails> {
     );
   }
 
-  Widget _buildDetails() {
-    return Container(
-        decoration: const BoxDecoration(
-          // borderRadius: BorderRadius.circular(AppTheme.cardPadding),
-          border: const Border(
-            bottom: BorderSide(color: AppColors.lessImportant, width: 0.2),
-            top: BorderSide(color: AppColors.lessImportant, width: 0.2),
-          ),
-          color: AppColors.cardBackground,
-          //  boxShadow: [
-          //     BoxShadow(
-          //       color: AppColors.blue.withOpacity(0.2), // Shadow color
-          //       spreadRadius: 0, // How much the shadow spreads
-          //       blurRadius: 2, // Softness of the shadow
-          //       offset: Offset(0, 0), // X and Y offset
-          //     ),
-          // ],
-        ),
-        width: double.infinity,
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          // mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text("Package Details",
-                style: TextStyle(
-                    color: AppColors.headingText,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 26)),
-            const SizedBox(
-              height: 10,
-            ),
-            const Row(
-              children: [
-                CustomIcon(
-                  iconPath: "assets/icon/delivery.svg",
-                  color: AppColors.blue,
-                  size: 26,
-                ),
-                SizedBox(
-                  width: 10,
-                ),
-                Text("Destination",
-                    style:
-                        TextStyle(color: AppColors.headingText, fontSize: 20)),
-              ],
-            ),
-            Row(
-              children: [
-                const SizedBox(
-                  width: 15,
-                ),
-                Destination(
-                  from: widget.shipment.from,
-                  to: widget.shipment.to,
-                  fontSize: 18,
-                  iconSize: 18,
-                ),
-              ],
-            ),
-            const SizedBox(
-              height: 20,
-            ),
-            const Row(
-              children: [
-                CustomIcon(
-                  iconPath: "assets/icon/calendar.svg",
-                  color: AppColors.blue,
-                  size: 24,
-                ),
-                SizedBox(
-                  width: 10,
-                ),
-                Text("Estimated Delivery",
-                    style:
-                        TextStyle(color: AppColors.headingText, fontSize: 20)),
-              ],
-            ),
-            Row(
-              children: [
-                const SizedBox(
-                  width: 15,
-                ),
-                Text(widget.shipment.date,
-                    style: const TextStyle(
-                        color: AppColors.headingText, fontSize: 18)),
-              ],
-            ),
-            const SizedBox(
-              height: 20,
-            ),
-            const Row(
-              children: [
-                CustomIcon(
-                  iconPath: "assets/icon/weight.svg",
-                  color: AppColors.blue,
-                  size: 24,
-                ),
-                SizedBox(
-                  width: 10,
-                ),
-                Text("Weight",
-                    style:
-                        TextStyle(color: AppColors.headingText, fontSize: 20)),
-              ],
-            ),
-            Row(
-              children: [
-                const SizedBox(
-                  width: 15,
-                ),
-                Text('${widget.shipment.weight} kg',
-                    style: const TextStyle(
-                        color: AppColors.headingText, fontSize: 18)),
-              ],
-            ),
-            const SizedBox(
-              height: 20,
-            ),
-            const Row(
-              children: [
-                CustomIcon(
-                  iconPath: "assets/icon/package.svg",
-                  color: AppColors.blue,
-                  size: 24,
-                ),
-                SizedBox(
-                  width: 10,
-                ),
-                Text("Quantity & Type",
-                    style:
-                        TextStyle(color: AppColors.headingText, fontSize: 20)),
-              ],
-            ),
-            Row(
-              children: [
-                const SizedBox(
-                  width: 15,
-                ),
-                Text('${widget.shipment.weight} x ${widget.shipment.type}',
-                    style: const TextStyle(
-                        color: AppColors.headingText, fontSize: 18)),
-              ],
-            ),
-            const SizedBox(
-              height: 20,
-            ),
-            const Row(
-              children: [
-                CustomIcon(
-                  iconPath: "assets/icon/package.svg",
-                  color: AppColors.blue,
-                  size: 24,
-                ),
-                SizedBox(
-                  width: 10,
-                ),
-                // Text("Starting price",
-                //     style: TextStyle(color: AppColors.headingText, fontSize: 20)),
-              ],
-            ),
-            Row(
-              children: [
-                const SizedBox(
-                  width: 15,
-                ),
-                Text('${widget.shipment.price} dh',
-                    style:
-                        const TextStyle(color: AppColors.white, fontSize: 18)),
-              ],
-            ),
-          ],
-        ));
-  }
 
   Widget _buildDescription() {
+
+    if (_selectedShipment == null) {
+      return Container();
+    } 
     return Container(
-      decoration: const BoxDecoration(
-        // borderRadius: BorderRadius.circular(AppTheme.cardPadding),
-        border: const Border(
-          bottom: BorderSide(color: AppColors.lessImportant, width: 0.2),
-          top: BorderSide(color: AppColors.lessImportant, width: 0.2),
-        ),
+      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
         color: AppColors.cardBackground,
-        //  boxShadow: [
-        //     BoxShadow(
-        //       color: AppColors.blue.withOpacity(0.2), // Shadow color
-        //       spreadRadius: 1, // How much the shadow spreads
-        //       blurRadius: 2, // Softness of the shadow
-        //       offset: Offset(0, 0), // X and Y offset
-        //     ),
-        // ],
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 10,
+            offset: const Offset(0, 2),
+          ),
+        ],
       ),
       width: double.infinity,
-      padding: const EdgeInsets.all(16),
       child: Column(
         // mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(widget.shipment.packageName,
+          Text(_selectedShipment!.packageName,
               style: const TextStyle(
                   fontSize: 26,
                   color: AppColors.headingText,
@@ -434,7 +443,7 @@ class _ListingCardDetailsState extends State<ListingCardDetails> {
                   color: AppColors.headingText,
                   fontWeight: FontWeight.bold,
                   fontSize: 26)),
-          Text(widget.shipment.description,
+          Text(_selectedShipment!.description,
               style: const TextStyle(
                 fontSize: 20,
                 color: AppColors.headingText,
@@ -446,16 +455,49 @@ class _ListingCardDetailsState extends State<ListingCardDetails> {
 
   Widget _buildUserProfile() {
     return Container(
-        padding: const EdgeInsets.all(16),
-        child: UserProfileCard(
-          header: widget.user.displayName ?? "unknow user",
-          onPressed: () => {context.push("/profile")},
-          photoUrl: widget.user.photoUrl ?? AppTheme.defaultProfileImage,
-          subHeader: "⭐ 4.5",
-          headerFontSize: 16,
-          subHeaderFontSize: 10,
-          avatarSize: 22,
-        ));
+        margin: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(20),
+        decoration: BoxDecoration(
+          color: AppColors.cardBackground,
+          borderRadius: BorderRadius.circular(20),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.05),
+              blurRadius: 10,
+              offset: const Offset(0, 2),
+            ),
+          ],
+        ),
+        child: Row(
+          children: [ 
+          UserProfileCard(
+            header: widget.user.displayName ?? "unknow user",
+            onPressed: () => {context.push("/profile")},
+            photoUrl: widget.user.photoUrl ?? AppTheme.defaultProfileImage,
+            subHeader: "⭐ 4.5",
+            headerFontSize: 16,
+            subHeaderFontSize: 10,
+            avatarSize: 22,
+      ),
+      const Spacer(),
+       GestureDetector(
+            onTap: () => context.push("/profile"),
+            child: Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: AppColors.background,
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: const Icon(
+                Icons.arrow_forward_ios,
+                size: 16,
+                color: AppColors.blue,
+              ),
+            ),
+       ),
+
+      ]
+    ));
   }
 
   void _showRequestSheet() {
