@@ -98,6 +98,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                       Expanded(
                         child: SingleChildScrollView(
+                          physics: const BouncingScrollPhysics(),
                           padding: const EdgeInsets.symmetric(horizontal: 20),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.center,
@@ -397,85 +398,7 @@ class _HomeScreenState extends State<HomeScreen> {
       ],
     );
   }
-
-  Widget _buildToggleButtons() {
-    return Container(
-      padding: const EdgeInsets.all(4),
-      decoration: BoxDecoration(
-        color: AppColors.hoverGray100,
-        borderRadius: BorderRadius.circular(16),
-      ),
-      child: Row(
-        children: [
-          Expanded(
-            child: _buildToggleButton(
-              text: "Shipments",
-              iconPath: "assets/icon/package.svg",
-              isSelected: selectedIndex == 0,
-              onPressed: () => setState(() => selectedIndex = 0),
-            ),
-          ),
-          const SizedBox(width: 8),
-          Expanded(
-            child: _buildToggleButton(
-              text: "Trips",
-              iconPath: "assets/icon/car.svg",
-              isSelected: selectedIndex == 1,
-              onPressed: () => setState(() => selectedIndex = 1),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildToggleButton({
-    required String text,
-    required String iconPath,
-    required bool isSelected,
-    required VoidCallback onPressed,
-  }) {
-    return GestureDetector(
-      onTap: onPressed,
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 300),
-        padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 20),
-        decoration: BoxDecoration(
-          color: isSelected ? Colors.white : Colors.transparent,
-          borderRadius: BorderRadius.circular(12),
-          boxShadow: isSelected
-              ? [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.1),
-                    blurRadius: 8,
-                    offset: const Offset(0, 2),
-                  ),
-                ]
-              : null,
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            CustomIcon(
-              iconPath: iconPath,
-              size: 20,
-              color: isSelected ? AppColors.blue600 : AppColors.textMuted,
-            ),
-            const SizedBox(width: 8),
-            Text(
-              text,
-              style: TextStyle(
-                color: isSelected ? AppColors.blue600 : AppColors.textMuted,
-                fontSize: 16,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
+  
   Widget _buildListingsHeader() {
     return Row(
       children: [

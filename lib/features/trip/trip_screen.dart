@@ -251,6 +251,7 @@ class _TripScreenState extends State<TripScreen>
                 buttonText: "Post Trip",
               ))
           : ListView.builder(
+             physics: const BouncingScrollPhysics(),
              controller: _scrollController,
               itemCount: activeTrips.length,
               itemBuilder: (context, index) {
@@ -284,6 +285,8 @@ class _TripScreenState extends State<TripScreen>
                 buttonText: "Post Trip",
               ))
             : ListView.builder(
+
+             physics: const BouncingScrollPhysics(),
                controller: _scrollController,
                 itemCount: ongoingTrips.length,
                 itemBuilder: (context, index) {
@@ -327,6 +330,8 @@ class _TripScreenState extends State<TripScreen>
                 buttonText: "Post Trip",
               ))
             : ListView.builder(
+
+             physics: const BouncingScrollPhysics(),
                controller: _scrollController,
                 itemCount: completedTrips.length,
                 itemBuilder: (context, index) {
