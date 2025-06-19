@@ -657,8 +657,8 @@ class _HomeScreenState extends State<HomeScreen> {
                         shipment: trip,
                         userData: userData,
                         onPressed: () {
-                          // context.push(
-                          //     '/trip-details?tripId=${trip.id}&userId=${trip.userId}');
+                          context.push(
+                              '/trip-details?tripId=${trip.id}&userId=${trip.userId}');
                         },
                       ),
                       const SizedBox(height: 16),
