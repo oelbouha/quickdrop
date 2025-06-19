@@ -148,7 +148,7 @@ class AppRouter {
               final verificationId = state.uri.queryParameters['verificationId'];
               print("Route param received: ${state.uri.queryParameters}");
 
-              print("phoneNumber: $phoneNumber");
+              // print("phoneNumber: $phoneNumber");
               return buildCustomTransitionPage(
                 context,
                 VerifyPhoneScreen(
@@ -282,6 +282,30 @@ class AppRouter {
                     ListingCardDetails(
                       user: userData,
                       shipment: shipment,
+                    ));
+              } catch (e) {
+                return buildCustomTransitionPage(context, const ErrorPage());
+              }
+            }),
+        GoRoute(
+            name: "trip-details",
+            path: "/trip-details",
+            pageBuilder: (context, state) {
+              final tripId = state.uri.queryParameters['tripId'];
+              final userId = state.uri.queryParameters['userId'];
+              try {
+                final userData =
+                    Provider.of<UserProvider>(context, listen: false)
+                        .getUserById(userId!);
+                if (userData == null) throw ("user is null");
+                final trip =
+                    Provider.of<TripProvider>(context, listen: false)
+                        .getTrip(tripId!);
+                return buildCustomTransitionPage(
+                    context,
+                    ListingCardDetails(
+                      user: userData,
+                      shipment: trip,
                     ));
               } catch (e) {
                 return buildCustomTransitionPage(context, const ErrorPage());
