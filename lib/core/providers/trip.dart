@@ -12,6 +12,12 @@ class TripProvider with ChangeNotifier {
   List<Trip> get trips => _trips;
   List<Trip> get activeTrips => _trips.where((item) => item.status == "active").toList();
 
+
+  Trip getTrip(String id) {
+    return _trips.firstWhere((item) => item.id == id,
+        orElse: () => throw ("shipment not found"));
+  }
+
 Map<String, String> getUserData(userId) {
   var map = <String, String>{}; 
   map["displayName"] = _userData[userId]?['displayName'] ?? "Unknown user";
