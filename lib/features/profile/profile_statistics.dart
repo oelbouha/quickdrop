@@ -75,6 +75,7 @@ class ProfileStatisticsState extends State<ProfileStatistics> {
                 color: AppColors.blue,
               ))
             : SingleChildScrollView(
+              physics: const BouncingScrollPhysics(),
                 child: Column(children: [
                 // const SizedBox(height: AppTheme.cardPadding),
                 _buildUserStatus(),
