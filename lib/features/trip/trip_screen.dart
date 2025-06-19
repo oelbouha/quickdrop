@@ -255,13 +255,16 @@ class _TripScreenState extends State<TripScreen>
              controller: _scrollController,
               itemCount: activeTrips.length,
               itemBuilder: (context, index) {
+                final trip = activeTrips[index];
                 return Column(
                   children: [
                     if (index == 0)
                       const SizedBox(height: AppTheme.gapBetweenCards),
                     ActiveItemCard(
-                      item: activeTrips[index],
-                      onPressed: () => {removeTrip(activeTrips[index].id!)},
+                      onViewPressed: () => {  context.push(
+                              '/trip-details?tripId=${trip.id}&userId=${trip.userId}')},
+                      item: trip,
+                      onPressed: () => {removeTrip(trip.id!)},
                     ),
                     const SizedBox(height: AppTheme.gapBetweenCards),
                   ],
@@ -306,6 +309,8 @@ class _TripScreenState extends State<TripScreen>
                       if (index == 0)
                         const SizedBox(height: AppTheme.gapBetweenCards),
                       OngoingItemCard(
+                           onViewPressed: () => {  context.push(
+                              '/trip-details?tripId=${trip.id}&userId=${trip.userId}')},
                           item: ongoingTrips[index], user: userData),
                       const SizedBox(height: AppTheme.gapBetweenCards),
                     ],
@@ -354,7 +359,9 @@ class _TripScreenState extends State<TripScreen>
                       if (index == 0)
                         const SizedBox(height: AppTheme.gapBetweenCards),
                       CompletedItemCard(
-                          item: completedTrips[index],
+                         onViewPressed: () => {  context.push(
+                              '/trip-details?tripId=${trip.id}&userId=${trip.userId}')},
+                          item: trip,
                           user: userData,
                           onPressed: () {
                             removeTrip(completedTrips[index].id!);

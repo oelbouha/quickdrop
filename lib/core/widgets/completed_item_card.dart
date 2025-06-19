@@ -8,11 +8,14 @@ class CompletedItemCard extends StatefulWidget {
  final TransportItem item;
   final UserData user;
   final VoidCallback onPressed;
+  final VoidCallback onViewPressed;
+
 
   const CompletedItemCard({super.key, 
       required this.item, 
       required this.user,
       required this.onPressed
+      ,required this.onViewPressed
     });
 
   @override
@@ -35,7 +38,7 @@ class CompletedItemCardState extends State<CompletedItemCard> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return GestureDetector(onTap: widget.onViewPressed, child: Container(
       // height: 120,
       decoration: BoxDecoration(
         color: AppColors.cardBackground,
@@ -50,14 +53,13 @@ class CompletedItemCardState extends State<CompletedItemCard> {
         ],
       ),
       child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  _buildBody(),
-                  const SizedBox(height: 10,),
-                  
-                  _buildFooter(),
-                ],
-        ));
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            _buildBody(),
+            const SizedBox(height: 10,),
+            _buildFooter(),
+          ],
+        )));
   }
 
 

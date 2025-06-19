@@ -4,9 +4,10 @@ import 'package:quickdrop_app/core/widgets/destination.dart';
 class ListingCardDetails extends StatefulWidget {
   final TransportItem shipment;
   final UserData user;
+  final bool viewOnly;
 
   const ListingCardDetails(
-      {super.key, required this.shipment, required this.user});
+      {super.key, required this.shipment, required this.user, this.viewOnly = true});
 
   @override
   State<ListingCardDetails> createState() => _ListingCardDetailsState();
@@ -155,6 +156,7 @@ class _ListingCardDetailsState extends State<ListingCardDetails> {
           ),
         ],
       ),
+      
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: _buildPriceAndAction(),
     );
@@ -295,6 +297,9 @@ class _ListingCardDetailsState extends State<ListingCardDetails> {
   }
 
   Widget _buildPriceAndAction() {
+    if (widget.viewOnly) {
+      return Container();
+    }
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16),
       padding: const EdgeInsets.all(20),
