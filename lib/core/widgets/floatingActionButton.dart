@@ -24,9 +24,10 @@ class FloatButton extends StatelessWidget {
         duration: const Duration(milliseconds: 300),
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         decoration: BoxDecoration(
-          gradient: const LinearGradient(
-            colors: [AppColors.blueStart, AppColors.purpleStart],
-          ),
+          color: AppColors.blue700,
+          // gradient: const LinearGradient(
+          //   colors: [AppColors.blueStart, AppColors.purpleStart],
+          // ),
           borderRadius: BorderRadius.circular(12),
           boxShadow: [
             BoxShadow(
