@@ -5,10 +5,13 @@ import 'package:quickdrop_app/features/models/base_transport.dart';
 class ActiveItemCard extends StatefulWidget {
   final TransportItem item;
   final VoidCallback onPressed;
+  
+  final VoidCallback onViewPressed;
   const ActiveItemCard({
     super.key,
     required this.item,
     required this.onPressed,
+    required this.onViewPressed
   });
 
   @override
@@ -18,7 +21,9 @@ class ActiveItemCard extends StatefulWidget {
 class ActiveListing extends State<ActiveItemCard> {
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return GestureDetector(
+        onTap: widget.onViewPressed, 
+        child: Container(
         decoration: BoxDecoration(
           color: AppColors.cardBackground,
           borderRadius: BorderRadius.circular(AppTheme.cardRadius),
@@ -40,7 +45,7 @@ class ActiveListing extends State<ActiveItemCard> {
                 _buildBody(),
                 _buildFooter(),
               ],
-            )));
+            ))));
   }
 
   Widget _buildBody() {

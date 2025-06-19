@@ -681,7 +681,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 buttonText: "Post Shipment",
               )
             : ListView.builder(
-                physics: const NeverScrollableScrollPhysics(),
+                // physics: const NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
                 itemCount: activeShipments.length,
                 itemBuilder: (context, index) {

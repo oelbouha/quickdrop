@@ -259,6 +259,7 @@ class _ShipmentScreenState extends State<ShipmentScreen>
                       if (index == 0)
                         const SizedBox(height: AppTheme.gapBetweenCards),
                       ActiveItemCard(
+                          onViewPressed: () => {context.push('/shipment-details?shipmentId=${shipment.id}&userId=${shipment.userId}')},
                           item: shipment,
                           onPressed: () {
                             removeShipment(activeShipments[index].id!);
@@ -308,7 +309,8 @@ class _ShipmentScreenState extends State<ShipmentScreen>
                       if (index == 0)
                         const SizedBox(height: AppTheme.gapBetweenCards),
                       OngoingItemCard(
-                          item: ongoingShipments[index], user: userData),
+                        onViewPressed: () => {context.push('/shipment-details?shipmentId=${shipment.id}&userId=${shipment.userId}')},
+                        item: ongoingShipments[index], user: userData),
                       const SizedBox(height: AppTheme.gapBetweenCards),
                     ],
                   );
@@ -350,12 +352,14 @@ class _ShipmentScreenState extends State<ShipmentScreen>
                     return const SizedBox
                         .shrink(); // Skip this item if userData is null
                   }
+                  final shipment = pastShipments[index];
                   return Column(
                     children: [
                       if (index == 0)
                         const SizedBox(height: AppTheme.gapBetweenCards),
                       CompletedItemCard(
-                          item: pastShipments[index],
+                          item: shipment,
+                           onViewPressed: () => {context.push('/shipment-details?shipmentId=${shipment.id}&userId=${shipment.userId}')},
                           user: userData,
                           onPressed: () {
                             removeShipment(pastShipments[index].id!);

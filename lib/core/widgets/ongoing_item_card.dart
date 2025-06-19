@@ -7,7 +7,8 @@ import 'package:quickdrop_app/features/chat/convo_screen.dart';
 class OngoingItemCard extends StatefulWidget {
   final TransportItem item;
   final UserData user;
-  const OngoingItemCard({super.key, required this.item, required this.user});
+  final VoidCallback onViewPressed;
+  const OngoingItemCard({super.key, required this.item, required this.user, required this.onViewPressed});
 
   @override
   OngoingItemCardState createState() => OngoingItemCardState();
@@ -65,7 +66,7 @@ class OngoingItemCardState extends State<OngoingItemCard> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return GestureDetector(onTap: widget.onViewPressed, child: Container(
         // height: 120,
         decoration: BoxDecoration(
           color: AppColors.cardBackground,
@@ -88,7 +89,7 @@ class OngoingItemCardState extends State<OngoingItemCard> {
             ),
             _buildFooter(),
           ],
-        ));
+        )));
   }
 
   Widget _buildHUserCard() {
