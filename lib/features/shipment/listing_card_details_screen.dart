@@ -476,7 +476,7 @@ class _ListingCardDetailsState extends State<ListingCardDetails> {
           children: [ 
           UserProfileCard(
             header: widget.user.displayName ?? "unknow user",
-            onPressed: () => {context.push("/profile")},
+            onPressed: () => {context.push('/profile/statistics?userId=${widget.user.uid}')},
             photoUrl: widget.user.photoUrl ?? AppTheme.defaultProfileImage,
             subHeader: "⭐ 4.5",
             headerFontSize: 16,
@@ -485,7 +485,7 @@ class _ListingCardDetailsState extends State<ListingCardDetails> {
       ),
       const Spacer(),
        GestureDetector(
-            onTap: () => context.push("/profile"),
+            onTap: () => context.push('/profile/statistics?userId=${widget.user.uid}'),
             child: Container(
               padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(

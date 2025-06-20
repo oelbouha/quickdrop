@@ -259,7 +259,7 @@ class _ShipmentScreenState extends State<ShipmentScreen>
                       if (index == 0)
                         const SizedBox(height: AppTheme.gapBetweenCards),
                       ActiveItemCard(
-                          onViewPressed: () => {context.push('/shipment-details?shipmentId=${shipment.id}&userId=${shipment.userId}')},
+                          onViewPressed: () => {context.push('/shipment-details?shipmentId=${shipment.id}&userId=${shipment.userId}&viewOnly=true')},
                           item: shipment,
                           onPressed: () {
                             removeShipment(activeShipments[index].id!);
@@ -309,7 +309,7 @@ class _ShipmentScreenState extends State<ShipmentScreen>
                       if (index == 0)
                         const SizedBox(height: AppTheme.gapBetweenCards),
                       OngoingItemCard(
-                        onViewPressed: () => {context.push('/shipment-details?shipmentId=${shipment.id}&userId=${shipment.userId}')},
+                        onViewPressed: () => {context.push('/shipment-details?shipmentId=${shipment.id}&userId=${shipment.userId}&viewOnly=true')},
                         item: ongoingShipments[index], user: userData),
                       const SizedBox(height: AppTheme.gapBetweenCards),
                     ],
@@ -359,7 +359,9 @@ class _ShipmentScreenState extends State<ShipmentScreen>
                         const SizedBox(height: AppTheme.gapBetweenCards),
                       CompletedItemCard(
                           item: shipment,
-                           onViewPressed: () => {context.push('/shipment-details?shipmentId=${shipment.id}&userId=${shipment.userId}')},
+                          onViewPressed: () => {
+                            context.push('/shipment-details?shipmentId=${shipment.id}&userId=${shipment.userId}&viewOnly=true')
+                          },
                           user: userData,
                           onPressed: () {
                             removeShipment(pastShipments[index].id!);

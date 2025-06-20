@@ -5,7 +5,11 @@ import 'package:quickdrop_app/core/providers/review_provider.dart';
 import 'package:quickdrop_app/features/models/review_model.dart';
 
 class ProfileStatistics extends StatefulWidget {
-  const ProfileStatistics({Key? key}) : super(key: key);
+  final UserData user;
+  const ProfileStatistics({
+    Key? key,
+    required this.user,
+  });
 
   @override
   State<ProfileStatistics> createState() => ProfileStatisticsState();
@@ -24,13 +28,13 @@ class ProfileStatisticsState extends State<ProfileStatistics> {
     // Fetch trips when the screen loads
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       try {
-        final user = FirebaseAuth.instance.currentUser;
+        // final user = FirebaseAuth.instance.currentUser;
 
         Provider.of<StatisticsProvider>(context, listen: false)
-            .fetchStatictics(user!.uid);
+            .fetchStatictics(widget.user.uid);
 
         Provider.of<ReviewProvider>(context, listen: false)
-            .fetchReviews(user.uid);
+            .fetchReviews(widget.user.uid);
         final userIds = Provider.of<ReviewProvider>(context, listen: false)
             .reviews
             .map((r) => r.senderId)
@@ -75,13 +79,13 @@ class ProfileStatisticsState extends State<ProfileStatistics> {
                 color: AppColors.blue,
               ))
             : SingleChildScrollView(
-              physics: const BouncingScrollPhysics(),
+                physics: const BouncingScrollPhysics(),
                 child: Column(children: [
-                // const SizedBox(height: AppTheme.cardPadding),
-                _buildUserStatus(),
-                const SizedBox(height: AppTheme.cardPadding),
-                _buildContent()
-              ])));
+                  // const SizedBox(height: AppTheme.cardPadding),
+                  _buildUserStatus(),
+                  const SizedBox(height: AppTheme.cardPadding),
+                  _buildContent()
+                ])));
   }
 
   Widget _buildContent() {
@@ -265,51 +269,52 @@ class ProfileStatisticsState extends State<ProfileStatistics> {
       builder: (context, reviewProvider, child) {
         final reviews = reviewProvider.reviews;
         return Container(
-          width: double.infinity,
-          margin: const EdgeInsets.symmetric(horizontal: 16),
-          child: Expanded(child:Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
+            width: double.infinity,
+            margin: const EdgeInsets.symmetric(horizontal: 16),
+            child: Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const CustomIcon(
-                    iconPath: "assets/icon/star.svg",
-                    size: 24,
-                    color: AppColors.blue,
-                  ),
-                  const SizedBox(width: 12),
-                  const Text(
-                    "Reviews",
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w600,
-                      color: AppColors.headingText,
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  Container(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                    decoration: BoxDecoration(
-                      color: AppColors.blue.withOpacity(0.1),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Text(
-                      reviews.length.toString(),
-                      style: const TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w600,
+                  Row(
+                    children: [
+                      const CustomIcon(
+                        iconPath: "assets/icon/star.svg",
+                        size: 24,
                         color: AppColors.blue,
                       ),
-                    ),
+                      const SizedBox(width: 12),
+                      const Text(
+                        "Reviews",
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w600,
+                          color: AppColors.headingText,
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 8, vertical: 4),
+                        decoration: BoxDecoration(
+                          color: AppColors.blue.withOpacity(0.1),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Text(
+                          reviews.length.toString(),
+                          style: const TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w600,
+                            color: AppColors.blue,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
+                  const SizedBox(height: 16),
+                  _buildReviewsList(reviews),
                 ],
               ),
-              const SizedBox(height: 16),
-              _buildReviewsList(reviews),
-            ],
-          ),
-        ));
+            ));
       },
     );
   }
@@ -418,7 +423,6 @@ class ProfileStatisticsState extends State<ProfileStatistics> {
   }
 
   Widget _buildStatsPreview() {
-
     final stats = Provider.of<StatisticsProvider>(context, listen: false).stats;
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
@@ -438,7 +442,7 @@ class ProfileStatisticsState extends State<ProfileStatistics> {
             size: 16,
           ),
           const SizedBox(width: 8),
-           Text(
+          Text(
             '${stats?.completedShipments ?? 0} deliveries',
             style: const TextStyle(
               color: Colors.white,

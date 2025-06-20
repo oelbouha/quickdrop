@@ -50,7 +50,7 @@ class AppRouter {
           '/forgot-password',
           '/create-account',
           '/verify-number'
-          '/privacy-policy',
+              '/privacy-policy',
           '/terms-of-service',
         };
         // return '/add-trip';
@@ -60,7 +60,8 @@ class AppRouter {
         // print("user: $user");
         // print("isEmailVerified: $isEmailVerified");
         // return '/verify-email';
-        if (user != null && currentPath == '/create-account' || currentPath == "/verify-number") {
+        if (user != null && currentPath == '/create-account' ||
+            currentPath == "/verify-number") {
           return null;
         }
         if (publicRoutes.contains(currentPath)) {
@@ -120,15 +121,15 @@ class AppRouter {
               );
             }),
         GoRoute(
-          path: '/login',
-          name: 'login',
-          pageBuilder: (context, state) {
-            return buildCustomTransitionPage(
-              context,
-              const LoginPage(),
-            );
-          }),
-            GoRoute(
+            path: '/login',
+            name: 'login',
+            pageBuilder: (context, state) {
+              return buildCustomTransitionPage(
+                context,
+                const LoginPage(),
+              );
+            }),
+        GoRoute(
             path: '/create-account',
             name: 'create-account',
             pageBuilder: (context, state) {
@@ -145,16 +146,15 @@ class AppRouter {
             name: 'verify-number',
             pageBuilder: (context, state) {
               final phoneNumber = state.uri.queryParameters['phoneNumber'];
-              final verificationId = state.uri.queryParameters['verificationId'];
+              final verificationId =
+                  state.uri.queryParameters['verificationId'];
               print("Route param received: ${state.uri.queryParameters}");
 
               // print("phoneNumber: $phoneNumber");
               return buildCustomTransitionPage(
                 context,
                 VerifyPhoneScreen(
-                  phoneNumber: phoneNumber,
-                  verificationId: verificationId!
-                ),
+                    phoneNumber: phoneNumber, verificationId: verificationId!),
               );
             }),
         GoRoute(
@@ -205,10 +205,23 @@ class AppRouter {
         GoRoute(
             name: "profile-statistics",
             path: "/profile/statistics",
-            pageBuilder: (context, state) => buildCustomTransitionPage(
-                  context,
-                  const ProfileStatistics(),
-                )),
+            pageBuilder: (context, state) { 
+              final userId = state.uri.queryParameters['userId'];
+              try {
+                final userData =
+                    Provider.of<UserProvider>(context, listen: false)
+                        .getUserById(userId!);
+                if (userData == null) throw ("user is null");
+                
+                return buildCustomTransitionPage(
+                    context,
+                    ProfileStatistics(
+                      user: userData,
+                    ));
+              } catch (e) {
+                return buildCustomTransitionPage(context, const ErrorPage());
+              }
+             }),
         GoRoute(
             name: "profile-info",
             path: "/profile/info",
@@ -269,6 +282,9 @@ class AppRouter {
             pageBuilder: (context, state) {
               final shipmentId = state.uri.queryParameters['shipmentId'];
               final userId = state.uri.queryParameters['userId'];
+              final viewOnly = state.uri.queryParameters['viewOnly'] == "true";
+              // print(viewOnly);
+
               try {
                 final userData =
                     Provider.of<UserProvider>(context, listen: false)
@@ -280,6 +296,7 @@ class AppRouter {
                 return buildCustomTransitionPage(
                     context,
                     ListingCardDetails(
+                      viewOnly: viewOnly,
                       user: userData,
                       shipment: shipment,
                     ));
@@ -293,18 +310,19 @@ class AppRouter {
             pageBuilder: (context, state) {
               final tripId = state.uri.queryParameters['tripId'];
               final userId = state.uri.queryParameters['userId'];
+              final viewOnly = state.uri.queryParameters['viewOnly'] == "true";
               try {
                 final userData =
                     Provider.of<UserProvider>(context, listen: false)
                         .getUserById(userId!);
                 if (userData == null) throw ("user is null");
-                final trip =
-                    Provider.of<TripProvider>(context, listen: false)
-                        .getTrip(tripId!);
+                final trip = Provider.of<TripProvider>(context, listen: false)
+                    .getTrip(tripId!);
                 return buildCustomTransitionPage(
                     context,
                     ListingCardDetails(
                       user: userData,
+                      viewOnly: viewOnly,
                       shipment: trip,
                     ));
               } catch (e) {

@@ -658,7 +658,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         userData: userData,
                         onPressed: () {
                           context.push(
-                              '/trip-details?tripId=${trip.id}&userId=${trip.userId}');
+                              '/trip-details?tripId=${trip.id}&userId=${trip.userId}&viewOnly=false');
                         },
                       ),
                       const SizedBox(height: 16),
@@ -681,7 +681,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 buttonText: "Post Shipment",
               )
             : ListView.builder(
-                // physics: const NeverScrollableScrollPhysics(),
+                physics: const NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
                 itemCount: activeShipments.length,
                 itemBuilder: (context, index) {
@@ -697,7 +697,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         userData: userData,
                         onPressed: () {
                           context.push(
-                              '/shipment-details?shipmentId=${shipment.id}&userId=${shipment.userId}');
+                              '/shipment-details?shipmentId=${shipment.id}&userId=${shipment.userId}&viewOnly=false');
                         },
                       ),
                       const SizedBox(height: 16),
