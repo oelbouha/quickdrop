@@ -508,11 +508,10 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget _buildAppBar() {
     return Row(
       children: [
-        UserProfileCard(
+        UserProfileWithRating(
+          user: user,
           header: 'Welcome, ${user?.firstName ?? 'Guest'}',
-          photoUrl: userPhotoUrl!,
           avatarSize: 24,
-          subHeader: "⭐ 4.8 rating",
           headerFontSize: 12,
           onPressed: () => context.push("/profile"),
         ),

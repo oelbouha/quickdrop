@@ -8,6 +8,29 @@ class ReviewProvider with ChangeNotifier {
   List<ReviewModel> _reviews = [];
   List<ReviewModel> get reviews => _reviews;
 
+ Future<double> getUserAverageRating(String userId) async {
+    try {
+      QuerySnapshot querySnapshot = await _firestore
+          .collection('reviews') // Replace with your actual collection name
+          .where('receiverId', isEqualTo: userId)
+          .get();
+
+      if (querySnapshot.docs.isEmpty) {
+        return 0.0; // No reviews yet
+      }
+
+      double totalRating = 0.0;
+      for (QueryDocumentSnapshot doc in querySnapshot.docs) {
+        totalRating += (doc.data() as Map<String, dynamic>)['rating'] ?? 0.0;
+      }
+
+      return totalRating / querySnapshot.docs.length;
+    } catch (e) {
+      print('Error fetching user rating: $e');
+      return 0.0;
+    }
+  }
+  
   Future<void> fetchReviews(String userId) async {
     final snapshot = await _firestore
         .collection('reviews')
