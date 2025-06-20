@@ -1,4 +1,6 @@
 import 'package:quickdrop_app/core/utils/imports.dart';
+import 'package:quickdrop_app/core/widgets/home_page_skeleton.dart';
+import 'package:quickdrop_app/features/models/statictics_model.dart';
 import 'package:quickdrop_app/features/profile/statistic_card.dart';
 import 'package:quickdrop_app/features/profile/review_card.dart';
 import 'package:quickdrop_app/core/providers/review_provider.dart';
@@ -21,6 +23,8 @@ class ProfileStatisticsState extends State<ProfileStatistics> {
   late int ongoingShipments;
   late int completedShipments;
 
+   late StatisticsModel? stats;
+
   @override
   void initState() {
     super.initState();
@@ -30,8 +34,14 @@ class ProfileStatisticsState extends State<ProfileStatistics> {
       try {
         // final user = FirebaseAuth.instance.currentUser;
 
-        Provider.of<StatisticsProvider>(context, listen: false)
-            .fetchStatictics(widget.user.uid);
+         final  fetchedStats = await Provider.of<StatisticsProvider>(context, listen: false)
+          .getStatictics(widget.user.uid);
+            // print(stats?.completedTrips);
+            if (mounted) {
+            setState(() {
+              stats = fetchedStats;
+            });
+          }
 
         Provider.of<ReviewProvider>(context, listen: false)
             .fetchReviews(widget.user.uid);
@@ -74,11 +84,8 @@ class ProfileStatisticsState extends State<ProfileStatistics> {
           centerTitle: true,
         ),
         body: _isLoading
-            ? const Center(
-                child: CircularProgressIndicator(
-                color: AppColors.blue,
-              ))
-            : SingleChildScrollView(
+                ? const HomePageSkeleton()
+                : SingleChildScrollView(
                 physics: const BouncingScrollPhysics(),
                 child: Column(children: [
                   // const SizedBox(height: AppTheme.cardPadding),
@@ -154,7 +161,7 @@ class ProfileStatisticsState extends State<ProfileStatistics> {
   Widget _buildShipmentsStats() {
     return Consumer<StatisticsProvider>(
       builder: (context, statsProvider, child) {
-        final stats = statsProvider.stats;
+        // final stats = statsProvider.stats;
         return _buildStatsRow([
           _buildStatCard(
             title: "Pending",
@@ -364,15 +371,15 @@ class ProfileStatisticsState extends State<ProfileStatistics> {
           width: 1,
         ),
       ),
-      child: Column(
+      child: const Column(
         children: [
           Icon(
             Icons.star_border,
             size: 48,
             color: AppColors.textLight,
           ),
-          const SizedBox(height: 16),
-          const Text(
+           SizedBox(height: 16),
+           Text(
             'No Reviews Yet',
             style: TextStyle(
               fontSize: 18,
@@ -380,15 +387,15 @@ class ProfileStatisticsState extends State<ProfileStatistics> {
               color: AppColors.headingText,
             ),
           ),
-          const SizedBox(height: 8),
-          const Text(
-            'Complete more trips to start receiving reviews from other users.',
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              fontSize: 14,
-              color: AppColors.textMuted,
-            ),
-          ),
+          // const SizedBox(height: 8),
+          // const Text(
+          //   'Complete more trips to start receiving reviews from other users.',
+          //   textAlign: TextAlign.center,
+          //   style: TextStyle(
+          //     fontSize: 14,
+          //     color: AppColors.textMuted,
+          //   ),
+          // ),
         ],
       ),
     );
@@ -423,14 +430,14 @@ class ProfileStatisticsState extends State<ProfileStatistics> {
   }
 
   Widget _buildStatsPreview() {
-    final stats = Provider.of<StatisticsProvider>(context, listen: false).stats;
+    // final stats = Provider.of<StatisticsProvider>(context, listen: false).stats;
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.15),
+        color: Colors.white.withValues(alpha: 0.15),
         borderRadius: BorderRadius.circular(20),
         border: Border.all(
-          color: Colors.white.withOpacity(0.2),
+          color: Colors.white.withValues(alpha: 0.2),
         ),
       ),
       child: Row(
@@ -443,7 +450,7 @@ class ProfileStatisticsState extends State<ProfileStatistics> {
           ),
           const SizedBox(width: 8),
           Text(
-            '${stats?.completedShipments ?? 0} deliveries',
+            '${stats?.completedTrips ?? 0} deliveries',
             style: const TextStyle(
               color: Colors.white,
               fontSize: 14,
@@ -498,7 +505,7 @@ class ProfileStatisticsState extends State<ProfileStatistics> {
             ),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.2),
+                color: Colors.black.withValues(alpha: 0.2),
                 blurRadius: 10,
                 offset: const Offset(0, 4),
               ),
@@ -525,4 +532,7 @@ class ProfileStatisticsState extends State<ProfileStatistics> {
       ],
     );
   }
+
+
+
 }

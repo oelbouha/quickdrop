@@ -21,6 +21,18 @@ class StatisticsProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  Future<StatisticsModel?> getStatictics(String userId) async {
+    final snapshot =
+        await _firestore.collection('statistics').doc(userId).get();
+
+    if (snapshot.exists) {
+      print("snapshot exist ");
+      print(snapshot);
+      return StatisticsModel.fromMap(snapshot.data()!, userId);
+    }
+    return null;
+  }
+
   Future<void> incrementField(String userId, String field) async {
     try {
       await _firestore.collection('statistics').doc(userId).update({
@@ -53,21 +65,24 @@ class StatisticsProvider with ChangeNotifier {
     }
   }
 
- Future<void> addStatictics(String userId, StatisticsModel stats) async {
-  try {
-    if (userId.isEmpty) {
-      throw Exception("Invalid userId: empty or null");
+  Future<void> addStatictics(String userId, StatisticsModel stats) async {
+    try {
+      if (userId.isEmpty) {
+        throw Exception("Invalid userId: empty or null");
+      }
+      print("Attempting to save stats for userId: $userId");
+      print("Stats data: ${stats.toMap()}");
+      await _firestore.collection('statistics').doc(userId).set(
+            stats.toMap(),
+            SetOptions(merge: true),
+          );
+      print("Stats saved successfully for userId: $userId");
+      // notifyListeners();
+    } catch (e) {
+      print("Error saving stats: $e");
+      rethrow;
     }
-    print("Attempting to save stats for userId: $userId");
-    print("Stats data: ${stats.toMap()}");
-    await _firestore.collection('statistics').doc(userId).set(stats.toMap(), SetOptions(merge: true), );
-    print("Stats saved successfully for userId: $userId");
-    // notifyListeners();
-  } catch (e) {
-    print("Error saving stats: $e");
-    rethrow;
   }
-}
 }
 
 // extension on ReviewModel {

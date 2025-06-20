@@ -295,14 +295,14 @@ class _ShipmentScreenState extends State<ShipmentScreen>
                   final shipment = ongoingShipments[index];
                   if (shipment.matchedDeliveryUserId == null) {
                     return const SizedBox
-                        .shrink(); // Skip this item if userData is null
+                        .shrink();
                   }
                   final userData =
                       Provider.of<UserProvider>(context, listen: false)
                           .getUserById(shipment.matchedDeliveryUserId!);
                   if (userData == null) {
                     return const SizedBox
-                        .shrink(); // Skip this item if userData is null
+                        .shrink();
                   }
                   return Column(
                     children: [
