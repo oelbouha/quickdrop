@@ -262,7 +262,7 @@ class _TripScreenState extends State<TripScreen>
                       const SizedBox(height: AppTheme.gapBetweenCards),
                     ActiveItemCard(
                       onViewPressed: () => {  context.push(
-                              '/trip-details?tripId=${trip.id}&userId=${trip.userId}')},
+                              '/trip-details?tripId=${trip.id}&userId=${trip.userId}&viewOnly=true')},
                       item: trip,
                       onPressed: () => {removeTrip(trip.id!)},
                     ),
@@ -310,7 +310,7 @@ class _TripScreenState extends State<TripScreen>
                         const SizedBox(height: AppTheme.gapBetweenCards),
                       OngoingItemCard(
                            onViewPressed: () => {  context.push(
-                              '/trip-details?tripId=${trip.id}&userId=${trip.userId}')},
+                              '/trip-details?tripId=${trip.id}&userId=${trip.userId}&viewOnly=true')},
                           item: ongoingTrips[index], user: userData),
                       const SizedBox(height: AppTheme.gapBetweenCards),
                     ],
@@ -360,7 +360,7 @@ class _TripScreenState extends State<TripScreen>
                         const SizedBox(height: AppTheme.gapBetweenCards),
                       CompletedItemCard(
                          onViewPressed: () => {  context.push(
-                              '/trip-details?tripId=${trip.id}&userId=${trip.userId}')},
+                              '/trip-details?tripId=${trip.id}&userId=${trip.userId}&viewOnly=true')},
                           item: trip,
                           user: userData,
                           onPressed: () {
