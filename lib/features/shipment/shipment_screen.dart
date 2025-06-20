@@ -259,6 +259,7 @@ class _ShipmentScreenState extends State<ShipmentScreen>
                       if (index == 0)
                         const SizedBox(height: AppTheme.gapBetweenCards),
                       ActiveItemCard(
+                          onEditPressed: () => {context.push('/add-shipment?shipmentId=${shipment.id}')},
                           onViewPressed: () => {context.push('/shipment-details?shipmentId=${shipment.id}&userId=${shipment.userId}&viewOnly=true')},
                           item: shipment,
                           onPressed: () {

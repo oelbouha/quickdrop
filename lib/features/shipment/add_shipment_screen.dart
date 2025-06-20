@@ -1,4 +1,5 @@
 import 'dart:io'; // Import File class
+import 'dart:math';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import 'package:quickdrop_app/core/utils/imports.dart';
@@ -7,14 +8,24 @@ import 'package:quickdrop_app/core/widgets/dropDownTextField.dart';
 export 'package:quickdrop_app/core/widgets/tipWidget.dart';
 
 class AddShipmentScreen extends StatefulWidget {
-  const AddShipmentScreen({Key? key}) : super(key: key);
+  final Shipment? existingShipment;
+  final bool isEditMode;
+
+   AddShipmentScreen({
+    Key? key, 
+    this.existingShipment, 
+    this.isEditMode = false 
+    });
 
   @override
   State<AddShipmentScreen> createState() => _AddShipmentScreenState();
 }
 
 class _AddShipmentScreenState extends State<AddShipmentScreen>
-    with TickerProviderStateMixin {
+  with TickerProviderStateMixin {
+  // Shipment? existingShipment ;
+  bool _isLoadingExistingShipment = true;
+
   File? _selectedImage;
   final fromController = TextEditingController();
   final toController = TextEditingController();
@@ -54,18 +65,47 @@ class _AddShipmentScreenState extends State<AddShipmentScreen>
   ];
 
   @override
-  void initState() {
+  void initState()  {
     super.initState();
+    
+    //   WidgetsBinding.instance.addPostFrameCallback((_) async {
+    //     if (widget.existingShipmentId != null) {
+    //       final data = await Provider.of<ShipmentProvider>(context, listen: false)
+    //         .fetchShipmentById(widget.existingShipmentId!);
+    //       // print("data: ${data?.id}");
+
+    //       setState(() {
+    //         existingShipment = data;
+    //         // _isLoadingExistingShipment = false;
+    //       });
+    //     }  
+    // });
+
     _initializeDefaults();
     _setupAnimations();
   }
 
   void _initializeDefaults() {
-    packageQuantityController.text = "1";
-    weightController.text = "1";
-    typeController.text = "water";
-    fromController.text = "cassa";
-    toController.text = "martil";
+    if (widget.existingShipment != null && widget.isEditMode) {
+      fromController.text = widget.existingShipment?.from ?? "";
+      toController.text = widget.existingShipment?.to ?? "";
+      weightController.text = widget.existingShipment?.weight ?? "";
+      descriptionController.text = widget.existingShipment?.description ?? "";
+      dateController.text = widget.existingShipment?.date ??   "";
+      lengthController.text = widget.existingShipment?.length ?? "";
+      widthController.text = widget.existingShipment?.width ?? "";
+      heightController.text = widget.existingShipment?.height ?? "";
+      packageNameController.text = widget.existingShipment?.packageName ?? "";
+      packageQuantityController.text = widget.existingShipment?.packageQuantity ??   "";
+      typeController.text = widget.existingShipment?.type ?? "";
+      priceController.text = widget.existingShipment?.price ?? ""; 
+    } else {
+      packageQuantityController.text = "1";
+      weightController.text = "1";
+      typeController.text = "water";
+      fromController.text = "cassa";
+      toController.text = "martil";
+    }
   }
 
   void _setupAnimations() {
@@ -164,16 +204,27 @@ class _AddShipmentScreenState extends State<AddShipmentScreen>
       );
 
       try {
-        await Provider.of<ShipmentProvider>(context, listen: false)
-            .addShipment(shipment);
-        if (mounted) {
-          Provider.of<StatisticsProvider>(context, listen: false)
-              .incrementField(user.uid, "pendingShipments");
-          await _showSuccessAnimation();
+          if (widget.isEditMode) {
+            
+            print("existing shipment id: ${widget.existingShipment!.id}");
+            await Provider.of<ShipmentProvider>(context, listen: false)
+                .updateShipment(widget.existingShipment!.id!, shipment);
+            await _showSuccessAnimation();
+          }
+          else {
+          await Provider.of<ShipmentProvider>(context, listen: false)
+              .addShipment(shipment);
+          if (mounted) {
+            Provider.of<StatisticsProvider>(context, listen: false)
+                .incrementField(user.uid, "pendingShipments");
+            await _showSuccessAnimation();
+          }
+        
+        
         }
       } catch (e) {
         if (mounted) {
-          _showErrorWithAnimation('Failed to list shipment: $e');
+          _showErrorWithAnimation( widget.isEditMode ? 'Failed to update shipment: $e' : 'Failed to list shipment: $e');
         }
       } finally {
         if (mounted) {
@@ -229,15 +280,15 @@ class _AddShipmentScreenState extends State<AddShipmentScreen>
                 },
               ),
               const SizedBox(height: 24),
-              const Text(
-                'Package Listed Successfully!',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+               Text(
+                widget.isEditMode ? 'Shipment Updated Successfully!' : 'Package Listed Successfully!',
+                style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 8),
               Text(
-                'Your shipment has been added and is now visible to couriers.',
-                style: TextStyle(fontSize: 14, color: AppColors.textMuted),
+                widget.isEditMode ? 'Your shipment has been updated and is now visible to couriers.' : 'Your shipment has been added and is now visible to couriers.',
+                style: const TextStyle(fontSize: 14, color: AppColors.textMuted),
                 textAlign: TextAlign.center,
               ),
             ],
@@ -254,9 +305,9 @@ class _AddShipmentScreenState extends State<AddShipmentScreen>
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
-        title: const Text(
-          'Create Shipment',
-          style: TextStyle(
+        title:  Text(
+          widget.isEditMode ? 'Update Shipment' : 'Create Shipment',
+          style: const TextStyle(
             color: AppColors.headingText,
             fontWeight: FontWeight.w600,
             fontSize: 20,
@@ -285,7 +336,7 @@ class _AddShipmentScreenState extends State<AddShipmentScreen>
                     offset: _slideAnimation.value,
                     child: FadeTransition(
                       opacity: _fadeAnimation,
-                      child: PageView(
+                      child:  PageView(
                         controller: _pageController,
                         physics: const NeverScrollableScrollPhysics(),
                         children: [
@@ -300,7 +351,6 @@ class _AddShipmentScreenState extends State<AddShipmentScreen>
                 },
               ),
             ),
-
             // Enhanced Navigation Buttons
             _buildNavigationButtons(),
           ],
@@ -469,7 +519,7 @@ class _AddShipmentScreenState extends State<AddShipmentScreen>
                   onPressed: _isListButtonLoading
                       ? null
                       : (_currentStep == _stepTitles.length - 1
-                          ? _listShipment
+                          ? _listShipment 
                           : _goToNextStep),
                   icon: _isListButtonLoading
                       ? const SizedBox(
@@ -491,7 +541,7 @@ class _AddShipmentScreenState extends State<AddShipmentScreen>
                     _isListButtonLoading
                         ? 'Processing...'
                         : (_currentStep == _stepTitles.length - 1
-                            ? 'Create Shipment'
+                            ? widget.isEditMode ? 'Update Shipment' : 'Create Shipment'
                             : 'Continue'),
                   ),
                   style: ElevatedButton.styleFrom(
