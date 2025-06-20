@@ -1,5 +1,6 @@
 import 'package:quickdrop_app/features/models/base_transport.dart';
 import 'package:quickdrop_app/core/utils/imports.dart';
+import 'package:quickdrop_app/features/models/statictics_model.dart';
 
 class ShipmentCard extends StatefulWidget {
   final TransportItem shipment;
@@ -25,6 +26,22 @@ class ShipmentCard extends StatefulWidget {
 
 class ShipmentCardState extends State<ShipmentCard>
     with TickerProviderStateMixin {
+  late StatisticsModel? stats;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+     final  fetchedStats = await Provider.of<StatisticsProvider>(context, listen: false)
+          .getStatictics(widget.shipment.userId);
+      // print(stats?.completedTrips);
+      if (mounted) {
+      setState(() {
+        stats = fetchedStats;
+      });
+    }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -50,12 +67,14 @@ class ShipmentCardState extends State<ShipmentCard>
           ),
           child: ClipRRect(
             borderRadius: BorderRadius.circular(24),
-            child: IntrinsicHeight( // Added IntrinsicHeight
+            child: IntrinsicHeight(
+              // Added IntrinsicHeight
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.stretch, // Added this
                 children: [
                   _buildImageSection(),
-                  Expanded( // Wrapped in Expanded to constrain width
+                  Expanded(
+                    // Wrapped in Expanded to constrain width
                     child: Padding(
                       padding: const EdgeInsets.all(16),
                       child: _buildContentSection(),
@@ -135,12 +154,10 @@ class ShipmentCardState extends State<ShipmentCard>
       String text, Color backgroundColor, Color textColor) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-      
       decoration: BoxDecoration(
         color: Colors.grey[50],
         borderRadius: BorderRadius.circular(12),
         border: Border.all(color: Colors.grey.withOpacity(0.1)),
-        
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.1),
@@ -164,11 +181,11 @@ class ShipmentCardState extends State<ShipmentCard>
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      mainAxisSize: MainAxisSize.max, 
+      mainAxisSize: MainAxisSize.max,
       children: [
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisSize: MainAxisSize.min, 
+          mainAxisSize: MainAxisSize.min,
           children: [
             _buildUserProfile(),
             const SizedBox(height: 12),
@@ -219,7 +236,8 @@ class ShipmentCardState extends State<ShipmentCard>
           ],
         ),
         const SizedBox(width: 4),
-        Expanded( // Added Expanded to prevent overflow
+        Expanded(
+          // Added Expanded to prevent overflow
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -230,7 +248,7 @@ class ShipmentCardState extends State<ShipmentCard>
                   fontWeight: FontWeight.w600,
                   color: AppColors.headingText,
                 ),
-                overflow: TextOverflow.ellipsis, 
+                overflow: TextOverflow.ellipsis,
               ),
               const SizedBox(height: 2),
               Row(
@@ -264,9 +282,9 @@ class ShipmentCardState extends State<ShipmentCard>
                     size: 10,
                   ),
                   const SizedBox(width: 4),
-                  Flexible( 
+                  Flexible(
                     child: Text(
-                      "${0} deliveries",
+                      "${stats?.completedTrips ?? "0"} deliveries",
                       style: const TextStyle(
                         fontSize: 8,
                         color: AppColors.lessImportant,
@@ -323,7 +341,7 @@ class ShipmentCardState extends State<ShipmentCard>
 
   Widget _buildLocationPoint(String location, Color color, bool isFrom) {
     return Column(
-      mainAxisSize: MainAxisSize.min, 
+      mainAxisSize: MainAxisSize.min,
       children: [
         Container(
           width: 12,
@@ -422,26 +440,28 @@ class ShipmentCardState extends State<ShipmentCard>
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Flexible( // Changed to Flexible to prevent overflow
-          child: Column(
+        Flexible(
+          // Changed to Flexible to prevent overflow
+          child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min, 
+            mainAxisSize: MainAxisSize.min,
             children: [
-              const Text(
-                "Starting from",
-                style: TextStyle(
-                  fontSize: 10,
-                  fontWeight: FontWeight.w500,
-                  color: AppColors.lessImportant,
-                  letterSpacing: 0.8,
-                ),
-              ),
+              // const Text(
+              //   "From",
+              //   style: TextStyle(
+              //     fontSize: 10,
+              //     fontWeight: FontWeight.w500,
+              //     color: AppColors.lessImportant,
+              //     letterSpacing: 0.8,
+              //   ),
+              // ),
               Row(
                 crossAxisAlignment: CrossAxisAlignment.baseline,
                 textBaseline: TextBaseline.alphabetic,
                 mainAxisSize: MainAxisSize.min, // Added this
                 children: [
-                  Flexible( // Added Flexible for price text
+                  Flexible(
+                    // Added Flexible for price text
                     child: Text(
                       widget.shipment.price,
                       style: const TextStyle(
