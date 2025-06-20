@@ -474,15 +474,13 @@ class _ListingCardDetailsState extends State<ListingCardDetails> {
         ),
         child: Row(
           children: [ 
-          UserProfileCard(
-            header: widget.user.displayName ?? "unknow user",
-            onPressed: () => {context.push('/profile/statistics?userId=${widget.user.uid}')},
-            photoUrl: widget.user.photoUrl ?? AppTheme.defaultProfileImage,
-            subHeader: "⭐ 4.5",
-            headerFontSize: 16,
-            subHeaderFontSize: 10,
-            avatarSize: 22,
-      ),
+             UserProfileWithRating(
+              user: widget.user,
+              header: widget.user.displayName ?? 'Guest',
+              avatarSize: 24,
+              headerFontSize: 16,
+              onPressed: () =>  {context.push('/profile/statistics?userId=${widget.user.uid}')},
+            ),
       const Spacer(),
        GestureDetector(
             onTap: () => context.push('/profile/statistics?userId=${widget.user.uid}'),

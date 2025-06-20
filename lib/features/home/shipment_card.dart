@@ -201,6 +201,15 @@ class ShipmentCardState extends State<ShipmentCard>
   }
 
   Widget _buildUserProfile() {
+    return   UserProfileWithRating(
+              user: widget.userData,
+              header: widget.userData.displayName ?? 'Guest',
+              avatarSize: 24,
+              headerFontSize: 16,
+              onPressed: () =>  {
+                context.push('/profile/statistics?userId=${widget.userData.uid}')
+                },
+            );
     return Row(
       children: [
         Stack(
