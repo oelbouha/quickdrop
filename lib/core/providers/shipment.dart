@@ -63,6 +63,19 @@ class ShipmentProvider with ChangeNotifier {
 
     notifyListeners();
   }
+  
+  Future<void> updateShipment(String id, Shipment newShipment) async {
+    await FirebaseFirestore.instance
+        .collection("shipments")
+        .doc(id)
+        .update(newShipment.toMap());
+
+    final index = _shipments.indexWhere((item) => item.id == id);
+    if (index != -1) {
+      _shipments[index] = newShipment;
+    }
+    notifyListeners();
+  }
 
   Future<void> updatePrice(String id, String price) async {
     await FirebaseFirestore.instance
@@ -97,6 +110,23 @@ class ShipmentProvider with ChangeNotifier {
       notifyListeners();
     } catch (e) {
       rethrow;
+    }
+  }
+
+  Future<Shipment?> fetchShipmentById(String documentId) async {
+    try {
+      final shipment = getShipment(documentId);
+      print("documentId: $documentId" "shipment: $shipment.packageName");
+        return shipment;
+      // return null;
+    } catch (e) {
+      print("Error fetching shipment: $e");
+      final snapshot = await _firestore.collection('shipments').doc(documentId).get();
+      if (snapshot.exists) {
+        return Shipment.fromMap(snapshot.data()!, snapshot.id);
+      }
+      // rethrow;
+      return null;
     }
   }
 

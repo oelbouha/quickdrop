@@ -254,10 +254,22 @@ class AppRouter {
         GoRoute(
             name: "add-shipment",
             path: "/add-shipment",
-            pageBuilder: (context, state) => buildCustomTransitionPage(
+            pageBuilder: (context, state) { 
+              final id = state.uri.queryParameters['shipmentId'];
+              Shipment? shipment;
+              if (id != null) {
+                shipment =  Provider.of<ShipmentProvider>(context, listen: false)
+                  .getShipment(id);
+              }
+
+              return buildCustomTransitionPage(
                   context,
-                  const AddShipmentScreen(),
-                )),
+                   AddShipmentScreen(
+                    isEditMode: true,
+                    existingShipment: shipment,
+                  ),
+            );
+          }),
         GoRoute(
             name: "add-trip",
             path: "/add-trip",

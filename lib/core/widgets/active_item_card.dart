@@ -5,13 +5,15 @@ import 'package:quickdrop_app/features/models/base_transport.dart';
 class ActiveItemCard extends StatefulWidget {
   final TransportItem item;
   final VoidCallback onPressed;
-  
+  final VoidCallback onEditPressed;
   final VoidCallback onViewPressed;
+  
   const ActiveItemCard({
     super.key,
     required this.item,
     required this.onPressed,
-    required this.onViewPressed
+    required this.onViewPressed,
+    required this.onEditPressed,
   });
 
   @override
@@ -267,7 +269,7 @@ Widget _buildFooter() {
             ).then((value) {
               if (value != null) {
                 if (value == 0) {
-                    
+                  widget.onEditPressed();
                 } else if (value == 1) {
                   widget.onPressed(); 
                 }
