@@ -38,7 +38,8 @@ class UserProfileCard extends StatelessWidget {
          onTap: onPressed,
           child: buildUserProfileImage(
             photoUrl,
-            borderColor
+            borderColor,
+            avatarSize
           ) ,
           ),
         const SizedBox(width: 10),
@@ -91,12 +92,12 @@ Widget buildUserProfileHeader(String header, Color color, double fontSize) {
       );
 }
 
-Widget buildUserProfileImage(String photoUrl, Color borderColor) {
+Widget buildUserProfileImage(String photoUrl, Color borderColor, double avatarSize) {
   return Stack(
       children: [
         Container(
-          width: 48,
-          height: 48,
+          width: avatarSize,
+          height: avatarSize,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(24),
             border: Border.all(
@@ -112,10 +113,10 @@ Widget buildUserProfileImage(String photoUrl, Color borderColor) {
               errorBuilder: (context, error, stackTrace) {
                 return Container(
                   color: borderColor.withOpacity(0.1),
-                  child: const Icon(
+                  child:  Icon(
                     Icons.person,
                     color: AppColors.blue,
-                    size: 26,
+                    size: avatarSize * 0.6,
                   ),
                 );
               },
@@ -174,7 +175,8 @@ class UserProfileWithRating extends StatelessWidget {
             onTap: onPressed,
               child: buildUserProfileImage(
                 user?.photoUrl ?? AppTheme.defaultProfileImage,
-                borderColor
+                borderColor,
+                avatarSize
               ) ,
               ),
             const SizedBox(width: 10),

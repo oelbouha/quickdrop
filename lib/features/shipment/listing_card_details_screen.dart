@@ -477,7 +477,7 @@ class _ListingCardDetailsState extends State<ListingCardDetails> {
              UserProfileWithRating(
               user: widget.user,
               header: widget.user.displayName ?? 'Guest',
-              avatarSize: 24,
+              avatarSize: 40,
               headerFontSize: 16,
               onPressed: () =>  {context.push('/profile/statistics?userId=${widget.user.uid}')},
             ),

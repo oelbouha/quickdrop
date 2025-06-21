@@ -511,7 +511,7 @@ class _HomeScreenState extends State<HomeScreen> {
         UserProfileWithRating(
           user: user,
           header: 'Welcome, ${user?.firstName ?? 'Guest'}',
-          avatarSize: 24,
+          avatarSize: 40,
           headerFontSize: 12,
           onPressed: () => context.push("/profile"),
         ),
