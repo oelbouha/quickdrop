@@ -11,12 +11,12 @@ class ReviewProvider with ChangeNotifier {
  Future<double> getUserAverageRating(String userId) async {
     try {
       QuerySnapshot querySnapshot = await _firestore
-          .collection('reviews') // Replace with your actual collection name
+          .collection('reviews') 
           .where('receiverId', isEqualTo: userId)
           .get();
 
       if (querySnapshot.docs.isEmpty) {
-        return 0.0; // No reviews yet
+        return 0.0; 
       }
 
       double totalRating = 0.0;

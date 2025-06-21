@@ -204,8 +204,9 @@ class ShipmentCardState extends State<ShipmentCard>
     return UserProfileWithRating(
         user: widget.userData,
         header: widget.userData.displayName ?? 'Guest',
-        avatarSize: 24,
-        headerFontSize: 16,
+        avatarSize: 34,
+        headerFontSize: 10,
+        subHeaderFontSize: 8,
         onPressed: () =>  {
           context.push('/profile/statistics?userId=${widget.userData.uid}')
           },
