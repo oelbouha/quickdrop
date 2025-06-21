@@ -1,20 +1,25 @@
 import 'package:quickdrop_app/core/utils/imports.dart';
 
 class AddTripScreen extends StatefulWidget {
-  const AddTripScreen({Key? key}) : super(key: key);
+  final Trip? existingTrip;
+  final bool isEditMode;
+
+  AddTripScreen({Key? key, this.existingTrip, this.isEditMode = false});
 
   @override
   State<AddTripScreen> createState() => _AddTripScreenState();
 }
 
-class _AddTripScreenState extends State<AddTripScreen>   with TickerProviderStateMixin {
-  final fromController = TextEditingController();
-  final toController = TextEditingController();
-  final dateController = TextEditingController();
-  final weightController = TextEditingController();
-  final priceController = TextEditingController();
-  bool _isListButtonLoading = false;
-  final _formKey = GlobalKey<FormState>();
+class _AddTripScreenState extends State<AddTripScreen>
+    with TickerProviderStateMixin {
+    
+    final fromController = TextEditingController();
+    final toController = TextEditingController();
+    final dateController = TextEditingController();
+    final weightController = TextEditingController();
+    final priceController = TextEditingController();
+    bool _isListButtonLoading = false;
+    final _formKey = GlobalKey<FormState>();
 
   late AnimationController _fadeController;
   late AnimationController _slideController;
@@ -38,8 +43,7 @@ class _AddTripScreenState extends State<AddTripScreen>   with TickerProviderStat
     Icons.schedule_outlined,
   ];
 
-
-void _setupAnimations() {
+  void _setupAnimations() {
     _fadeController = AnimationController(
       duration: const Duration(milliseconds: 600),
       vsync: this,
@@ -71,6 +75,22 @@ void _setupAnimations() {
     _slideController.forward();
   }
 
+  void _updateTrip() async {
+
+    Trip trip = Trip(
+          id: widget.existingTrip!.id,
+          from: fromController.text,
+          to: toController.text,
+          weight: weightController.text,
+          date: dateController.text,
+          userId: widget.existingTrip!.userId,
+          price: priceController.text
+          );
+    //  print("existing shipment id: ${widget.existingShipment!.id}");
+    await Provider.of<TripProvider>(context, listen: false)
+        .updateTrip(widget.existingTrip!.id!, trip);
+  }
+
   void _listTrip() async {
     if (_isListButtonLoading) return;
     setState(() {
@@ -93,16 +113,20 @@ void _setupAnimations() {
           weight: weightController.text,
           date: dateController.text,
           userId: user.uid,
-          price: priceController.text);
+          price: priceController.text
+          );
+
       try {
-        await Provider.of<TripProvider>(context, listen: false).addTrip(trip);
-        if (mounted) {
-          // Navigator.pop(context);
-          // AppUtils.showDialog(
-          //     context, 'Trip listed Successfully!', AppColors.succes);
-          Provider.of<StatisticsProvider>(context, listen: false)
-              .incrementField(user.uid, "pendingTrips");
-              await _showSuccessAnimation();
+        if (widget.isEditMode) {
+          _updateTrip();
+          await _showSuccessAnimation();
+        } else {
+          await Provider.of<TripProvider>(context, listen: false).addTrip(trip);
+          if (mounted) {
+            Provider.of<StatisticsProvider>(context, listen: false)
+                .incrementField(user.uid, "pendingTrips");
+            await _showSuccessAnimation();
+          }
         }
       } catch (e) {
         if (mounted) {
@@ -136,7 +160,6 @@ void _setupAnimations() {
       });
     }
   }
-
 
   Future<void> _showSuccessAnimation() async {
     HapticFeedback.lightImpact();
@@ -179,14 +202,15 @@ void _setupAnimations() {
                 },
               ),
               const SizedBox(height: 24),
-              const Text(
-                'Trip Listed Successfully!',
+               Text(
+                widget.isEditMode ? 'Trip updated Successfully!' : 'Trip Listed Successfully!',
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 8),
               Text(
-                'Your Trip has been added and is now visible to peaple looking to send or receive packages.',
+                widget.isEditMode ? 'Your Trip has been Updated and is now visible to peaple looking to send or receive packages.' 
+                :'Your Trip has been added and is now visible to peaple looking to send or receive packages.',
                 style: TextStyle(fontSize: 14, color: AppColors.textMuted),
                 textAlign: TextAlign.center,
               ),
@@ -197,11 +221,18 @@ void _setupAnimations() {
     );
   }
 
-
-void _initializeDefaults() {
-    weightController.text = "1";
-    fromController.text = "cassa";
-    toController.text = "martil";
+  void _initializeDefaults() {
+    if (widget.isEditMode && widget.existingTrip != null) {
+      fromController.text = widget.existingTrip?.from ?? '';
+      toController.text = widget.existingTrip?.to ?? '';
+      weightController.text = widget.existingTrip?.weight ??   '';
+      dateController.text = widget.existingTrip?.date ?? '';
+      priceController.text = widget.existingTrip?.price ?? '';
+    } else {
+      weightController.text = "1";
+      fromController.text = "cassa";
+      toController.text = "martil";
+    }
   }
 
   @override
@@ -227,67 +258,64 @@ void _initializeDefaults() {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: AppColors.background,
-        appBar: AppBar(
-          backgroundColor: Colors.white,
-            elevation: 0,
-            title: const Text(
-              'Create Trip',
-              style: TextStyle(
-                color: AppColors.headingText,
-                fontWeight: FontWeight.w600,
-                fontSize: 20,
-              ),
-            ),
-            centerTitle: true,
-            iconTheme: const IconThemeData(
-                color: Colors.black, // Set the arrow back color to black
-              ),
-              systemOverlayStyle:
-                  SystemUiOverlayStyle.dark,
+      backgroundColor: AppColors.background,
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        elevation: 0,
+        title:  Text(
+          widget.isEditMode ? 'Update trip' : 'Create Trip',
+          style: const TextStyle(
+            color: AppColors.headingText,
+            fontWeight: FontWeight.w600,
+            fontSize: 20,
+          ),
         ),
-        body:  Padding(
-              padding: const EdgeInsets.all(AppTheme.homeScreenPadding),
-              child: Form(
-              key: _formKey,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  _buildProgressBar(),
+        centerTitle: true,
+        iconTheme: const IconThemeData(
+          color: Colors.black, 
+        ),
+        systemOverlayStyle: SystemUiOverlayStyle.dark,
+      ),
+      body: Padding(
+          padding: const EdgeInsets.all(AppTheme.homeScreenPadding),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                _buildProgressBar(),
 
-                  Expanded(
-                    child: AnimatedBuilder(
-                      animation: _slideAnimation,
-                      builder: (context, child) {
-                        return Transform.translate(
-                          offset: _slideAnimation.value,
-                          child: FadeTransition(
-                            opacity: _fadeAnimation,
-                            child: PageView(
-                              controller: _pageController,
-                              physics: const NeverScrollableScrollPhysics(),
-                              children: [
-                                _buildPackageDestination(),
-                                _buildTripDetails(),
-                                _buildTimingDetails(),
-                              ],
-                            ),
+                Expanded(
+                  child: AnimatedBuilder(
+                    animation: _slideAnimation,
+                    builder: (context, child) {
+                      return Transform.translate(
+                        offset: _slideAnimation.value,
+                        child: FadeTransition(
+                          opacity: _fadeAnimation,
+                          child: PageView(
+                            controller: _pageController,
+                            physics: const NeverScrollableScrollPhysics(),
+                            children: [
+                              _buildPackageDestination(),
+                              _buildTripDetails(),
+                              _buildTimingDetails(),
+                            ],
                           ),
-                        );
-                      },
-                    ),
+                        ),
+                      );
+                    },
                   ),
+                ),
 
-                  // Enhanced Navigation Buttons
-                  _buildNavigationButtons(),
-                ],
-              ),
-                    )
-                  ),
-        );
+                // Enhanced Navigation Buttons
+                _buildNavigationButtons(),
+              ],
+            ),
+          )),
+    );
   }
-
 
   Widget _buildTripDetails() {
     return _buildStepContainer(
@@ -316,7 +344,6 @@ void _initializeDefaults() {
             validator: Validators.isNumber,
             keyboardType: TextInputType.number,
           ),
-
           const SizedBox(height: 20),
           buildInfoCard(
             icon: Icons.info_outline,
@@ -330,14 +357,10 @@ void _initializeDefaults() {
     );
   }
 
-
-
   void _showErrorWithAnimation(String message) {
     AppUtils.showDialog(context, message, AppColors.error);
     HapticFeedback.heavyImpact();
   }
-
-
 
   bool _validateCurrentStep() {
     switch (_currentStep) {
@@ -382,7 +405,7 @@ void _initializeDefaults() {
     }
   }
 
- void _goToNextStep() {
+  void _goToNextStep() {
     if (_validateCurrentStep()) {
       HapticFeedback.lightImpact();
       _pageController.nextPage(
@@ -469,7 +492,7 @@ void _initializeDefaults() {
                     _isListButtonLoading
                         ? 'Processing...'
                         : (_currentStep == _stepTitles.length - 1
-                            ? 'Create Shipment'
+                            ?  widget.isEditMode ? 'Update trip' : 'Create trip'
                             : 'Continue'),
                   ),
                   style: ElevatedButton.styleFrom(
@@ -489,7 +512,7 @@ void _initializeDefaults() {
       ),
     );
   }
-  
+
   Widget _buildProgressBar() {
     return Container(
         // alignment: ali,
@@ -576,10 +599,6 @@ void _initializeDefaults() {
         ));
   }
 
-
-
-
-
   Widget _buildSectionHeader({
     required IconData icon,
     required String title,
@@ -623,7 +642,7 @@ void _initializeDefaults() {
           color: Colors.white,
           borderRadius: BorderRadius.circular(16),
           boxShadow: [
-             BoxShadow(
+            BoxShadow(
               color: Colors.black.withOpacity(0.05),
               blurRadius: 10,
               offset: const Offset(0, 4),
@@ -648,20 +667,18 @@ void _initializeDefaults() {
           ),
           const SizedBox(height: 24),
           TextFieldWithHeader(
-            controller: fromController,
-            hintText: "From",
-            headerText: "Pickup Location",
-            validator: Validators.notEmpty,
-             iconPath : "assets/icon/map-point.svg"
-          ),
+              controller: fromController,
+              hintText: "From",
+              headerText: "Pickup Location",
+              validator: Validators.notEmpty,
+              iconPath: "assets/icon/map-point.svg"),
           const SizedBox(height: 16),
           TextFieldWithHeader(
-            controller: toController,
-            hintText: "To",
-            headerText: "Delivery Location",
-            validator: Validators.notEmpty,
-             iconPath : "assets/icon/map-point.svg"
-          ),
+              controller: toController,
+              hintText: "To",
+              headerText: "Delivery Location",
+              validator: Validators.notEmpty,
+              iconPath: "assets/icon/map-point.svg"),
           const SizedBox(height: 20),
           buildInfoCard(
             icon: Icons.location_on,
@@ -675,7 +692,6 @@ void _initializeDefaults() {
     );
   }
 
-
   Widget _buildTimingDetails() {
     return _buildStepContainer(
       child: Column(
@@ -687,7 +703,6 @@ void _initializeDefaults() {
             color: const Color(0xFFF59E0B),
             backgroundColor: const Color(0xFFFEF3C7),
           ),
-        
           const SizedBox(height: 20),
           TextWithRequiredIcon(text: "Preferred Pickup Date"),
           const SizedBox(height: 8),

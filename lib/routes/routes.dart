@@ -205,14 +205,14 @@ class AppRouter {
         GoRoute(
             name: "profile-statistics",
             path: "/profile/statistics",
-            pageBuilder: (context, state) { 
+            pageBuilder: (context, state) {
               final userId = state.uri.queryParameters['userId'];
               try {
                 final userData =
                     Provider.of<UserProvider>(context, listen: false)
                         .getUserById(userId!);
                 if (userData == null) throw ("user is null");
-                
+
                 return buildCustomTransitionPage(
                     context,
                     ProfileStatistics(
@@ -221,7 +221,7 @@ class AppRouter {
               } catch (e) {
                 return buildCustomTransitionPage(context, const ErrorPage());
               }
-             }),
+            }),
         GoRoute(
             name: "profile-info",
             path: "/profile/info",
@@ -254,29 +254,40 @@ class AppRouter {
         GoRoute(
             name: "add-shipment",
             path: "/add-shipment",
-            pageBuilder: (context, state) { 
+            pageBuilder: (context, state) {
               final id = state.uri.queryParameters['shipmentId'];
               Shipment? shipment;
               if (id != null) {
-                shipment =  Provider.of<ShipmentProvider>(context, listen: false)
-                  .getShipment(id);
+                shipment = Provider.of<ShipmentProvider>(context, listen: false)
+                    .getShipment(id);
               }
 
               return buildCustomTransitionPage(
-                  context,
-                   AddShipmentScreen(
-                    isEditMode: true,
-                    existingShipment: shipment,
-                  ),
-            );
-          }),
+                context,
+                AddShipmentScreen(
+                  isEditMode: true,
+                  existingShipment: shipment,
+                ),
+              );
+            }),
         GoRoute(
             name: "add-trip",
             path: "/add-trip",
-            pageBuilder: (context, state) => buildCustomTransitionPage(
-                  context,
-                  const AddTripScreen(),
-                )),
+            pageBuilder: (context, state) {
+              final id = state.uri.queryParameters['tripId'];
+              Trip? trip;
+              if (id != null) {
+                trip =  Provider.of<TripProvider>(context, listen: false)
+                  .getTrip(id);
+              }
+              return buildCustomTransitionPage(
+                context,
+                 AddTripScreen(
+                  isEditMode: true,
+                  existingTrip: trip,
+                 ),
+              );
+            }),
         GoRoute(
             name: "convo-screen",
             path: "/convo-screen",

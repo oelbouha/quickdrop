@@ -69,6 +69,19 @@ Map<String, String> getUserData(userId) {
     }
   }
 
+ Future<void> updateTrip(String id, Trip newTrip) async {
+    await FirebaseFirestore.instance
+        .collection("trips")
+        .doc(id)
+        .update(newTrip.toMap());
+
+    final index = _trips.indexWhere((item) => item.id == id);
+    if (index != -1) {
+      _trips[index] = newTrip;
+    }
+    notifyListeners();
+  }
+
   Future<void> addTrip(Trip trip) async {
     final docRef = await _firestore.collection('trips').add(trip.toMap());
     _trips.add(trip.copyWith(id: docRef.id));

@@ -23,7 +23,6 @@ class AddShipmentScreen extends StatefulWidget {
 
 class _AddShipmentScreenState extends State<AddShipmentScreen>
   with TickerProviderStateMixin {
-  // Shipment? existingShipment ;
   bool _isLoadingExistingShipment = true;
 
   File? _selectedImage;
@@ -67,20 +66,6 @@ class _AddShipmentScreenState extends State<AddShipmentScreen>
   @override
   void initState()  {
     super.initState();
-    
-    //   WidgetsBinding.instance.addPostFrameCallback((_) async {
-    //     if (widget.existingShipmentId != null) {
-    //       final data = await Provider.of<ShipmentProvider>(context, listen: false)
-    //         .fetchShipmentById(widget.existingShipmentId!);
-    //       // print("data: ${data?.id}");
-
-    //       setState(() {
-    //         existingShipment = data;
-    //         // _isLoadingExistingShipment = false;
-    //       });
-    //     }  
-    // });
-
     _initializeDefaults();
     _setupAnimations();
   }
@@ -166,6 +151,32 @@ class _AddShipmentScreenState extends State<AddShipmentScreen>
     HapticFeedback.heavyImpact();
   }
 
+
+void _updateShipment() async {
+
+ Shipment shipment = Shipment(
+    id: widget.existingShipment!.id,
+    price: priceController.text,
+    type: typeController.text,
+    from: fromController.text,
+    to: toController.text,
+    weight: weightController.text,
+    description: descriptionController.text,
+    date: dateController.text,
+    length: lengthController.text,
+    width: widthController.text,
+    height: heightController.text,
+    packageName: packageNameController.text,
+    packageQuantity: packageQuantityController.text,
+    imageUrl: null,
+    userId: widget.existingShipment!.userId,
+  );
+
+    // print("existing shipment id: ${widget.existingShipment!.id}");
+    await Provider.of<ShipmentProvider>(context, listen: false)
+        .updateShipment(widget.existingShipment!.id!, shipment);
+}
+
   void _listShipment() async {
     // Add haptic feedback
     HapticFeedback.mediumImpact();
@@ -205,19 +216,16 @@ class _AddShipmentScreenState extends State<AddShipmentScreen>
 
       try {
           if (widget.isEditMode) {
-            
-            print("existing shipment id: ${widget.existingShipment!.id}");
-            await Provider.of<ShipmentProvider>(context, listen: false)
-                .updateShipment(widget.existingShipment!.id!, shipment);
-            await _showSuccessAnimation();
+            _updateShipment();
+             await _showSuccessAnimation();
           }
           else {
-          await Provider.of<ShipmentProvider>(context, listen: false)
-              .addShipment(shipment);
-          if (mounted) {
-            Provider.of<StatisticsProvider>(context, listen: false)
-                .incrementField(user.uid, "pendingShipments");
-            await _showSuccessAnimation();
+            await Provider.of<ShipmentProvider>(context, listen: false)
+                .addShipment(shipment);
+            if (mounted) {
+              Provider.of<StatisticsProvider>(context, listen: false)
+                  .incrementField(user.uid, "pendingShipments");
+              await _showSuccessAnimation();
           }
         
         
