@@ -28,7 +28,7 @@ class _SingupPageState extends State<SignUpScreen> {
   final firstNameController = TextEditingController();
   final passwordController = TextEditingController();
   final emailController = TextEditingController();
-  final birthdayController = TextEditingController();
+  // final birthdayController = TextEditingController();
   final confirmPasswordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
 
@@ -43,6 +43,9 @@ class _SingupPageState extends State<SignUpScreen> {
             pendingShipments: 0,
             ongoingShipments: 0,
             completedShipments: 0,
+            pendingTrips: 0,
+            ongoingTrips: 0,
+            completedTrips: 0,
             reviewCount: 0,
             id: userId,
             userId: userId);
@@ -210,21 +213,21 @@ class _SingupPageState extends State<SignUpScreen> {
              buildInfoCard(
               icon: Icons.info_outline,
               title: "Important Note",
-              message: "Make sure your name matches your government ID. You must be 18+ to use QuickDrop.",
+              message: "Make sure your name matches your government ID.",
               color: Colors.blue,
             ),
             // TipWidget(message: "Make sure this matches the name on your government ID or passport."),
-            const SizedBox(height: 15),
-            TextFieldWithHeader(
-              controller: birthdayController,
-              hintText: 'Birthday',
-              isRequired: false,
-              headerText: 'Date of Birth',
-              obsecureText: false,
-              iconPath: "assets/icon/email.svg",
-              keyboardType: TextInputType.datetime,
-              validator: Validators.notEmpty,
-            ),
+            // const SizedBox(height: 15),
+            // TextFieldWithHeader(
+            //   controller: birthdayController,
+            //   hintText: 'Birthday',
+            //   isRequired: false,
+            //   headerText: 'Date of Birth',
+            //   obsecureText: false,
+            //   iconPath: "assets/icon/email.svg",
+            //   keyboardType: TextInputType.datetime,
+            //   validator: Validators.notEmpty,
+            // ),
             // const SizedBox(height: 8),
             //  buildInfoCard(
             //   icon: Icons.info_outline,

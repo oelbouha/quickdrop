@@ -328,7 +328,7 @@ class _ProfileScreenState extends State<ProfileScreen>
     // print("photo ${user!.photoUrl}");
     return GestureDetector(
         onTap: () {
-          context.push('/profile/statistics?userId=${user!.uid}');
+          context.push('/profile/statistics?userId=${FirebaseAuth.instance.currentUser!.uid}');
         },
         child: Container(
             width: double.infinity,

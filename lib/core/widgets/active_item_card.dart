@@ -276,12 +276,18 @@ Widget _buildFooter() {
               }
             });
           },
-          child: const CustomIcon(
+          child: Container (
+            padding: const EdgeInsets.all(6),
+            decoration: BoxDecoration(
+              color: AppColors.blue700.withValues(alpha: 0.1),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: const CustomIcon(
             iconPath: "assets/icon/dots.svg",
             size: 18,
             color: AppColors.dark,
           ),
-        ),
+        )),
       ],
     ),
   );

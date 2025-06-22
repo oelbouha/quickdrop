@@ -547,9 +547,9 @@ class _HomeScreenState extends State<HomeScreen> {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        padding: const EdgeInsets.all(8),
+        padding: const EdgeInsets.all(6),
         decoration: BoxDecoration(
-          // color: AppColors.hoverGray100,
+          color: AppColors.white.withValues(alpha: 0.4),
           borderRadius: BorderRadius.circular(8),
         ),
         child: Stack(
@@ -649,6 +649,7 @@ class _HomeScreenState extends State<HomeScreen> {
     toController.text = "";
     weightController.text = "";
     priceController.text = "";
+    typeController.text = "Shipment";
   }
 
   void _applySearchFilter() {

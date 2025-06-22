@@ -34,14 +34,14 @@ class ProfileStatisticsState extends State<ProfileStatistics> {
       try {
         // final user = FirebaseAuth.instance.currentUser;
 
-         final  fetchedStats = await Provider.of<StatisticsProvider>(context, listen: false)
+         stats = await Provider.of<StatisticsProvider>(context, listen: false)
           .getStatictics(widget.user.uid);
-            // print(stats?.completedTrips);
-            if (mounted) {
-            setState(() {
-              stats = fetchedStats;
-            });
-          }
+            print(stats?.completedTrips);
+            // if (mounted) {
+            // setState(() {
+            //   stats = fetchedStats;
+            // });
+          // }
 
         Provider.of<ReviewProvider>(context, listen: false)
             .fetchReviews(widget.user.uid);
@@ -237,7 +237,6 @@ class ProfileStatisticsState extends State<ProfileStatistics> {
   Widget _buildTripsStats() {
     return Consumer<StatisticsProvider>(
       builder: (context, statsProvider, child) {
-        final stats = statsProvider.stats;
         return _buildStatsRow([
           _buildStatCard(
             title: "Pending",
