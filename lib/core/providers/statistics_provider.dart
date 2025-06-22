@@ -26,7 +26,6 @@ class StatisticsProvider with ChangeNotifier {
         await _firestore.collection('statistics').doc(userId).get();
 
     if (snapshot.exists) {
-     
       return StatisticsModel.fromMap(snapshot.data()!, userId);
     }
     return null;

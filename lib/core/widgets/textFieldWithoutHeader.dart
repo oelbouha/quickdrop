@@ -47,14 +47,14 @@ class TextFieldWithoutHeader extends StatelessWidget {
                 child: CustomIcon(
                   iconPath: iconPath!,
                   size: 20,
-                  color: AppColors.lessImportant,
+                  color: AppColors.textSecondary,
                
             ),
               ) : null,
         fillColor: AppColors.white,
         enabledBorder: OutlineInputBorder(
           borderSide: const BorderSide(
-            color: AppColors.lessImportant,
+            color: AppColors.textSecondary,
             width: AppTheme.textFieldBorderWidth,
           ),
           borderRadius: BorderRadius.circular(AppTheme.textFeildRadius),

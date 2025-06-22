@@ -31,7 +31,7 @@ class _ChatScreenState extends State<ChatScreen>
 
     user = Provider.of<UserProvider>(context, listen: false).user;
 
-    _tabController = TabController(length: 3, vsync: this);
+    _tabController = TabController(length: 4, vsync: this);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Future.microtask(() async {
         try {
@@ -83,6 +83,7 @@ class _ChatScreenState extends State<ChatScreen>
             "Send",
             "Received",
             "Negotiate",
+            "Chats"
           ],
           title: "Offers",
         ),
@@ -94,6 +95,7 @@ class _ChatScreenState extends State<ChatScreen>
               _buildMyRequests(),
               _buildDeliveryRequests(),
               _buildDeliveryRequests(),
+              _buildChatConversations(),
             ],
           ),
         ));

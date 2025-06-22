@@ -38,30 +38,21 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                   fontWeight: FontWeight.bold,
                 ),
               ),
+             
               Row(
-                children: [
-                  IconButton(
-                    icon: const CustomIcon(
-                      iconPath: "assets/icon/notification.svg",
-                      size: 22,
-                      color: AppColors.appBarIcons,
-                    ),
-                    tooltip: 'notification',
-                    onPressed: () => context.push("/notification"),
-                  ),
-                  GestureDetector(
-                    onTap: () => context.push("/profile"),
-                    child: CircleAvatar(
-                      radius: 18,
-                      backgroundColor: AppColors.blue,
-                      backgroundImage: userPhotoUrl.startsWith("http")
-                          ? NetworkImage(userPhotoUrl)
-                          : AssetImage(userPhotoUrl) as ImageProvider,
-                    ),
-                  ),
-                  const SizedBox(width: 10),
-                ],
-              ),
+          children: [
+            _buildHeaderIcon(
+              icon: "assets/icon/help.svg",
+              onTap: () => context.push("/help"),
+            ),
+            const SizedBox(width: 8),
+            _buildHeaderIcon(
+              icon: "assets/icon/notification.svg",
+              onTap: () => context.push("/notification"),
+              hasNotification: true,
+            ),
+          ],
+        ),
             ],
           )
         : null,
@@ -77,12 +68,14 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
             labelColor: AppColors.tabTextActive,
             unselectedLabelColor: AppColors.tabTextInactive,
             indicatorColor: AppColors.blueStart,
-            tabAlignment: TabAlignment.fill,
             indicatorWeight: 2,
             indicatorSize: TabBarIndicatorSize.label,
             dividerColor: AppColors.lessImportant,
             dividerHeight: 0.4,
-            labelStyle: const TextStyle(
+            isScrollable: tabs.length > 3,
+            tabAlignment: tabs.length > 3 ? TabAlignment.start : TabAlignment.fill, 
+            padding: tabs.length > 3 ? const EdgeInsets.symmetric(horizontal: 16) : null, 
+           labelStyle: const TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 16,
             ),
@@ -95,6 +88,46 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
         ),
       ),
     ));
+  }
+
+
+  Widget _buildHeaderIcon({
+    required String icon,
+    required VoidCallback onTap,
+    bool hasNotification = false,
+  }) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.all(6),
+        decoration: BoxDecoration(
+          color: AppColors.white.withValues(alpha: 0.4),
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: Stack(
+          children: [
+            CustomIcon(
+              iconPath: icon,
+              color: AppColors.textSecondary,
+              size: 24,
+            ),
+            if (hasNotification)
+              Positioned(
+                right: 0,
+                top: 0,
+                child: Container(
+                  width: 8,
+                  height: 8,
+                  decoration: const BoxDecoration(
+                    color: AppColors.red500,
+                    shape: BoxShape.circle,
+                  ),
+                ),
+              ),
+          ],
+        ),
+      ),
+    );
   }
 
   @override
