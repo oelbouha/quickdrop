@@ -84,7 +84,7 @@ class ProfileStatisticsState extends State<ProfileStatistics> {
           centerTitle: true,
         ),
         body: _isLoading
-                ? const HomePageSkeleton()
+                ? const ProfileStatisticsSkeleon()
                 : SingleChildScrollView(
                 physics: const BouncingScrollPhysics(),
                 child: Column(children: [
@@ -122,7 +122,7 @@ class ProfileStatisticsState extends State<ProfileStatistics> {
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 4,
             offset: const Offset(0, 2),
           ),
@@ -149,7 +149,7 @@ class ProfileStatisticsState extends State<ProfileStatistics> {
             title,
             style: TextStyle(
               fontSize: 12,
-              color: textColor.withOpacity(0.8),
+              color: textColor.withValues(alpha: 0.8),
               fontWeight: FontWeight.w500,
             ),
           ),
@@ -303,7 +303,7 @@ class ProfileStatisticsState extends State<ProfileStatistics> {
                         padding: const EdgeInsets.symmetric(
                             horizontal: 8, vertical: 4),
                         decoration: BoxDecoration(
-                          color: AppColors.blue.withOpacity(0.1),
+                          color: AppColors.blue.withValues(alpha: 0.1),
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: Text(
@@ -347,7 +347,7 @@ class ProfileStatisticsState extends State<ProfileStatistics> {
             borderRadius: BorderRadius.circular(12),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.05),
+                color: Colors.black.withValues(alpha: 0.05),
                 blurRadius: 4,
                 offset: const Offset(0, 2),
               ),
@@ -460,7 +460,7 @@ class ProfileStatisticsState extends State<ProfileStatistics> {
           const SizedBox(width: 8),
           Icon(
             Icons.trending_up,
-            color: AppColors.succes.withOpacity(0.8),
+            color: AppColors.succes.withValues(alpha: 0.8),
             size: 12,
           ),
         ],
@@ -500,7 +500,7 @@ class ProfileStatisticsState extends State<ProfileStatistics> {
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(55),
             border: Border.all(
-              color: Colors.white.withOpacity(0.3),
+              color: Colors.white.withValues(alpha: 0.3),
               width: 3,
             ),
             boxShadow: [
@@ -518,7 +518,7 @@ class ProfileStatisticsState extends State<ProfileStatistics> {
               fit: BoxFit.cover,
               errorBuilder: (context, error, stackTrace) {
                 return Container(
-                  color: Colors.white.withOpacity(0.1),
+                  color: Colors.white.withValues(alpha: 0.1),
                   child: const Icon(
                     Icons.person,
                     color: AppColors.white,

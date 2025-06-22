@@ -8,8 +8,8 @@ import 'package:intl/intl.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:quickdrop_app/core/widgets/passwordTextField.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter/gestures.dart';
+  import 'package:flutter/services.dart';
+  import 'package:flutter/gestures.dart';
 
 class SignUpScreen extends StatefulWidget {
   final String? phoneNumber;

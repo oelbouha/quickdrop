@@ -1,8 +1,6 @@
 import 'package:quickdrop_app/core/utils/imports.dart';
-import 'package:quickdrop_app/features/shipment/listing_card_details_screen.dart';
-import 'package:quickdrop_app/features/profile/profile_screen.dart';
-import 'package:quickdrop_app/core/widgets/app_header.dart';
 import 'package:quickdrop_app/core/widgets/home_page_skeleton.dart';
+import 'package:quickdrop_app/features/home/search_page.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -17,10 +15,16 @@ class _HomeScreenState extends State<HomeScreen> {
   String? userPhotoUrl;
   UserData? user;
 
+  final fromController = TextEditingController();
+  final toController = TextEditingController();
+  final weightController = TextEditingController();
+  final priceController = TextEditingController();
+  final typeController = TextEditingController();
+
   @override
   void initState() {
     super.initState();
-
+    typeController.text = "Shipment"; // Default type
     user = Provider.of<UserProvider>(context, listen: false).user;
     if (user == null) {
       // If user is null, redirect to login
@@ -55,7 +59,8 @@ class _HomeScreenState extends State<HomeScreen> {
             .fetchUsersData(tripUserIds);
       } catch (e) {
         if (mounted) {
-          AppUtils.showDialog(context, 'Error fetching shipments: $e', AppColors.error);
+          AppUtils.showDialog(
+              context, 'Error fetching shipments: $e', AppColors.error);
         }
       } finally {
         setState(() {
@@ -398,7 +403,7 @@ class _HomeScreenState extends State<HomeScreen> {
       ],
     );
   }
-  
+
   Widget _buildListingsHeader() {
     return Row(
       children: [
@@ -511,7 +516,7 @@ class _HomeScreenState extends State<HomeScreen> {
         UserProfileWithRating(
           user: user,
           header: 'Welcome, ${user?.firstName ?? 'Guest'}',
-          avatarSize: 40,
+          avatarSize: 42,
           headerFontSize: 12,
           onPressed: () => context.push("/profile"),
         ),
@@ -573,18 +578,171 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _buildRequesBody() {
-    return const Padding(
-      padding: EdgeInsets.all(24.0),
-      child: Text(
-        "Request a shipment or trip",
-        style: TextStyle(
-          color: AppColors.textPrimary,
-          fontSize: 18,
-          fontWeight: FontWeight.w600,
+  Widget _buildFilterDestination() {
+    return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          TextFieldWithHeader(
+              controller: fromController,
+              hintText: "Departure city",
+              headerText: "From",
+              validator: Validators.notEmpty,
+              iconPath: "assets/icon/map-point.svg"),
+          const SizedBox(height: 16),
+          TextFieldWithHeader(
+              controller: toController,
+              hintText: "Destination city",
+              headerText: "To",
+              validator: Validators.notEmpty,
+              iconPath: "assets/icon/map-point.svg"),
+          const SizedBox(height: 24),
+          Row(
+            mainAxisSize: MainAxisSize.max, // Use max to fill available width
+            children: [
+              Expanded(
+                child: TextFieldWithHeader(
+                  controller: weightController,
+                  hintText: "1.0",
+                  headerText: "Max Weight (kg)",
+                  keyboardType: TextInputType.number,
+                  validator: Validators.notEmpty,
+                ),
+              ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: TextFieldWithHeader(
+                  controller: priceController,
+                  hintText: "1.0",
+                  headerText: "Max price (dh)",
+                  keyboardType: TextInputType.number,
+                  validator: Validators.notEmpty,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 24),
+          const Text(
+            "Select Type",
+            style: TextStyle(
+              color: AppColors.textPrimary,
+              fontSize: 14,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          const SizedBox(height: 8),
+          TypeSelectorWidget(
+            onTypeSelected: (type) {
+              typeController.text = type;
+            },
+            initialSelection: "Shipment",
+            types: const ["Shipment", "Trip"],
+            selectedColor: AppColors.blue600,
+            unselectedColor: AppColors.textSecondary,
+          )
+        ]);
+  }
+
+  void _clearSearchFilter() {
+    fromController.text = "";
+    toController.text = "";
+    weightController.text = "";
+    priceController.text = "";
+  }
+
+  void _applySearchFilter() {
+  if (fromController.text.isEmpty &&
+        toController.text.isEmpty &&
+        weightController.text.isEmpty &&
+        priceController.text.isEmpty &&
+        typeController.text.isEmpty) {
+      AppUtils.showDialog(
+          context, 'Please fill at least one field', AppColors.error);
+      return;
+    }
+
+    SearchFilters filters = SearchFilters(
+        from: fromController.text,
+        to: toController.text,
+        price: priceController.text,
+        weight: weightController.text,
+        type: typeController.text.isEmpty
+            ? "Shipment"
+            : typeController.text 
+        );
+        
+    context.push('/search?${Uri(queryParameters: filters.toQueryParameters()).query}');
+  }
+
+  Widget _buildNavigationButtons() {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+      ),
+      child: SafeArea(
+        child: Row(
+          children: [
+            // Back button
+
+            Expanded(
+              flex: 2,
+              child: OutlinedButton.icon(
+                onPressed: _clearSearchFilter,
+                icon: const Icon(Icons.clear_all, size: 18),
+                label: const Text('Clear filters'),
+                style: OutlinedButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  side: BorderSide(color: Colors.grey[300]!),
+                ),
+              ),
+            ),
+            const SizedBox(width: 12),
+
+            // Next/Submit button
+            Expanded(
+              flex: 3,
+              child: AnimatedContainer(
+                duration: const Duration(milliseconds: 200),
+                child: ElevatedButton.icon(
+                  onPressed: _applySearchFilter,
+                  icon: const Icon(Icons.check, size: 18),
+                  label: const Text(
+                    'Apply filtters',
+                  ),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColors.blue700,
+                    foregroundColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    elevation: 2,
+                  ),
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );
+  }
+
+  Widget _buildRequesBody() {
+    return Column(children: [
+      Padding(
+          padding: EdgeInsets.all(16.0),
+          child: Column(children: [
+            _buildFilterDestination(),
+          ])),
+      // const SizedBox(height: 24),
+      _buildNavigationButtons(),
+    ]);
   }
 
   void _showRequestSheet() {

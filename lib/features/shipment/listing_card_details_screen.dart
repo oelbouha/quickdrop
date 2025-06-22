@@ -7,7 +7,10 @@ class ListingCardDetails extends StatefulWidget {
   final bool viewOnly;
 
   const ListingCardDetails(
-      {super.key, required this.shipment, required this.user, this.viewOnly = true});
+      {super.key,
+      required this.shipment,
+      required this.user,
+      this.viewOnly = true});
 
   @override
   State<ListingCardDetails> createState() => _ListingCardDetailsState();
@@ -19,8 +22,8 @@ class _ListingCardDetailsState extends State<ListingCardDetails> {
   final _formKey = GlobalKey<FormState>();
   bool _isTrip = false;
   bool _isLoading = false;
-  Shipment? _selectedShipment ;
-  Trip? _selectedTrip ;
+  Shipment? _selectedShipment;
+  Trip? _selectedTrip;
 
   @override
   void initState() {
@@ -101,39 +104,41 @@ class _ListingCardDetailsState extends State<ListingCardDetails> {
   }
 
   Widget _buildSliverApp() {
-    return  SliverAppBar(
-            expandedHeight: _selectedShipment == null ? 100 : 300,
-            pinned: true,
-            backgroundColor: AppColors.background,
-
-            flexibleSpace: _selectedShipment == null ? null : FlexibleSpaceBar(
-               background: _displayImage(),
+    return SliverAppBar(
+      expandedHeight: _selectedShipment == null ? 100 : 300,
+      pinned: true,
+      backgroundColor: AppColors.background,
+      flexibleSpace: _selectedShipment == null
+          ? null
+          : FlexibleSpaceBar(
+              background: _displayImage(),
             ),
-            leading: Container(
-              margin: const EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                color: Colors.black.withOpacity(0.3),
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: BackButton(color: Colors.white),
-            ),
-            actions: [
-              Container(
-                margin: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  color: Colors.black.withOpacity(0.3),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: IconButton(
-                  icon: const Icon(Icons.share, color: Colors.white),
-                  onPressed: () {
-                    // Share functionality
-                  },
-                ),
-              ),
-            ],
-            
-          );
+      leading: Container(
+        margin: const EdgeInsets.all(8),
+        decoration: BoxDecoration(
+          color: Colors.black.withValues(alpha: 0.3),
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: BackButton(color: Colors.white),
+      ),
+      actions: [
+        Container(
+          margin: const EdgeInsets.all(8),
+          decoration: BoxDecoration(
+            color: Colors.black.withValues(alpha: 0.3),
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: IconButton(
+            icon: const Icon(Icons.share, color: Colors.white),
+            onPressed: () {
+              // Share functionality
+              AppUtils.showDialog(
+                  context, "Share feature is comming", AppColors.blue700);
+            },
+          ),
+        ),
+      ],
+    );
   }
 
   @override
@@ -143,26 +148,25 @@ class _ListingCardDetailsState extends State<ListingCardDetails> {
       body: CustomScrollView(
         slivers: [
           _buildSliverApp(),
-           SliverToBoxAdapter(
-              child: Column(
-                children: [
-                  _buildUserProfile(),
-                  _buildDescription(),
-                  const SizedBox(height: 20),
-                  _buildDetailsSection(),
-                  const SizedBox(height: 150), // space for bottom bar
-                ],
-              ),
+          SliverToBoxAdapter(
+            child: Column(
+              children: [
+                _buildUserProfile(),
+                _buildDescription(),
+                const SizedBox(height: 20),
+                _buildDetailsSection(),
+                const SizedBox(height: 150), // space for bottom bar
+              ],
+            ),
           ),
         ],
       ),
-      
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: _buildPriceAndAction(),
     );
   }
- Widget _buildDetailsSection() {
 
+  Widget _buildDetailsSection() {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       padding: const EdgeInsets.all(20),
@@ -223,35 +227,24 @@ class _ListingCardDetailsState extends State<ListingCardDetails> {
               ),
             ),
           ),
-          // _buildDetailItem(
-          //   icon: "assets/icon/package.svg",
-          //   title: "Package Type",
-          //   child: Text(
-          //     '${widget.shipment.weight} kg',
-          //     style: const TextStyle(
-          //       color: AppColors.headingText,
-          //       fontSize: 16,
-          //     ),
-          //   ),
-          // ),
-          if (_selectedShipment != null ) _buildDetailItem(
-            icon: "assets/icon/package.svg",
-            title: "Package type",  
-            child: Text(
-              '${_selectedShipment?.type } ',
-              style: const TextStyle(
-                color: AppColors.headingText,
-                fontSize: 16,
+
+            _buildDetailItem(
+              icon: _selectedShipment != null ? "assets/icon/package.svg" : "assets/icon/car.svg",
+              title: _selectedShipment != null ? "Package type" : "Transport type",
+              child: Text(
+                '${_selectedShipment == null ? _selectedTrip!.transportType : _selectedShipment!.type}',
+                style: const TextStyle(
+                  color: AppColors.headingText,
+                  fontSize: 16,
+                ),
               ),
             ),
-          ),
         ],
       ),
     );
   }
 
-
-   Widget _buildDetailItem({
+  Widget _buildDetailItem({
     required String icon,
     required String title,
     required Widget child,
@@ -264,7 +257,7 @@ class _ListingCardDetailsState extends State<ListingCardDetails> {
           Container(
             padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
-              color: AppColors.blue.withOpacity(0.1),
+              color: AppColors.blue.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(10),
             ),
             child: CustomIcon(
@@ -308,7 +301,7 @@ class _ListingCardDetailsState extends State<ListingCardDetails> {
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.1),
+            color: Colors.black.withValues(alpha: 0.1),
             blurRadius: 20,
             offset: const Offset(0, -5),
           ),
@@ -375,7 +368,7 @@ class _ListingCardDetailsState extends State<ListingCardDetails> {
                 borderRadius: BorderRadius.circular(16),
                 boxShadow: [
                   BoxShadow(
-                    color: AppColors.blue.withOpacity(0.4),
+                    color: AppColors.blue.withValues(alpha: 0.4),
                     blurRadius: 12,
                     offset: const Offset(0, 6),
                   ),
@@ -412,12 +405,10 @@ class _ListingCardDetailsState extends State<ListingCardDetails> {
     );
   }
 
-
   Widget _buildDescription() {
-
     if (_selectedShipment == null) {
       return Container();
-    } 
+    }
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       padding: const EdgeInsets.all(20),
@@ -426,7 +417,7 @@ class _ListingCardDetailsState extends State<ListingCardDetails> {
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 10,
             offset: const Offset(0, 2),
           ),
@@ -466,24 +457,25 @@ class _ListingCardDetailsState extends State<ListingCardDetails> {
           borderRadius: BorderRadius.circular(20),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.05),
+              color: Colors.black.withValues(alpha: 0.05),
               blurRadius: 10,
               offset: const Offset(0, 2),
             ),
           ],
         ),
-        child: Row(
-          children: [ 
-             UserProfileWithRating(
-              user: widget.user,
-              header: widget.user.displayName ?? 'Guest',
-              avatarSize: 40,
-              headerFontSize: 16,
-              onPressed: () =>  {context.push('/profile/statistics?userId=${widget.user.uid}')},
-            ),
-      const Spacer(),
-       GestureDetector(
-            onTap: () => context.push('/profile/statistics?userId=${widget.user.uid}'),
+        child: Row(children: [
+          UserProfileWithRating(
+            user: widget.user,
+            header: widget.user.displayName ?? 'Guest',
+            avatarSize: 46,
+            headerFontSize: 16,
+            onPressed: () =>
+                {context.push('/profile/statistics?userId=${widget.user.uid}')},
+          ),
+          const Spacer(),
+          GestureDetector(
+            onTap: () =>
+                context.push('/profile/statistics?userId=${widget.user.uid}'),
             child: Container(
               padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
@@ -496,10 +488,8 @@ class _ListingCardDetailsState extends State<ListingCardDetails> {
                 color: AppColors.blue,
               ),
             ),
-       ),
-
-      ]
-    ));
+          ),
+        ]));
   }
 
   void _showRequestSheet() {
@@ -510,7 +500,7 @@ class _ListingCardDetailsState extends State<ListingCardDetails> {
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
-      barrierColor: Colors.black.withOpacity(0.5),
+      barrierColor: Colors.black.withValues(alpha: 0.5),
       builder: (BuildContext context) {
         return Padding(
           padding: EdgeInsets.only(

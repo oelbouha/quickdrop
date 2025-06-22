@@ -259,7 +259,7 @@ class _ShipmentScreenState extends State<ShipmentScreen>
                       if (index == 0)
                         const SizedBox(height: AppTheme.gapBetweenCards),
                       ActiveItemCard(
-                          onEditPressed: () => {context.push('/add-shipment?shipmentId=${shipment.id}')},
+                          onEditPressed: () => {context.push('/add-shipment?shipmentId=${shipment.id}&isEdit=true')},
                           onViewPressed: () => {context.push('/shipment-details?shipmentId=${shipment.id}&userId=${shipment.userId}&viewOnly=true')},
                           item: shipment,
                           onPressed: () {
@@ -342,7 +342,7 @@ class _ShipmentScreenState extends State<ShipmentScreen>
                 itemBuilder: (context, index) {
                   final trip = pastShipments[index];
                   if (trip.matchedDeliveryUserId == null) {
-                    print("matchedDeliveryUserId is null");
+                    // print("matchedDeliveryUserId is null");
                     return const SizedBox
                         .shrink(); // Skip this item if userData is null
                   }

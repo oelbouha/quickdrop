@@ -261,7 +261,7 @@ class _TripScreenState extends State<TripScreen>
                     if (index == 0)
                       const SizedBox(height: AppTheme.gapBetweenCards),
                     ActiveItemCard(
-                      onEditPressed: () => {context.push('/add-trip?tripId=${trip.id}')},
+                      onEditPressed: () => {context.push('/add-trip?tripId=${trip.id}&isEdit=true')},
                       onViewPressed: () => {  context.push(
                               '/trip-details?tripId=${trip.id}&userId=${trip.userId}&viewOnly=true')},
                       item: trip,

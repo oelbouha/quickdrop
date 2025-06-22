@@ -122,6 +122,7 @@ extension on Trip {
     String? from,
     String? to,
     String? weight,
+    String? transportType,
     // String? description,
     String? date,
     // String? packageName,
@@ -133,6 +134,7 @@ extension on Trip {
     return Trip(
       id: id ?? this.id,
       from: from ?? this.from,
+      transportType: transportType ?? this.transportType,
       to: to ?? this.to,
       weight: weight ?? this.weight,
       // description: description ?? this.description,

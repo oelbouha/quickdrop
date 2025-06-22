@@ -1,11 +1,14 @@
 import 'package:quickdrop_app/features/models/base_transport.dart';
 
 class Trip extends TransportItem {
+  final String transportType;
   Trip({
     String? id,
     String? matchedDeliveryId,
     String? matchedDeliveryUserId,
     String status = 'active',
+
+    required this.transportType,
     required String from,
     required String to,
     required String weight,
@@ -45,6 +48,7 @@ class Trip extends TransportItem {
       matchedDeliveryId: map['matchedDeliveryId'],
       matchedDeliveryUserId: map['matchedDeliveryUserId'],
       status: map['status'] ?? 'active',
+      transportType: map['transportType'] ?? 'trip',
     );
   }
 }
