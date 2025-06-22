@@ -90,6 +90,7 @@ class _AddShipmentScreenState extends State<AddShipmentScreen>
       typeController.text = "water";
       fromController.text = "cassa";
       toController.text = "martil";
+      typeController.text = "Box";
     }
   }
 
@@ -359,7 +360,6 @@ void _updateShipment() async {
                 },
               ),
             ),
-            // Enhanced Navigation Buttons
             _buildNavigationButtons(),
           ],
         ),
@@ -792,47 +792,57 @@ void _updateShipment() async {
             ],
           ),
           const SizedBox(height: 20),
-          Text(
-            "Dimensions (cm) - Optional",
-            style: TextStyle(
-              color: AppColors.headingText,
-              fontWeight: FontWeight.w600,
-              fontSize: 16,
-            ),
-          ),
-          const SizedBox(height: 12),
-          Row(
-            children: [
-              Expanded(
-                child: TextFieldWithHeader(
-                  controller: lengthController,
-                  hintText: "0",
-                  headerText: "Length",
-                  keyboardType: TextInputType.number,
-                  isRequired: false,
-                ),
-              ),
-              const SizedBox(width: 8),
-              Expanded(
-                child: TextFieldWithHeader(
-                  controller: widthController,
-                  hintText: "0",
-                  headerText: "Width",
-                  isRequired: false,
-                  keyboardType: TextInputType.number,
-                ),
-              ),
-              const SizedBox(width: 8),
-              Expanded(
-                child: TextFieldWithHeader(
-                  controller: heightController,
-                  hintText: "0",
-                  headerText: "Height",
-                  isRequired: false,
-                  keyboardType: TextInputType.number,
-                ),
-              ),
-            ],
+          // Text(
+          //   "Dimensions (cm) - Optional",
+          //   style: TextStyle(
+          //     color: AppColors.headingText,
+          //     fontWeight: FontWeight.w600,
+          //     fontSize: 16,
+          //   ),
+          // ),
+          // const SizedBox(height: 12),
+          // Row(
+          //   children: [
+          //     Expanded(
+          //       child: TextFieldWithHeader(
+          //         controller: lengthController,
+          //         hintText: "0",
+          //         headerText: "Length",
+          //         keyboardType: TextInputType.number,
+          //         isRequired: false,
+          //       ),
+          //     ),
+          //     const SizedBox(width: 8),
+          //     Expanded(
+          //       child: TextFieldWithHeader(
+          //         controller: widthController,
+          //         hintText: "0",
+          //         headerText: "Width",
+          //         isRequired: false,
+          //         keyboardType: TextInputType.number,
+          //       ),
+          //     ),
+          //     const SizedBox(width: 8),
+          //     Expanded(
+          //       child: TextFieldWithHeader(
+          //         controller: heightController,
+          //         hintText: "0",
+          //         headerText: "Height",
+          //         isRequired: false,
+          //         keyboardType: TextInputType.number,
+          //       ),
+          //     ),
+          //   ],
+          // ),
+          TextWithRequiredIcon(text: "Package Type"),
+          TypeSelectorWidget(
+            onTypeSelected: (type) {
+              typeController.text = type;
+            },
+            initialSelection: "Box",
+            types: const ["Box", "Envelope", "Bag", "Pallet", "Accessories"],
+            selectedColor: AppColors.blue600,
+            unselectedColor: AppColors.textSecondary,
           ),
           const SizedBox(height: 20),
           buildInfoCard(
@@ -861,16 +871,16 @@ void _updateShipment() async {
           const SizedBox(height: 24),
           TextFieldWithHeader(
             controller: fromController,
-            hintText: "From",
-            headerText: "Pickup Location",
+            hintText: "Departure city",
+            headerText: "From",
             validator: Validators.notEmpty,
              iconPath : "assets/icon/map-point.svg"
           ),
           const SizedBox(height: 16),
           TextFieldWithHeader(
             controller: toController,
-            hintText: "To",
-            headerText: "Delivery Location",
+            hintText: "Destination city",
+            headerText: "To",
             validator: Validators.notEmpty,
              iconPath : "assets/icon/map-point.svg"
           ),

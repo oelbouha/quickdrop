@@ -16,6 +16,8 @@ export 'package:quickdrop_app/core/widgets/textWithLink.dart';
 export 'package:quickdrop_app/core/widgets/appBarText.dart';
 export 'package:quickdrop_app/core/widgets/phone_number.dart';
 export 'package:quickdrop_app/core/widgets/tipWidget.dart';
+export 'package:quickdrop_app/core/widgets/typeSelectorWidget.dart';
+export 'package:quickdrop_app/core/widgets/profile_statistics_skeleton.dart';
 
 export 'package:quickdrop_app/features/shipment/add_shipment_screen.dart';
 

@@ -19,7 +19,7 @@ class TextFieldWithHeader extends StatelessWidget {
     super.key,
     required this.controller,
     required this.hintText,
-    this.iconPath = null,
+    this.iconPath ,
     required this.headerText,
     this.obsecureText = false,
     this.keyboardType = TextInputType.text,
@@ -72,18 +72,18 @@ class TextFieldWithHeader extends StatelessWidget {
               color: Colors.grey[400],
             ),
             prefixIcon: iconPath != null ? Padding(
-                padding:  EdgeInsets.all(12),
+                padding:  const EdgeInsets.all(12),
                 child: CustomIcon(
                   iconPath: iconPath!,
                   size: 20,
-                  color: AppColors.lessImportant,
+                  color: AppColors.textSecondary,
                 ),
               ) : null,
             filled: true,
             fillColor: AppColors.white,
             enabledBorder: OutlineInputBorder(
-              borderSide:  BorderSide(
-                color: Colors.grey,
+              borderSide:  const BorderSide(
+                color: AppColors.textSecondary,
                 width: AppTheme.textFieldBorderWidth,
               ),
               borderRadius: BorderRadius.circular(AppTheme.textFeildRadius),

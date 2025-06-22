@@ -18,6 +18,9 @@ class _AddTripScreenState extends State<AddTripScreen>
     final dateController = TextEditingController();
     final weightController = TextEditingController();
     final priceController = TextEditingController();
+
+    final transportTypeController = TextEditingController();
+
     bool _isListButtonLoading = false;
     final _formKey = GlobalKey<FormState>();
 
@@ -84,7 +87,8 @@ class _AddTripScreenState extends State<AddTripScreen>
           weight: weightController.text,
           date: dateController.text,
           userId: widget.existingTrip!.userId,
-          price: priceController.text
+          price: priceController.text,
+          transportType: transportTypeController.text,
           );
     //  print("existing shipment id: ${widget.existingShipment!.id}");
     await Provider.of<TripProvider>(context, listen: false)
@@ -113,7 +117,8 @@ class _AddTripScreenState extends State<AddTripScreen>
           weight: weightController.text,
           date: dateController.text,
           userId: user.uid,
-          price: priceController.text
+          price: priceController.text,
+          transportType: transportTypeController.text,
           );
 
       try {
@@ -228,10 +233,12 @@ class _AddTripScreenState extends State<AddTripScreen>
       weightController.text = widget.existingTrip?.weight ??   '';
       dateController.text = widget.existingTrip?.date ?? '';
       priceController.text = widget.existingTrip?.price ?? '';
+      transportTypeController.text = widget.existingTrip?.transportType ?? 'Car';
     } else {
       weightController.text = "1";
       fromController.text = "cassa";
       toController.text = "martil";
+      transportTypeController.text = "Car";
     }
   }
 
@@ -276,9 +283,7 @@ class _AddTripScreenState extends State<AddTripScreen>
         ),
         systemOverlayStyle: SystemUiOverlayStyle.dark,
       ),
-      body: Padding(
-          padding: const EdgeInsets.all(AppTheme.homeScreenPadding),
-          child: Form(
+      body:  Form(
             key: _formKey,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -313,7 +318,7 @@ class _AddTripScreenState extends State<AddTripScreen>
                 _buildNavigationButtons(),
               ],
             ),
-          )),
+          ),
     );
   }
 
@@ -704,7 +709,7 @@ class _AddTripScreenState extends State<AddTripScreen>
             backgroundColor: const Color(0xFFFEF3C7),
           ),
           const SizedBox(height: 20),
-          TextWithRequiredIcon(text: "Preferred Pickup Date"),
+          TextWithRequiredIcon(text: "Pickup Date"),
           const SizedBox(height: 8),
           DateTextField(
             controller: dateController,
@@ -712,6 +717,18 @@ class _AddTripScreenState extends State<AddTripScreen>
             onTap: () => _selectDate(context),
             hintText: "Select pickup date",
             validator: Validators.notEmpty,
+          ),
+          const SizedBox(height: 20),
+          
+          TextWithRequiredIcon(text: "transport Type"),
+          TypeSelectorWidget(
+            onTypeSelected: (type) {
+              transportTypeController.text = type;
+            },
+            initialSelection: "Car",
+            types: const ["Car", "Airplane", "Truck", "Motorcycle"],
+            selectedColor: AppColors.blue600,
+            unselectedColor: AppColors.textSecondary,
           ),
           const SizedBox(height: 20),
           buildInfoCard(
