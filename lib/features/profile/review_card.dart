@@ -53,7 +53,7 @@ class ReviewCard extends StatelessWidget {
               photoUrl: user.photoUrl ?? AppTheme.defaultProfileImage,
               headerFontSize: 14,
               subHeaderFontSize: 10,
-              avatarSize: 18,
+              avatarSize: 34,
             ),
            RatingBarIndicator(
               rating: review.rating, 

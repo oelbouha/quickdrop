@@ -125,6 +125,9 @@ class _ChatScreenState extends State<ChatScreen>
                                   child: Text("No conversations yet"));
                             }
                             final conversation = (snapshot.data as List)[index];
+                            if (conversation['userId'] == null || conversation == null) {
+                              return const SizedBox.shrink();
+                            }
                             // List<Map<String, dynamic>> user = conversation['user'];
                             // print("user data: ${user}");
                             // print("sender id: ${conversation['participants'][0]}");
@@ -133,9 +136,9 @@ class _ChatScreenState extends State<ChatScreen>
                                 const SizedBox(
                                     height: AppTheme.gapBetweenCards),
                               ChatConversationCard(
-                                header: conversation['userName'],
-                                subHeader: conversation['lastMessage'],
-                                photoUrl: conversation['photoUrl'],
+                                header: conversation['userName'] ?? 'Guest',
+                                subHeader: conversation['lastMessage'] ?? 'No messages yet',
+                                photoUrl: conversation['photoUrl'] ?? AppTheme.defaultProfileImage,
                                 userId: conversation['userId'],
                                 isMessageSeen: conversation['lastMessageSeen'],
                                 messageSender:

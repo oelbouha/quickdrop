@@ -1,3 +1,5 @@
+import 'package:quickdrop_app/core/providers/negotiation_provider.dart';
+
 import 'firebase_options.dart';
 import 'package:quickdrop_app/core/utils/imports.dart';
 import 'package:quickdrop_app/core/providers/review_provider.dart';
@@ -15,6 +17,7 @@ void main() async {
         ChangeNotifierProvider(create: (context) => UserProvider()),
         ChangeNotifierProvider(create: (context) => DeliveryRequestProvider()),
         ChangeNotifierProvider(create: (context) => ChatProvider()),
+        ChangeNotifierProvider(create: (context) => NegotiationProvider()),
       ],
       child: const MyApp(),
     ),

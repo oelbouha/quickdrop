@@ -131,10 +131,11 @@ class _ReviewDialogState extends State<ReviewDialog> {
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(8),
                 ),
-                child: LoginButton(
+                child: Button(
                   onPressed: _submitReview,
                   hintText: "Submit Review",
                   isLoading: false,
+                  backgroundColor: AppColors.blue700,
                 ))
           ],
         ),

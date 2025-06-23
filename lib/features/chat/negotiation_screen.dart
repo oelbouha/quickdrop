@@ -1,51 +1,61 @@
+import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
 import 'package:quickdrop_app/core/utils/imports.dart';
 import 'package:quickdrop_app/features/models/chat_model.dart';
+import 'package:quickdrop_app/core/providers/negotiation_provider.dart';
+import 'package:quickdrop_app/features/models/negotiation_model.dart';
 
+class NegotiationScreen extends StatefulWidget {
+  final UserData user;
+  final TransportItem transportItem;
 
-class ConversationScreen extends StatefulWidget {
-  final Map<String, dynamic> user;
-
-  const ConversationScreen({
+  const NegotiationScreen({
     super.key,
     required this.user,
+    required this.transportItem,
   });
 
   @override
-  State<ConversationScreen> createState() => _ConversationScreenState();
+  State<NegotiationScreen> createState() => _NegotiationScreenState();
 }
 
-class _ConversationScreenState extends State<ConversationScreen> {
+class _NegotiationScreenState extends State<NegotiationScreen> {
   TextEditingController messageController = TextEditingController();
+  TextEditingController priceController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
     // update the message seen status when the screen is opened
-    final chatId =
-        getChatId(FirebaseAuth.instance.currentUser!.uid, widget.user['uid']);
-    Provider.of<ChatProvider>(context, listen: false)
-        .markMessageAsSeen(chatId)
-        .then((_) {
-      // print("Message seen status updated");
-    }).catchError((error) {
-      // print("Error updating message seen status: $error");
-    });
+    // final chatId =
+    //     getChatId(FirebaseAuth.instance.currentUser!.uid, widget.user.uid);
+    // Provider.of<NegotiationProvider>(context, listen: false)
+    //     .markMessageAsSeen(chatId)
+    //     .then((_) {
+    //   // print("Message seen status updated");
+    // }).catchError((error) {
+    //   // print("Error updating message seen status: $error");
+    // });
   }
 
   void _sendMessage() async {
     if (messageController.text.isEmpty) return;
 
-    // print("user id ${widget.user['uid']}");
-    ChatModel message = ChatModel(
-        receiverId: widget.user['uid'],
+    // print("user id ${widget.user.uid}");
+    NegotiationModel message = NegotiationModel(
+        receiverId: widget.user.uid!,
         senderId: FirebaseAuth.instance.currentUser!.uid,
         timestamp: DateTime.now().toString(),
-        text: messageController.text,
-        type: "text");
+        message: messageController.text,
+        price: priceController.text
+      );
     try {
-      await Provider.of<ChatProvider>(context, listen: false)
+      await Provider.of<NegotiationProvider>(context, listen: false)
           .addMessage(message);
       messageController.clear();
+      priceController.clear();
     } catch (e) {
       // print("Error sending message: $e");
       if (mounted)
@@ -55,17 +65,17 @@ class _ConversationScreenState extends State<ConversationScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final chatProvider = Provider.of<ChatProvider>(context);
+    final negotiationProvider = Provider.of<NegotiationProvider>(context);
     final chatId =
-        getChatId(FirebaseAuth.instance.currentUser!.uid, widget.user['uid']);
+        getChatId(FirebaseAuth.instance.currentUser!.uid, widget.user.uid);
 
     return Scaffold(
         backgroundColor: AppColors.white,
         appBar: AppBar(
           title: UserProfileCard(
-            header: widget.user['displayName'],
-            onPressed: () =>  {context.push('/profile/statistics?userId=${widget.user['uid']}')},
-            photoUrl: widget.user['photoUrl'],
+            header: widget.user.displayName!,
+            onPressed: () =>  {context.push('/profile/statistics?userId=${widget.user.uid}')},
+            photoUrl: widget.user.photoUrl!,
             headerFontSize: 16,
             subHeaderFontSize: 10,
             avatarSize: 36,
@@ -73,7 +83,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
             headerColor: AppColors.appBarText,
           ),
            iconTheme: const IconThemeData(
-            color: Colors.black, // Set the arrow back color to black
+            color: Colors.black,
           ),
           systemOverlayStyle:
               SystemUiOverlayStyle.dark,
@@ -96,7 +106,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
                     // top: 6.0,
                   ),
                   child: StreamBuilder(
-                    stream: chatProvider.getMessages(chatId),
+                    stream: negotiationProvider.getMessages(chatId),
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
                         // return const Center(child: CircularProgressIndicator());
@@ -151,13 +161,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
                                               : const Radius.circular(20),
                                         ),
                                       ),
-                                      child: Text(
-                                        message.text,
-                                        style: TextStyle(
-                                            color: isMe
-                                                ? Colors.white
-                                                : Colors.black),
-                                      ),
+                                      child: _buildMessageContent(isMe, message),
                                     ),
                                     if (index == 0 && message.seen && isMe) ...[
                                       const Text(
@@ -171,74 +175,80 @@ class _ConversationScreenState extends State<ConversationScreen> {
                                     ]
                                   ]),
                             ),
-                            // const SizedBox(height: 5),
-                            //   const Text(
-                            //     "12:00 PM",
-                            //     style: TextStyle(
-                            //         color: AppColors.lessImportant, fontSize: 10),
-                            //   ),
-                            // const SizedBox(height: 5),
                           ]);
                         },
                       );
                     },
                   ))),
-          Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Row(children: [
-                Expanded(
-                    child: TextFormField(
-                  controller: messageController,
-                  onChanged: (text) {
-                    // Handle text input
-                    // print("Text input: $text");
-                  },
-                  style: const TextStyle(
-                    color: AppColors.headingText,
-                    fontSize: 14,
-                  ),
-                  decoration: InputDecoration(
-                    suffixIcon: Padding(
-                        padding: const EdgeInsets.only(
-                          right: 8.0,
-                          top: 4.0,
-                          bottom: 4.0,
-                        ),
-                        child: Container(
-                            decoration: BoxDecoration(
-                              color: AppColors.blue,
-                              borderRadius: BorderRadius.circular(30),
-                            ),
-                            child: IconButton(
-                                icon: const CustomIcon(
-                                  iconPath: "assets/icon/send.svg",
-                                  color: AppColors.white,
-                                  size: 30,
-                                ),
-                                onPressed: _sendMessage))),
-                    filled: true,
-                    fillColor: AppColors.blue.withOpacity(0.2),
-                    hintText: 'Message...',
-                    border: const OutlineInputBorder(
-                      // borderSide: BorderSide.none, // Removes visible border
-                      borderRadius: BorderRadius.all(Radius.circular(
-                          AppTheme.chatInputRadius)), // Adds border radius
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(
-                          color: AppColors.blue.withOpacity(0.1), width: 1.0),
-                      borderRadius: const BorderRadius.all(
-                          Radius.circular(AppTheme.chatInputRadius)),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(
-                          color: AppColors.blue.withOpacity(0.1), width: 1.0),
-                      borderRadius: const BorderRadius.all(
-                          Radius.circular(AppTheme.chatInputRadius)),
-                    ),
-                  ),
-                )),
-              ]))
+          _buildFooter(),
         ]));
+  }
+
+  Widget _buildFooter() {
+    return Container(
+      decoration: BoxDecoration(
+        color: AppColors.lessImportant,
+        border: Border(
+          top: BorderSide(
+            color: AppColors.blue.withOpacity(0.1),
+            width: 1.0,
+          ),
+        ),
+      ),
+      child: Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Column(
+       
+        children: [ 
+           const Text(
+          "Make an offer",
+          style: TextStyle(
+            color: AppColors.headingText,
+            fontSize: 14,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        const SizedBox(height: 8),
+        TextFieldWithHeader(
+            controller: priceController,
+            hintText: "Enter your offer",
+            headerText: "Price (DH)",
+            keyboardType: TextInputType.number,
+            maxLines: 1,
+            validator: Validators.notEmpty,
+           
+          ),
+          const SizedBox(height: 16),
+          TextFieldWithHeader(
+            controller: priceController,
+            hintText: "Add a message",
+            headerText: "Message (optional)",
+            validator: Validators.notEmpty,
+            keyboardType: TextInputType.text,
+            maxLines: 3,
+          ),
+          const SizedBox(height: 16),
+          Button(
+            hintText: "Send Offer",
+            onPressed: _sendMessage,
+            isLoading: false,
+            backgroundColor: AppColors.blue,
+            textColor: Colors.white,
+          ),])
+      )
+      );
+  }
+  Widget _buildMessageContent(bool isMe, NegotiationModel message) {
+    return Row(
+      children: [
+        Text(
+          message.message,
+          style: TextStyle(
+              color: isMe
+                  ? Colors.white
+                  : Colors.black),
+        ),
+      ]
+    );
   }
 }

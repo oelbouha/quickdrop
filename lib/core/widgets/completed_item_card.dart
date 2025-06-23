@@ -73,14 +73,14 @@ class CompletedItemCardState extends State<CompletedItemCard> {
       ),
       child: Row(
       children: [
-        UserProfileCard(
-          header: widget.user.displayName ?? "Unknown user",
-          onPressed: () => print("user profile  Clicked"),
-          subHeader: widget.item is Shipment ?  "Package Carrier" : "Package owner", 
-          photoUrl: widget.user.photoUrl ?? AppTheme.defaultProfileImage,
-          headerFontSize: 14,
-          subHeaderFontSize: 10,
-          avatarSize: 18,
+        UserProfileWithRating(
+          user: widget.user,
+          header: widget.user.displayName ?? 'Guest',
+          avatarSize: 34,
+          headerFontSize: 10,
+          subHeaderFontSize: 8,
+          onPressed: () =>
+              {context.push('/profile/statistics?userId=${widget.user.uid}')},
         ),
       ],
     ));
@@ -183,10 +183,12 @@ class CompletedItemCardState extends State<CompletedItemCard> {
       label: const Text("Rate trip", style: TextStyle(color: AppColors.white, fontSize: 12),),
       style: ElevatedButton.styleFrom(
         backgroundColor: AppColors.rateBackground,
+        foregroundColor: Colors.white,
         shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8),
+          borderRadius: BorderRadius.circular(8),
         ),
-        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
+        elevation: 0,
       ),
     );
   }

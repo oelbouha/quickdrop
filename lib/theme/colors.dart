@@ -42,6 +42,9 @@ class AppColors {
 
   static const Color barColor = blue;
 
+
+  static const Color primary = blue700;
+
    // AppBar
   static const Color appBarBackground = background;
   static const Color appBarText = headingText;
