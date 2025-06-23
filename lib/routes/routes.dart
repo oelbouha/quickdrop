@@ -1,4 +1,5 @@
 import 'package:quickdrop_app/core/utils/imports.dart';
+import 'package:quickdrop_app/features/chat/negotiation_screen.dart';
 import 'package:quickdrop_app/features/home/home_screen.dart';
 import 'package:quickdrop_app/features/auth/intro_screen.dart';
 import 'package:quickdrop_app/features/auth/signup.dart';
@@ -281,15 +282,15 @@ class AppRouter {
 
               Trip? trip;
               if (id != null) {
-                trip =  Provider.of<TripProvider>(context, listen: false)
-                  .getTrip(id);
+                trip = Provider.of<TripProvider>(context, listen: false)
+                    .getTrip(id);
               }
               return buildCustomTransitionPage(
                 context,
-                 AddTripScreen(
+                AddTripScreen(
                   isEditMode: isEdit,
                   existingTrip: trip,
-                 ),
+                ),
               );
             }),
         GoRoute(
@@ -303,15 +304,37 @@ class AppRouter {
                     user: user,
                   ));
             }),
-          GoRoute(
-            path: '/search',
+        GoRoute(
+            name: "negotiation-screen",
+            path: "/negotiation-screen",
             pageBuilder: (context, state) {
-              final filters = SearchFilters.fromQueryParameters(
-                state.uri.queryParameters,
-              );
-              return buildCustomTransitionPage(context,SearchPage(filters: filters));
-            },
-          ),
+              final userId = state.uri.queryParameters['userId'];
+              try {
+                final userData =
+                    Provider.of<UserProvider>(context, listen: false)
+                        .getUserById(userId!);
+                if (userData == null) throw ("user is null");
+
+                return buildCustomTransitionPage(
+                    context,
+                    NegotiationScreen(
+                      user: userData,
+                      transportItem: state.extra as TransportItem,
+                    ));
+              } catch (e) {
+                return buildCustomTransitionPage(context, const ErrorPage());
+              }
+            }),
+        GoRoute(
+          path: '/search',
+          pageBuilder: (context, state) {
+            final filters = SearchFilters.fromQueryParameters(
+              state.uri.queryParameters,
+            );
+            return buildCustomTransitionPage(
+                context, SearchPage(filters: filters));
+          },
+        ),
         GoRoute(
             name: "shipment-details",
             path: "/shipment-details",

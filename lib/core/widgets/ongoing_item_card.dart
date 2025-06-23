@@ -101,15 +101,14 @@ class OngoingItemCardState extends State<OngoingItemCard> {
         ),
         child: Row(
           children: [
-            UserProfileCard(
-              header: widget.user.displayName ?? "Unknow user",
-              onPressed: () => print("user profile  Clicked"),
-              subHeader:
-                  widget.item is Shipment ? "Package Carrier" : "Package owner",
-              photoUrl: widget.user.photoUrl ?? AppTheme.defaultProfileImage,
-              headerFontSize: 14,
-              subHeaderFontSize: 10,
-              avatarSize: 14,
+            UserProfileWithRating(
+              user: widget.user,
+              header: widget.user.displayName ?? 'Guest',
+              avatarSize: 34,
+              headerFontSize: 10,
+              subHeaderFontSize: 8,
+              onPressed: () =>
+                  {context.push('/profile/statistics?userId=${widget.user.uid}')},
             ),
             const Spacer(),
             GestureDetector(
@@ -216,6 +215,8 @@ class OngoingItemCardState extends State<OngoingItemCard> {
         ));
   }
 
+
+
   Widget _buildFooter() {
     return Container(
         padding: const EdgeInsets.only(
@@ -262,36 +263,35 @@ class OngoingItemCardState extends State<OngoingItemCard> {
             style: TextStyle(color: AppColors.white, fontSize: 12),
           ),
           style: ElevatedButton.styleFrom(
-            backgroundColor: AppColors.succes,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(AppTheme.cardButtonRadius),
-            ),
-            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-          ),
+                    backgroundColor: AppColors.succes,
+                    foregroundColor: Colors.white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
+                    elevation: 0,
+                  ),
         ),
         const SizedBox(
           width: 10,
         ),
-        ElevatedButton.icon(
+        OutlinedButton.icon(
           onPressed: () {
             _contactCourier();
           },
-          icon: const CustomIcon(
-            iconPath: "assets/icon/cancel.svg",
-            size: 18,
-            color: Colors.white,
-          ),
+          icon: Icon(Icons.close, size: 18),
           label: const Text(
             "Cancel",
-            style: TextStyle(color: AppColors.white, fontSize: 12),
+            style: TextStyle(color: AppColors.error, fontSize: 12),
           ),
-          style: ElevatedButton.styleFrom(
-            backgroundColor: AppColors.error,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(AppTheme.cardButtonRadius),
-            ),
-            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-          ),
+          style: OutlinedButton.styleFrom(
+                    foregroundColor: AppColors.error,
+                    side: BorderSide(color: AppColors.error),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 10),
+                  ),
         ),
       ],
     );

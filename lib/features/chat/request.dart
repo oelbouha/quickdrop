@@ -2,6 +2,10 @@
 import 'package:quickdrop_app/core/widgets/destination.dart';
 import 'package:quickdrop_app/core/utils/imports.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:quickdrop_app/core/utils/imports.dart';
+import 'package:quickdrop_app/core/widgets/destination.dart';
+
+  
 
 class Request extends StatefulWidget {
   final DeliveryRequest request;
@@ -16,22 +20,75 @@ class Request extends StatefulWidget {
   });
 
   @override
-  DeliveryRequestState createState() => DeliveryRequestState();
+  RequestState createState() => RequestState();
 }
 
-class DeliveryRequestState extends State<Request> {
+class RequestState extends State<Request> with SingleTickerProviderStateMixin {
+  late AnimationController _animationController;
+  late Animation<double> _scaleAnimation;
+  bool _isProcessing = false;
+  String _processingAction = '';
+
+  @override
+  void initState() {
+    super.initState();
+    _animationController = AnimationController(
+      duration: const Duration(milliseconds: 200),
+      vsync: this,
+    );
+    _scaleAnimation = Tween<double>(
+      begin: 1.0,
+      end: 0.98,
+    ).animate(CurvedAnimation(
+      parent: _animationController,
+      curve: Curves.easeInOut,
+    ));
+  }
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
+  }
+
   void _refuseRequest() async {
+    if (_isProcessing) return;
+    
+    setState(() {
+      _isProcessing = true;
+      _processingAction = 'refuse';
+    });
+    
     try {
       await Provider.of<DeliveryRequestProvider>(context, listen: false)
           .deleteRequest(widget.request.id!);
+      
+      if (mounted) {
+        AppUtils.showDialog(context, "Request refused successfully", AppColors.succes);
+      }
     } catch (e) {
-      if (mounted)
-        AppUtils.showDialog(
-            context, "Failed to refuse request", AppColors.error);
+      if (mounted) {
+        AppUtils.showDialog(context, "Failed to refuse request", AppColors.error);
+      }
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isProcessing = false;
+          _processingAction = '';
+        });
+      }
     }
   }
 
   void _acceptRequest() async {
+    if (_isProcessing) return;
+    
+    setState(() {
+      _isProcessing = true;
+      _processingAction = 'accept';
+    });
+    _animationController.forward();
+    
     try {
       await FirebaseFirestore.instance.runTransaction((transaction) async {
         final requestRef = FirebaseFirestore.instance
@@ -80,162 +137,312 @@ class DeliveryRequestState extends State<Request> {
         }
       });
     } catch (e) {
-      if (mounted)
-        AppUtils.showDialog(
-            context, "Failed to accept request", AppColors.error);
+      if (mounted) {
+        AppUtils.showDialog(context, "Failed to accept request", AppColors.error);
+      }
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isProcessing = false;
+          _processingAction = '';
+        });
+        _animationController.reverse();
+      }
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-        // height: 120,
-        decoration: BoxDecoration(
-          color: AppColors.cardBackground,
-          borderRadius: BorderRadius.circular(AppTheme.cardRadius),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.1),
-              spreadRadius: 0.2,
-              blurRadius: 2,
-              offset: Offset(0, 1),
+    return AnimatedBuilder(
+      animation: _scaleAnimation,
+      builder: (context, child) {
+        return Transform.scale(
+          scale: _scaleAnimation.value,
+          child: Container(
+            // margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [
+                  AppColors.cardBackground,
+                  AppColors.cardBackground.withValues(alpha: 0.95),
+                ],
+              ),
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(
+                color: AppColors.primary.withValues(alpha: 0.1),
+                width: 1,
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: AppColors.primary.withValues(alpha: 0.08),
+                  spreadRadius: 0,
+                  blurRadius: 12,
+                  offset: const Offset(0, 4),
+                ),
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.04),
+                  spreadRadius: 1,
+                  blurRadius: 3,
+                  offset: const Offset(0, 1),
+                ),
+              ],
             ),
+            child: Column(
+              children: [
+                _buildStatusBanner(),
+                _buildHeader(),
+                _buildBody(),
+                _buildFooter(),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildStatusBanner() {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.symmetric(vertical: 8),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [
+            AppColors.primary.withValues(alpha: 0.1),
+            AppColors.primary.withValues(alpha: 0.05),
           ],
         ),
-        child: Column(
-          // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            _buildHeader(),
-            _buildBody(),
-            const SizedBox(
-              height: 10,
+        borderRadius: const BorderRadius.only(
+          topLeft: Radius.circular(16),
+          topRight: Radius.circular(16),
+        ),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Container(
+            padding: const EdgeInsets.all(4),
+            decoration: BoxDecoration(
+              color: AppColors.primary.withValues(alpha: 0.2),
+              shape: BoxShape.circle,
             ),
-            _buildFooter(),
-          ],
+            child: Icon(
+              Icons.local_shipping,
+              size: 14,
+              color: AppColors.primary,
+            ),
+          ),
+          const SizedBox(width: 8),
+          Text(
+            'New Delivery Request',
+            style: TextStyle(
+              color: AppColors.primary,
+              fontSize: 13,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+         
+
+
+Widget _buildHeader() {
+    return Padding(
+        padding: const EdgeInsets.all(16),
+        child: UserProfileWithRating(
+          user: widget.user,
+          header: widget.user.displayName ?? 'Guest',
+          avatarSize: 34,
+          headerFontSize: 10,
+          subHeaderFontSize: 8,
+          onPressed: () =>
+              {context.push('/profile/statistics?userId=${widget.user.uid}')},
         ));
   }
 
-  Widget _buildHeader() {
-    return Padding(
-        padding: const EdgeInsets.all(8),
-        child: UserProfileCard(
-          photoUrl: widget.user.photoUrl ?? AppTheme.defaultProfileImage,
-          header: widget.user.displayName ?? "Unknown user",
-          onPressed: () => print("user profile  Clicked"),
-          // subHeader: "Carrier: Ahmed K.",
-          headerFontSize: 14,
-          subHeaderFontSize: 10,
-          avatarSize: 18,
-        ));
-  }
+
 
   Widget _buildBody() {
     return Padding(
-        padding: const EdgeInsets.all(8),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Destination(from: widget.shipment.from, to: widget.shipment.to),
-            const SizedBox(
-              height: 8,
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: Column(
+        children: [
+          Container(
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: AppColors.primary.withValues(alpha: 0.05),
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(
+                color: AppColors.primary.withValues(alpha: 0.1),
+              ),
             ),
-            _buildRequestPrice(),
+            child: Destination(
+              from: widget.shipment.from,
+              to: widget.shipment.to,
+            ),
+          ),
+          const SizedBox(height: 16),
+          _buildPriceCard(),
+          const SizedBox(height: 16),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildPriceCard() {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            AppColors.primary.withValues(alpha: 0.08),
+            AppColors.primary.withValues(alpha: 0.03),
           ],
-        ));
+        ),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(
+          color: AppColors.primary.withValues(alpha: 0.2),
+        ),
+      ),
+      child: Row(
+        children: [
+          Container(
+            padding: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              color: AppColors.primary.withValues(alpha: 0.1),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Icon(
+              Icons.local_offer,
+              color: AppColors.primary,
+              size: 20,
+            ),
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Offered Price',
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: AppColors.shipmentText,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                const SizedBox(height: 2),
+                Text(
+                  '${widget.request.price} dh',
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.primary,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          
+        ],
+      ),
+    );
   }
 
   Widget _buildFooter() {
     return Container(
-        padding: const EdgeInsets.only(
-          top: 2,
-          left: 10,
-          right: 10,
-          bottom: 2,
-        ),
-        decoration: const BoxDecoration(
-          color: AppColors.cardFooterBackground,
-          borderRadius: BorderRadius.only(
-            bottomLeft: Radius.circular(AppTheme.cardRadius),
-            bottomRight: Radius.circular(AppTheme.cardRadius),
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        children: [
+          Row(
+            children: [
+              Expanded(
+                child: ElevatedButton.icon(
+                  onPressed: (_isProcessing && _processingAction == 'accept') ? null : _acceptRequest,
+                  icon: (_isProcessing && _processingAction == 'accept')
+                      ? const SizedBox(
+                          width: 16,
+                          height: 16,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                          ),
+                        )
+                      : const Icon(Icons.check_circle, size: 18),
+                  label: Text(
+                    (_isProcessing && _processingAction == 'accept') ? 'Accepting...' : 'Accept',
+                  ),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColors.succes,
+                    foregroundColor: Colors.white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    padding: const EdgeInsets.symmetric(vertical: 12),
+                    elevation: 0,
+                  ),
+                ),
+              ),
+              const SizedBox(width: 8),
+              Expanded(
+                child: OutlinedButton.icon(
+                  onPressed: (_isProcessing && _processingAction == 'refuse') ? null : _refuseRequest,
+                  icon: (_isProcessing && _processingAction == 'refuse')
+                      ? SizedBox(
+                          width: 16,
+                          height: 16,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            valueColor: AlwaysStoppedAnimation<Color>(AppColors.error),
+                          ),
+                        )
+                      : Icon(Icons.close, size: 18),
+                  label: Text(
+                    (_isProcessing && _processingAction == 'refuse') ? 'Refusing...' : 'Refuse',
+                  ),
+                  style: OutlinedButton.styleFrom(
+                    foregroundColor: AppColors.error,
+                    side: BorderSide(color: AppColors.error),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    padding: const EdgeInsets.symmetric(vertical: 12),
+                  ),
+                ),
+              ),
+            ],
           ),
-        ),
-        child: Row(
-          children: [
-            const Spacer(),
-            _buildButtons(),
-          ],
-        ));
-  }
-
-  Widget _buildButtons() {
-    return Row(children: [
-      ElevatedButton(
-        onPressed: _acceptRequest,
-        style: ElevatedButton.styleFrom(
-          backgroundColor: AppColors.succes,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(4),
+          const SizedBox(height: 8),
+          SizedBox(
+            width: double.infinity,
+            child: OutlinedButton.icon(
+              onPressed: () {
+                print("Negotiate clicked!");
+                // Add navigation to negotiation screen
+              },
+              icon: Icon(Icons.chat_bubble_outline, size: 16),
+              label: const Text('Negotiate Price'),
+              style: OutlinedButton.styleFrom(
+                foregroundColor: AppColors.primary,
+                side: BorderSide(color: AppColors.primary.withValues(alpha: 0.3)),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                padding: const EdgeInsets.symmetric(vertical: 10),
+              ),
+            ),
           ),
-          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-        ),
-        child: const Text(
-          "Accept",
-          style: TextStyle(color: AppColors.white),
-        ),
+        ],
       ),
-      const SizedBox(
-        width: 8,
-      ),
-      ElevatedButton(
-        onPressed: _refuseRequest,
-        style: ElevatedButton.styleFrom(
-          backgroundColor: AppColors.error,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(4),
-          ),
-          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-        ),
-        child: const Text(
-          "Refuse",
-          style: TextStyle(color: AppColors.white),
-        ),
-      ),
-      const SizedBox(
-        width: 8,
-      ),
-      ElevatedButton(
-        onPressed: () {
-          print("Notifications clicked!");
-        },
-        style: ElevatedButton.styleFrom(
-          backgroundColor: AppColors.blue,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(4),
-          ),
-          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-        ),
-        child: const Text(
-          "Negotiate",
-          style: TextStyle(color: AppColors.white),
-        ),
-      ),
-    ]);
-  }
-
-  Widget _buildRequestPrice() {
-    return Row(
-      children: [
-        const Text('Price: ',
-            style: const TextStyle(
-                color: AppColors.headingText,
-                fontSize: 14,
-                fontWeight: FontWeight.bold)),
-        Text('${widget.request.price} dh',
-            style: const TextStyle(
-                color: AppColors.blue,
-                fontSize: 14,
-                fontWeight: FontWeight.bold)),
-      ],
     );
   }
+
+
 }
