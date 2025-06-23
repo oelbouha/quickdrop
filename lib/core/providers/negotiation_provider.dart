@@ -12,6 +12,9 @@ class NegotiationProvider with ChangeNotifier {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
+  List<NegotiationModel> _requests = [];
+  List<NegotiationModel> get requests => _requests;
+
   final Map<String, UserData> _users = {};
 
   Future<void> addMessage(NegotiationModel message) async {
@@ -30,6 +33,9 @@ class NegotiationProvider with ChangeNotifier {
         'participants': [message.senderId, message.receiverId],
         'lastMessage': message.message,
         'lastMessageSeen': message.seen,
+        'price': message.price,
+        'shipmentId': message.shipmentId,
+        'requestId': message.requestId,
         'timestamp': message.timestamp,
         'lastMessageTimestamp': message.timestamp,
         'lastMessageSender': message.senderId,
@@ -120,6 +126,8 @@ class NegotiationProvider with ChangeNotifier {
         final lastMessageSender = data['lastMessageSender'] ?? '';
         final lastMessageSeen = data['lastMessageSeen'] ?? false;
         final lastMessageTimestamp = data['lastMessageTimestamp'] ?? '';
+        final requestId = data['requestId'] ?? '';
+        final shipmentId = data['shipmentId'] ?? '';
         final participants = List<String>.from(data['participants'] ?? []);
         return {
           'chatId': chatId,
@@ -127,6 +135,8 @@ class NegotiationProvider with ChangeNotifier {
           'lastMessageSeen': lastMessageSeen,
           'lastMessageSender': lastMessageSender,
           'lastMessageTimestamp': lastMessageTimestamp,
+          'requestId': requestId,
+          'shipmentId': shipmentId,
           'participants': participants,
         };
       }).toList();
@@ -171,6 +181,8 @@ class NegotiationProvider with ChangeNotifier {
           'lastMessageTimestamp': conversation['lastMessageTimestamp'],
           'userName': user?.displayName,
           'photoUrl': user?.photoUrl,
+          'requestId': conversation['requestId'],
+          'shipmentId': conversation['shipmentId'],
           'userId': user?.uid,
         };
       }).toList();
@@ -189,6 +201,8 @@ extension on NegotiationModel {
     String? price,
     String? message,
     bool seen = false,
+    String? requestId,
+    String? shipmentId,
   }) {
     return NegotiationModel(
         id: id ?? this.id,
@@ -197,6 +211,8 @@ extension on NegotiationModel {
         timestamp: timestamp ?? this.timestamp,
         price: price ?? this.price,
         message: message ?? this.message,
+        requestId: requestId ?? this.requestId,
+        shipmentId: shipmentId ?? this.shipmentId,
         seen: seen);
   }
 }

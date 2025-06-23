@@ -308,18 +308,26 @@ class AppRouter {
             name: "negotiation-screen",
             path: "/negotiation-screen",
             pageBuilder: (context, state) {
-              final userId = state.uri.queryParameters['userId'];
+                final userId = state.uri.queryParameters['userId'];
+               final shipmentId = state.uri.queryParameters['shipmentId'];
+               final requestId = state.uri.queryParameters['requestId'];
               try {
                 final userData =
                     Provider.of<UserProvider>(context, listen: false)
                         .getUserById(userId!);
-                if (userData == null) throw ("user is null");
+                final shipment = Provider.of<ShipmentProvider>(context, listen: false)
+                    .getShipment(shipmentId!);
+                final request = Provider.of<DeliveryRequestProvider>(context, listen: false).getRequest(requestId!);
+                if (userData == null ) throw ("user is null");
+
+                print("data is fetched successfully");
 
                 return buildCustomTransitionPage(
                     context,
                     NegotiationScreen(
                       user: userData,
-                      transportItem: state.extra as TransportItem,
+                      transportItem: shipment,
+                      request: request
                     ));
               } catch (e) {
                 return buildCustomTransitionPage(context, const ErrorPage());

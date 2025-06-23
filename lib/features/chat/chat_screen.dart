@@ -1,10 +1,12 @@
 import 'package:quickdrop_app/features/chat/request.dart';
 import 'package:quickdrop_app/features/chat/chat_conversation_card.dart';
-
 import 'package:quickdrop_app/features/chat/pending_request.dart';
 import 'package:go_router/go_router.dart';
 import 'package:quickdrop_app/core/widgets/app_header.dart';
 import 'package:quickdrop_app/core/utils/imports.dart';
+import 'package:quickdrop_app/features/chat/negotiation_card.dart';
+import 'package:quickdrop_app/core/providers/negotiation_provider.dart';
+
 
 class ChatScreen extends StatefulWidget {
   const ChatScreen({Key? key}) : super(key: key);
@@ -94,12 +96,73 @@ class _ChatScreenState extends State<ChatScreen>
             children: [
               _buildMyRequests(),
               _buildDeliveryRequests(),
-              _buildDeliveryRequests(),
+              _buildNegotiationRequests(),
               _buildChatConversations(),
             ],
           ),
         ));
   }
+
+
+  Widget _buildNegotiationRequests() {
+    final negotiationProvider = Provider.of<NegotiationProvider>(context);
+
+    return Container(
+        margin: const EdgeInsets.only(
+            left: AppTheme.cardPadding, right: AppTheme.cardPadding),
+        child: StreamBuilder(
+          stream: negotiationProvider.getConversations(),
+          builder: (context, snapshot) => snapshot.connectionState ==
+                  ConnectionState.waiting
+              ? const Center(child: CircularProgressIndicator())
+              : snapshot.hasError
+                  ? const Center(child: Text("Error loading conversations"))
+                  : snapshot.hasData && (snapshot.data as List).isNotEmpty
+                      ? ListView.builder(
+                          itemCount: (snapshot.data as List).length,
+                          itemBuilder: (context, index) {
+                            print("data ${snapshot.data as List}");
+                            // final user =
+                            if (snapshot.data == null) {
+                              return const Center(
+                                  child: Text("No conversations yet"));
+                            }
+                            final conversation = (snapshot.data as List)[index];
+                            if (conversation['userId'] == null || conversation == null 
+                              || conversation['shipmentId'] == null 
+                              || conversation['requestId'] == null) {
+                                print("conversation:");
+                                print(conversation["requestId"]);
+                                print(conversation["shipmentId"]);
+                                print(conversation["userId"]);
+                              return const SizedBox.shrink();
+                            }
+                            // List<Map<String, dynamic>> user = conversation['user'];
+                            // print("user data: ${user}");
+                            // print("sender id: ${conversation['participants'][0]}");
+                            return Column(children: [
+                              if (index == 0)
+                                const SizedBox(
+                                    height: AppTheme.gapBetweenCards),
+                              NegotiationCard (
+                                header: conversation['userName'] ?? 'Guest',
+                                subHeader: conversation['lastMessage'] ?? 'No messages yet',
+                                photoUrl: conversation['photoUrl'],
+                                userId: conversation['userId'],
+                                isMessageSeen: conversation['lastMessageSeen'],
+                                messageSender: conversation['lastMessageSender'],
+                                shipmentId: conversation['shipmentId'],
+                                requestId: conversation['requestId'],
+                              ),
+                              const SizedBox(height: AppTheme.gapBetweenCards),
+                            ]);
+                          },
+                        )
+                      : Center(child: Message(context, "No conversations yet")),
+        ));
+  }
+
+
 
   Widget _buildChatConversations() {
     final chatProvider = Provider.of<ChatProvider>(context);

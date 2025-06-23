@@ -13,6 +13,11 @@ class DeliveryRequestProvider with ChangeNotifier {
   List<DeliveryRequest> get activeRequests =>
       _requests.where((item) => item.status == DeliveryStatus.active).toList();
 
+  DeliveryRequest getRequest(String id) {
+      return _requests.firstWhere((item) => item.id == id,
+        orElse: () => throw ("DeliveryRequest not found"));
+  }
+
  Future<void> fetchRequests(String userId) async {
   try {
     // Fetch sender requests

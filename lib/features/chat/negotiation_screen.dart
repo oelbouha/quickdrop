@@ -1,8 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:quickdrop_app/core/utils/imports.dart';
+import 'package:quickdrop_app/features/chat/request.dart';
 import 'package:quickdrop_app/features/models/chat_model.dart';
 import 'package:quickdrop_app/core/providers/negotiation_provider.dart';
 import 'package:quickdrop_app/features/models/negotiation_model.dart';
@@ -10,11 +12,13 @@ import 'package:quickdrop_app/features/models/negotiation_model.dart';
 class NegotiationScreen extends StatefulWidget {
   final UserData user;
   final TransportItem transportItem;
+  final DeliveryRequest request;
 
   const NegotiationScreen({
     super.key,
     required this.user,
     required this.transportItem,
+    required this.request,
   });
 
   @override
@@ -24,6 +28,10 @@ class NegotiationScreen extends StatefulWidget {
 class _NegotiationScreenState extends State<NegotiationScreen> {
   TextEditingController messageController = TextEditingController();
   TextEditingController priceController = TextEditingController();
+
+  bool _isProcessing = false;
+  String _processingAction = '';
+  String lastPrice = '';
 
   @override
   void initState() {
@@ -38,22 +46,126 @@ class _NegotiationScreenState extends State<NegotiationScreen> {
     // }).catchError((error) {
     //   // print("Error updating message seen status: $error");
     // });
+    lastPrice = widget.request.price.toString();
   }
 
+  void _refuseRequest() async {
+     if (_isProcessing) return;
+    
+    setState(() {
+      _isProcessing = true;
+      _processingAction = 'refuse';
+    });
+    
+    try {
+      await Provider.of<DeliveryRequestProvider>(context, listen: false)
+          .deleteRequest(widget.request.id!);
+      
+      if (mounted) {
+        AppUtils.showDialog(context, "Request refused successfully", AppColors.succes);
+      }
+    } catch (e) {
+      if (mounted) {
+        AppUtils.showDialog(context, "Failed to refuse request", AppColors.error);
+      }
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isProcessing = false;
+          _processingAction = '';
+        });
+      }
+    }
+  }
+
+  void _acceptRequest() async {
+     if (_isProcessing) return;
+    
+    setState(() {
+      _isProcessing = true;
+      _processingAction = 'accept';
+    });
+    
+    try {
+      await FirebaseFirestore.instance.runTransaction((transaction) async {
+        final requestRef = FirebaseFirestore.instance
+            .collection('requests')
+            .doc(widget.request.id);
+        final tripRef = FirebaseFirestore.instance
+            .collection('trips')
+            .doc(widget.request.tripId);
+        final shipmentRef = FirebaseFirestore.instance
+            .collection('shipments')
+            .doc(widget.request.shipmentId);
+
+        // Update the trip document
+        transaction.update(tripRef, {
+          'status': DeliveryStatus.ongoing,
+          'matchedDeliveryId': widget.request.shipmentId,
+          'matchedDeliveryUserId': widget.request.receiverId,
+        });
+
+        // Update the shipment document
+        transaction.update(shipmentRef, {
+          'status': DeliveryStatus.ongoing,
+          'matchedDeliveryId': widget.request.shipmentId,
+          'matchedDeliveryUserId': widget.request.senderId,
+        });
+
+        // Update the request document
+        final requestProvider =
+            Provider.of<DeliveryRequestProvider>(context, listen: false);
+        transaction.update(requestRef, {'status': DeliveryStatus.accepted});
+        requestProvider.markRequestAsAccepted(widget.request.id!);
+
+        if (mounted) {
+          AppUtils.showDialog(
+              context, "Request accepted successfully", AppColors.succes);
+          await requestProvider.deleteActiveRequestsByShipmentId(
+              widget.request.shipmentId, widget.request.id!);
+          Provider.of<StatisticsProvider>(context, listen: false)
+              .incrementField(widget.request.receiverId, "ongoingShipments");
+          Provider.of<StatisticsProvider>(context, listen: false)
+              .decrementField(widget.request.receiverId, "pendingShipments");
+          Provider.of<StatisticsProvider>(context, listen: false)
+              .incrementField(widget.request.senderId, "ongoingTrips");
+          Provider.of<StatisticsProvider>(context, listen: false)
+              .decrementField(widget.request.senderId, "pendingTrips");
+        }
+      });
+    } catch (e) {
+      if (mounted) {
+        AppUtils.showDialog(context, "Failed to accept request", AppColors.error);
+      }
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isProcessing = false;
+          _processingAction = '';
+        });
+      }
+    }
+  }
+  
   void _sendMessage() async {
     if (messageController.text.isEmpty) return;
 
     // print("user id ${widget.user.uid}");
     NegotiationModel message = NegotiationModel(
-        receiverId: widget.user.uid!,
+        receiverId: widget.user.uid,
         senderId: FirebaseAuth.instance.currentUser!.uid,
         timestamp: DateTime.now().toString(),
         message: messageController.text,
-        price: priceController.text
+        price: priceController.text,
+        shipmentId: widget.transportItem.id,
+        requestId: widget.request.id
       );
     try {
       await Provider.of<NegotiationProvider>(context, listen: false)
           .addMessage(message);
+      setState(() {
+        lastPrice = message.price;
+      });
       messageController.clear();
       priceController.clear();
     } catch (e) {
@@ -73,9 +185,9 @@ class _NegotiationScreenState extends State<NegotiationScreen> {
         backgroundColor: AppColors.white,
         appBar: AppBar(
           title: UserProfileCard(
-            header: widget.user.displayName!,
+            header: widget.user.displayName ?? 'Guest',
             onPressed: () =>  {context.push('/profile/statistics?userId=${widget.user.uid}')},
-            photoUrl: widget.user.photoUrl!,
+            photoUrl: widget.user.photoUrl ?? AppTheme.defaultProfileImage,
             headerFontSize: 16,
             subHeaderFontSize: 10,
             avatarSize: 36,
@@ -148,18 +260,9 @@ class _NegotiationScreenState extends State<NegotiationScreen> {
                                       padding: const EdgeInsets.all(10),
                                       decoration: BoxDecoration(
                                         color: isMe
-                                            ? AppColors.blue
-                                            : AppColors.lessImportant,
-                                        borderRadius: BorderRadius.only(
-                                          topLeft: const Radius.circular(20),
-                                          topRight: const Radius.circular(20),
-                                          bottomLeft: isMe
-                                              ? const Radius.circular(20)
-                                              : Radius.zero,
-                                          bottomRight: isMe
-                                              ? Radius.zero
-                                              : const Radius.circular(20),
-                                        ),
+                                            ? AppColors.blue.withValues(alpha: 0.9)
+                                            : AppColors.warning.withValues(alpha: 0.1),
+                                        borderRadius: BorderRadius.circular(12),
                                       ),
                                       child: _buildMessageContent(isMe, message),
                                     ),
@@ -184,10 +287,73 @@ class _NegotiationScreenState extends State<NegotiationScreen> {
         ]));
   }
 
+
+Widget _buildButtons() {
+  return Row(
+            children: [
+              Expanded(
+                child: ElevatedButton.icon(
+                  onPressed: (_isProcessing && _processingAction == 'accept') ? null : _acceptRequest,
+                  icon: (_isProcessing && _processingAction == 'accept')
+                      ? const SizedBox(
+                          width: 16,
+                          height: 16,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                          ),
+                        )
+                      : const Icon(Icons.check_circle, size: 18),
+                  label: Text(
+                    (_isProcessing && _processingAction == 'accept') ? 'Accepting...' : 'Accept',
+                  ),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColors.succes,
+                    foregroundColor: Colors.white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    padding: const EdgeInsets.symmetric(vertical: 12),
+                    elevation: 0,
+                  ),
+                ),
+              ),
+              const SizedBox(width: 8),
+              Expanded(
+                child: ElevatedButton.icon(
+                  onPressed: (_isProcessing && _processingAction == 'refuse') ? null : _refuseRequest,
+                  icon: (_isProcessing && _processingAction == 'refuse')
+                      ? const SizedBox(
+                          width: 16,
+                          height: 16,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            valueColor: AlwaysStoppedAnimation<Color>(AppColors.error),
+                          ),
+                        )
+                      : const Icon(Icons.close, size: 18),
+                  label: Text(
+                    (_isProcessing && _processingAction == 'refuse') ? 'Refusing...' : 'Refuse',
+                  ),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColors.error,
+                    foregroundColor: Colors.white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    padding: const EdgeInsets.symmetric(vertical: 12),
+                    elevation: 0,
+                  ),
+                ),
+              ),
+            ],
+          );
+}
+
   Widget _buildFooter() {
     return Container(
       decoration: BoxDecoration(
-        color: AppColors.lessImportant,
+        color: AppColors.primary.withValues(alpha: 0.05),
         border: Border(
           top: BorderSide(
             color: AppColors.blue.withOpacity(0.1),
@@ -198,7 +364,8 @@ class _NegotiationScreenState extends State<NegotiationScreen> {
       child: Padding(
       padding: const EdgeInsets.all(8.0),
       child: Column(
-       
+       mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [ 
            const Text(
           "Make an offer",
@@ -220,7 +387,7 @@ class _NegotiationScreenState extends State<NegotiationScreen> {
           ),
           const SizedBox(height: 16),
           TextFieldWithHeader(
-            controller: priceController,
+            controller: messageController,
             hintText: "Add a message",
             headerText: "Message (optional)",
             validator: Validators.notEmpty,
@@ -234,21 +401,54 @@ class _NegotiationScreenState extends State<NegotiationScreen> {
             isLoading: false,
             backgroundColor: AppColors.blue,
             textColor: Colors.white,
-          ),])
+          ),
+          const SizedBox(height: 16),
+          Text(
+            'Responde to: $lastPrice DH offer',
+            style: const TextStyle(
+              color: AppColors.headingText,
+              fontSize: 14,
+              fontWeight: FontWeight.bold,
+            ),
+            textAlign: TextAlign.start,
+          ) ,
+          const SizedBox(height: 8),
+          _buildButtons()
+          ]
+          )
       )
       );
   }
+  
+  
   Widget _buildMessageContent(bool isMe, NegotiationModel message) {
-    return Row(
+    return  Column(
+      mainAxisAlignment: MainAxisAlignment.start,
       children: [
+
+        Text(
+          'Offer: ${message.price} DH',
+          style: TextStyle(
+              color: isMe
+                  ? Colors.white
+                  : Colors.black,
+                  fontWeight: FontWeight.bold
+                  ),
+        ),
+        const SizedBox(height: 8),
         Text(
           message.message,
           style: TextStyle(
               color: isMe
                   ? Colors.white
-                  : Colors.black),
+                  : Colors.black
+),
         ),
-      ]
+      
+      ],
     );
   }
+
+
+
 }
