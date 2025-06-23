@@ -11,6 +11,8 @@ class NegotiationModel {
   final bool seen;
   final String message;
   final String price;
+  final String? shipmentId;
+  final String? requestId;
 
   NegotiationModel({
     this.id,
@@ -20,6 +22,8 @@ class NegotiationModel {
     this.seen = false,
     required this.message,
     required this.price,
+    required this.shipmentId,
+    required this.requestId
   });
   Map<String, dynamic> toMap() {
     return {
@@ -28,7 +32,9 @@ class NegotiationModel {
       'timestamp': timestamp,
       'seen': seen,
       'price': price,
-      'message': message
+      'message': message,
+      'shipmentId': shipmentId,
+      'requestId': requestId
     };
   }
 
@@ -40,7 +46,9 @@ class NegotiationModel {
       timestamp: map['timestamp'],
       seen: map['seen'],
       price : map['price'],
-      message : map['message']
+      message : map['message'],
+      shipmentId : map['shipmentId'],
+      requestId : map['requestId'],
     );
   }
 }

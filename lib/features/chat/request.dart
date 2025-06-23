@@ -395,7 +395,7 @@ Widget _buildHeader() {
                 child: OutlinedButton.icon(
                   onPressed: (_isProcessing && _processingAction == 'refuse') ? null : _refuseRequest,
                   icon: (_isProcessing && _processingAction == 'refuse')
-                      ? SizedBox(
+                      ? const SizedBox(
                           width: 16,
                           height: 16,
                           child: CircularProgressIndicator(
@@ -403,13 +403,13 @@ Widget _buildHeader() {
                             valueColor: AlwaysStoppedAnimation<Color>(AppColors.error),
                           ),
                         )
-                      : Icon(Icons.close, size: 18),
+                      : const Icon(Icons.close, size: 18),
                   label: Text(
                     (_isProcessing && _processingAction == 'refuse') ? 'Refusing...' : 'Refuse',
                   ),
                   style: OutlinedButton.styleFrom(
                     foregroundColor: AppColors.error,
-                    side: BorderSide(color: AppColors.error),
+                    side: const BorderSide(color: AppColors.error),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8),
                     ),
@@ -426,6 +426,7 @@ Widget _buildHeader() {
               onPressed: () {
                 print("Negotiate clicked!");
                 // Add navigation to negotiation screen
+                 context.push('/negotiation-screen?userId=${widget.user.uid}&shipmentId=${widget.shipment.id}&requestId=${widget.request.id}');
               },
               icon: Icon(Icons.chat_bubble_outline, size: 16),
               label: const Text('Negotiate Price'),
