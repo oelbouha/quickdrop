@@ -79,7 +79,7 @@ class NegotiationCardState extends State<NegotiationCard> {
                 headerFontSize: 16,
                 subHeaderFontSize: 12,
                 avatarSize: 40,
-                subHeader: widget.subHeader! ,
+                subHeader: widget.subHeader!,
                 subHeaderColor: widget.isMessageSeen == false && widget.messageSender == widget.userId
                     ? AppColors.shipmentText:
                      AppColors.lessImportant,

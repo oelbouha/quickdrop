@@ -131,10 +131,10 @@ class _ChatScreenState extends State<ChatScreen>
                             if (conversation['userId'] == null || conversation == null 
                               || conversation['shipmentId'] == null 
                               || conversation['requestId'] == null) {
-                                print("conversation:");
-                                print(conversation["requestId"]);
-                                print(conversation["shipmentId"]);
-                                print(conversation["userId"]);
+                                // print("conversation:");
+                                // print(conversation["requestId"]);
+                                // print(conversation["shipmentId"]);
+                                // print(conversation["userId"]);
                               return const SizedBox.shrink();
                             }
                             // List<Map<String, dynamic>> user = conversation['user'];
