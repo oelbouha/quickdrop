@@ -13,9 +13,30 @@ class DeliveryRequestProvider with ChangeNotifier {
   List<DeliveryRequest> get activeRequests =>
       _requests.where((item) => item.status == DeliveryStatus.active).toList();
 
-  DeliveryRequest getRequest(String id) {
-      return _requests.firstWhere((item) => item.id == id,
-        orElse: () => throw ("DeliveryRequest not found"));
+  DeliveryRequest? getRequest(String id) {
+      try {
+          final request = _requests.firstWhere((item) => item.id == id);
+          return request;
+      }
+      catch (e) {
+
+          return null;
+      }
+      // return _requests.firstWhere((item) => item.id == id,
+      //   orElse: () => throw ("DeliveryRequest not found"));
+  }
+
+  Future<DeliveryRequest?> fetchRequestById(String requestId) async {
+    try {
+      final snapshot = await _firestore.collection('requests').doc(requestId).get();
+      if (snapshot.exists) {
+        return DeliveryRequest.fromMap(snapshot.data() as Map<String, dynamic>, snapshot.id);
+      } else {
+        return null;
+      }
+    } catch (e) {
+      return null;
+    }
   }
 
  Future<void> fetchRequests(String userId) async {

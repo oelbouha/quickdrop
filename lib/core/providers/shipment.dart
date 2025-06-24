@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:quickdrop_app/core/utils/imports.dart';
 import 'package:quickdrop_app/features/models/shipment_model.dart';
 import 'package:flutter/material.dart';
 import 'package:quickdrop_app/core/utils/delivery_status.dart';
@@ -29,6 +30,15 @@ class ShipmentProvider with ChangeNotifier {
         notifyListeners();
     } catch (e) {
       rethrow;
+    }
+  }
+
+  Future<Shipment?> fetchShipmentById(String id) async {
+    try {
+        final snapshot = await _firestore.collection('shipments').doc(id).get();
+       return Shipment.fromMap(snapshot.data()!, snapshot.id);
+    } catch (e) {
+      return null;
     }
   }
 
@@ -113,22 +123,22 @@ class ShipmentProvider with ChangeNotifier {
     }
   }
 
-  Future<Shipment?> fetchShipmentById(String documentId) async {
-    try {
-      final shipment = getShipment(documentId);
-      print("documentId: $documentId" "shipment: $shipment.packageName");
-        return shipment;
-      // return null;
-    } catch (e) {
-      print("Error fetching shipment: $e");
-      final snapshot = await _firestore.collection('shipments').doc(documentId).get();
-      if (snapshot.exists) {
-        return Shipment.fromMap(snapshot.data()!, snapshot.id);
-      }
-      // rethrow;
-      return null;
-    }
-  }
+  // Future<Shipment?> fetchShipmentById(String documentId) async {
+  //   try {
+  //     final shipment = getShipment(documentId);
+  //     print("documentId: $documentId" "shipment: $shipment.packageName");
+  //       return shipment;
+  //     // return null;
+  //   } catch (e) {
+  //     print("Error fetching shipment: $e");
+  //     final snapshot = await _firestore.collection('shipments').doc(documentId).get();
+  //     if (snapshot.exists) {
+  //       return Shipment.fromMap(snapshot.data()!, snapshot.id);
+  //     }
+  //     // rethrow;
+  //     return null;
+  //   }
+  // }
 
   Future<String?> uploadImageToFirebase(File image) async {
     try {

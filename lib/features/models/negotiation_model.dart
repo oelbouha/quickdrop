@@ -1,6 +1,8 @@
 
 
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 export  'package:firebase_core/firebase_core.dart';
 
 class NegotiationModel {
@@ -13,6 +15,9 @@ class NegotiationModel {
   final String price;
   final String? shipmentId;
   final String? requestId;
+  final String? status;
+  final String? lastUpdate;
+  final int turnCount;
 
   NegotiationModel({
     this.id,
@@ -23,7 +28,10 @@ class NegotiationModel {
     required this.message,
     required this.price,
     required this.shipmentId,
-    required this.requestId
+    required this.requestId,
+    this.status,
+    this.lastUpdate,
+    this.turnCount = 0
   });
   Map<String, dynamic> toMap() {
     return {
@@ -34,7 +42,10 @@ class NegotiationModel {
       'price': price,
       'message': message,
       'shipmentId': shipmentId,
-      'requestId': requestId
+      'requestId': requestId,
+      'status': status,
+      'lastUpdate': lastUpdate,
+      'turnCount': turnCount
     };
   }
 
@@ -49,6 +60,9 @@ class NegotiationModel {
       message : map['message'],
       shipmentId : map['shipmentId'],
       requestId : map['requestId'],
+      status : map['status'],
+      lastUpdate : map['lastUpdate'],
+      turnCount : map['turnCount'],
     );
   }
 }

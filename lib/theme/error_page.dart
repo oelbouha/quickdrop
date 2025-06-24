@@ -1,7 +1,8 @@
 import 'package:quickdrop_app/core/utils/imports.dart';
 
 class ErrorPage extends StatefulWidget {
-  const ErrorPage({Key? key}) : super(key: key);
+  final String? errorMessage;
+  const ErrorPage({Key? key, this.errorMessage}) : super(key: key);
 
   @override
   State<ErrorPage> createState() => ErrorPageState();
@@ -23,9 +24,9 @@ class ErrorPageState extends State<ErrorPage> {
         backgroundColor: AppColors.barColor,
         centerTitle: true,
       ),
-      body: const Center(child: Text(
-        "Failed to load resources please try again !",
-        style: TextStyle(
+      body: Center(child: Text(
+       widget.errorMessage ?? "Failed to load resources please try again !",
+        style: const TextStyle(
           fontSize: 20,
           color: AppColors.headingText,
           
