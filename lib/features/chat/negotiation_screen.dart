@@ -231,6 +231,12 @@ class _NegotiationScreenState extends State<NegotiationScreen> {
                         return const Center(child: Text("No messages yet"));
                       }
                       final messages = snapshot.data ?? [];
+                      // setState(() {
+                        // Update the last price with the last message's price
+                        if (messages.isNotEmpty) {
+                          lastPrice = messages.last.price;
+                        }
+                      // });
                       return ListView.builder(
                         reverse: true,
                         itemCount: messages.length,
@@ -238,6 +244,8 @@ class _NegotiationScreenState extends State<NegotiationScreen> {
                           final message = messages[index];
                           final isMe = message.senderId ==
                               FirebaseAuth.instance.currentUser?.uid;
+                          // if (!isMe) lastPrice = message.price;
+                          // print("Message: ${message.message}, Price: ${message.price}, Sender: ${message.senderId}, Receiver: ${message.receiverId}");
                           return Column(children: [
                             Align(
                               alignment: isMe
@@ -392,7 +400,7 @@ Widget _buildButtons() {
             headerText: "Message (optional)",
             validator: Validators.notEmpty,
             keyboardType: TextInputType.text,
-            maxLines: 3,
+            maxLines: 2,
           ),
           const SizedBox(height: 16),
           Button(
@@ -402,24 +410,63 @@ Widget _buildButtons() {
             backgroundColor: AppColors.blue,
             textColor: Colors.white,
           ),
-          const SizedBox(height: 16),
-          Text(
-            'Responde to: $lastPrice DH offer',
-            style: const TextStyle(
-              color: AppColors.headingText,
-              fontSize: 14,
-              fontWeight: FontWeight.bold,
-            ),
-            textAlign: TextAlign.start,
-          ) ,
-          const SizedBox(height: 8),
-          _buildButtons()
-          ]
-          )
+            if (widget.request.senderId == FirebaseAuth.instance.currentUser!.uid) ...[
+            const SizedBox(height: 16),
+            Text(
+              'Responde to: $lastPrice DH offer',
+              style: const TextStyle(
+                color: AppColors.headingText,
+                fontSize: 14,
+                fontWeight: FontWeight.bold,
+              ),
+              textAlign: TextAlign.start,
+            ) ,
+            const SizedBox(height: 8),
+            _buildButtons()
+            ],
+            if (widget.request.senderId != FirebaseAuth.instance.currentUser!.uid) ...[
+            const SizedBox(height: 16),
+            _buildcancelButton(),
+            ]
+          ])
       )
       );
   }
   
+  Widget _buildcancelButton() {
+    return Container(
+      // padding: const EdgeInsets.all(16),
+      child: Row(
+        children: [
+          Expanded(
+            child: OutlinedButton.icon(
+              onPressed: _isProcessing ? null : _refuseRequest,
+              icon: _isProcessing
+                  ? const SizedBox(
+                      width: 16,
+                      height: 16,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2,
+                        valueColor:
+                            AlwaysStoppedAnimation<Color>(AppColors.error),
+                      ),
+                    )
+                  : const Icon(Icons.close, size: 18),
+              label: Text(_isProcessing ? 'Cancelling...' : 'Cancel Negotiation'),
+              style: OutlinedButton.styleFrom(
+                foregroundColor: AppColors.error,
+                side: const BorderSide(color: AppColors.error),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                padding: const EdgeInsets.symmetric(vertical: 12),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
   
   Widget _buildMessageContent(bool isMe, NegotiationModel message) {
     return  Column(
