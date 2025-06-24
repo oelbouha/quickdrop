@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:quickdrop_app/core/utils/appUtils.dart';
 import 'package:quickdrop_app/features/models/chat_model.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:quickdrop_app/core/utils/delivery_status.dart';
 import 'package:quickdrop_app/features/models/user_model.dart';
 import 'package:provider/provider.dart';
 
@@ -176,11 +176,7 @@ class ChatProvider with ChangeNotifier {
   }
 }
 
-String getChatId(String user1, String user2) {
-  return user1.hashCode <= user2.hashCode
-      ? '${user1}_$user2'
-      : '${user2}_$user1';
-}
+
 
 extension on ChatModel {
   ChatModel copyWith({

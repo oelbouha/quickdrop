@@ -1,11 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:quickdrop_app/core/providers/chat_provider.dart';
-import 'package:quickdrop_app/features/models/chat_model.dart';
-import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:quickdrop_app/core/utils/delivery_status.dart';
-import 'package:quickdrop_app/features/models/user_model.dart';
 import 'package:quickdrop_app/features/models/negotiation_model.dart';
+import 'package:quickdrop_app/core/utils/imports.dart';
 import 'package:provider/provider.dart';
 
 class NegotiationProvider with ChangeNotifier {
@@ -34,11 +29,11 @@ class NegotiationProvider with ChangeNotifier {
         'lastMessage': message.message,
         'lastMessageSeen': message.seen,
         'price': message.price,
-        'shipmentId': message.shipmentId,
-        'requestId': message.requestId,
         'timestamp': message.timestamp,
         'lastMessageTimestamp': message.timestamp,
         'lastMessageSender': message.senderId,
+        'requestId': message.requestId,
+        'shipmentId': message.shipmentId
       }, SetOptions(merge: true));
       notifyListeners();
     } catch (e) {

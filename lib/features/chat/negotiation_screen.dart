@@ -9,29 +9,110 @@ import 'package:quickdrop_app/features/models/chat_model.dart';
 import 'package:quickdrop_app/core/providers/negotiation_provider.dart';
 import 'package:quickdrop_app/features/models/negotiation_model.dart';
 
+
+enum NegotiationTurn { sender, receiver }
+enum NegotiationStatus { pending, accepted, rejected, expired }
+
+
 class NegotiationScreen extends StatefulWidget {
-  final UserData user;
-  final TransportItem transportItem;
-  final DeliveryRequest request;
+  final String userId;
+  final String requestId;
+  final String shipmentId;  
 
   const NegotiationScreen({
     super.key,
-    required this.user,
-    required this.transportItem,
-    required this.request,
+    required this.userId,
+    required this.requestId,
+    required this.shipmentId
   });
 
   @override
   State<NegotiationScreen> createState() => _NegotiationScreenState();
 }
 
+
+
 class _NegotiationScreenState extends State<NegotiationScreen> {
+
+
+Future<(UserData, TransportItem, DeliveryRequest)> fetchData() async {
+  print("fetching data");
+  print("shipment id: ${widget.shipmentId}");
+  print("request id: ${widget.requestId}");
+  final user = Provider.of<UserProvider>(context, listen: false).getUserById(widget.userId);;
+  final transportItem = await Provider.of<ShipmentProvider>(context, listen: false).fetchShipmentById(widget.shipmentId);
+  final request = await Provider.of<DeliveryRequestProvider>(context, listen: false).fetchRequestById(widget.requestId);
+  if (user == null || transportItem == null || request == null) {
+    if (request == null) print("request not found");
+    if (transportItem == null) print("shipment not found");
+    if (user == null) print("user not found");
+    return Future.error("Data not found");}
+  return (user, transportItem, request);
+}
+
+@override
+Widget build(BuildContext context) {
+  return FutureBuilder<(UserData, TransportItem, DeliveryRequest)>(
+    future: fetchData(),
+    builder: (context, snapshot) {
+      if (snapshot.connectionState != ConnectionState.done) {
+        return const Scaffold(
+          backgroundColor: Colors.white,
+          body: Center(child: CircularProgressIndicator(
+            color: AppColors.blue700,
+          )),
+        );
+      }
+
+      if (snapshot.hasError) {
+        return ErrorPage(errorMessage: snapshot.error.toString());
+      }
+
+      final (userData, shipmentData, requestData) = snapshot.data!;
+
+      return NegotiationContent(
+        user: userData,
+        transportItem: shipmentData,
+        request: requestData,
+      );
+    },
+  );
+}
+}
+
+
+
+class NegotiationContent extends StatefulWidget {
+  final UserData user;
+  final DeliveryRequest request;
+  final TransportItem transportItem;
+
+  const NegotiationContent({
+    super.key,
+    required this.user,
+    required this.request,
+    required this.transportItem,
+  });
+
+  @override
+  State<NegotiationContent> createState() => _NegotiationContentState();
+}
+
+class _NegotiationContentState extends State<NegotiationContent> {
   TextEditingController messageController = TextEditingController();
   TextEditingController priceController = TextEditingController();
 
   bool _isProcessing = false;
   String _processingAction = '';
   String lastPrice = '';
+  
+  NegotiationTurn  currentTurn = NegotiationTurn.sender;
+  NegotiationStatus negotiationStatus = NegotiationStatus.pending;
+  int offerCount = 0;
+  int maxOfferCount = 5;
+  DateTime? lastOfferTime;
+  static const int offerTimeTimeout = 30;
+
 
   @override
   void initState() {
@@ -46,8 +127,34 @@ class _NegotiationScreenState extends State<NegotiationScreen> {
     // }).catchError((error) {
     //   // print("Error updating message seen status: $error");
     // });
+    
+    if (widget.request.senderId == widget.user.uid) {
+      currentTurn = NegotiationTurn.receiver;
+    } else {
+      currentTurn = NegotiationTurn.sender;
+    }
     lastPrice = widget.request.price.toString();
   }
+
+    bool get isMyTurn {
+      final currentUserId = widget.user.uid;
+      return (currentTurn == NegotiationTurn.sender && widget.request.senderId == currentUserId) ||
+        (currentTurn == NegotiationTurn.receiver && widget.request.receiverId == currentUserId);
+    }
+
+    bool canMakeOffer() {
+      return isMyTurn 
+        && negotiationStatus == NegotiationStatus.pending
+        && offerCount < maxOfferCount
+        && !isExpired();
+    }
+
+    bool isExpired() {
+      if (lastOfferTime == null) return false;
+      final duration = DateTime.now().difference(lastOfferTime!).inMinutes;
+      if (duration < offerTimeTimeout) return false;
+      return true;
+    }
 
   void _refuseRequest() async {
      if (_isProcessing) return;
@@ -157,14 +264,19 @@ class _NegotiationScreenState extends State<NegotiationScreen> {
         timestamp: DateTime.now().toString(),
         message: messageController.text,
         price: priceController.text,
-        shipmentId: widget.transportItem.id,
-        requestId: widget.request.id
+        shipmentId: widget.request.shipmentId,
+        requestId: widget.request.id,
+        turnCount: offerCount + 1,
+        lastUpdate: DateTime.now().toString(),
       );
     try {
       await Provider.of<NegotiationProvider>(context, listen: false)
           .addMessage(message);
       setState(() {
         lastPrice = message.price;
+        offerCount++;
+        currentTurn = currentTurn == NegotiationTurn.sender ? NegotiationTurn.receiver : NegotiationTurn.sender;
+        lastOfferTime = DateTime.now();
       });
       messageController.clear();
       priceController.clear();
@@ -221,22 +333,30 @@ class _NegotiationScreenState extends State<NegotiationScreen> {
                     stream: negotiationProvider.getMessages(chatId),
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
-                        // return const Center(child: CircularProgressIndicator());
+                        return const Center(child: CircularProgressIndicator());
                       }
                       if (snapshot.hasError) {
-                        return const Center(
-                            child: Text("Error loading messages"));
+                        return  Center(
+                            child: Text('Error loading messages ${snapshot.error}'));
                       }
                       if (!snapshot.hasData || snapshot.data!.isEmpty) {
                         return const Center(child: Text("No messages yet"));
                       }
                       final messages = snapshot.data ?? [];
-                      // setState(() {
-                        // Update the last price with the last message's price
-                        if (messages.isNotEmpty) {
-                          lastPrice = messages.last.price;
-                        }
-                      // });
+                      // if (messages.isNotEmpty) {
+                      //   final lastMessage = messages.first; // Assuming reversed order
+                      //   if (mounted) {
+                      //     WidgetsBinding.instance.addPostFrameCallback((_) {
+                      //       setState(() {
+                      //         lastPrice = lastMessage.price;
+                      //         // Update turn count if needed
+                      //         if (lastMessage.turnCount > offerCount) {
+                      //           offerCount = lastMessage.turnCount;
+                      //         }
+                      //       });
+                      //     });
+                      //   }
+                      // }
                       return ListView.builder(
                         reverse: true,
                         itemCount: messages.length,

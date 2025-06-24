@@ -308,29 +308,30 @@ class AppRouter {
             name: "negotiation-screen",
             path: "/negotiation-screen",
             pageBuilder: (context, state) {
-                final userId = state.uri.queryParameters['userId'];
-               final shipmentId = state.uri.queryParameters['shipmentId'];
-               final requestId = state.uri.queryParameters['requestId'];
+              final userId = state.uri.queryParameters['userId'];
+              final shipmentId = state.uri.queryParameters['shipmentId'];
+              final requestId = state.uri.queryParameters['requestId'];
               try {
-                final userData =
-                    Provider.of<UserProvider>(context, listen: false)
-                        .getUserById(userId!);
-                final shipment = Provider.of<ShipmentProvider>(context, listen: false)
-                    .getShipment(shipmentId!);
-                final request = Provider.of<DeliveryRequestProvider>(context, listen: false).getRequest(requestId!);
-                if (userData == null ) throw ("user is null");
+                // final userData =
+                //     Provider.of<UserProvider>(context, listen: false)
+                //         .getUserById(userId!);
+                // final shipment =  Provider.of<ShipmentProvider>(context, listen: false)
+                //     .fetchShipmentById(shipmentId!);
+                // final request = Provider.of<DeliveryRequestProvider>(context, listen: false).getRequest(requestId!);
+                // if (userData == null ) throw ("user is null");
 
-                print("data is fetched successfully");
+                // print("data is fetched successfully");
+                // // print(shipment?.from);
 
                 return buildCustomTransitionPage(
                     context,
                     NegotiationScreen(
-                      user: userData,
-                      transportItem: shipment,
-                      request: request
+                      userId: userId!,
+                      requestId: requestId!,
+                      shipmentId: shipmentId!
                     ));
               } catch (e) {
-                return buildCustomTransitionPage(context, const ErrorPage());
+                return buildCustomTransitionPage(context,  ErrorPage(errorMessage: e.toString(),));
               }
             }),
         GoRoute(
@@ -368,7 +369,7 @@ class AppRouter {
                       shipment: shipment,
                     ));
               } catch (e) {
-                return buildCustomTransitionPage(context, const ErrorPage());
+                return buildCustomTransitionPage(context, ErrorPage(errorMessage: e.toString(),));
               }
             }),
         GoRoute(
