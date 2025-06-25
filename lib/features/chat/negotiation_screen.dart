@@ -136,20 +136,55 @@ class _NegotiationContentState extends State<NegotiationContent> {
     lastPrice = widget.request.price.toString();
   }
 
-    bool get isMyTurn {
-      final currentUserId = widget.user.uid;
-      return (currentTurn == NegotiationTurn.sender && widget.request.senderId == currentUserId) ||
-        (currentTurn == NegotiationTurn.receiver && widget.request.receiverId == currentUserId);
+  int getOfferCount(List<NegotiationModel> messages) {
+    if (messages.isEmpty) {
+      return 0;
+    }
+      return messages.length;
+  }
+  
+  String getLastPrice(List<NegotiationModel> messages) {
+    if (messages.isEmpty) {
+      return widget.request.price.toString();
+    }
+    return messages.first.price;
+  }
+
+    bool  isMyTurn(List<NegotiationModel> messages) {
+      final currenUserId = FirebaseAuth.instance.currentUser!.uid;
+      if (messages.isEmpty) {
+        print("sender id: ${widget.request.senderId}");
+        print("receiver id: ${widget.request.receiverId}");
+        print("current user id: $currenUserId");
+        if (widget.request.senderId == currenUserId) {
+          print("is equal ...");
+        };
+        return widget.request.receiverId == currenUserId;
+      }
+
+      final lastMessage = messages.first;
+
+      print("user id : $currenUserId");
+      print("last message sender id : ${lastMessage.senderId}");
+
+      print("last message : ${lastMessage.message} ${lastMessage.price}");
+
+      
+
+      return lastMessage.senderId != currenUserId;
     }
 
-    bool canMakeOffer() {
-      return isMyTurn 
+    bool canMakeOffer(List<NegotiationModel> messages) {
+
+      final offerCount = getOfferCount(messages);
+    return isMyTurn(messages) 
         && negotiationStatus == NegotiationStatus.pending
         && offerCount < maxOfferCount
-        && !isExpired();
+        && !isExpired(messages);
     }
 
-    bool isExpired() {
+    bool isExpired(List<NegotiationModel> messages) {
+      if (messages.isEmpty) return false;
       if (lastOfferTime == null) return false;
       final duration = DateTime.now().difference(lastOfferTime!).inMinutes;
       if (duration < offerTimeTimeout) return false;
@@ -343,20 +378,6 @@ class _NegotiationContentState extends State<NegotiationContent> {
                         return const Center(child: Text("No messages yet"));
                       }
                       final messages = snapshot.data ?? [];
-                      // if (messages.isNotEmpty) {
-                      //   final lastMessage = messages.first; // Assuming reversed order
-                      //   if (mounted) {
-                      //     WidgetsBinding.instance.addPostFrameCallback((_) {
-                      //       setState(() {
-                      //         lastPrice = lastMessage.price;
-                      //         // Update turn count if needed
-                      //         if (lastMessage.turnCount > offerCount) {
-                      //           offerCount = lastMessage.turnCount;
-                      //         }
-                      //       });
-                      //     });
-                      //   }
-                      // }
                       return ListView.builder(
                         reverse: true,
                         itemCount: messages.length,
@@ -364,6 +385,7 @@ class _NegotiationContentState extends State<NegotiationContent> {
                           final message = messages[index];
                           final isMe = message.senderId ==
                               FirebaseAuth.instance.currentUser?.uid;
+                              
                           // if (!isMe) lastPrice = message.price;
                           // print("Message: ${message.message}, Price: ${message.price}, Sender: ${message.senderId}, Receiver: ${message.receiverId}");
                           return Column(children: [
@@ -411,7 +433,13 @@ class _NegotiationContentState extends State<NegotiationContent> {
                       );
                     },
                   ))),
-          _buildFooter(),
+            StreamBuilder(
+              stream: negotiationProvider.getMessages(chatId),
+              builder: (context, snapshot) {
+                final messages = snapshot.data ?? [];
+                return _buildFooter(messages);
+              }
+            )
         ]));
   }
 
@@ -478,7 +506,16 @@ Widget _buildButtons() {
           );
 }
 
-  Widget _buildFooter() {
+  Widget _buildFooter(List<NegotiationModel> messages) {
+    print("building footer");
+    final isMyNegotiationTurn = isMyTurn(messages);
+    final canOffer = canMakeOffer(messages);
+    final offerCount = getOfferCount(messages);
+    final lastPrice = getLastPrice(messages);
+    final expired = isExpired(messages);
+
+    print("can make an offer $isMyNegotiationTurn, offer count $offerCount, last price $lastPrice, expired $expired");
+
     return Container(
       decoration: BoxDecoration(
         color: AppColors.primary.withValues(alpha: 0.05),
@@ -492,12 +529,12 @@ Widget _buildButtons() {
       child: Padding(
       padding: const EdgeInsets.all(8.0),
       child: Column(
-       mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
+      //  mainAxisAlignment: MainAxisAlignment.start,
+        // crossAxisAlignment: CrossAxisAlignment.start,
         children: [ 
-           const Text(
-          "Make an offer",
-          style: TextStyle(
+          Text(
+          isMyNegotiationTurn ?  "Make an offer" : "Waiting for an offer",
+          style: const TextStyle(
             color: AppColors.headingText,
             fontSize: 14,
             fontWeight: FontWeight.bold,
@@ -527,27 +564,28 @@ Widget _buildButtons() {
             hintText: "Send Offer",
             onPressed: _sendMessage,
             isLoading: false,
-            backgroundColor: AppColors.blue,
+            backgroundColor: isMyNegotiationTurn ? AppColors.blue700 : AppColors.lessImportant,
             textColor: Colors.white,
           ),
-            if (widget.request.senderId == FirebaseAuth.instance.currentUser!.uid) ...[
-            const SizedBox(height: 16),
-            Text(
-              'Responde to: $lastPrice DH offer',
-              style: const TextStyle(
-                color: AppColors.headingText,
-                fontSize: 14,
-                fontWeight: FontWeight.bold,
-              ),
-              textAlign: TextAlign.start,
-            ) ,
-            const SizedBox(height: 8),
-            _buildButtons()
+            if (isMyNegotiationTurn) ...[
+                const SizedBox(height: 16),
+                Text(
+                  'Responde to: $lastPrice DH offer',
+                  style: const TextStyle(
+                    color: AppColors.headingText,
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  textAlign: TextAlign.start,
+                ),
+              const SizedBox(height: 8),
+              _buildButtons()
             ],
-            if (widget.request.senderId != FirebaseAuth.instance.currentUser!.uid) ...[
-            const SizedBox(height: 16),
-            _buildcancelButton(),
-            ]
+            // ],
+            // if (widget.request.senderId != FirebaseAuth.instance.currentUser!.uid) ...[
+            // const SizedBox(height: 16),
+            // _buildcancelButton(),
+            // ]
           ])
       )
       );
