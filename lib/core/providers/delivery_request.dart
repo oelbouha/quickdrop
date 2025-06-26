@@ -139,6 +139,18 @@ class DeliveryRequestProvider with ChangeNotifier {
     }
   }
 
+  void updateRequestStatus(String id, String status) async {
+      await FirebaseFirestore.instance
+        .collection("requests")
+        .doc(id)
+        .update({"status": status});
+    final index = _requests.indexWhere((request) => request.id == id);
+    if (index != -1) {
+      _requests[index].status = status;
+      notifyListeners();
+    }
+  }
+
   void markRequestAsAccepted(String id) {
     final index = _requests.indexWhere((request) => request.id == id);
     if (index != -1) {

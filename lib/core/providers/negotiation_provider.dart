@@ -183,6 +183,33 @@ class NegotiationProvider with ChangeNotifier {
       }).toList();
     });
   }
+
+
+   Future<void> deleteNegotiation(String documentId) async {
+    try {
+      final negotiationRef = _firestore.collection('negotiations').doc(documentId);
+      
+      // Delete all messages in the subcollection
+      final messagesSnapshot = await negotiationRef.collection('messages').get();
+      
+      final batch = _firestore.batch();
+      for (var doc in messagesSnapshot.docs) {
+        batch.delete(doc.reference);
+      }
+      await batch.commit();
+      
+      // Delete the main negotiation document
+      await negotiationRef.delete();
+      
+      // Update local state
+      _requests.removeWhere((request) => request.id == documentId);
+      notifyListeners();
+    } catch (e) {
+      print('Error deleting negotiation: $e');
+      rethrow;
+    }
+  }
+
 }
 
 
