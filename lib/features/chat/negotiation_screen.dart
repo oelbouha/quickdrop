@@ -104,36 +104,37 @@ class _NegotiationContentState extends State<NegotiationContent> {
 
   bool _isProcessing = false;
   String _processingAction = '';
-  String lastPrice = '';
+  String  _lastPrice = '';
   
   NegotiationTurn  currentTurn = NegotiationTurn.sender;
   NegotiationStatus negotiationStatus = NegotiationStatus.pending;
   int offerCount = 0;
   int maxOfferCount = 5;
   DateTime? lastOfferTime;
-  static const int offerTimeTimeout = 30;
+  static const int offerTimeoutMinutes = 60; // 1 hour timeout
+  bool _hasShownExpiredDialog = false;
 
 
   @override
   void initState() {
     super.initState();
     // update the message seen status when the screen is opened
-    // final chatId =
-    //     getChatId(FirebaseAuth.instance.currentUser!.uid, widget.user.uid);
-    // Provider.of<NegotiationProvider>(context, listen: false)
-    //     .markMessageAsSeen(chatId)
-    //     .then((_) {
-    //   // print("Message seen status updated");
-    // }).catchError((error) {
-    //   // print("Error updating message seen status: $error");
-    // });
+    final chatId =
+        getChatId(FirebaseAuth.instance.currentUser!.uid, widget.user.uid);
+    Provider.of<NegotiationProvider>(context, listen: false)
+        .markMessageAsSeen(chatId)
+        .then((_) {
+      // print("Message seen status updated");
+    }).catchError((error) {
+      print("Error updating message seen status: $error");
+    });
     
     if (widget.request.senderId == widget.user.uid) {
       currentTurn = NegotiationTurn.receiver;
     } else {
       currentTurn = NegotiationTurn.sender;
     }
-    lastPrice = widget.request.price.toString();
+    _lastPrice = widget.request.price.toString();
   }
 
   int getOfferCount(List<NegotiationModel> messages) {
@@ -183,13 +184,16 @@ class _NegotiationContentState extends State<NegotiationContent> {
         && !isExpired(messages);
     }
 
-    bool isExpired(List<NegotiationModel> messages) {
-      if (messages.isEmpty) return false;
-      if (lastOfferTime == null) return false;
-      final duration = DateTime.now().difference(lastOfferTime!).inMinutes;
-      if (duration < offerTimeTimeout) return false;
-      return true;
-    }
+     bool isExpired(List<NegotiationModel> messages) {
+    if (messages.isEmpty) return false;
+    
+    // Get the timestamp of the last message
+    final lastMessage = messages.first;
+    final lastMessageTime = DateTime.parse(lastMessage.timestamp);
+    final duration = DateTime.now().difference(lastMessageTime).inMinutes;
+    
+    return duration > offerTimeoutMinutes;
+  }
 
   void _refuseRequest() async {
      if (_isProcessing) return;
@@ -200,15 +204,21 @@ class _NegotiationContentState extends State<NegotiationContent> {
     });
     
     try {
-      await Provider.of<DeliveryRequestProvider>(context, listen: false)
+        await FirebaseFirestore.instance.runTransaction((transaction) async {
+
+        await Provider.of<DeliveryRequestProvider>(context, listen: false)
           .deleteRequest(widget.request.id!);
-      
+        final chatId = getChatId(FirebaseAuth.instance.currentUser!.uid, widget.user.uid);
+        await Provider.of<NegotiationProvider>(context, listen: false).deleteNegotiation(chatId); 
+      });
+
       if (mounted) {
+        context.pop();
         AppUtils.showDialog(context, "Request refused successfully", AppColors.succes);
       }
     } catch (e) {
       if (mounted) {
-        AppUtils.showDialog(context, "Failed to refuse request", AppColors.error);
+        AppUtils.showDialog(context, "Failed to refuse request $e", AppColors.error);
       }
     } finally {
       if (mounted) {
@@ -245,6 +255,7 @@ class _NegotiationContentState extends State<NegotiationContent> {
           'status': DeliveryStatus.ongoing,
           'matchedDeliveryId': widget.request.shipmentId,
           'matchedDeliveryUserId': widget.request.receiverId,
+          'price': _lastPrice
         });
 
         // Update the shipment document
@@ -252,6 +263,7 @@ class _NegotiationContentState extends State<NegotiationContent> {
           'status': DeliveryStatus.ongoing,
           'matchedDeliveryId': widget.request.shipmentId,
           'matchedDeliveryUserId': widget.request.senderId,
+          'price': _lastPrice
         });
 
         // Update the request document
@@ -259,6 +271,10 @@ class _NegotiationContentState extends State<NegotiationContent> {
             Provider.of<DeliveryRequestProvider>(context, listen: false);
         transaction.update(requestRef, {'status': DeliveryStatus.accepted});
         requestProvider.markRequestAsAccepted(widget.request.id!);
+          // await Provider.of<DeliveryRequestProvider>(context, listen: false)
+            // .deleteRequest(widget.request.id!);
+          final chatId = getChatId(FirebaseAuth.instance.currentUser!.uid, widget.user.uid);
+          await Provider.of<NegotiationProvider>(context, listen: false).deleteNegotiation(chatId);
 
         if (mounted) {
           AppUtils.showDialog(
@@ -273,6 +289,7 @@ class _NegotiationContentState extends State<NegotiationContent> {
               .incrementField(widget.request.senderId, "ongoingTrips");
           Provider.of<StatisticsProvider>(context, listen: false)
               .decrementField(widget.request.senderId, "pendingTrips");
+          context.pop();
         }
       });
     } catch (e) {
@@ -290,6 +307,7 @@ class _NegotiationContentState extends State<NegotiationContent> {
   }
   
   void _sendMessage() async {
+    // if (!canMakeOffer(messages)) return;
     if (messageController.text.isEmpty) return;
 
     // print("user id ${widget.user.uid}");
@@ -307,8 +325,12 @@ class _NegotiationContentState extends State<NegotiationContent> {
     try {
       await Provider.of<NegotiationProvider>(context, listen: false)
           .addMessage(message);
+      if (widget.request.status != "negotiation") {
+        Provider.of<DeliveryRequestProvider>(context, listen: false)
+          .updateRequestStatus(widget.request.id!, "negotiation");
+      }
       setState(() {
-        lastPrice = message.price;
+        _lastPrice = message.price;
         offerCount++;
         currentTurn = currentTurn == NegotiationTurn.sender ? NegotiationTurn.receiver : NegotiationTurn.sender;
         lastOfferTime = DateTime.now();
@@ -317,9 +339,155 @@ class _NegotiationContentState extends State<NegotiationContent> {
       priceController.clear();
     } catch (e) {
       // print("Error sending message: $e");
-      if (mounted)
+      if (mounted) {
         AppUtils.showDialog(context, "Failed to send message ${e.toString()}", AppColors.error);
+      }
     }
+  }
+
+ Future<void> _handleExpiredNegotiation() async {
+    if (_hasShownExpiredDialog) return;
+    
+    setState(() {
+      _hasShownExpiredDialog = true;
+      negotiationStatus = NegotiationStatus.expired;
+    });
+
+    // Show expired dialog
+    await showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+          title: Row(
+            children: [
+              Icon(Icons.access_time, color: AppColors.warning, size: 24),
+              const SizedBox(width: 8),
+              const Text('Negotiation Expired'),
+            ],
+          ),
+          content: const Text(
+            'This negotiation has expired due to inactivity. The request will be cancelled.',
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+                _deleteExpiredNegotiation();
+              },
+              child: const Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+
+   Future<void> _deleteExpiredNegotiation() async {
+    try {
+      await FirebaseFirestore.instance.runTransaction((transaction) async {
+        // Delete the request
+        await Provider.of<DeliveryRequestProvider>(context, listen: false)
+            .deleteRequest(widget.request.id!);
+        
+        // Delete the negotiation chat
+        final chatId = getChatId(FirebaseAuth.instance.currentUser!.uid, widget.user.uid);
+        await Provider.of<NegotiationProvider>(context, listen: false)
+            .deleteNegotiation(chatId);
+      });
+
+      if (mounted) {
+        context.pop();
+      }
+    } catch (e) {
+      print("Error deleting expired negotiation: $e");
+      if (mounted) {
+        AppUtils.showDialog(context, "Error cleaning up expired negotiation", AppColors.error);
+        context.pop();
+      }
+    }
+  }
+
+
+  PreferredSizeWidget _buildAppBar() {
+    return AppBar(
+      title: UserProfileCard(
+        header: widget.user.displayName ?? 'Guest',
+        onPressed: () => context.push('/profile/statistics?userId=${widget.user.uid}'),
+        photoUrl: widget.user.photoUrl ?? AppTheme.defaultProfileImage,
+        headerFontSize: 16,
+        subHeaderFontSize: 10,
+        avatarSize: 36,
+        borderColor: AppColors.blue700,
+        headerColor: AppColors.appBarText,
+      ),
+      iconTheme: const IconThemeData(color: Colors.black),
+      systemOverlayStyle: SystemUiOverlayStyle.dark,
+      backgroundColor: Colors.white,
+      elevation: 0,
+      bottom: PreferredSize(
+        preferredSize: const Size.fromHeight(1.0),
+        child: Container(
+          color: Colors.grey[300],
+          height: 0.5,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildNegotiationHeader() {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 4,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Row(
+        children: [
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+            decoration: BoxDecoration(
+              color: AppColors.blue700.withOpacity(0.1),
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(Icons.handshake, size: 16, color: AppColors.blue700),
+                const SizedBox(width: 4),
+                Text(
+                  'Negotiation',
+                  style: TextStyle(
+                    color: AppColors.blue700,
+                    fontWeight: FontWeight.w600,
+                    fontSize: 12,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const Spacer(),
+          Text(
+            'Initial: ${widget.request.price} DH',
+            style: TextStyle(
+              color: Colors.grey[600],
+              fontSize: 14,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
   @override
@@ -328,35 +496,11 @@ class _NegotiationContentState extends State<NegotiationContent> {
     final chatId =
         getChatId(FirebaseAuth.instance.currentUser!.uid, widget.user.uid);
 
-    return Scaffold(
+    return Scaffold (
         backgroundColor: AppColors.white,
-        appBar: AppBar(
-          title: UserProfileCard(
-            header: widget.user.displayName ?? 'Guest',
-            onPressed: () =>  {context.push('/profile/statistics?userId=${widget.user.uid}')},
-            photoUrl: widget.user.photoUrl ?? AppTheme.defaultProfileImage,
-            headerFontSize: 16,
-            subHeaderFontSize: 10,
-            avatarSize: 36,
-            borderColor: AppColors.blue700,
-            headerColor: AppColors.appBarText,
-          ),
-           iconTheme: const IconThemeData(
-            color: Colors.black,
-          ),
-          systemOverlayStyle:
-              SystemUiOverlayStyle.dark,
-          backgroundColor: AppColors.white,
-           elevation: 0, 
-          bottom: PreferredSize(
-            preferredSize: const Size.fromHeight(1.0),
-            child: Container(
-              color: Colors.grey, 
-              height: 0.6,
-            ),
-          ),
-        ),
+        appBar: _buildAppBar(),
         body: Column(children: [
+          _buildNegotiationHeader(),
           Expanded(
               child: Padding(
                   padding: const EdgeInsets.only(
@@ -375,9 +519,16 @@ class _NegotiationContentState extends State<NegotiationContent> {
                             child: Text('Error loading messages ${snapshot.error}'));
                       }
                       if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                        return const Center(child: Text("No messages yet"));
+                        return  _buildEmptyState();
                       }
                       final messages = snapshot.data ?? [];
+
+                      if (messages.isNotEmpty && isExpired(messages) && !_hasShownExpiredDialog) {
+                        WidgetsBinding.instance.addPostFrameCallback((_) {
+                          _handleExpiredNegotiation();
+                        });
+                      }
+
                       return ListView.builder(
                         reverse: true,
                         itemCount: messages.length,
@@ -385,9 +536,6 @@ class _NegotiationContentState extends State<NegotiationContent> {
                           final message = messages[index];
                           final isMe = message.senderId ==
                               FirebaseAuth.instance.currentUser?.uid;
-                              
-                          // if (!isMe) lastPrice = message.price;
-                          // print("Message: ${message.message}, Price: ${message.price}, Sender: ${message.senderId}, Receiver: ${message.receiverId}");
                           return Column(children: [
                             Align(
                               alignment: isMe
@@ -501,46 +649,14 @@ Widget _buildButtons() {
                     elevation: 0,
                   ),
                 ),
-              ),
-            ],
-          );
+            ),
+        ],
+    );
 }
 
-  Widget _buildFooter(List<NegotiationModel> messages) {
-    print("building footer");
-    final isMyNegotiationTurn = isMyTurn(messages);
-    final canOffer = canMakeOffer(messages);
-    final offerCount = getOfferCount(messages);
-    final lastPrice = getLastPrice(messages);
-    final expired = isExpired(messages);
-
-    print("can make an offer $isMyNegotiationTurn, offer count $offerCount, last price $lastPrice, expired $expired");
-
-    return Container(
-      decoration: BoxDecoration(
-        color: AppColors.primary.withValues(alpha: 0.05),
-        border: Border(
-          top: BorderSide(
-            color: AppColors.blue.withOpacity(0.1),
-            width: 1.0,
-          ),
-        ),
-      ),
-      child: Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Column(
-      //  mainAxisAlignment: MainAxisAlignment.start,
-        // crossAxisAlignment: CrossAxisAlignment.start,
-        children: [ 
-          Text(
-          isMyNegotiationTurn ?  "Make an offer" : "Waiting for an offer",
-          style: const TextStyle(
-            color: AppColors.headingText,
-            fontSize: 14,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        const SizedBox(height: 8),
+ Widget _buildInputFields(bool isMyNegotiationTurn, bool canOffer) {
+    return Column(
+      children: [
         TextFieldWithHeader(
             controller: priceController,
             hintText: "Enter your offer",
@@ -557,40 +673,196 @@ Widget _buildButtons() {
             headerText: "Message (optional)",
             validator: Validators.notEmpty,
             keyboardType: TextInputType.text,
+            isRequired: false,
             maxLines: 2,
           ),
           const SizedBox(height: 16),
           Button(
             hintText: "Send Offer",
-            onPressed: _sendMessage,
+            onPressed: () => {if (canOffer) _sendMessage()},
             isLoading: false,
             backgroundColor: isMyNegotiationTurn ? AppColors.blue700 : AppColors.lessImportant,
             textColor: Colors.white,
           ),
-            if (isMyNegotiationTurn) ...[
-                const SizedBox(height: 16),
-                Text(
-                  'Responde to: $lastPrice DH offer',
-                  style: const TextStyle(
-                    color: AppColors.headingText,
-                    fontSize: 14,
-                    fontWeight: FontWeight.bold,
-                  ),
-                  textAlign: TextAlign.start,
+      ],
+    );
+  }
+
+  Widget _buildActionButtons(bool isMyTurn, bool canOffer) {
+    return Column(
+      children: [
+        SizedBox(
+          width: double.infinity,
+          child: ElevatedButton.icon(
+            onPressed: canOffer ? _sendMessage : null,
+            icon: Icon(
+              Icons.send,
+              size: 18,
+              color: canOffer ? Colors.white : Colors.grey[400],
+            ),
+            label: Text(
+              "Send Offer",
+              style: TextStyle(
+                fontWeight: FontWeight.w600,
+                color: canOffer ? Colors.white : Colors.grey[400],
+              ),
+            ),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: canOffer ? AppColors.blue700 : Colors.grey[300],
+              elevation: 0,
+              padding: const EdgeInsets.symmetric(vertical: 16),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+            ),
+          ),
+        ),
+        if (isMyTurn && _lastPrice.isNotEmpty) ...[
+          const SizedBox(height: 12),
+          _buildButtons(),
+        ],
+      ],
+    );
+  }
+
+
+ Widget _buildEmptyState() {
+    return Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(
+                padding: const EdgeInsets.all(24),
+                decoration: BoxDecoration(
+                  color: AppColors.blue700.withOpacity(0.1),
+                  shape: BoxShape.circle,
                 ),
+                child: const Icon(
+                  Icons.chat_bubble_outline,
+                  size: 48,
+                  color: AppColors.blue700,
+                ),
+              ),
+              const SizedBox(height: 24),
+              Text(
+                'Start Negotiating',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.grey[800],
+                ),
+              ),
               const SizedBox(height: 8),
-              _buildButtons()
+              Text(
+                'Make your first offer to begin the negotiation',
+                style: TextStyle(
+                  fontSize: 14,
+                  color: Colors.grey[600],
+                ),
+                textAlign: TextAlign.center,
+              ),
             ],
-            // ],
-            // if (widget.request.senderId != FirebaseAuth.instance.currentUser!.uid) ...[
-            // const SizedBox(height: 16),
-            // _buildcancelButton(),
-            // ]
-          ])
+      ),
+    );
+  }
+
+  Widget _buildFooter(List<NegotiationModel> messages) {
+    // print("building footer");
+    final isMyNegotiationTurn = isMyTurn(messages);
+    final canOffer = canMakeOffer(messages);
+    final offerCount = getOfferCount(messages);
+    _lastPrice = getLastPrice(messages);
+    final expired = isExpired(messages);
+    
+    if (expired ) {
+      return Container();
+    }
+    // print("can make an offer $isMyNegotiationTurn, offer count $offerCount, last price $lastPrice, expired $expired");
+
+    return Container(
+      decoration: BoxDecoration(
+        color: AppColors.primary.withValues(alpha: 0.05),
+        border: Border(
+          top: BorderSide(
+            color: AppColors.blue.withOpacity(0.1),
+            width: 1.0,
+          ),
+        ),
+      ),
+      child: Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Column(
+        children: [ 
+         _buildStatusIndicator(isMyNegotiationTurn, offerCount),
+        const SizedBox(height: 8),
+        _buildInputFields(isMyNegotiationTurn, canOffer),
+        if (isMyNegotiationTurn) ...[
+            const SizedBox(height: 16),
+            Text(
+              'Responde to: $_lastPrice DH offer',
+              style: const TextStyle(
+                color: AppColors.headingText,
+                fontSize: 14,
+                fontWeight: FontWeight.bold,
+              ),
+              textAlign: TextAlign.start,
+            ),
+          const SizedBox(height: 8),
+          _buildButtons()
+        ],
+        ])
       )
-      );
+    );
   }
   
+
+    Widget _buildStatusIndicator(bool isMyTurn, int offerCount) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      decoration: BoxDecoration(
+        color: isMyTurn 
+            ? AppColors.blue700.withOpacity(0.1)
+            : Colors.orange.withOpacity(0.1),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(
+          color: isMyTurn ? AppColors.blue700.withOpacity(0.3) : Colors.orange.withOpacity(0.3),
+        ),
+      ),
+      child: Row(
+        children: [
+          Icon(
+            isMyTurn ? Icons.edit : Icons.hourglass_empty,
+            size: 20,
+            color: isMyTurn ? AppColors.blue700 : Colors.orange[700],
+          ),
+          const SizedBox(width: 8),
+          Expanded(
+            child: Text(
+              isMyTurn 
+                  ? "Your turn to make an offer"
+                  : "Waiting for their response...",
+              style: TextStyle(
+                color: isMyTurn ? AppColors.blue700 : Colors.orange[700],
+                fontWeight: FontWeight.w600,
+                fontSize: 14,
+              ),
+            ),
+          ),
+          if (_lastPrice.isNotEmpty) ...[
+            Text(
+              'Last: $_lastPrice DH',
+              style: TextStyle(
+                color: Colors.grey[600],
+                fontSize: 12,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+
   Widget _buildcancelButton() {
     return Container(
       // padding: const EdgeInsets.all(16),
@@ -642,7 +914,7 @@ Widget _buildButtons() {
         ),
         const SizedBox(height: 8),
         Text(
-          message.message,
+          'Note: ${message.message}',
           style: TextStyle(
               color: isMe
                   ? Colors.white

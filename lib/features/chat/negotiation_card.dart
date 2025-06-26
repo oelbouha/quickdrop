@@ -124,7 +124,7 @@ class NegotiationCardState extends State<NegotiationCard> {
           ),
           SizedBox(width: 4),
           Text(
-             'Negotiation exires in 24 hours',
+             'Negotiation exires automatically within 24 hours',
             style: TextStyle(
               color: AppColors.warning,
               fontSize: 12,

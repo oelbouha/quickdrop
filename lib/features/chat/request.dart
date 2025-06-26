@@ -106,6 +106,7 @@ class RequestState extends State<Request> with SingleTickerProviderStateMixin {
           'status': DeliveryStatus.ongoing,
           'matchedDeliveryId': widget.request.shipmentId,
           'matchedDeliveryUserId': widget.request.receiverId,
+          'price': widget.request.price
         });
 
         // Update the shipment document
@@ -113,6 +114,7 @@ class RequestState extends State<Request> with SingleTickerProviderStateMixin {
           'status': DeliveryStatus.ongoing,
           'matchedDeliveryId': widget.request.shipmentId,
           'matchedDeliveryUserId': widget.request.senderId,
+          'price': widget.request.price
         });
 
         // Update the request document
