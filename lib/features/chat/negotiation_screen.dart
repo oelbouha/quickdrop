@@ -759,7 +759,7 @@ Widget _buildButtons() {
           const SizedBox(height: 16),
           Button(
             hintText: "Send Offer",
-            onPressed: () => { _sendMessage()},
+            onPressed: () => { if (canOffer) _sendMessage()},
             isLoading: false,
             backgroundColor: isMyNegotiationTurn ? AppColors.blue700 : AppColors.lessImportant,
             textColor: Colors.white,
