@@ -235,7 +235,7 @@ class DeliveryRequestState extends State<PendingRequest>
             child: OutlinedButton.icon(
               onPressed: _isProcessing ? null : _refuseRequest,
               icon: _isProcessing
-                  ? SizedBox(
+                  ? const SizedBox(
                       width: 16,
                       height: 16,
                       child: CircularProgressIndicator(
@@ -244,7 +244,7 @@ class DeliveryRequestState extends State<PendingRequest>
                             AlwaysStoppedAnimation<Color>(AppColors.error),
                       ),
                     )
-                  : Icon(Icons.close, size: 18),
+                  : const Icon(Icons.close, size: 18),
               label: Text(_isProcessing ? 'Cancelling...' : 'Cancel Request'),
               style: OutlinedButton.styleFrom(
                 foregroundColor: AppColors.error,

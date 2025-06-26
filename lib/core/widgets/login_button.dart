@@ -89,14 +89,19 @@ class Button extends StatelessWidget {
           ),
           child: Center(
             child: isLoading?
-                const SizedBox(
-                  width: 28,
-                  height: 28,
+                const Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [const SizedBox(
+                  width: 18,
+                  height: 18,
                   child: CircularProgressIndicator(
-                    strokeWidth: 3,
+                    strokeWidth: 2,
                     color: AppColors.white,
                   ),
-              ) 
+              ) ,
+               SizedBox(width: 10),
+              Text("Loading...", style: TextStyle(color: AppColors.white, fontSize: 16))
+              ])
             :
               Text(
                 hintText,

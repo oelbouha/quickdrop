@@ -6,6 +6,62 @@ import 'package:quickdrop_app/features/profile/review_card.dart';
 import 'package:quickdrop_app/core/providers/review_provider.dart';
 import 'package:quickdrop_app/features/models/review_model.dart';
 
+
+class ProfileStatisticsLoader extends StatefulWidget {
+  final String userId;
+
+  const ProfileStatisticsLoader({
+    super.key,
+    required this.userId,
+  });
+
+  @override
+  State<ProfileStatisticsLoader> createState() => _ProfileStatisticsLoaderState();
+}
+
+
+
+class _ProfileStatisticsLoaderState extends State<ProfileStatisticsLoader> {
+
+
+Future<UserData> fetchData() async {
+  print("fetching data");
+  final user = Provider.of<UserProvider>(context, listen: false).getUserById(widget.userId);
+  if (user == null) {
+    return Future.error("User not found");
+  }
+  return (user);
+}
+
+@override
+Widget build(BuildContext context) {
+  return FutureBuilder<UserData>(
+    future: fetchData(),
+    builder: (context, snapshot) {
+      if (snapshot.connectionState != ConnectionState.done) {
+        return  const Scaffold(
+          backgroundColor: AppColors.background,
+          body:  Center(child: CircularProgressIndicator(
+            color: AppColors.blue700,
+          )),
+        );
+      }
+
+      if (snapshot.hasError) {
+        return ErrorPage(errorMessage: snapshot.error.toString());
+      }
+
+      final userData = snapshot.data!;
+
+      return ProfileStatistics(
+        user: userData,
+      );
+    },
+  );
+}
+}
+
+
 class ProfileStatistics extends StatefulWidget {
   final UserData user;
   const ProfileStatistics({
@@ -36,7 +92,7 @@ class ProfileStatisticsState extends State<ProfileStatistics> {
 
          stats = await Provider.of<StatisticsProvider>(context, listen: false)
           .getStatictics(widget.user.uid);
-            print(stats?.completedTrips);
+            // print(stats?.completedTrips);
             // if (mounted) {
             // setState(() {
             //   stats = fetchedStats;
@@ -59,7 +115,7 @@ class ProfileStatisticsState extends State<ProfileStatistics> {
       } catch (e) {
         if (mounted) {
           AppUtils.showDialog(
-              context, "Failed to fetch Shipments analytics", AppColors.error);
+            context, "Failed to fetch Shipments analytics", AppColors.error);
         }
       }
     });
@@ -84,7 +140,9 @@ class ProfileStatisticsState extends State<ProfileStatistics> {
           centerTitle: true,
         ),
         body: _isLoading
-                ? const ProfileStatisticsSkeleon()
+                ? const Center(child: CircularProgressIndicator(
+                    color: AppColors.blue,
+                  ))
                 : SingleChildScrollView(
                 physics: const BouncingScrollPhysics(),
                 child: Column(children: [
