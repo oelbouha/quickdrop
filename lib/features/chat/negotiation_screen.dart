@@ -176,12 +176,11 @@ class _NegotiationContentState extends State<NegotiationContent> {
     }
 
     bool canMakeOffer(List<NegotiationModel> messages) {
-
       final offerCount = getOfferCount(messages);
-    return isMyTurn(messages) 
-        && negotiationStatus == NegotiationStatus.pending
-        && offerCount < maxOfferCount
-        && !isExpired(messages);
+      return isMyTurn(messages) 
+          && negotiationStatus == NegotiationStatus.pending
+          && offerCount < maxOfferCount
+          && !isExpired(messages);
     }
 
      bool isExpired(List<NegotiationModel> messages) {
@@ -345,7 +344,7 @@ class _NegotiationContentState extends State<NegotiationContent> {
     }
   }
 
- Future<void> _handleExpiredNegotiation() async {
+ Future<void> _handleExpiredNegotiation(String? message) async {
     if (_hasShownExpiredDialog) return;
     
     setState(() {
@@ -362,14 +361,15 @@ class _NegotiationContentState extends State<NegotiationContent> {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16),
           ),
-          title: Row(
+          title: const Row(
             children: [
               Icon(Icons.access_time, color: AppColors.warning, size: 24),
-              const SizedBox(width: 8),
-              const Text('Negotiation Expired'),
+                SizedBox(width: 8),
+                Text('Negotiation Expired'),
             ],
           ),
-          content: const Text(
+          content:  Text(
+            message ??
             'This negotiation has expired due to inactivity. The request will be cancelled.',
           ),
           actions: [
@@ -438,55 +438,130 @@ class _NegotiationContentState extends State<NegotiationContent> {
       ),
     );
   }
-
+  
+  
   Widget _buildNegotiationHeader() {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 4,
-            offset: const Offset(0, 2),
+    return StreamBuilder<List<NegotiationModel>>(
+      stream: Provider.of<NegotiationProvider>(context, listen: false)
+          .getMessages(getChatId(FirebaseAuth.instance.currentUser!.uid, widget.user.uid)),
+      builder: (context, snapshot) {
+        final messages = snapshot.data ?? [];
+        final currentOfferCount = getOfferCount(messages);
+        final remainingOffers = maxOfferCount - currentOfferCount;
+        
+        return Container(
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.05),
+                blurRadius: 4,
+                offset: const Offset(0, 2),
+              ),
+            ],
           ),
-        ],
-      ),
-      child: Row(
-        children: [
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-            decoration: BoxDecoration(
-              color: AppColors.blue700.withOpacity(0.1),
-              borderRadius: BorderRadius.circular(20),
-            ),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Icon(Icons.handshake, size: 16, color: AppColors.blue700),
-                const SizedBox(width: 4),
-                Text(
-                  'Negotiation',
-                  style: TextStyle(
-                    color: AppColors.blue700,
-                    fontWeight: FontWeight.w600,
-                    fontSize: 12,
+          child: Column(
+            children: [
+              Row(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                    decoration: BoxDecoration(
+                      color: AppColors.blue700.withOpacity(0.1),
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(Icons.handshake, size: 16, color: AppColors.blue700),
+                        const SizedBox(width: 4),
+                        Text(
+                          'Negotiation',
+                          style: TextStyle(
+                            color: AppColors.blue700,
+                            fontWeight: FontWeight.w600,
+                            fontSize: 12,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-              ],
-            ),
+                  const Spacer(),
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                    decoration: BoxDecoration(
+                      color: remainingOffers <= 2 
+                          ? Colors.red.withOpacity(0.1)
+                          : Colors.grey.withOpacity(0.1),
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(
+                        color: remainingOffers <= 2 
+                            ? Colors.red.withOpacity(0.3)
+                            : Colors.grey.withOpacity(0.3),
+                      ),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(
+                          Icons.swap_horiz,
+                          size: 14,
+                          color: remainingOffers <= 2 ? Colors.red[700] : Colors.grey[600],
+                        ),
+                        const SizedBox(width: 4),
+                        Text(
+                          '$currentOfferCount/$maxOfferCount',
+                          style: TextStyle(
+                            color: remainingOffers <= 2 ? Colors.red[700] : Colors.grey[600],
+                            fontWeight: FontWeight.w600,
+                            fontSize: 12,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 12),
+              Row(
+                children: [
+                  Text(
+                    'Initial: ${widget.request.price} DH',
+                    style: TextStyle(
+                      color: Colors.grey[600],
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  const Spacer(),
+                  if (remainingOffers > 0) ...[
+                    Text(
+                      remainingOffers == 1 
+                          ? 'Last offer remaining'
+                          : '$remainingOffers offers left',
+                      style: TextStyle(
+                        color: remainingOffers <= 2 ? Colors.red[600] : Colors.grey[600],
+                        fontSize: 12,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ] else ...[
+                    Text(
+                      'No offers left',
+                      style: TextStyle(
+                        color: Colors.red[600],
+                        fontSize: 12,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ],
+                ],
+              ),
+            ],
           ),
-          const Spacer(),
-          Text(
-            'Initial: ${widget.request.price} DH',
-            style: TextStyle(
-              color: Colors.grey[600],
-              fontSize: 14,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-        ],
-      ),
+        );
+      },
     );
   }
 
@@ -525,7 +600,12 @@ class _NegotiationContentState extends State<NegotiationContent> {
 
                       if (messages.isNotEmpty && isExpired(messages) && !_hasShownExpiredDialog) {
                         WidgetsBinding.instance.addPostFrameCallback((_) {
-                          _handleExpiredNegotiation();
+                          _handleExpiredNegotiation(null);
+                        });
+                      }
+                      if (messages.isNotEmpty && getOfferCount(messages) > maxOfferCount ) {
+                        WidgetsBinding.instance.addPostFrameCallback((_) {
+                          _handleExpiredNegotiation("You have reached the maximum number of offers.");
                         });
                       }
 
@@ -679,7 +759,7 @@ Widget _buildButtons() {
           const SizedBox(height: 16),
           Button(
             hintText: "Send Offer",
-            onPressed: () => {if (canOffer) _sendMessage()},
+            onPressed: () => { _sendMessage()},
             isLoading: false,
             backgroundColor: isMyNegotiationTurn ? AppColors.blue700 : AppColors.lessImportant,
             textColor: Colors.white,
