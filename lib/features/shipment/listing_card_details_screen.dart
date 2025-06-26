@@ -1,6 +1,131 @@
 import 'package:quickdrop_app/core/utils/imports.dart';
 import 'package:quickdrop_app/core/widgets/destination.dart';
 
+
+
+class ListingShipmentLoader extends StatefulWidget {
+  final String userId;
+  final bool viewOnly;
+  final String shipmentId;  
+
+  const ListingShipmentLoader({
+    super.key,
+    required this.userId,
+    required this.viewOnly,
+    required this.shipmentId
+  });
+
+  @override
+  State<ListingShipmentLoader> createState() => _ListingShipmentLoaderState();
+}
+
+
+
+class _ListingShipmentLoaderState extends State<ListingShipmentLoader> {
+
+
+Future<(UserData, TransportItem)> fetchData() async {
+  final user = Provider.of<UserProvider>(context, listen: false).getUserById(widget.userId);;
+  final transportItem = await Provider.of<ShipmentProvider>(context, listen: false).fetchShipmentById(widget.shipmentId);
+  if (user == null || transportItem == null) {
+    return Future.error("Data not found");
+  }
+  return (user, transportItem);
+}
+
+@override
+Widget build(BuildContext context) {
+  return FutureBuilder<(UserData, TransportItem)>(
+    future: fetchData(),
+    builder: (context, snapshot) {
+      if (snapshot.connectionState != ConnectionState.done) {
+        return const Scaffold(
+          backgroundColor: Colors.white,
+          body: Center(child: CircularProgressIndicator(
+            color: AppColors.blue700,
+          )),
+        );
+      }
+
+      if (snapshot.hasError) {
+        return ErrorPage(errorMessage: snapshot.error.toString());
+      }
+
+      final (userData, shipmentData) = snapshot.data!;
+
+      return ListingCardDetails(
+        user: userData,
+        shipment: shipmentData,
+        viewOnly: widget.viewOnly,
+      );
+    },
+  );
+}
+}
+
+
+class ListingTripLoader extends StatefulWidget {
+  final String userId;
+  final bool viewOnly;
+  final String shipmentId;  
+
+  const ListingTripLoader({
+    super.key,
+    required this.userId,
+    required this.viewOnly,
+    required this.shipmentId
+  });
+
+  @override
+  State<ListingTripLoader> createState() => _ListingTripLoaderState();
+}
+
+
+
+class _ListingTripLoaderState extends State<ListingTripLoader> {
+
+
+Future<(UserData, TransportItem)> fetchData() async {
+  final user = Provider.of<UserProvider>(context, listen: false).getUserById(widget.userId);
+  final transportItem = Provider.of<TripProvider>(context, listen: false).getTrip(widget.shipmentId);
+  if (user == null ) {
+    return Future.error("Data not found");
+  }
+  return (user, transportItem);
+}
+
+@override
+Widget build(BuildContext context) {
+  return FutureBuilder<(UserData, TransportItem)>(
+    future: fetchData(),
+    builder: (context, snapshot) {
+      if (snapshot.connectionState != ConnectionState.done) {
+        return const Scaffold(
+          backgroundColor: Colors.white,
+          body: Center(child: CircularProgressIndicator(
+            color: AppColors.blue700,
+          )),
+        );
+      }
+
+      if (snapshot.hasError) {
+        return ErrorPage(errorMessage: snapshot.error.toString());
+      }
+
+      final (userData, shipmentData) = snapshot.data!;
+
+      return ListingCardDetails(
+        user: userData,
+        shipment: shipmentData,
+        viewOnly: widget.viewOnly,
+      );
+    },
+  );
+}
+}
+
+
+
 class ListingCardDetails extends StatefulWidget {
   final TransportItem shipment;
   final UserData user;
@@ -49,6 +174,14 @@ class _ListingCardDetailsState extends State<ListingCardDetails> {
   void _sendDeliveryRequest(Trip? trip) async {
     if (_isLoading) return;
 
+    // setState(() {
+    //   _isLoading = true;
+    // });
+    if (!_formKey.currentState!.validate()) {
+      AppUtils.showDialog(
+          context, 'Please complete all required fields', AppColors.error);
+      return;
+    }
     if (trip == null) {
       AppUtils.showDialog(context, 'Please select a trip', AppColors.error);
       return;
@@ -78,7 +211,9 @@ class _ListingCardDetailsState extends State<ListingCardDetails> {
             price: priceController.text);
         await Provider.of<DeliveryRequestProvider>(context, listen: false)
             .addRequest(request);
-
+        // delay(const Duration(seconds: 1));
+        // add delay
+        await Future.delayed(const Duration(seconds: 1));
         if (mounted) {
           Navigator.pop(context);
           priceController.text = "";
@@ -594,44 +729,31 @@ class _ListingCardDetailsState extends State<ListingCardDetails> {
                             value == null ? "Please select a trip" : null,
                       ),
                 const SizedBox(height: 20),
-                const Text(
-                  "Add a note",
-                  style: TextStyle(color: AppColors.headingText, fontSize: 16),
-                ),
-                const SizedBox(height: 10),
-                CustomTextField(
+                
+                TextFieldWithHeader(
                   controller: noteController,
-                  hintText: "Note",
-                  backgroundColor: AppColors.background,
+                  hintText: "Add a note",
+                  headerText: "Note",
+                  keyboardType: TextInputType.text,
+                  isRequired: false,
                   maxLines: 2,
                 ),
-                const Text(
-                  "Price",
-                  style: TextStyle(color: AppColors.headingText, fontSize: 16),
-                ),
+               
                 const SizedBox(height: 10),
-                NumberField(
+                TextFieldWithHeader(
                   controller: priceController,
-                  hintText: "Start price",
-                  backgroundColor: AppColors.background,
+                  hintText: "0.00",
+                  headerText: "Price (dh)",
                   validator: Validators.notEmpty,
+                  keyboardType: TextInputType.number,
                 ),
                 const SizedBox(
                   height: 20,
                 ),
-                LoginButton(
+                Button(
                     hintText: "Send request",
                     isLoading: _isLoading,
-                    onPressed: () {
-                      if (_formKey.currentState!.validate()) {
-                        _sendDeliveryRequest(_selectedTrip);
-                      } else {
-                        AppUtils.showDialog(
-                            context,
-                            'Please complete all required fields',
-                            AppColors.error);
-                      }
-                    }),
+                    onPressed: () {_sendDeliveryRequest(_selectedTrip);}),
                 const SizedBox(
                   height: 10,
                 ),
@@ -640,4 +762,6 @@ class _ListingCardDetailsState extends State<ListingCardDetails> {
           ));
     });
   }
+ 
+
 }

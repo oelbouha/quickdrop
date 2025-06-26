@@ -209,20 +209,11 @@ class AppRouter {
             path: "/profile/statistics",
             pageBuilder: (context, state) {
               final userId = state.uri.queryParameters['userId'];
-              try {
-                final userData =
-                    Provider.of<UserProvider>(context, listen: false)
-                        .getUserById(userId!);
-                if (userData == null) throw ("user is null");
-
-                return buildCustomTransitionPage(
+              return buildCustomTransitionPage(
                     context,
-                    ProfileStatistics(
-                      user: userData,
+                    ProfileStatisticsLoader(
+                      userId: userId!,
                     ));
-              } catch (e) {
-                return buildCustomTransitionPage(context, const ErrorPage());
-              }
             }),
         GoRoute(
             name: "profile-info",
@@ -351,26 +342,13 @@ class AppRouter {
               final shipmentId = state.uri.queryParameters['shipmentId'];
               final userId = state.uri.queryParameters['userId'];
               final viewOnly = state.uri.queryParameters['viewOnly'] == "true";
-              // print(viewOnly);
-
-              try {
-                final userData =
-                    Provider.of<UserProvider>(context, listen: false)
-                        .getUserById(userId!);
-                if (userData == null) throw ("user is null");
-                final shipment =
-                    Provider.of<ShipmentProvider>(context, listen: false)
-                        .getShipment(shipmentId!);
                 return buildCustomTransitionPage(
                     context,
-                    ListingCardDetails(
+                    ListingShipmentLoader(
                       viewOnly: viewOnly,
-                      user: userData,
-                      shipment: shipment,
+                      userId: userId!,
+                      shipmentId: shipmentId!,
                     ));
-              } catch (e) {
-                return buildCustomTransitionPage(context, ErrorPage(errorMessage: e.toString(),));
-              }
             }),
         GoRoute(
             name: "trip-details",
@@ -379,23 +357,15 @@ class AppRouter {
               final tripId = state.uri.queryParameters['tripId'];
               final userId = state.uri.queryParameters['userId'];
               final viewOnly = state.uri.queryParameters['viewOnly'] == "true";
-              try {
-                final userData =
-                    Provider.of<UserProvider>(context, listen: false)
-                        .getUserById(userId!);
-                if (userData == null) throw ("user is null");
-                final trip = Provider.of<TripProvider>(context, listen: false)
-                    .getTrip(tripId!);
-                return buildCustomTransitionPage(
+
+                 return buildCustomTransitionPage(
                     context,
-                    ListingCardDetails(
-                      user: userData,
+                    ListingTripLoader(
                       viewOnly: viewOnly,
-                      shipment: trip,
+                      userId: userId!,
+                      shipmentId: tripId!,
                     ));
-              } catch (e) {
-                return buildCustomTransitionPage(context, const ErrorPage());
-              }
+             
             }),
       ],
     );
