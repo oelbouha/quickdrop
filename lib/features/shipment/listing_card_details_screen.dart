@@ -463,18 +463,13 @@ class _ListingCardDetailsState extends State<ListingCardDetails> {
                   crossAxisAlignment: CrossAxisAlignment.baseline,
                   textBaseline: TextBaseline.alphabetic,
                   children: [
-                    ShaderMask(
-                      shaderCallback: (bounds) => const LinearGradient(
-                        colors: [AppColors.blue, Colors.purple],
-                      ).createShader(bounds),
-                      child: Text(
+                    Text(
                         widget.shipment.price,
                         style: const TextStyle(
                           fontSize: 28,
                           fontWeight: FontWeight.bold,
-                          color: Colors.white,
+                          color: AppColors.blue600,
                         ),
-                      ),
                     ),
                     const SizedBox(width: 4),
                     Text(
@@ -491,34 +486,23 @@ class _ListingCardDetailsState extends State<ListingCardDetails> {
             ),
           ),
           const SizedBox(width: 16),
-          GestureDetector(
-            onTap: _showRequestSheet,
-            child: AnimatedContainer(
-              duration: const Duration(milliseconds: 200),
-              padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
-              decoration: BoxDecoration(
-                gradient: const LinearGradient(
-                  colors: [AppColors.blue, Colors.purple],
-                ),
-                borderRadius: BorderRadius.circular(16),
-                boxShadow: [
-                  BoxShadow(
-                    color: AppColors.blue.withValues(alpha: 0.4),
-                    blurRadius: 12,
-                    offset: const Offset(0, 6),
-                  ),
-                ],
-              ),
-              child: const Text(
-                "Make Offer",
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
+          ElevatedButton.icon(
+          onPressed:  _showRequestSheet ,
+          icon: const Icon(Icons.send, size: 18),
+          label: const Text(
+            'Send Offer',
+            style: TextStyle(fontWeight: FontWeight.w600),
           ),
+          style: ElevatedButton.styleFrom(
+            backgroundColor: AppColors.blue700,
+            foregroundColor: Colors.white,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+            padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+            elevation: 0,
+          ),
+        ),
         ],
       ),
     );
