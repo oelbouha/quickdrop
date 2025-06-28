@@ -119,10 +119,10 @@ class _NegotiationContentState extends State<NegotiationContent> {
   void initState() {
     super.initState();
     // update the message seen status when the screen is opened
-    final chatId =
-        getChatId(FirebaseAuth.instance.currentUser!.uid, widget.user.uid);
+    // final chatId =
+    //     getChatId(FirebaseAuth.instance.currentUser!.uid, widget.user.uid);
     Provider.of<NegotiationProvider>(context, listen: false)
-        .markMessageAsSeen(chatId)
+        .markMessageAsSeen(widget.request.id!)
         .then((_) {
       // print("Message seen status updated");
     }).catchError((error) {
@@ -154,21 +154,21 @@ class _NegotiationContentState extends State<NegotiationContent> {
     bool  isMyTurn(List<NegotiationModel> messages) {
       final currenUserId = FirebaseAuth.instance.currentUser!.uid;
       if (messages.isEmpty) {
-        print("sender id: ${widget.request.senderId}");
-        print("receiver id: ${widget.request.receiverId}");
-        print("current user id: $currenUserId");
-        if (widget.request.senderId == currenUserId) {
-          print("is equal ...");
-        };
+        // print("sender id: ${widget.request.senderId}");
+        // print("receiver id: ${widget.request.receiverId}");
+        // print("current user id: $currenUserId");
+        // if (widget.request.senderId == currenUserId) {
+        //   print("is equal ...");
+        // };
         return widget.request.receiverId == currenUserId;
       }
 
       final lastMessage = messages.first;
 
-      print("user id : $currenUserId");
-      print("last message sender id : ${lastMessage.senderId}");
+      // print("user id : $currenUserId");
+      // print("last message sender id : ${lastMessage.senderId}");
 
-      print("last message : ${lastMessage.message} ${lastMessage.price}");
+      // print("last message : ${lastMessage.message} ${lastMessage.price}");
 
       
 
@@ -207,8 +207,8 @@ class _NegotiationContentState extends State<NegotiationContent> {
 
         await Provider.of<DeliveryRequestProvider>(context, listen: false)
           .deleteRequest(widget.request.id!);
-        final chatId = getChatId(FirebaseAuth.instance.currentUser!.uid, widget.user.uid);
-        await Provider.of<NegotiationProvider>(context, listen: false).deleteNegotiation(chatId); 
+        // final chatId = getChatId(FirebaseAuth.instance.currentUser!.uid, widget.user.uid);
+        await Provider.of<NegotiationProvider>(context, listen: false).deleteNegotiation(widget.request.id!); 
       });
 
       if (mounted) {
@@ -272,7 +272,7 @@ class _NegotiationContentState extends State<NegotiationContent> {
         requestProvider.markRequestAsAccepted(widget.request.id!);
           // await Provider.of<DeliveryRequestProvider>(context, listen: false)
             // .deleteRequest(widget.request.id!);
-          final chatId = getChatId(FirebaseAuth.instance.currentUser!.uid, widget.user.uid);
+          final chatId = widget.request.id!;
           await Provider.of<NegotiationProvider>(context, listen: false).deleteNegotiation(chatId);
 
         if (mounted) {
@@ -395,9 +395,9 @@ class _NegotiationContentState extends State<NegotiationContent> {
             .deleteRequest(widget.request.id!);
         
         // Delete the negotiation chat
-        final chatId = getChatId(FirebaseAuth.instance.currentUser!.uid, widget.user.uid);
+        // final chatId = getChatId(FirebaseAuth.instance.currentUser!.uid, widget.user.uid);
         await Provider.of<NegotiationProvider>(context, listen: false)
-            .deleteNegotiation(chatId);
+            .deleteNegotiation(widget.request.id!);
       });
 
       if (mounted) {
@@ -443,7 +443,7 @@ class _NegotiationContentState extends State<NegotiationContent> {
   Widget _buildNegotiationHeader() {
     return StreamBuilder<List<NegotiationModel>>(
       stream: Provider.of<NegotiationProvider>(context, listen: false)
-          .getMessages(getChatId(FirebaseAuth.instance.currentUser!.uid, widget.user.uid)),
+          .getMessages(widget.request.id!),
       builder: (context, snapshot) {
         final messages = snapshot.data ?? [];
         final currentOfferCount = getOfferCount(messages);
@@ -455,7 +455,7 @@ class _NegotiationContentState extends State<NegotiationContent> {
             color: Colors.white,
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.05),
+                color: Colors.black.withValues(alpha: 0.05),
                 blurRadius: 4,
                 offset: const Offset(0, 2),
               ),
@@ -468,7 +468,7 @@ class _NegotiationContentState extends State<NegotiationContent> {
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                     decoration: BoxDecoration(
-                      color: AppColors.blue700.withOpacity(0.1),
+                      color: AppColors.blue700.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(20),
                     ),
                     child: Row(
@@ -492,13 +492,13 @@ class _NegotiationContentState extends State<NegotiationContent> {
                     padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                     decoration: BoxDecoration(
                       color: remainingOffers <= 2 
-                          ? Colors.red.withOpacity(0.1)
-                          : Colors.grey.withOpacity(0.1),
+                          ? Colors.red.withValues(alpha: 0.1)
+                          : Colors.grey.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(12),
                       border: Border.all(
                         color: remainingOffers <= 2 
-                            ? Colors.red.withOpacity(0.3)
-                            : Colors.grey.withOpacity(0.3),
+                            ? Colors.red.withValues(alpha: 0.3)
+                            : Colors.grey.withValues(alpha: 0.3),
                       ),
                     ),
                     child: Row(
@@ -568,8 +568,7 @@ class _NegotiationContentState extends State<NegotiationContent> {
   @override
   Widget build(BuildContext context) {
     final negotiationProvider = Provider.of<NegotiationProvider>(context);
-    final chatId =
-        getChatId(FirebaseAuth.instance.currentUser!.uid, widget.user.uid);
+    final chatId = widget.request.id!;
 
     return Scaffold (
         backgroundColor: AppColors.white,
@@ -734,77 +733,46 @@ Widget _buildButtons() {
     );
 }
 
- Widget _buildInputFields(bool isMyNegotiationTurn, bool canOffer) {
-    return Column(
-      children: [
-        TextFieldWithHeader(
-            controller: priceController,
-            hintText: "Enter your offer",
-            headerText: "Price (DH)",
-            keyboardType: TextInputType.number,
-            maxLines: 1,
-            validator: Validators.notEmpty,
-           
-          ),
-          const SizedBox(height: 16),
-          TextFieldWithHeader(
-            controller: messageController,
-            hintText: "Add a message",
-            headerText: "Message (optional)",
-            validator: Validators.notEmpty,
-            keyboardType: TextInputType.text,
-            isRequired: false,
-            maxLines: 2,
-          ),
-          const SizedBox(height: 16),
+
+Widget _buildInputFields(bool isMyNegotiationTurn, bool canOffer) {
+  return Column(
+    mainAxisSize: MainAxisSize.min,
+    children: [
+      TextFieldWithHeader(
+        controller: messageController,
+        hintText: "Add a message",
+        headerText: "Message (optional)",
+        validator: Validators.notEmpty,
+        keyboardType: TextInputType.text,
+        isRequired: false,
+        maxLines: 2,
+      ),
+      const SizedBox(height: 8),
+      // Row(
+      //   mainAxisSize: MainAxisSize.max,
+      //   children: [
+      //     Expanded( 
+            TextFieldWithHeader(
+              controller: priceController,
+              hintText: "Enter your offer",
+              headerText: "Price (DH)",
+              keyboardType: TextInputType.number,
+              maxLines: 1,
+              validator: Validators.notEmpty,
+            ),
+          const SizedBox(height: 6),
           Button(
-            hintText: "Send Offer",
+            hintText: "Send",
             onPressed: () => { if (canOffer) _sendMessage()},
             isLoading: false,
             backgroundColor: isMyNegotiationTurn ? AppColors.blue700 : AppColors.lessImportant,
             textColor: Colors.white,
           ),
-      ],
-    );
-  }
-
-  Widget _buildActionButtons(bool isMyTurn, bool canOffer) {
-    return Column(
-      children: [
-        SizedBox(
-          width: double.infinity,
-          child: ElevatedButton.icon(
-            onPressed: canOffer ? _sendMessage : null,
-            icon: Icon(
-              Icons.send,
-              size: 18,
-              color: canOffer ? Colors.white : Colors.grey[400],
-            ),
-            label: Text(
-              "Send Offer",
-              style: TextStyle(
-                fontWeight: FontWeight.w600,
-                color: canOffer ? Colors.white : Colors.grey[400],
-              ),
-            ),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: canOffer ? AppColors.blue700 : Colors.grey[300],
-              elevation: 0,
-              padding: const EdgeInsets.symmetric(vertical: 16),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-            ),
-          ),
-        ),
-        if (isMyTurn && _lastPrice.isNotEmpty) ...[
-          const SizedBox(height: 12),
-          _buildButtons(),
-        ],
-      ],
-    );
-  }
-
+        // ],
+      // ),
+    ],
+  );
+}
 
  Widget _buildEmptyState() {
     return Center(
@@ -814,7 +782,7 @@ Widget _buildButtons() {
               Container(
                 padding: const EdgeInsets.all(24),
                 decoration: BoxDecoration(
-                  color: AppColors.blue700.withOpacity(0.1),
+                  color: AppColors.blue700.withValues(alpha: 0.1),
                   shape: BoxShape.circle,
                 ),
                 child: const Icon(
@@ -845,103 +813,311 @@ Widget _buildButtons() {
       ),
     );
   }
-
-  Widget _buildFooter(List<NegotiationModel> messages) {
-    // print("building footer");
-    final isMyNegotiationTurn = isMyTurn(messages);
-    final canOffer = canMakeOffer(messages);
-    final offerCount = getOfferCount(messages);
-    _lastPrice = getLastPrice(messages);
-    final expired = isExpired(messages);
-    
-    if (expired ) {
-      return Container();
-    }
-    // print("can make an offer $isMyNegotiationTurn, offer count $offerCount, last price $lastPrice, expired $expired");
-
-    return Container(
-      decoration: BoxDecoration(
-        color: AppColors.primary.withValues(alpha: 0.05),
-        border: Border(
-          top: BorderSide(
-            color: AppColors.blue.withOpacity(0.1),
-            width: 1.0,
-          ),
-        ),
-      ),
-      child: Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Column(
-        children: [ 
-         _buildStatusIndicator(isMyNegotiationTurn, offerCount),
-        const SizedBox(height: 8),
-        _buildInputFields(isMyNegotiationTurn, canOffer),
-        if (isMyNegotiationTurn) ...[
-            const SizedBox(height: 16),
-            Text(
-              'Responde to: $_lastPrice DH offer',
-              style: const TextStyle(
-                color: AppColors.headingText,
-                fontSize: 14,
-                fontWeight: FontWeight.bold,
-              ),
-              textAlign: TextAlign.start,
-            ),
-          const SizedBox(height: 8),
-          _buildButtons()
-        ],
-        ])
-      )
-    );
-  }
+Widget _buildFooter(List<NegotiationModel> messages) {
+  final isMyNegotiationTurn = isMyTurn(messages);
+  final canOffer = canMakeOffer(messages);
+  final offerCount = getOfferCount(messages);
+  _lastPrice = getLastPrice(messages);
+  final expired = isExpired(messages);
   
+  if (expired) {
+    return Container();
+  }
 
-    Widget _buildStatusIndicator(bool isMyTurn, int offerCount) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-      decoration: BoxDecoration(
-        color: isMyTurn 
-            ? AppColors.blue700.withOpacity(0.1)
-            : Colors.orange.withOpacity(0.1),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-          color: isMyTurn ? AppColors.blue700.withOpacity(0.3) : Colors.orange.withOpacity(0.3),
+  return Container(
+    decoration: BoxDecoration(
+      color: Colors.white,
+      border: Border(
+        top: BorderSide(
+          color: Colors.grey.withValues(alpha: 0.2),
+          width: 1.0,
         ),
       ),
-      child: Row(
-        children: [
-          Icon(
-            isMyTurn ? Icons.edit : Icons.hourglass_empty,
-            size: 20,
-            color: isMyTurn ? AppColors.blue700 : Colors.orange[700],
+      boxShadow: [
+        BoxShadow(
+          color: Colors.black.withValues(alpha: 0.08),
+          blurRadius: 8,
+          offset: const Offset(0, -2),
+        ),
+      ],
+    ),
+    child: SafeArea(
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(16, 12, 16, 8),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            
+            _buildCompactStatusIndicator(isMyNegotiationTurn),
+            
+            const SizedBox(height: 12),
+            
+            if (canOffer) ...[
+              _buildCompactInputSection(isMyNegotiationTurn),
+            ] else ...[
+              _buildWaitingState(isMyNegotiationTurn),
+            ],
+            
+            
+            // if (isMyNegotiationTurn ) ...[
+              const SizedBox(height: 12),
+              _buildActionButtons(),
+            // ],
+          ],
+        ),
+      ),
+    ),
+  );
+}
+
+Widget _buildCompactStatusIndicator(bool isMyTurn) {
+  return Container(
+    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+    decoration: BoxDecoration(
+      color: isMyTurn 
+          ? AppColors.blue700.withValues(alpha: 0.08)
+          : Colors.amber.withValues(alpha: 0.08),
+      borderRadius: BorderRadius.circular(20),
+    ),
+    child: Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Icon(
+          isMyTurn ? Icons.edit_outlined : Icons.schedule,
+          size: 16,
+          color: isMyTurn ? AppColors.blue700 : Colors.amber[700],
+        ),
+        const SizedBox(width: 6),
+        Text(
+          isMyTurn ? "Your turn" : "Waiting for response",
+          style: TextStyle(
+            color: isMyTurn ? AppColors.blue700 : Colors.amber[700],
+            fontWeight: FontWeight.w600,
+            fontSize: 12,
           ),
+        ),
+        if (_lastPrice.isNotEmpty) ...[
           const SizedBox(width: 8),
-          Expanded(
-            child: Text(
-              isMyTurn 
-                  ? "Your turn to make an offer"
-                  : "Waiting for their response...",
-              style: TextStyle(
-                color: isMyTurn ? AppColors.blue700 : Colors.orange[700],
-                fontWeight: FontWeight.w600,
-                fontSize: 14,
-              ),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+            decoration: BoxDecoration(
+              color: Colors.grey.withValues(alpha: 0.1),
+              borderRadius: BorderRadius.circular(8),
             ),
-          ),
-          if (_lastPrice.isNotEmpty) ...[
-            Text(
-              'Last: $_lastPrice DH',
+            child: Text(
+              '$_lastPrice DH',
               style: TextStyle(
-                color: Colors.grey[600],
-                fontSize: 12,
+                color: Colors.grey[700],
+                fontSize: 10,
                 fontWeight: FontWeight.w500,
               ),
             ),
-          ],
+          ),
         ],
+      ],
+    ),
+  );
+}
+
+Widget _buildCompactInputSection(bool isMyTurn) {
+  return Column(
+    children: [
+      // Price input - most important, so it's prominent
+      Container(
+        decoration: BoxDecoration(
+          border: Border.all(color: AppColors.blue700.withValues(alpha: 0.3)),
+          borderRadius: BorderRadius.circular(12),
+          color: Colors.white,
+        ),
+        child: Row(
+          children: [
+            Expanded(
+              child: TextField(
+                controller: priceController,
+                keyboardType: TextInputType.number,
+                style: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                ),
+                decoration: InputDecoration(
+                  hintText: "Enter your offer",
+                  hintStyle: TextStyle(
+                    color: Colors.grey[400],
+                    fontWeight: FontWeight.normal,
+                  ),
+                  prefixIcon: const Icon(
+                    Icons.attach_money,
+                    color: AppColors.blue700,
+                    size: 20,
+                  ),
+                  suffixText: "DH",
+                  suffixStyle: TextStyle(
+                    color: Colors.grey[600],
+                    fontWeight: FontWeight.w500,
+                  ),
+                  border: InputBorder.none,
+                  contentPadding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 12,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
-    );
-  }
+      
+      const SizedBox(height: 8),
+      
+      Container(
+        decoration: BoxDecoration(
+          border: Border.all(color: Colors.grey.withValues(alpha: 0.3)),
+          borderRadius: BorderRadius.circular(12),
+          color: Colors.grey.withValues(alpha: 0.02),
+        ),
+        child: TextField(
+          controller: messageController,
+          maxLines: 2,
+          minLines: 1,
+          style: const TextStyle(fontSize: 14),
+          decoration: InputDecoration(
+            hintText: "Add a note (optional)",
+            hintStyle: TextStyle(
+              color: Colors.grey[400],
+              fontSize: 13,
+            ),
+            prefixIcon: Icon(
+              Icons.message_outlined,
+              color: Colors.grey[500],
+              size: 18,
+            ),
+            border: InputBorder.none,
+            contentPadding: const EdgeInsets.symmetric(
+              horizontal: 16,
+              vertical: 10,
+            ),
+          ),
+        ),
+      ),
+    ],
+  );
+}
+
+Widget _buildWaitingState(bool isMyTurn) {
+  return Container(
+    padding: const EdgeInsets.symmetric(vertical: 16),
+    child: Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        SizedBox(
+          width: 16,
+          height: 16,
+          child: CircularProgressIndicator(
+            strokeWidth: 2,
+            valueColor: AlwaysStoppedAnimation<Color>(
+              isMyTurn ? AppColors.blue700 : Colors.amber[700]!,
+            ),
+          ),
+        ),
+        const SizedBox(width: 12),
+        Text(
+          isMyTurn 
+              ? "You can make an offer now"
+              : "Waiting for their response...",
+          style: TextStyle(
+            color: Colors.grey[600],
+            fontSize: 14,
+            fontStyle: FontStyle.italic,
+          ),
+        ),
+      ],
+    ),
+  );
+}
+
+Widget _buildActionButtons() {
+  return Row(
+    children: [
+      Expanded(
+        flex: 2,
+        child: ElevatedButton.icon(
+          onPressed:  _sendMessage ,
+          icon: const Icon(Icons.send, size: 18),
+          label: const Text(
+            'Send Offer',
+            style: TextStyle(fontWeight: FontWeight.w600),
+          ),
+          style: ElevatedButton.styleFrom(
+            backgroundColor: AppColors.blue700,
+            foregroundColor: Colors.white,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+            padding: const EdgeInsets.symmetric(vertical: 12),
+            elevation: 0,
+          ),
+        ),
+      ),
+      
+      const SizedBox(width: 8),
+      
+      // Accept button
+      Expanded(
+        child: ElevatedButton(
+          onPressed: (_isProcessing && _processingAction == 'accept') ? null : _acceptRequest,
+          child: (_isProcessing && _processingAction == 'accept')
+              ? const SizedBox(
+                  width: 16,
+                  height: 16,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 2,
+                    valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                  ),
+                )
+              : const Icon(Icons.check, size: 18),
+          style: ElevatedButton.styleFrom(
+            backgroundColor: AppColors.succes,
+            foregroundColor: Colors.white,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+            padding: const EdgeInsets.symmetric(vertical: 12),
+            elevation: 0,
+          ),
+        ),
+      ),
+      
+      const SizedBox(width: 8),
+      
+      // Refuse button
+      Expanded(
+        child: ElevatedButton(
+          onPressed: (_isProcessing && _processingAction == 'refuse') ? null : _refuseRequest,
+          child: (_isProcessing && _processingAction == 'refuse')
+              ? const SizedBox(
+                  width: 16,
+                  height: 16,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 2,
+                    valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                  ),
+                )
+              : const Icon(Icons.close, size: 18),
+          style: ElevatedButton.styleFrom(
+            backgroundColor: AppColors.error,
+            foregroundColor: Colors.white,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+            padding: const EdgeInsets.symmetric(vertical: 12),
+            elevation: 0,
+          ),
+        ),
+      ),
+    ],
+  );
+}
+
 
   Widget _buildcancelButton() {
     return Container(
@@ -982,7 +1158,6 @@ Widget _buildButtons() {
     return  Column(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
-
         Text(
           'Offer: ${message.price} DH',
           style: TextStyle(
