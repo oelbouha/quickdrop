@@ -4,8 +4,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:quickdrop_app/core/utils/imports.dart';
-import 'package:quickdrop_app/features/chat/request.dart';
-import 'package:quickdrop_app/features/models/chat_model.dart';
 import 'package:quickdrop_app/core/providers/negotiation_provider.dart';
 import 'package:quickdrop_app/features/models/negotiation_model.dart';
 
@@ -183,7 +181,7 @@ class _NegotiationContentState extends State<NegotiationContent> {
           && !isExpired(messages);
     }
 
-     bool isExpired(List<NegotiationModel> messages) {
+  bool isExpired(List<NegotiationModel> messages) {
     if (messages.isEmpty) return false;
     
     // Get the timestamp of the last message
@@ -568,8 +566,7 @@ class _NegotiationContentState extends State<NegotiationContent> {
   @override
   Widget build(BuildContext context) {
     final negotiationProvider = Provider.of<NegotiationProvider>(context);
-    final chatId =
-        getChatId(FirebaseAuth.instance.currentUser!.uid, widget.user.uid);
+    final chatId = widget.request.id!;
 
     return Scaffold (
         backgroundColor: AppColors.white,

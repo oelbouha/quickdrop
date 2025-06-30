@@ -185,7 +185,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget _buildSearchSection() {
     return GestureDetector(
-      onTap: () => _showRequestSheet(),
+      onTap: () => context.push("/search"),
       child: Container(
         width: double.infinity,
         padding: const EdgeInsets.all(20),
@@ -673,7 +673,7 @@ class _HomeScreenState extends State<HomeScreen> {
             : typeController.text 
         );
         
-    context.push('/search?${Uri(queryParameters: filters.toQueryParameters()).query}');
+    // context.push('/search?${Uri(queryParameters: filters.toQueryParameters()).query}');
   }
 
   Widget _buildNavigationButtons() {
