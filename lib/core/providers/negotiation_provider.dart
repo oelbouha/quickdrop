@@ -17,7 +17,7 @@ class NegotiationProvider with ChangeNotifier {
       throw Exception(
           "Invalid sender ID: you cannot send message to your self");
     }
-    final negotiationId = getChatId(message.senderId, message.receiverId);
+    final negotiationId = message.requestId;
     final negotiationRef = FirebaseFirestore.instance.collection('negotiations').doc(negotiationId);
     final messagesRef = negotiationRef.collection("messages").doc();
 

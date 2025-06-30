@@ -18,11 +18,9 @@ class PendingRequest extends StatefulWidget {
   DeliveryRequestState createState() => DeliveryRequestState();
 }
 
-class DeliveryRequestState extends State<PendingRequest>
-     {
-  bool _isProcessing = false;
 
-  
+class DeliveryRequestState extends State<PendingRequest> {
+  bool _isProcessing = false;
 
   void _refuseRequest() async {
     if (_isProcessing) return;
@@ -52,31 +50,29 @@ class DeliveryRequestState extends State<PendingRequest>
   @override
   Widget build(BuildContext context) {
     return Container(
-      // margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      margin: const EdgeInsets.symmetric(horizontal: 4, vertical: 6),
       decoration: BoxDecoration(
         color: AppColors.cardBackground,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.08),
+            color: Colors.black.withOpacity(0.06),
             spreadRadius: 0,
-            blurRadius: 8,
-            offset: const Offset(0, 2),
+            blurRadius: 12,
+            offset: const Offset(0, 4),
           ),
           BoxShadow(
-            color: Colors.black.withOpacity(0.04),
-            spreadRadius: 1,
-            blurRadius: 3,
-            offset: const Offset(0, 1),
+            color: Colors.black.withOpacity(0.02),
+            spreadRadius: 0,
+            blurRadius: 6,
+            offset: const Offset(0, 2),
           ),
         ],
       ),
       child: Column(
         children: [
           _buildStatusBanner(),
-          _buildHeader(),
-          _buildBody(),
-          _buildFooter(),
+          _buildContent(),
         ],
       ),
     );
@@ -85,35 +81,44 @@ class DeliveryRequestState extends State<PendingRequest>
   Widget _buildStatusBanner() {
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.symmetric(vertical: 8),
+      padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 20),
       decoration: BoxDecoration(
-        color: AppColors.warning.withOpacity(0.1),
-        borderRadius: const BorderRadius.only(
-          topLeft: Radius.circular(16),
-          topRight: Radius.circular(16),
+        gradient: LinearGradient(
+          colors: [
+            AppColors.warning.withOpacity(0.1),
+            AppColors.warning.withOpacity(0.05),
+          ],
+          begin: Alignment.centerLeft,
+          end: Alignment.centerRight,
         ),
-        border: Border(
-          bottom: BorderSide(
-            color: AppColors.warning.withOpacity(0.2),
-            width: 1,
-          ),
+        borderRadius: const BorderRadius.only(
+          topLeft: Radius.circular(20),
+          topRight: Radius.circular(20),
         ),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(
-            Icons.schedule,
-            size: 16,
-            color: AppColors.warning,
+          Container(
+            padding: const EdgeInsets.all(6),
+            decoration: BoxDecoration(
+              color: AppColors.warning.withOpacity(0.15),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Icon(
+              Icons.access_time_rounded,
+              size: 16,
+              color: AppColors.warning,
+            ),
           ),
-          const SizedBox(width: 4),
+          const SizedBox(width: 8),
           Text(
             'Waiting for response',
             style: TextStyle(
               color: AppColors.warning,
-              fontSize: 12,
+              fontSize: 13,
               fontWeight: FontWeight.w600,
+              letterSpacing: 0.2,
             ),
           ),
         ],
@@ -121,158 +126,228 @@ class DeliveryRequestState extends State<PendingRequest>
     );
   }
 
-  Widget _buildHeader() {
+  Widget _buildContent() {
     return Padding(
-        padding: const EdgeInsets.all(16),
-        child: UserProfileWithRating(
-          user: widget.user,
-          header: widget.user.displayName ?? 'Guest',
-          avatarSize: 34,
-          headerFontSize: 10,
-          subHeaderFontSize: 8,
-          onPressed: () =>
-              {context.push('/profile/statistics?userId=${widget.user.uid}')},
-        ));
-  }
-
-  Widget _buildBody() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
+      padding: const EdgeInsets.all(20),
       child: Column(
         children: [
-          Container(
-            padding: const EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              color: AppColors.primary.withOpacity(0.05),
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: Destination(
-              from: widget.shipment.from,
-              to: widget.shipment.to,
-            ),
-          ),
-          const SizedBox(height: 16),
-          _buildRequestDetails(),
+          _buildUserSection(),
+          const SizedBox(height: 20),
+          _buildMainContent(),
+          const SizedBox(height: 20),
+          _buildActionButton(),
         ],
       ),
     );
   }
 
-  Widget _buildRequestDetails() {
+  Widget _buildUserSection() {
     return Container(
-      padding: const EdgeInsets.all(12),
+      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: AppColors.cardBackground,
-        borderRadius: BorderRadius.circular(8),
+        color: AppColors.primary.withOpacity(0.04),
+        borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: AppColors.headingText.withOpacity(0.5),
+          color: AppColors.primary.withOpacity(0.1),
+          width: 1,
+        ),
+      ),
+      child: UserProfileWithRating(
+        user: widget.user,
+        header: widget.user.displayName ?? 'Guest',
+        avatarSize: 40,
+        headerFontSize: 16,
+        subHeaderFontSize: 12,
+        onPressed: () =>
+            {context.push('/profile/statistics?userId=${widget.user.uid}')},
+      ),
+    );
+  }
+
+  Widget _buildMainContent() {
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: Colors.grey.withOpacity(0.02),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+          color: Colors.grey.withOpacity(0.1),
+          width: 1,
+        ),
+      ),
+      child: Column(
+        children: [
+          _buildDestinationSection(),
+          const SizedBox(height: 20),
+          _buildPriceSection(),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildDestinationSection() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: AppColors.primary.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Icon(
+                Icons.route_rounded,
+                size: 18,
+                color: AppColors.primary,
+              ),
+            ),
+            const SizedBox(width: 12),
+            Text(
+              'Delivery Route',
+              style: TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w600,
+                color: AppColors.headingText,
+                letterSpacing: 0.3,
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 16),
+        Container(
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: AppColors.cardBackground,
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(
+              color: Colors.grey.withOpacity(0.15),
+              width: 1,
+            ),
+          ),
+          child: Destination(
+            from: widget.shipment.from,
+            to: widget.shipment.to,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildPriceSection() {
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [
+            AppColors.primary.withOpacity(0.08),
+            AppColors.primary.withOpacity(0.04),
+          ],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+          color: AppColors.primary.withOpacity(0.2),
+          width: 1,
         ),
       ),
       child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          _buildDetailItem(
-            icon: Icons.local_offer,
-            label: 'Your Offer',
-            value: '${widget.request.price} dh',
-            valueColor: AppColors.primary,
-          ),
-          const SizedBox(width: 16),
           Container(
-            width: 1,
-            height: 40,
-            color: AppColors.headingText.withOpacity(0.3),
+            padding: const EdgeInsets.all(10),
+            decoration: BoxDecoration(
+              color: AppColors.primary.withOpacity(0.15),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Icon(
+              Icons.local_offer_rounded,
+              size: 20,
+              color: AppColors.primary,
+            ),
           ),
           const SizedBox(width: 16),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildDetailItem({
-    required IconData icon,
-    required String label,
-    required String value,
-    required Color valueColor,
-  }) {
-    return Expanded(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Icon(icon, size: 14, color: AppColors.shipmentText),
-              const SizedBox(width: 4),
               Text(
-                label,
+                'Your Offer',
                 style: TextStyle(
-                  fontSize: 11,
+                  fontSize: 12,
                   color: AppColors.shipmentText,
                   fontWeight: FontWeight.w500,
+                  letterSpacing: 0.5,
+                ),
+              ),
+              const SizedBox(height: 4),
+              Text(
+                '${widget.request.price} dh',
+                style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.w700,
+                  color: AppColors.primary,
+                  letterSpacing: 0.5,
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 4),
-          Text(
-            value,
-            style: TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.w600,
-              color: valueColor,
-            ),
-          ),
         ],
       ),
     );
   }
 
-  Widget _buildFooter() {
+  Widget _buildActionButton() {
     return Container(
-      padding: const EdgeInsets.all(16),
-      child: Row(
-        children: [
-          Expanded(
-            child: OutlinedButton.icon(
-              onPressed: _isProcessing ? null : _refuseRequest,
-              icon: _isProcessing
-                  ? const SizedBox(
-                      width: 16,
-                      height: 16,
-                      child: CircularProgressIndicator(
-                        strokeWidth: 2,
-                        valueColor:
-                            AlwaysStoppedAnimation<Color>(AppColors.error),
-                      ),
-                    )
-                  : const Icon(Icons.close, size: 18),
-              label: Text(_isProcessing ? 'Cancelling...' : 'Cancel Request'),
-              style: OutlinedButton.styleFrom(
-                foregroundColor: AppColors.error,
-                side: BorderSide(color: AppColors.error),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                padding: const EdgeInsets.symmetric(vertical: 12),
-              ),
-            ),
+      width: double.infinity,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(
+            color: AppColors.error.withOpacity(0.15),
+            spreadRadius: 0,
+            blurRadius: 8,
+            offset: const Offset(0, 4),
           ),
         ],
       ),
+      child: ElevatedButton.icon(
+        onPressed: _isProcessing ? null : _refuseRequest,
+        icon: _isProcessing
+            ? SizedBox(
+                width: 18,
+                height: 18,
+                child: CircularProgressIndicator(
+                  strokeWidth: 2.5,
+                  valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                ),
+              )
+            : Icon(
+                Icons.close_rounded,
+                size: 20,
+                color: Colors.white,
+              ),
+        label: Text(
+          _isProcessing ? 'Cancelling Request...' : 'Cancel Request',
+          style: const TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.w600,
+            color: Colors.white,
+            letterSpacing: 0.5,
+          ),
+        ),
+        style: ElevatedButton.styleFrom(
+          backgroundColor: AppColors.error,
+          elevation: 0,
+          shadowColor: Colors.transparent,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+          padding: const EdgeInsets.symmetric(vertical: 16),
+          disabledBackgroundColor: AppColors.error.withOpacity(0.6),
+        ),
+      ),
     );
-  }
-
-  String _formatTimeAgo(DateTime? dateTime) {
-    if (dateTime == null) return 'Recently';
-
-    final now = DateTime.now();
-    final difference = now.difference(dateTime);
-
-    if (difference.inMinutes < 60) {
-      return '${difference.inMinutes}m ago';
-    } else if (difference.inHours < 24) {
-      return '${difference.inHours}h ago';
-    } else {
-      return '${difference.inDays}d ago';
-    }
   }
 }
