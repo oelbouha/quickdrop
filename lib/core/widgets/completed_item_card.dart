@@ -55,8 +55,9 @@ class CompletedItemCardState extends State<CompletedItemCard> {
       child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
+            _buildHeader(),
             _buildBody(),
-            const SizedBox(height: 10,),
+            // const SizedBox(height: 10,),
             _buildFooter(),
           ],
         )));
@@ -64,133 +65,349 @@ class CompletedItemCardState extends State<CompletedItemCard> {
 
 
 
-  Widget _buildUserCard() {
-    return Container(
-      padding: const EdgeInsets.all(10),
-        decoration:  BoxDecoration(
-          color: AppColors.courierInfoBackground,
-          borderRadius: BorderRadius.circular(AppTheme.cardRadius),
-      ),
-      child: Row(
-      children: [
-        UserProfileWithRating(
-          user: widget.user,
-          header: widget.user.displayName ?? 'Guest',
-          avatarSize: 34,
-          headerFontSize: 10,
-          subHeaderFontSize: 8,
-          onPressed: () =>
-              {context.push('/profile/statistics?userId=${widget.user.uid}')},
-        ),
-      ],
-    ));
-  }
-
- Widget _buildBody() {
+  Widget _buildBody() {
     return Padding(
-       padding: const EdgeInsets.only(
-        left: 10,
-        right: 10,
-        top: 10,
-        bottom: 4,
-      ),
+      padding: const EdgeInsets.all(16),
       child: Column(
-      children: [
+        children: [
+          // Destination
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Destination(from: widget.item.from, to: widget.item.to),
-               Container(
-                padding: const EdgeInsets.only(
-                    left: 5,
-                    right: 5,
-                    top: 3,
-                    bottom: 3
+              Expanded(
+                child: Destination(
+                  from: widget.item.from,
+                  to: widget.item.to,
                 ),
-                decoration:  BoxDecoration(
-                    color: AppColors.completedstatusBackground,
-                    borderRadius: BorderRadius.circular(30),
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+          
+          // Details Grid
+          Container(
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: AppColors.cardBackground.withOpacity(0.5),
+              borderRadius: BorderRadius.circular(8),
+              border: Border.all(
+                color: AppColors.cardBackground.withOpacity(0.3),
+                width: 0.5,
+              ),
+            ),
+            child: Column(
+              children: [
+                _buildDetailRow(
+                  icon: "assets/icon/calendar.svg",
+                  label: "Departure",
+                  value: widget.item.date,
+                  iconColor: AppColors.blue600,
                 ),
-                child: const  Row(
-                  children: [
-                    CustomIcon(
-                      iconPath: "assets/icon/check-circle.svg",
-                      size: 10,
-                      color: AppColors.completedStatusText,
-                    ),
-                    SizedBox(width: 5,),
-                    Text("Completed", style: TextStyle(fontSize: 8, color: AppColors.completedStatusText), )
-              ]
-          )),
-         
-        ]),
-        buildIconWithText(
-          iconPath: "calendar.svg", 
-          text: 'Departure time ${widget.item.date}'
-        ),
-        const SizedBox(
-          height: 3,
-        ),
-        buildIconWithText(
-          iconPath: "weight.svg", 
-          text: 'Weight ${widget.item.weight} kg'
-        ),
-        const SizedBox(
-          height: 8,
-        ),
-        _buildUserCard()
-      ],
-    ));
-  }
-
-  Widget _buildFooter() {
-    return  Container(
-       padding: const EdgeInsets.only(
-        left: 10,
-        right: 10,
-        top: 4,
-        bottom: 4,
-      ),
-      decoration: const BoxDecoration(
-        color: AppColors.cardFooterBackground,
-        borderRadius:  BorderRadius.only(
-          bottomRight: Radius.circular(AppTheme.cardRadius),
-          bottomLeft: Radius.circular(AppTheme.cardRadius),
-        ),
-      ),
-      child: Row(
-      children: [
-         Text('${widget.item.price}dh',
-            style: const TextStyle(
-                color: AppColors.blue,
-                fontSize: 14,
-                fontWeight: FontWeight.bold)),
-        const Spacer(),
-          _buildButtons(),
-          ],
-    ));
-  }
-
-  Widget _buildButtons() {
-    return  ElevatedButton.icon(
-      onPressed: _submitReview,
-      icon: const CustomIcon(
-        iconPath: "assets/icon/star.svg",
-        size: 20,
-        color: Colors.white,
-      ),
-      label: const Text("Rate trip", style: TextStyle(color: AppColors.white, fontSize: 12),),
-      style: ElevatedButton.styleFrom(
-        backgroundColor: AppColors.rateBackground,
-        foregroundColor: Colors.white,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(8),
-        ),
-        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
-        elevation: 0,
+                const SizedBox(height: 8),
+                _buildDetailRow(
+                  icon: "assets/icon/weight.svg",
+                  label: "Weight",
+                  value: "${widget.item.weight} kg",
+                  iconColor: AppColors.blue600,
+                ),
+              ],
+            ),
+          ),
+          
+          const SizedBox(height: 16),
+          
+          // Courier Information
+          _buildCourierCard(),
+        ],
       ),
     );
   }
+
+  Widget _buildDetailRow({
+    required String icon,
+    required String label,
+    required String value,
+    required Color iconColor,
+  }) {
+    return Row(
+      children: [
+        Container(
+          padding: const EdgeInsets.all(4),
+          decoration: BoxDecoration(
+            color: iconColor.withOpacity(0.1),
+            borderRadius: BorderRadius.circular(4),
+          ),
+          child: CustomIcon(
+            iconPath: icon,
+            size: 12,
+            color: iconColor,
+          ),
+        ),
+        const SizedBox(width: 8),
+        Text(
+          label,
+          style: TextStyle(
+            fontSize: 11,
+            color: AppColors.textSecondary,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+        const SizedBox(width: 8),
+        Expanded(
+          child: Text(
+            value,
+            style: const TextStyle(
+              fontSize: 11,
+              color: AppColors.textPrimary,
+              fontWeight: FontWeight.w600,
+            ),
+            textAlign: TextAlign.end,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildCourierCard() {
+    return Container(
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: AppColors.courierInfoBackground,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(
+          color: AppColors.blue.withOpacity(0.1),
+          width: 0.5,
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              const CustomIcon(
+                iconPath: "assets/icon/user.svg",
+                size: 14,
+                color: AppColors.blue600,
+              ),
+              const SizedBox(width: 6),
+              Text(
+                'Your Courier',
+                style: TextStyle(
+                  fontSize: 11,
+                  color: AppColors.textSecondary,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          Row(
+            children: [
+              Expanded(
+                child: UserProfileWithRating(
+                  user: widget.user,
+                  header: widget.user.displayName ?? 'Guest',
+                  avatarSize: 36,
+                  headerFontSize: 12,
+                  subHeaderFontSize: 9,
+                  onPressed: () => {
+                    context.push('/profile/statistics?userId=${widget.user.uid}')
+                  },
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+  
+
+  Widget _buildHeader() {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      decoration: BoxDecoration(
+        color: AppColors.completedstatusBackground.withOpacity(0.3),
+        borderRadius: const BorderRadius.only(
+          topLeft: Radius.circular(AppTheme.cardRadius),
+          topRight: Radius.circular(AppTheme.cardRadius),
+        ),
+      ),
+      child: Row(
+        children: [
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+            decoration: BoxDecoration(
+              color: AppColors.completedstatusBackground,
+              borderRadius: BorderRadius.circular(20),
+              border: Border.all(
+                color: AppColors.completedStatusText.withOpacity(0.3),
+                width: 1,
+              ),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  width: 6,
+                  height: 6,
+                  decoration: const BoxDecoration(
+                    color: AppColors.completedStatusText,
+                    shape: BoxShape.circle,
+                  ),
+                ),
+                const SizedBox(width: 6),
+                const Text(
+                  "Completed",
+                  style: TextStyle(
+                    fontSize: 10,
+                    color: AppColors.completedStatusText,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const Spacer(),
+          Text(
+            'ID: #${widget.item.id ?? 'N/A'}',
+            style: TextStyle(
+              fontSize: 10,
+              color: AppColors.textSecondary,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+
+
+  Widget _buildFooter() {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: AppColors.cardFooterBackground,
+        borderRadius: const BorderRadius.only(
+          bottomRight: Radius.circular(AppTheme.cardRadius),
+          bottomLeft: Radius.circular(AppTheme.cardRadius),
+        ),
+        border: Border(
+          top: BorderSide(
+            color: AppColors.cardBackground.withOpacity(0.1),
+            width: 0.5,
+          ),
+        ),
+      ),
+      child: Row(
+        children: [
+          // Price
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+            decoration: BoxDecoration(
+              color: AppColors.blue.withOpacity(0.1),
+              borderRadius: BorderRadius.circular(20),
+              border: Border.all(
+                color: AppColors.blue.withOpacity(0.2),
+                width: 1,
+              ),
+            ),
+            child: Text(
+              '${widget.item.price} DH',
+              style: const TextStyle(
+                color: AppColors.blue,
+                fontSize: 13,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          const Spacer(),
+          
+          // Action buttons
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              _buildActionButton(
+                icon: "assets/icon/star.svg",
+                label: "Rate trip",
+                color: AppColors.succes,
+                backgroundColor: AppColors.succes.withOpacity(0.1),
+                onTap: _submitReview,
+                isDestructive: false,
+              ),
+              const SizedBox(width: 8),
+              _buildActionButton(
+                icon: "assets/icon/report.svg",
+                label: "Report",
+                color: AppColors.error,
+                backgroundColor: AppColors.error.withOpacity(0.1),
+                onTap: ()  {
+                  AppUtils.showDialog(context, "Report feature is not available yet", AppColors.blue700);
+                },
+                isDestructive: true,
+                iconWidget: const Icon(Icons.cancel_outlined, size: 14),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildActionButton({
+    String? icon,
+    Widget? iconWidget,
+    required String label,
+    required Color color,
+    required Color backgroundColor,
+    required VoidCallback onTap,
+    required bool isDestructive,
+  }) {
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(8),
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+          decoration: BoxDecoration(
+            color: backgroundColor,
+            borderRadius: BorderRadius.circular(8),
+            border: Border.all(
+              color: color.withOpacity(0.3),
+              width: 0.5,
+            ),
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              if (icon != null)
+                CustomIcon(
+                  iconPath: icon,
+                  size: 14,
+                  color: color,
+                )
+              else if (iconWidget != null)
+                IconTheme(
+                  data: IconThemeData(color: color),
+                  child: iconWidget,
+                ),
+              const SizedBox(width: 4),
+              Text(
+                label,
+                style: TextStyle(
+                  color: color,
+                  fontSize: 11,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+ 
 
 }
