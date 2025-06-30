@@ -57,7 +57,6 @@ class CompletedItemCardState extends State<CompletedItemCard> {
           children: [
             _buildHeader(),
             _buildBody(),
-            // const SizedBox(height: 10,),
             _buildFooter(),
           ],
         )));
@@ -330,8 +329,8 @@ class CompletedItemCardState extends State<CompletedItemCard> {
               _buildActionButton(
                 icon: "assets/icon/star.svg",
                 label: "Rate trip",
-                color: AppColors.succes,
-                backgroundColor: AppColors.succes.withOpacity(0.1),
+                color: AppColors.rateBackground,
+                backgroundColor: AppColors.rateBackground.withOpacity(0.1),
                 onTap: _submitReview,
                 isDestructive: false,
               ),
