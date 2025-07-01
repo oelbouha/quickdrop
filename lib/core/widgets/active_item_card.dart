@@ -4,7 +4,7 @@ import 'package:quickdrop_app/features/models/base_transport.dart';
 
 class ActiveItemCard extends StatefulWidget {
   final TransportItem item;
-  final VoidCallback onPressed;
+  final VoidCallback onPressed; // Delete callback
   final VoidCallback onEditPressed;
   final VoidCallback onViewPressed;
   
@@ -20,295 +20,463 @@ class ActiveItemCard extends StatefulWidget {
   ActiveListing createState() => ActiveListing();
 }
 
-class ActiveListing extends State<ActiveItemCard> {
+class ActiveListing extends State<ActiveItemCard> with TickerProviderStateMixin {
+  
+
+  @override
+  void initState() {
+    super.initState();
+ 
+  }
+
+ 
+
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-        onTap: widget.onViewPressed, 
-        child: Container(
-        decoration: BoxDecoration(
-          color: AppColors.cardBackground,
-          borderRadius: BorderRadius.circular(AppTheme.cardRadius),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.1),
-              spreadRadius: 0.2,
-              blurRadius: 2,
-              offset: Offset(0, 1),
+    return  GestureDetector(
+            onTap: widget.onViewPressed,
+            child: Container(
+              margin: const EdgeInsets.symmetric(horizontal: 4, vertical: 6),
+              decoration: BoxDecoration(
+                color: AppColors.cardBackground,
+                borderRadius: BorderRadius.circular(AppTheme.cardRadius),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.08),
+                    spreadRadius: 0,
+                    blurRadius: 8,
+                    offset: const Offset(0, 2),
+                  ),
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.04),
+                    spreadRadius: 0,
+                    blurRadius: 4,
+                    offset: const Offset(0, 1),
+                  ),
+                ],
+                border: Border.all(
+                  color: AppColors.cardBackground.withOpacity(0.1),
+                  width: 0.5,
+                ),
+              ),
+              child: Column(
+                children: [
+                  _buildHeader(),
+                  _buildBody(),
+                  _buildFooter(),
+                ],
+              ),
             ),
-          ],
+    );
+  }
+
+  Widget _buildHeader() {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      decoration: BoxDecoration(
+        color: AppColors.blue.withOpacity(0.05),
+        borderRadius: const BorderRadius.only(
+          topLeft: Radius.circular(AppTheme.cardRadius),
+          topRight: Radius.circular(AppTheme.cardRadius),
         ),
-        child: Padding(
-            padding: const EdgeInsets.only(
-              left: AppTheme.historyCardPadding * 0,
+      ),
+      child: Row(
+        children: [
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+            decoration: BoxDecoration(
+              color: AppColors.blue.withOpacity(0.1),
+              borderRadius: BorderRadius.circular(20),
+              border: Border.all(
+                color: AppColors.blue.withOpacity(0.2),
+                width: 1,
+              ),
             ),
-            child: Column(
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
               children: [
-                _buildBody(),
-                _buildFooter(),
+                Container(
+                  width: 6,
+                  height: 6,
+                  decoration: const BoxDecoration(
+                    color: AppColors.blue,
+                    shape: BoxShape.circle,
+                  ),
+                ),
+                const SizedBox(width: 6),
+                const Text(
+                  "Active",
+                  style: TextStyle(
+                    fontSize: 10,
+                    color: AppColors.blue,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
               ],
-            ))));
+            ),
+          ),
+          const Spacer(),
+          Text(
+            'ID: #${widget.item.id ?? 'N/A'}',
+            style: TextStyle(
+              fontSize: 10,
+              color: AppColors.textSecondary,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
   Widget _buildBody() {
     return Padding(
-        padding: const EdgeInsets.only(
-          left: 10,
-          right: 10,
-          top: 10,
-          bottom: 4,
-        ),
-        child: Column(
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Destination(from: widget.item.from, to: widget.item.to),
-                Container(
-                  padding: const EdgeInsets.only(
-                      left: 5, right: 5, top: 3, bottom: 3),
-                  decoration: BoxDecoration(
-                    color: AppColors.contactBackground,
-                    borderRadius: BorderRadius.circular(30),
-                  ),
-                  child: const Row(children: [
-                    CustomIcon(
-                      iconPath: "assets/icon/pending.svg",
-                      size: 10,
-                      color: AppColors.blue,
-                    ),
-                    SizedBox(
-                      width: 5,
-                    ),
-                    Text(
-                      "Pending",
-                      style: TextStyle(fontSize: 8, color: AppColors.blue),
-                    )
-                  ]),
-                ),
-              ],
-            ),
-            const SizedBox(
-              height: 3,
-            ),
-            buildIconWithText(
-                iconPath: "calendar.svg",
-                text: 'Departure time ${widget.item.date}'),
-            const SizedBox(
-              height: 3,
-            ),
-            buildIconWithText(
-                iconPath: "weight.svg",
-                text: 'Weight ${widget.item.weight} kg'),
-            const SizedBox(
-              height: 3,
-            ),
-            _buildType(),
-          ],
-        ));
-  }
-
-  Widget _showPopUpMenu() {
-    return Theme(
-        data: Theme.of(context).copyWith(
-          popupMenuTheme: PopupMenuThemeData(
-            color: AppColors.white,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12),
-            ),
-          ),
-        ),
-        child: PopupMenuButton<int>(
-          onSelected: (value) {
-            // setState(() {
-            //    = value;
-            // });
-          },
-          itemBuilder: (BuildContext context) => <PopupMenuEntry<int>>[
-            const PopupMenuItem<int>(
-              value: 0,
-              child: Row(
-                children: [
-                  CustomIcon(
-                    iconPath: "assets/icon/package.svg",
-                    size: 20,
-                    color: AppColors.blue600,
-                  ),
-                  SizedBox(width: 8),
-                  Text(
-                    'edit',
-                    style: TextStyle(
-                      color: AppColors.textPrimary,
-                      fontSize: 14,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            const PopupMenuItem<int>(
-              value: 1,
-              child: Row(
-                children: [
-                  CustomIcon(
-                    iconPath: "assets/icon/car.svg",
-                    size: 20,
-                    color: AppColors.blue600,
-                  ),
-                  SizedBox(width: 8),
-                  Text(
-                    'delete',
-                    style: TextStyle(
-                      color: AppColors.textPrimary,
-                      fontSize: 14,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ));
-  }
-
-
-Widget _buildFooter() {
-  return Container(
-    padding: const EdgeInsets.only(
-      left: 8,
-      right: 8,
-      top: 14,
-      bottom: 14,
-    ),
-    decoration: const BoxDecoration(
-      color: AppColors.cardFooterBackground,
-      borderRadius: BorderRadius.only(
-        bottomRight: Radius.circular(AppTheme.cardRadius),
-        bottomLeft: Radius.circular(AppTheme.cardRadius),
-      ),
-    ),
-    child: Row(
-      children: [
-        Text(
-          ' ${widget.item.price}dh',
-          style: const TextStyle(
-            color: AppColors.blue,
-            fontSize: 14,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        const SizedBox(width: 10),
-        const Spacer(),
-        GestureDetector(
-          onTap: () {
-            // Get the position of the GestureDetector
-            final RenderBox button = context.findRenderObject() as RenderBox;
-            final RenderBox overlay = Overlay.of(context).context.findRenderObject() as RenderBox;
-            // Calculate the position to place the menu below and aligned with the right edge of the icon
-            final Offset buttonPosition = button.localToGlobal(Offset.zero, ancestor: overlay);
-            final double menuWidth = 120; // Approximate menu width (adjust as needed)
-            final RelativeRect position = RelativeRect.fromLTRB(
-              buttonPosition.dx + button.size.width - menuWidth, // Left: Align menu's right edge with icon's right edge
-              buttonPosition.dy + button.size.height, // Top: Just below the icon
-              buttonPosition.dx + button.size.width, // Right: Icon's right edge
-              buttonPosition.dy, // Bottom: Adjusted to ensure proper anchoring
-            );
-
-            showMenu<int>(
-              context: context, // Use the widget's BuildContext
-              position: position,
-              items: <PopupMenuEntry<int>>[
-                const PopupMenuItem<int>(
-                  value: 0,
-                  child: Row(
-                    children: [
-                      CustomIcon(
-                        iconPath: "assets/icon/edit.svg",
-                        size: 20,
-                        color: AppColors.blue600,
-                      ),
-                      SizedBox(width: 8),
-                      Text(
-                        'Edit',
-                        style: TextStyle(
-                          color: AppColors.textPrimary,
-                          fontSize: 14,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                const PopupMenuItem<int>(
-                  value: 1,
-                  child:  Row(
-                    children: [
-                      CustomIcon(
-                        iconPath: "assets/icon/trash-bin.svg",
-                        size: 20,
-                        color: AppColors.blue600,
-                      ),
-                      SizedBox(width: 8),
-                       Text(
-                        'Delete',
-                        style: TextStyle(
-                          color: AppColors.textPrimary,
-                          fontSize: 14,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-              color: AppColors.white,
-            ).then((value) {
-              if (value != null) {
-                if (value == 0) {
-                  widget.onEditPressed();
-                } else if (value == 1) {
-                  widget.onPressed(); 
-                }
-              }
-            });
-          },
-          child: Container (
-            padding: const EdgeInsets.all(6),
-            decoration: BoxDecoration(
-              color: AppColors.blue700.withValues(alpha: 0.1),
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: const CustomIcon(
-            iconPath: "assets/icon/dots.svg",
-            size: 18,
-            color: AppColors.dark,
-          ),
-        )),
-      ],
-    ),
-  );
-}
-  Widget _buildType() {
-    if (widget.item is Shipment) {
-      final shipment = widget.item as Shipment;
-      return Row(
+      padding: const EdgeInsets.all(16),
+      child: Column(
         children: [
-          const CustomIcon(
-            iconPath: "assets/icon/package.svg",
-            size: 12,
-            color: AppColors.shipmentText,
+          // Destination
+          Row(
+            children: [
+              Expanded(
+                child: Destination(
+                  from: widget.item.from,
+                  to: widget.item.to,
+                ),
+              ),
+            ],
           ),
-          Text(' ${shipment.type}', // Now using `shipment.type`
-              style:
-                  const TextStyle(color: AppColors.shipmentText, fontSize: 10)),
+          const SizedBox(height: 16),
+          
+          // Details Grid
+          Container(
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: AppColors.cardBackground.withOpacity(0.5),
+              borderRadius: BorderRadius.circular(8),
+              border: Border.all(
+                color: AppColors.cardBackground.withOpacity(0.3),
+                width: 0.5,
+              ),
+            ),
+            child: Column(
+              children: [
+                _buildDetailRow(
+                  icon: "assets/icon/calendar.svg",
+                  label: "Departure",
+                  value: widget.item.date,
+                  iconColor: AppColors.blue600,
+                ),
+                const SizedBox(height: 8),
+                _buildDetailRow(
+                  icon: "assets/icon/weight.svg",
+                  label: "Weight",
+                  value: "${widget.item.weight} kg",
+                  iconColor: AppColors.blue600,
+                ),
+                if (widget.item is Shipment) ...[
+                  const SizedBox(height: 8),
+                  _buildDetailRow(
+                    icon: "assets/icon/package.svg",
+                    label: "Type",
+                    value: (widget.item as Shipment).type,
+                    iconColor: AppColors.shipmentText,
+                  ),
+                ],
+              ],
+            ),
+          ),
         ],
-      );
-    }
-    return const SizedBox
-        .shrink(); // If it's not a Shipment, return an empty widget
+      ),
+    );
+  }
+
+  Widget _buildDetailRow({
+    required String icon,
+    required String label,
+    required String value,
+    required Color iconColor,
+  }) {
+    return Row(
+      children: [
+        Container(
+          padding: const EdgeInsets.all(4),
+          decoration: BoxDecoration(
+            color: iconColor.withOpacity(0.1),
+            borderRadius: BorderRadius.circular(4),
+          ),
+          child: CustomIcon(
+            iconPath: icon,
+            size: 12,
+            color: iconColor,
+          ),
+        ),
+        const SizedBox(width: 8),
+        Text(
+          label,
+          style: TextStyle(
+            fontSize: 11,
+            color: AppColors.textSecondary,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+        const SizedBox(width: 8),
+        Expanded(
+          child: Text(
+            value,
+            style: const TextStyle(
+              fontSize: 11,
+              color: AppColors.textPrimary,
+              fontWeight: FontWeight.w600,
+            ),
+            textAlign: TextAlign.end,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildFooter() {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: AppColors.cardFooterBackground,
+        borderRadius: const BorderRadius.only(
+          bottomRight: Radius.circular(AppTheme.cardRadius),
+          bottomLeft: Radius.circular(AppTheme.cardRadius),
+        ),
+        border: Border(
+          top: BorderSide(
+            color: AppColors.cardBackground.withOpacity(0.1),
+            width: 0.5,
+          ),
+        ),
+      ),
+      child: Row(
+        children: [
+          // Price
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+            decoration: BoxDecoration(
+              color: AppColors.blue.withOpacity(0.1),
+              borderRadius: BorderRadius.circular(20),
+              border: Border.all(
+                color: AppColors.blue.withOpacity(0.2),
+                width: 1,
+              ),
+            ),
+            child: Text(
+              '${widget.item.price} DH',
+              style: const TextStyle(
+                color: AppColors.blue,
+                fontSize: 13,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          const Spacer(),
+          
+          // Action buttons
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              _buildActionButton(
+                icon: "assets/icon/eye.svg",
+                label: "View",
+                color: AppColors.blue600,
+                backgroundColor: AppColors.blue600.withOpacity(0.1),
+                onTap: widget.onViewPressed,
+              ),
+              const SizedBox(width: 8),
+              _buildActionButton(
+                icon: "assets/icon/edit.svg",
+                label: "Edit",
+                color: AppColors.blue600,
+                backgroundColor: AppColors.blue600.withOpacity(0.1),
+                onTap: widget.onEditPressed,
+              ),
+              const SizedBox(width: 8),
+              _buildActionButton(
+                icon: "assets/icon/trash-bin.svg",
+                label: "Delete",
+                color: Colors.red.shade600,
+                backgroundColor: Colors.red.shade50,
+                onTap: () => {
+                   widget.onPressed()
+                },
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildActionButton({
+    required String icon,
+    required String label,
+    required Color color,
+    required Color backgroundColor,
+    required VoidCallback onTap,
+  }) {
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(8),
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+          decoration: BoxDecoration(
+            color: backgroundColor,
+            borderRadius: BorderRadius.circular(8),
+            border: Border.all(
+              color: color.withOpacity(0.2),
+              width: 0.5,
+            ),
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              CustomIcon(
+                iconPath: icon,
+                size: 14,
+                color: color,
+              ),
+              const SizedBox(width: 4),
+              Text(
+                label,
+                style: TextStyle(
+                  color: color,
+                  fontSize: 11,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  void _showDeleteConfirmation() {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+          title: Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: Colors.red.shade50,
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: CustomIcon(
+                  iconPath: "assets/icon/trash-bin.svg",
+                  size: 20,
+                  color: Colors.red.shade600,
+                ),
+              ),
+              const SizedBox(width: 12),
+              const Text(
+                'Delete Item',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          ),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Are you sure you want to delete this transport item?',
+                style: TextStyle(
+                  fontSize: 14,
+                  color: AppColors.textSecondary,
+                ),
+              ),
+              const SizedBox(height: 12),
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: Colors.red.shade50,
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(
+                    color: Colors.red.shade200,
+                    width: 1,
+                  ),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      '${widget.item.from} → ${widget.item.to}',
+                      style: const TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      'Price: ${widget.item.price} DH',
+                      style: TextStyle(
+                        fontSize: 11,
+                        color: AppColors.textSecondary,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 12),
+              Text(
+                'This action cannot be undone.',
+                style: TextStyle(
+                  fontSize: 12,
+                  color: Colors.red.shade600,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              style: TextButton.styleFrom(
+                foregroundColor: AppColors.textSecondary,
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              ),
+              child: const Text(
+                'Cancel',
+                style: TextStyle(fontWeight: FontWeight.w600),
+              ),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+                widget.onPressed(); // Call the delete callback
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.red.shade600,
+                foregroundColor: Colors.white,
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
+              child: const Text(
+                'Delete',
+                style: TextStyle(fontWeight: FontWeight.w600),
+              ),
+            ),
+          ],
+        );
+      },
+    );
   }
 }
