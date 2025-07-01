@@ -571,6 +571,7 @@ class _NegotiationContentState extends State<NegotiationContent> {
     return Scaffold (
         backgroundColor: AppColors.white,
         appBar: _buildAppBar(),
+        resizeToAvoidBottomInset: true,
         body: Column(children: [
           _buildNegotiationHeader(),
           Expanded(
@@ -772,45 +773,53 @@ Widget _buildInputFields(bool isMyNegotiationTurn, bool canOffer) {
   );
 }
 
- Widget _buildEmptyState() {
-    return Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Container(
-                padding: const EdgeInsets.all(24),
-                decoration: BoxDecoration(
-                  color: AppColors.blue700.withValues(alpha: 0.1),
-                  shape: BoxShape.circle,
-                ),
-                child: const Icon(
-                  Icons.chat_bubble_outline,
-                  size: 48,
-                  color: AppColors.blue700,
-                ),
-              ),
-              const SizedBox(height: 24),
-              Text(
-                'Start Negotiating',
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.grey[800],
-                ),
-              ),
-              const SizedBox(height: 8),
-              Text(
-                'Make your first offer to begin the negotiation',
-                style: TextStyle(
-                  fontSize: 14,
-                  color: Colors.grey[600],
-                ),
-                textAlign: TextAlign.center,
-              ),
-            ],
+
+Widget _buildEmptyState() {
+  return SingleChildScrollView(
+    child: Container(
+      constraints: BoxConstraints(
+        minHeight: MediaQuery.of(context).size.height * 0.3, // Ensure it doesn't take too much space
       ),
-    );
-  }
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Container(
+            padding: const EdgeInsets.all(24),
+            decoration: BoxDecoration(
+              color: AppColors.blue700.withValues(alpha: 0.1),
+              shape: BoxShape.circle,
+            ),
+            child: const Icon(
+              Icons.chat_bubble_outline,
+              size: 48,
+              color: AppColors.blue700,
+            ),
+          ),
+          const SizedBox(height: 24),
+          Text(
+            'Start Negotiating',
+            style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+              color: Colors.grey[800],
+            ),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            'Make your first offer to begin the negotiation',
+            style: TextStyle(
+              fontSize: 14,
+              color: Colors.grey[600],
+            ),
+            textAlign: TextAlign.center,
+          ),
+        ],
+      ),
+    ),
+  );
+}
+
+
 Widget _buildFooter(List<NegotiationModel> messages) {
   final isMyNegotiationTurn = isMyTurn(messages);
   final canOffer = canMakeOffer(messages);

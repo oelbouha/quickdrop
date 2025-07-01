@@ -279,14 +279,14 @@ class ActiveListing extends State<ActiveItemCard> with TickerProviderStateMixin 
           Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              _buildActionButton(
-                icon: "assets/icon/eye.svg",
-                label: "View",
-                color: AppColors.blue600,
-                backgroundColor: AppColors.blue600.withOpacity(0.1),
-                onTap: widget.onViewPressed,
-              ),
-              const SizedBox(width: 8),
+              // _buildActionButton(
+              //   icon: "assets/icon/eye.svg",
+              //   label: "View",
+              //   color: AppColors.blue600,
+              //   backgroundColor: AppColors.blue600.withOpacity(0.1),
+              //   onTap: widget.onViewPressed,
+              // ),
+              // const SizedBox(width: 8),
               _buildActionButton(
                 icon: "assets/icon/edit.svg",
                 label: "Edit",
