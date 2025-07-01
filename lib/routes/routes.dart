@@ -303,16 +303,6 @@ class AppRouter {
               final shipmentId = state.uri.queryParameters['shipmentId'];
               final requestId = state.uri.queryParameters['requestId'];
               try {
-                // final userData =
-                //     Provider.of<UserProvider>(context, listen: false)
-                //         .getUserById(userId!);
-                // final shipment =  Provider.of<ShipmentProvider>(context, listen: false)
-                //     .fetchShipmentById(shipmentId!);
-                // final request = Provider.of<DeliveryRequestProvider>(context, listen: false).getRequest(requestId!);
-                // if (userData == null ) throw ("user is null");
-
-                // print("data is fetched successfully");
-                // // print(shipment?.from);
 
                 return buildCustomTransitionPage(
                     context,
@@ -328,11 +318,11 @@ class AppRouter {
         GoRoute(
           path: '/search',
           pageBuilder: (context, state) {
-            final filters = SearchFilters.fromQueryParameters(
-              state.uri.queryParameters,
-            );
+            // final filters = SearchFilters.fromQueryParameters(
+            //   state.uri.queryParameters,
+            // );
             return buildCustomTransitionPage(
-                context, SearchPage(filters: filters));
+                context, SearchPage());
           },
         ),
         GoRoute(

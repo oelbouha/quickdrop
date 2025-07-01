@@ -8,7 +8,13 @@ class OngoingItemCard extends StatefulWidget {
   final TransportItem item;
   final UserData user;
   final VoidCallback onViewPressed;
-  const OngoingItemCard({super.key, required this.item, required this.user, required this.onViewPressed});
+  
+  const OngoingItemCard({
+    super.key,
+    required this.item,
+    required this.user,
+    required this.onViewPressed,
+  });
 
   @override
   OngoingItemCardState createState() => OngoingItemCardState();
@@ -47,8 +53,6 @@ class OngoingItemCardState extends State<OngoingItemCard> {
             .incrementField(widget.item.userId, "completedShipments");
         Provider.of<StatisticsProvider>(context, listen: false)
             .decrementField(widget.item.userId, "ongoingShipments");
-
-        // print("shipment updated succsfully");
       }
       if (widget.item is Trip) {
         await Provider.of<TripProvider>(context, listen: false)
@@ -57,243 +61,686 @@ class OngoingItemCardState extends State<OngoingItemCard> {
             .incrementField(widget.item.userId, "completedTrips");
         Provider.of<StatisticsProvider>(context, listen: false)
             .decrementField(widget.item.userId, "ongoingTrips");
-        // print("shipment updated succsfully");
       }
     } catch (e) {
       if (mounted) AppUtils.showDialog(context, "Failed to update shipment", AppColors.error);
     }
   }
 
+  void _showDeliveryConfirmation() {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+          title: Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: AppColors.succes.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: const CustomIcon(
+                  iconPath: "assets/icon/check-circle.svg",
+                  size: 20,
+                  color: AppColors.succes,
+                ),
+              ),
+              const SizedBox(width: 12),
+              const Text(
+                'Mark as Delivered',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          ),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Are you sure this item has been delivered successfully?',
+                style: TextStyle(
+                  fontSize: 14,
+                  color: AppColors.textSecondary,
+                ),
+              ),
+              const SizedBox(height: 12),
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: AppColors.succes.withOpacity(0.05),
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(
+                    color: AppColors.succes.withOpacity(0.2),
+                    width: 1,
+                  ),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      '${widget.item.from} → ${widget.item.to}',
+                      style: const TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      'Courier: ${widget.user.displayName ?? "Unknown"}',
+                      style: TextStyle(
+                        fontSize: 11,
+                        color: AppColors.textSecondary,
+                      ),
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      'Price: ${widget.item.price} DH',
+                      style: TextStyle(
+                        fontSize: 11,
+                        color: AppColors.textSecondary,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 12),
+              Text(
+                'This will complete the delivery and you\'ll be asked to rate the courier.',
+                style: TextStyle(
+                  fontSize: 12,
+                  color: AppColors.succes,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              style: TextButton.styleFrom(
+                foregroundColor: AppColors.textSecondary,
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              ),
+              child: const Text(
+                'Not Yet',
+                style: TextStyle(fontWeight: FontWeight.w600),
+              ),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+                markShipmentAsDelivered(widget.item.id!);
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.succes,
+                foregroundColor: Colors.white,
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
+              child: const Text(
+                'Mark Delivered',
+                style: TextStyle(fontWeight: FontWeight.w600),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _showCancelConfirmation() {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+          title: Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: AppColors.error.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: const Icon(
+                  Icons.cancel_outlined,
+                  size: 20,
+                  color: AppColors.error,
+                ),
+              ),
+              const SizedBox(width: 12),
+              const Text(
+                'Cancel Delivery',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          ),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Are you sure you want to cancel this ongoing delivery?',
+                style: TextStyle(
+                  fontSize: 14,
+                  color: AppColors.textSecondary,
+                ),
+              ),
+              const SizedBox(height: 12),
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: AppColors.error.withOpacity(0.05),
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(
+                    color: AppColors.error.withOpacity(0.2),
+                    width: 1,
+                  ),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      '${widget.item.from} → ${widget.item.to}',
+                      style: const TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      'Courier: ${widget.user.displayName ?? "Unknown"}',
+                      style: TextStyle(
+                        fontSize: 11,
+                        color: AppColors.textSecondary,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 12),
+              Text(
+                'Please contact the courier before canceling to avoid any issues.',
+                style: TextStyle(
+                  fontSize: 12,
+                  color: AppColors.error,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              style: TextButton.styleFrom(
+                foregroundColor: AppColors.textSecondary,
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              ),
+              child: const Text(
+                'Keep Active',
+                style: TextStyle(fontWeight: FontWeight.w600),
+              ),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+                // Add your cancel logic here
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.error,
+                foregroundColor: Colors.white,
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
+              child: const Text(
+                'Cancel Delivery',
+                style: TextStyle(fontWeight: FontWeight.w600),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(onTap: widget.onViewPressed, child: Container(
-        // height: 120,
+    return GestureDetector(
+      onTap: widget.onViewPressed,
+      child: Container(
+        margin: const EdgeInsets.symmetric(horizontal: 4, vertical: 6),
         decoration: BoxDecoration(
           color: AppColors.cardBackground,
           borderRadius: BorderRadius.circular(AppTheme.cardRadius),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.1),
-              spreadRadius: 0.2,
-              blurRadius: 2,
-              offset: Offset(0, 1),
+              color: Colors.black.withOpacity(0.08),
+              spreadRadius: 0,
+              blurRadius: 8,
+              offset: const Offset(0, 2),
+            ),
+            BoxShadow(
+              color: Colors.black.withOpacity(0.04),
+              spreadRadius: 0,
+              blurRadius: 4,
+              offset: const Offset(0, 1),
             ),
           ],
+          border: Border.all(
+            color: AppColors.cardBackground.withOpacity(0.1),
+            width: 0.5,
+          ),
         ),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
+            _buildHeader(),
             _buildBody(),
-            const SizedBox(
-              height: 10,
-            ),
             _buildFooter(),
           ],
-        )));
+        ),
+      ),
+    );
   }
 
-  Widget _buildHUserCard() {
+  Widget _buildHeader() {
     return Container(
-        padding: const EdgeInsets.all(10),
-        decoration: BoxDecoration(
-          color: AppColors.courierInfoBackground,
-          borderRadius: BorderRadius.circular(AppTheme.cardRadius),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      decoration: BoxDecoration(
+        color: AppColors.ongoingstatusBackground.withOpacity(0.3),
+        borderRadius: const BorderRadius.only(
+          topLeft: Radius.circular(AppTheme.cardRadius),
+          topRight: Radius.circular(AppTheme.cardRadius),
         ),
-        child: Row(
-          children: [
-            UserProfileWithRating(
-              user: widget.user,
-              header: widget.user.displayName ?? 'Guest',
-              avatarSize: 34,
-              headerFontSize: 10,
-              subHeaderFontSize: 8,
-              onPressed: () =>
-                  {context.push('/profile/statistics?userId=${widget.user.uid}')},
-            ),
-            const Spacer(),
-            GestureDetector(
-              onTap: () {
-                _contactCourier();
-              },
-              child: Container(
-                width: 40,
-                height: 40,
-                padding: EdgeInsets.all(10),
-                decoration: BoxDecoration(
-                  color: AppColors.contactBackground,
-                  borderRadius: BorderRadius.circular(30),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.1),
-                      blurRadius: 20,
-                      offset: const Offset(0, 4),
-                    ),
-                  ],
-                ),
-                child: const CustomIcon(
-                  iconPath: "assets/icon/chat-round-line.svg",
-                  size: 24,
-                  color: AppColors.blue,
-                ),
-                // label: const Text(
-                //   "Contact",
-                //   style: TextStyle(color: AppColors.blue, fontSize: 14),
-                // ),
-                // style: ElevatedButton.styleFrom(
-                //   elevation: 0,
-                //   backgroundColor: AppColors.contactBackground,
-                //   shape: RoundedRectangleBorder(
-                //     borderRadius:
-                //         BorderRadius.circular(30),
-                //   ),
-                // padding: const EdgeInsets.symmetric(horizontal: 2, vertical: 2),
+      ),
+      child: Row(
+        children: [
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+            decoration: BoxDecoration(
+              color: AppColors.ongoingstatusBackground,
+              borderRadius: BorderRadius.circular(20),
+              border: Border.all(
+                color: AppColors.ongoingStatusText.withOpacity(0.3),
+                width: 1,
               ),
             ),
-          ],
-        ));
-  }
-
-  Widget _buildBody() {
-    return Padding(
-        padding: const EdgeInsets.only(
-          left: 10,
-          right: 10,
-          top: 10,
-          bottom: 4,
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.start,
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
               children: [
-                Destination(from: widget.item.from, to: widget.item.to),
                 Container(
-                  padding: const EdgeInsets.only(
-                      left: 5, right: 5, top: 3, bottom: 3),
-                  decoration: BoxDecoration(
-                    color: AppColors.ongoingstatusBackground,
-                    borderRadius: BorderRadius.circular(30),
+                  width: 6,
+                  height: 6,
+                  decoration: const BoxDecoration(
+                    color: AppColors.ongoingStatusText,
+                    shape: BoxShape.circle,
                   ),
-                  child: const Row(children: [
-                    CustomIcon(
-                      iconPath: "assets/icon/ongoing.svg",
-                      size: 10,
-                      color: AppColors.ongoingStatusText,
-                    ),
-                    SizedBox(
-                      width: 5,
-                    ),
-                    Text(
-                      "Ongoing",
-                      style: TextStyle(
-                          fontSize: 8, color: AppColors.ongoingStatusText),
-                    )
-                  ]),
+                ),
+                const SizedBox(width: 6),
+                const Text(
+                  "In Progress",
+                  style: TextStyle(
+                    fontSize: 10,
+                    color: AppColors.ongoingStatusText,
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
               ],
             ),
-            const SizedBox(
-              height: 3,
+          ),
+          const Spacer(),
+          Text(
+            'ID: #${widget.item.id ?? 'N/A'}',
+            style: TextStyle(
+              fontSize: 10,
+              color: AppColors.textSecondary,
+              fontWeight: FontWeight.w500,
             ),
-            buildIconWithText(
-                iconPath: "calendar.svg",
-                text: 'Departure time ${widget.item.date}'),
-            const SizedBox(
-              height: 3,
-            ),
-            buildIconWithText(
-                iconPath: "weight.svg",
-                text: 'Weight ${widget.item.weight} kg'),
-            const SizedBox(
-              height: 6,
-            ),
-            _buildHUserCard()
-          ],
-        ));
+          ),
+        ],
+      ),
+    );
   }
 
 
+  Widget _buildBody() {
+    return Padding(
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        children: [
+          // Destination
+          Row(
+            children: [
+              Expanded(
+                child: Destination(
+                  from: widget.item.from,
+                  to: widget.item.to,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+          
+          // Details Grid
+          Container(
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: AppColors.cardBackground.withOpacity(0.5),
+              borderRadius: BorderRadius.circular(8),
+              border: Border.all(
+                color: AppColors.cardBackground.withOpacity(0.3),
+                width: 0.5,
+              ),
+            ),
+            child: Column(
+              children: [
+                _buildDetailRow(
+                  icon: "assets/icon/calendar.svg",
+                  label: "Departure",
+                  value: widget.item.date,
+                  iconColor: AppColors.blue600,
+                ),
+                const SizedBox(height: 8),
+                _buildDetailRow(
+                  icon: "assets/icon/weight.svg",
+                  label: "Weight",
+                  value: "${widget.item.weight} kg",
+                  iconColor: AppColors.blue600,
+                ),
+              ],
+            ),
+          ),
+          
+          const SizedBox(height: 16),
+          
+          // Courier Information
+          _buildCourierCard(),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildDetailRow({
+    required String icon,
+    required String label,
+    required String value,
+    required Color iconColor,
+  }) {
+    return Row(
+      children: [
+        Container(
+          padding: const EdgeInsets.all(4),
+          decoration: BoxDecoration(
+            color: iconColor.withOpacity(0.1),
+            borderRadius: BorderRadius.circular(4),
+          ),
+          child: CustomIcon(
+            iconPath: icon,
+            size: 12,
+            color: iconColor,
+          ),
+        ),
+        const SizedBox(width: 8),
+        Text(
+          label,
+          style: TextStyle(
+            fontSize: 11,
+            color: AppColors.textSecondary,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+        const SizedBox(width: 8),
+        Expanded(
+          child: Text(
+            value,
+            style: const TextStyle(
+              fontSize: 11,
+              color: AppColors.textPrimary,
+              fontWeight: FontWeight.w600,
+            ),
+            textAlign: TextAlign.end,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildCourierCard() {
+    return Container(
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: AppColors.courierInfoBackground,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(
+          color: AppColors.blue.withOpacity(0.1),
+          width: 0.5,
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              const CustomIcon(
+                iconPath: "assets/icon/user.svg",
+                size: 14,
+                color: AppColors.blue600,
+              ),
+              const SizedBox(width: 6),
+              Text(
+                'Your Courier',
+                style: TextStyle(
+                  fontSize: 11,
+                  color: AppColors.textSecondary,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          Row(
+            children: [
+              Expanded(
+                child: UserProfileWithRating(
+                  user: widget.user,
+                  header: widget.user.displayName ?? 'Guest',
+                  avatarSize: 36,
+                  headerFontSize: 12,
+                  subHeaderFontSize: 9,
+                  onPressed: () => {
+                    context.push('/profile/statistics?userId=${widget.user.uid}')
+                  },
+                ),
+              ),
+              const SizedBox(width: 12),
+              Material(
+                color: Colors.transparent,
+                child: InkWell(
+                  onTap: _contactCourier,
+                  borderRadius: BorderRadius.circular(12),
+                  child: Container(
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color: AppColors.contactBackground,
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(
+                        color: AppColors.blue.withOpacity(0.2),
+                        width: 0.5,
+                      ),
+                      boxShadow: [
+                        BoxShadow(
+                          color: AppColors.blue.withOpacity(0.1),
+                          blurRadius: 8,
+                          offset: const Offset(0, 2),
+                        ),
+                      ],
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const CustomIcon(
+                          iconPath: "assets/icon/chat-round-line.svg",
+                          size: 16,
+                          color: AppColors.blue,
+                        ),
+                        const SizedBox(width: 6),
+                        const Text(
+                          'Chat',
+                          style: TextStyle(
+                            color: AppColors.blue,
+                            fontSize: 12,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
 
   Widget _buildFooter() {
     return Container(
-        padding: const EdgeInsets.only(
-          left: 10,
-          right: 10,
-          top: 4,
-          bottom: 4,
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: AppColors.cardFooterBackground,
+        borderRadius: const BorderRadius.only(
+          bottomRight: Radius.circular(AppTheme.cardRadius),
+          bottomLeft: Radius.circular(AppTheme.cardRadius),
         ),
-        decoration: const BoxDecoration(
-          color: AppColors.cardFooterBackground,
-          borderRadius: BorderRadius.only(
-            bottomRight: Radius.circular(AppTheme.cardRadius),
-            bottomLeft: Radius.circular(AppTheme.cardRadius),
+        border: Border(
+          top: BorderSide(
+            color: AppColors.cardBackground.withOpacity(0.1),
+            width: 0.5,
           ),
         ),
-        child: Row(
-          children: [
-            Text('${widget.item.price}dh',
-                style: const TextStyle(
-                    color: AppColors.blue,
-                    fontSize: 14,
-                    fontWeight: FontWeight.bold)),
-            const Spacer(),
-            _buildButtons(),
-          ],
-        ));
+      ),
+      child: Row(
+        children: [
+          // Price
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+            decoration: BoxDecoration(
+              color: AppColors.blue.withOpacity(0.1),
+              borderRadius: BorderRadius.circular(20),
+              border: Border.all(
+                color: AppColors.blue.withOpacity(0.2),
+                width: 1,
+              ),
+            ),
+            child: Text(
+              '${widget.item.price} DH',
+              style: const TextStyle(
+                color: AppColors.blue,
+                fontSize: 13,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          const Spacer(),
+          
+          // Action buttons
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              _buildActionButton(
+                icon: "assets/icon/check-circle.svg",
+                label: "Delivered",
+                color: AppColors.succes,
+                backgroundColor: AppColors.succes.withOpacity(0.1),
+                onTap: _showDeliveryConfirmation,
+                isDestructive: false,
+              ),
+              const SizedBox(width: 8),
+              _buildActionButton(
+                icon: null,
+                label: "Cancel",
+                color: AppColors.error,
+                backgroundColor: AppColors.error.withOpacity(0.1),
+                onTap: _showCancelConfirmation,
+                isDestructive: true,
+                iconWidget: const Icon(Icons.cancel_outlined, size: 14),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
   }
 
-  Widget _buildButtons() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        ElevatedButton.icon(
-          onPressed: () {
-            markShipmentAsDelivered(widget.item.id!);
-          },
-          icon: const CustomIcon(
-            iconPath: "assets/icon/check-circle.svg",
-            size: 18,
-            color: Colors.white,
+  Widget _buildActionButton({
+    String? icon,
+    Widget? iconWidget,
+    required String label,
+    required Color color,
+    required Color backgroundColor,
+    required VoidCallback onTap,
+    required bool isDestructive,
+  }) {
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(8),
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+          decoration: BoxDecoration(
+            color: backgroundColor,
+            borderRadius: BorderRadius.circular(8),
+            border: Border.all(
+              color: color.withOpacity(0.3),
+              width: 0.5,
+            ),
           ),
-          label: const Text(
-            "Delivered",
-            style: TextStyle(color: AppColors.white, fontSize: 12),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              if (icon != null)
+                CustomIcon(
+                  iconPath: icon,
+                  size: 14,
+                  color: color,
+                )
+              else if (iconWidget != null)
+                IconTheme(
+                  data: IconThemeData(color: color),
+                  child: iconWidget,
+                ),
+              const SizedBox(width: 4),
+              Text(
+                label,
+                style: TextStyle(
+                  color: color,
+                  fontSize: 11,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ],
           ),
-          style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.succes,
-                    foregroundColor: Colors.white,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
-                    elevation: 0,
-                  ),
         ),
-        const SizedBox(
-          width: 10,
-        ),
-        OutlinedButton.icon(
-          onPressed: () {
-            _contactCourier();
-          },
-          icon: Icon(Icons.close, size: 18),
-          label: const Text(
-            "Cancel",
-            style: TextStyle(color: AppColors.error, fontSize: 12),
-          ),
-          style: OutlinedButton.styleFrom(
-                    foregroundColor: AppColors.error,
-                    side: BorderSide(color: AppColors.error),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 10),
-                  ),
-        ),
-      ],
+      ),
     );
   }
 }
