@@ -211,104 +211,6 @@ class ShipmentCardState extends State<ShipmentCard>
           context.push('/profile/statistics?userId=${widget.userData.uid}')
           },
       );
-    return Row(
-      children: [
-        Stack(
-          children: [
-            Container(
-              width: 34,
-              height: 34,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(24),
-                border: Border.all(
-                  color: AppColors.blue.withOpacity(0.3),
-                  width: 2,
-                ),
-              ),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(21),
-                child: Image.network(
-                  widget.userData.photoUrl ?? AppTheme.defaultProfileImage,
-                  fit: BoxFit.cover,
-                  errorBuilder: (context, error, stackTrace) {
-                    return Container(
-                      color: AppColors.blue.withOpacity(0.1),
-                      child: const Icon(
-                        Icons.person,
-                        color: AppColors.blue,
-                        size: 14,
-                      ),
-                    );
-                  },
-                ),
-              ),
-            ),
-          ],
-        ),
-        const SizedBox(width: 4),
-        Expanded(
-          // Added Expanded to prevent overflow
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                widget.userData.displayName ?? "Unknown user",
-                style: const TextStyle(
-                  fontSize: 12,
-                  fontWeight: FontWeight.w600,
-                  color: AppColors.headingText,
-                ),
-                overflow: TextOverflow.ellipsis,
-              ),
-              const SizedBox(height: 2),
-              Row(
-                children: [
-                  const Icon(
-                    Icons.star,
-                    color: Colors.amber,
-                    size: 10,
-                  ),
-                  const SizedBox(width: 4),
-                  Text(
-                    "${4.5}",
-                    style: const TextStyle(
-                      fontSize: 8,
-                      fontWeight: FontWeight.w500,
-                      color: AppColors.headingText,
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  Text(
-                    "•",
-                    style: TextStyle(
-                      color: Colors.grey[400],
-                      fontSize: 8,
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  const Icon(
-                    Icons.local_shipping,
-                    color: Colors.green,
-                    size: 10,
-                  ),
-                  const SizedBox(width: 4),
-                  Flexible(
-                    child: Text(
-                      "${stats?.completedTrips ?? "0"} deliveries",
-                      style: const TextStyle(
-                        fontSize: 8,
-                        color: AppColors.lessImportant,
-                      ),
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
-      ],
-    );
   }
 
   Widget _buildDestination() {
@@ -412,8 +314,43 @@ class ShipmentCardState extends State<ShipmentCard>
             "${shipment.weight} kg",
             Colors.purple,
           ),
+          
       ],
     );
+  }
+
+
+    Widget _buildViewDetailsButton() {
+    return GestureDetector(
+      onTap: widget.onPressed,
+      child:  Container(
+      
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+      decoration: BoxDecoration(
+        color: AppColors.blue700.withOpacity(0.1),
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: AppColors.blue700.withOpacity(0.2)),
+      ),
+      child: const Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+           Text(
+            "View Details",
+            style: TextStyle(
+              fontSize: 10,
+              fontWeight: FontWeight.w600,
+              color: AppColors.dark,
+            ),
+          ),
+           SizedBox(width: 4),
+           Icon(
+            Icons.arrow_forward_ios,
+            size: 12,
+            color: AppColors.blue700,
+          ),
+        ],
+      ),
+    ));
   }
 
   Widget _buildDetailChip(IconData icon, String text, Color color) {
@@ -496,6 +433,8 @@ class ShipmentCardState extends State<ShipmentCard>
             ],
           ),
         ),
+              const Spacer(),
+              _buildViewDetailsButton(),
       ],
     );
   }
