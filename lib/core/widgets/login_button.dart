@@ -61,7 +61,7 @@ class LoginButton extends StatelessWidget {
 
 class Button extends StatelessWidget {
   final String hintText;
-  final VoidCallback onPressed;
+  final VoidCallback? onPressed;
   final bool isLoading;
   final Color backgroundColor;
   final double radius;
@@ -79,37 +79,37 @@ class Button extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onPressed,
-      child: Container(
-          padding: const EdgeInsets.symmetric(vertical: 16),
-          decoration: BoxDecoration(
-            color: backgroundColor,
-            borderRadius: BorderRadius.circular(radius),
-          ),
+    return Container(
+         width: double.infinity,
+          height: 52,
+          margin: const EdgeInsets.symmetric(vertical: 20),
+          child: ElevatedButton(
+            onPressed: isLoading ? null : onPressed,
+            style: ElevatedButton.styleFrom(
+              backgroundColor: isLoading ? Colors.grey : AppColors.primary,
+              elevation: 0,
+              shadowColor: Colors.transparent,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+            ),
           child: Center(
             child: isLoading?
-                const Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [const SizedBox(
-                  width: 18,
-                  height: 18,
-                  child: CircularProgressIndicator(
-                    strokeWidth: 2,
-                    color: AppColors.white,
-                  ),
-              ) ,
-               SizedBox(width: 10),
-              Text("Loading...", style: TextStyle(color: AppColors.white, fontSize: 16))
-              ])
-            :
-              Text(
+               const SizedBox(
+                width: 24,
+                height: 24,
+                child: CircularProgressIndicator(
+                  strokeWidth: 2.5,
+                  valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                ),
+              )
+            : Text(
                 hintText,
                 style:  TextStyle(
                     color: textColor, fontWeight: FontWeight.bold, fontSize: 16
                     ),
               ),
-          )),
+          ))
     );
   }
 }

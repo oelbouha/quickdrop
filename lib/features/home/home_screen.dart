@@ -77,16 +77,17 @@ class _HomeScreenState extends State<HomeScreen> {
       child: Scaffold(
         body: Container(
           decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [
-                AppColors.backgroundStart,
-                AppColors.backgroundMiddle,
-                AppColors.backgroundEnd,
-              ],
-              stops: [0.0, 0.5, 1.0],
-            ),
+            color: AppColors.background,
+            // gradient: LinearGradient(
+            //   begin: Alignment.topLeft,
+            //   end: Alignment.bottomRight,
+            //   colors: [
+            //     AppColors.backgroundStart,
+            //     AppColors.backgroundMiddle,
+            //     AppColors.backgroundEnd,
+            //   ],
+            //   stops: [0.0, 0.5, 1.0],
+            // ),
           ),
           child: SafeArea(
             child: _isLoading
