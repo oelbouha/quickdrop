@@ -359,11 +359,18 @@ class _NegotiationContentState extends State<NegotiationContent> {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16),
           ),
-          title: const Row(
+          title: const Wrap(
             children: [
               Icon(Icons.access_time, color: AppColors.warning, size: 24),
                 SizedBox(width: 8),
-                Text('Negotiation Expired'),
+                Text('Negotiation Expired',
+                style: TextStyle(
+                  color: AppColors.warning,
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+                 overflow: TextOverflow.ellipsis,
+              ),
             ],
           ),
           content:  Text(
@@ -669,109 +676,6 @@ class _NegotiationContentState extends State<NegotiationContent> {
         ]));
   }
 
-
-Widget _buildButtons() {
-  return Row(
-            children: [
-              Expanded(
-                child: ElevatedButton.icon(
-                  onPressed: (_isProcessing && _processingAction == 'accept') ? null : _acceptRequest,
-                  icon: (_isProcessing && _processingAction == 'accept')
-                      ? const SizedBox(
-                          width: 16,
-                          height: 16,
-                          child: CircularProgressIndicator(
-                            strokeWidth: 2,
-                            valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                          ),
-                        )
-                      : const Icon(Icons.check_circle, size: 18),
-                  label: Text(
-                    (_isProcessing && _processingAction == 'accept') ? 'Accepting...' : 'Accept',
-                  ),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.succes,
-                    foregroundColor: Colors.white,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    padding: const EdgeInsets.symmetric(vertical: 12),
-                    elevation: 0,
-                  ),
-                ),
-              ),
-              const SizedBox(width: 8),
-              Expanded(
-                child: ElevatedButton.icon(
-                  onPressed: (_isProcessing && _processingAction == 'refuse') ? null : _refuseRequest,
-                  icon: (_isProcessing && _processingAction == 'refuse')
-                      ? const SizedBox(
-                          width: 16,
-                          height: 16,
-                          child: CircularProgressIndicator(
-                            strokeWidth: 2,
-                            valueColor: AlwaysStoppedAnimation<Color>(AppColors.error),
-                          ),
-                        )
-                      : const Icon(Icons.close, size: 18),
-                  label: Text(
-                    (_isProcessing && _processingAction == 'refuse') ? 'Refusing...' : 'Refuse',
-                  ),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.error,
-                    foregroundColor: Colors.white,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    padding: const EdgeInsets.symmetric(vertical: 12),
-                    elevation: 0,
-                  ),
-                ),
-            ),
-        ],
-    );
-}
-
-
-Widget _buildInputFields(bool isMyNegotiationTurn, bool canOffer) {
-  return Column(
-    mainAxisSize: MainAxisSize.min,
-    children: [
-      TextFieldWithHeader(
-        controller: messageController,
-        hintText: "Add a message",
-        headerText: "Message (optional)",
-        validator: Validators.notEmpty,
-        keyboardType: TextInputType.text,
-        isRequired: false,
-        maxLines: 2,
-      ),
-      const SizedBox(height: 8),
-      // Row(
-      //   mainAxisSize: MainAxisSize.max,
-      //   children: [
-      //     Expanded( 
-            TextFieldWithHeader(
-              controller: priceController,
-              hintText: "Enter your offer",
-              headerText: "Price (DH)",
-              keyboardType: TextInputType.number,
-              maxLines: 1,
-              validator: Validators.notEmpty,
-            ),
-          const SizedBox(height: 6),
-          Button(
-            hintText: "Send",
-            onPressed: () => { if (canOffer) _sendMessage()},
-            isLoading: false,
-            backgroundColor: isMyNegotiationTurn ? AppColors.blue700 : AppColors.lessImportant,
-            textColor: Colors.white,
-          ),
-        // ],
-      // ),
-    ],
-  );
-}
 
 
 Widget _buildEmptyState() {
