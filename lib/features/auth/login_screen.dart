@@ -19,13 +19,34 @@ class LoginPage extends StatefulWidget {
   State<LoginPage> createState() => _LoginPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
 
   bool _isEmailLoading = false;
   bool _isGoogleLoading = false;
+
+ late AnimationController _animationController;
+  late Animation<double> _fadeAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _animationController = AnimationController(
+      duration: const Duration(milliseconds: 800),
+      vsync: this,
+    );
+    _fadeAnimation = Tween<double>(
+      begin: 0.0,
+      end: 1.0,
+    ).animate(CurvedAnimation(
+      parent: _animationController,
+      curve: Curves.easeInOut,
+    ));
+    _animationController.forward();
+    _loadSavedCredentials();
+  }
 
   Future<void> _createStatsIfNewUser(String userId) async {
     bool userExist = await doesUserExist(userId);
@@ -193,11 +214,7 @@ class _LoginPageState extends State<LoginPage> {
     return {'email': email, 'password': password};
   }
 
-  @override
-  void initState() {
-    super.initState();
-    _loadSavedCredentials();
-  }
+ 
 
   void _loadSavedCredentials() async {
     final creds = await getSavedCredentials();
@@ -211,6 +228,7 @@ class _LoginPageState extends State<LoginPage> {
   void dispose() {
     emailController.dispose();
     passwordController.dispose();
+    _animationController.dispose();
     super.dispose();
   }
 
@@ -218,22 +236,25 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return AnnotatedRegion<SystemUiOverlayStyle>(
         value: SystemUiOverlayStyle.dark,
+        child: FadeTransition(
+        opacity: _fadeAnimation,
         child: Scaffold(
             backgroundColor: AppColors.background,
             resizeToAvoidBottomInset: false,
             body: Container(
                 padding: const EdgeInsets.all(AppTheme.homeScreenPadding),
                 decoration: const BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                    colors: [
-                      AppColors.backgroundStart,
-                      AppColors.backgroundMiddle,
-                      AppColors.backgroundEnd,
-                    ],
-                    stops: [0.0, 0.5, 1.0],
-                  ),
+                  color: AppColors.white,
+                  // gradient: LinearGradient(
+                  //   begin: Alignment.topLeft,
+                  //   end: Alignment.bottomRight,
+                  //   colors: [
+                  //     AppColors.backgroundStart,
+                  //     AppColors.backgroundMiddle,
+                  //     AppColors.backgroundEnd,
+                  //   ],
+                  //   stops: [0.0, 0.5, 1.0],
+                  // ),
                 ),
                 child: Center(
                     child: Column(
@@ -244,7 +265,7 @@ class _LoginPageState extends State<LoginPage> {
                               child: _buildLogInScreen())),
                     ),
                   ],
-                )))));
+                ))))));
   }
 
   Widget _buildLogInScreen() {
@@ -254,14 +275,38 @@ class _LoginPageState extends State<LoginPage> {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              "Sign in to Quickdrop",
-              style: TextStyle(
-                  color: AppColors.dark,
-                  fontSize: 24,
-                  fontWeight: FontWeight.w600),
-              textAlign: TextAlign.start,
+            Center(
+          child: Container(
+            margin: const EdgeInsets.only(bottom: 40),
+            child:  Column(
+              children: [
+                
+              Image.asset(
+                'assets/images/quickdrop.png',
+                height: 180,
+                fit: BoxFit.cover,
+              ),
+                //  SizedBox(height: 16),
+                const Text(
+                  "Welcome back",
+                  style: TextStyle(
+                    color: AppColors.dark,
+                    fontSize: 28,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                 SizedBox(height: 8),
+                 const Text(
+                  "Sign in to continue",
+                  style: TextStyle(
+                    color: AppColors.shipmentText,
+                    fontSize: 16,
+                  ),
+                ),
+              ],
             ),
+          ),
+        ),
             const SizedBox(
               height: 25,
             ),
@@ -304,37 +349,88 @@ class _LoginPageState extends State<LoginPage> {
             const SizedBox(
               height: 30,
             ),
-            const Text(
-              "Email",
-              style: TextStyle(
-                color: AppColors.shipmentText,
-                fontSize: 16,
-                fontWeight: FontWeight.w600,
-              ),
-              textAlign: TextAlign.start,
-            ),
-            IconTextField(
-              controller: emailController,
-              keyboardType: TextInputType.emailAddress,
-              hintText: 'example@gmail.com',
-              obsecureText: false,
-              iconPath: "assets/icon/email.svg",
-              validator: Validators.email,
-            ),
+// Replace your current text fields with more polished versions
+Container(
+  margin: const EdgeInsets.only(bottom: 20),
+  child: Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      const Text(
+        "Email",
+        style: TextStyle(
+          color: AppColors.shipmentText,
+          fontSize: 14,
+          fontWeight: FontWeight.w500,
+        ),
+      ),
+      const SizedBox(height: 8),
+      Container(
+        decoration: BoxDecoration(
+          color: AppColors.background,
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(
+            color: AppColors.lessImportant,
+            width: 1,
+          ),
+        ),
+        child: IconTextField(
+          controller: emailController,
+          keyboardType: TextInputType.emailAddress,
+          hintText: 'Enter your email',
+          obsecureText: false,
+          iconPath: "assets/icon/email.svg",
+          validator: Validators.email,
+        ),
+      ),
+    ],
+  ),
+),
             const SizedBox(height: 15),
-            const Text(
-              "Password",
-              style: const TextStyle(
-                color: AppColors.shipmentText,
-                fontSize: 16,
-                fontWeight: FontWeight.w600,
-              ),
-              textAlign: TextAlign.start,
-            ),
-            PasswordTextfield(
+
+        Container(
+  margin: const EdgeInsets.only(bottom: 20),
+  child: Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      const Text(
+        "Password",
+        style: TextStyle(
+          color: AppColors.shipmentText,
+          fontSize: 14,
+          fontWeight: FontWeight.w500,
+        ),
+      ),
+      const SizedBox(height: 8),
+      Container(
+        decoration: BoxDecoration(
+          color: AppColors.background,
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(
+            color: AppColors.lessImportant,
+            width: 1,
+          ),
+        ),
+        child:   PasswordTextfield(
               controller: passwordController,
               validator: Validators.notEmpty,
             ),
+      ),
+    ],
+  ),
+),    
+            // const Text(
+            //   "Password",
+            //   style: const TextStyle(
+            //     color: AppColors.shipmentText,
+            //     fontSize: 16,
+            //     fontWeight: FontWeight.w600,
+            //   ),
+            //   textAlign: TextAlign.start,
+            // ),
+            // PasswordTextfield(
+            //   controller: passwordController,
+            //   validator: Validators.notEmpty,
+            // ),
             const SizedBox(
               height: 25,
             ),

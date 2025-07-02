@@ -44,7 +44,7 @@ class _ChatScreenState extends State<ChatScreen>
                 Provider.of<DeliveryRequestProvider>(context, listen: false);
 
             await deliveryProvider.fetchRequests(user.uid);
-            print("Fetched requests: ${deliveryProvider.requests.length}");
+            // print("Fetched requests: ${deliveryProvider.requests.length}");
 
             // Extract all senderIds and fetch user data at once
             final userIds = deliveryProvider.requests
@@ -55,10 +55,10 @@ class _ChatScreenState extends State<ChatScreen>
                 .fetchUsersData(userIds);
           }
         } catch (e) {
-          // print('Error fetching requests: $e');
-          if (mounted)
+          if (mounted) {
             AppUtils.showDialog(
                 context, "Failed to fetch requests: ${e.toString()}", AppColors.error);
+          }
         } finally {
           setState(() {
             _isLoading = false;
@@ -89,9 +89,7 @@ class _ChatScreenState extends State<ChatScreen>
           ],
           title: "Offers",
         ),
-        body: Skeletonizer(
-          enabled: _isLoading,
-          child: TabBarView(
+        body: TabBarView(
             controller: _tabController,
             children: [
               _buildMyRequests(),
@@ -100,7 +98,7 @@ class _ChatScreenState extends State<ChatScreen>
               _buildChatConversations(),
             ],
           ),
-        ));
+        );
   }
 
 
@@ -121,7 +119,7 @@ class _ChatScreenState extends State<ChatScreen>
                       ? ListView.builder(
                           itemCount: (snapshot.data as List).length,
                           itemBuilder: (context, index) {
-                            print("data ${snapshot.data as List}");
+                            // print("data ${snapshot.data as List}");
                             // final user =
                             if (snapshot.data == null) {
                               return const Center(
@@ -181,7 +179,7 @@ class _ChatScreenState extends State<ChatScreen>
                       ? ListView.builder(
                           itemCount: (snapshot.data as List).length,
                           itemBuilder: (context, index) {
-                            print("data ${snapshot.data as List}");
+                            // print("data ${snapshot.data as List}");
                             // final user =
                             if (snapshot.data == null) {
                               return const Center(
@@ -244,7 +242,7 @@ class _ChatScreenState extends State<ChatScreen>
                       Provider.of<ShipmentProvider>(context, listen: false)
                           .getShipment(request.shipmentId);
                 } catch (e) {
-                  print("Error fetching shipment: $e");
+                  // print("Error fetching shipment: $e");
                   return const SizedBox.shrink();
                 }
                 if (userData == null) {
@@ -296,7 +294,7 @@ class _ChatScreenState extends State<ChatScreen>
                       Provider.of<ShipmentProvider>(context, listen: false)
                           .getShipment(request.shipmentId);
                 } catch (e) {
-                  print("Error fetching shipment: $e");
+                  // print("Error fetching shipment: $e");
                   return const SizedBox.shrink();
                 }
                 if (userData == null) {

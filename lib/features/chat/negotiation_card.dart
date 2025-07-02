@@ -8,8 +8,7 @@ import 'package:quickdrop_app/features/chat/convo_screen.dart';
 import 'package:quickdrop_app/core/utils/imports.dart';
 
 class NegotiationCard extends StatefulWidget {
-  /// A card that displays a chat conversation with a user.
-  ///
+
   final String? photoUrl;
   final String? header;
   final String? subHeader;
@@ -49,7 +48,7 @@ class NegotiationCardState extends State<NegotiationCard> {
             borderRadius: BorderRadius.circular(16),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.1),
+                color: Colors.black.withValues(alpha: 0.1),
                 spreadRadius: 0.2,
                 blurRadius: 2,
                 offset: Offset(0, 1),
@@ -102,14 +101,14 @@ class NegotiationCardState extends State<NegotiationCard> {
       width: double.infinity,
       padding: const EdgeInsets.symmetric(vertical: 8),
       decoration: BoxDecoration(
-        color: AppColors.warning.withOpacity(0.1),
+        color: AppColors.warning.withValues(alpha: 0.1),
         borderRadius: const BorderRadius.only(
           topLeft: Radius.circular(16),
           topRight: Radius.circular(16),
         ),
         border: Border(
           bottom: BorderSide(
-            color: AppColors.warning.withOpacity(0.2),
+            color: AppColors.warning.withValues(alpha: 0.2),
             width: 1,
           ),
         ),
@@ -124,7 +123,7 @@ class NegotiationCardState extends State<NegotiationCard> {
           ),
           SizedBox(width: 4),
           Text(
-             'Negotiation exires automatically within 24 hours',
+             'Negotiation expires automatically within 24 hours',
             style: TextStyle(
               color: AppColors.warning,
               fontSize: 12,
@@ -136,43 +135,6 @@ class NegotiationCardState extends State<NegotiationCard> {
     );
   }
 
-  Widget _buildBottomStatusBanner() {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.symmetric(vertical: 8),
-      decoration: BoxDecoration(
-        color: AppColors.warning.withOpacity(0.1),
-        borderRadius: const BorderRadius.only(
-          bottomLeft: Radius.circular(16),
-          bottomRight: Radius.circular(16),
-        ),
-        border: Border(
-          bottom: BorderSide(
-            color: AppColors.warning.withOpacity(0.2),
-            width: 1,
-          ),
-        ),
-      ),
-      child: const  Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(
-            Icons.schedule,
-            size: 16,
-            color: AppColors.warning,
-          ),
-          SizedBox(width: 4),
-          Text(
-            'Negotiation exires in 24 hours',
-            style: TextStyle(
-              color: AppColors.warning,
-              fontSize: 12,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
+ 
 
 }

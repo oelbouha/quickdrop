@@ -9,7 +9,7 @@ class SearchPage extends StatefulWidget {
   SearchPageState createState() => SearchPageState();
 }
 
-class SearchPageState extends State<SearchPage> {
+class SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
   bool _isSearching = false;
   bool _hasSearched = false;
   List<Shipment> activeShipments = [];
@@ -22,11 +22,26 @@ class SearchPageState extends State<SearchPage> {
   final typeController = TextEditingController();
   late SearchFilters filters;
 
+  late AnimationController _animationController;
+  late Animation<double> _fadeAnimation;
+
   @override
   void initState() {
     super.initState();
     filters = const SearchFilters();
-    typeController.text = "Shipment"; // Set default type
+    typeController.text = "Shipment";
+     _animationController = AnimationController(
+      duration: const Duration(milliseconds: 1200),
+      vsync: this,
+    );
+    _fadeAnimation = Tween<double>(
+      begin: 0.0,
+      end: 1.0,
+    ).animate(CurvedAnimation(
+      parent: _animationController,
+      curve: Curves.easeInOut,
+    ));
+    _animationController.forward();
   }
 
   @override
@@ -125,7 +140,7 @@ class SearchPageState extends State<SearchPage> {
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-            color: Colors.grey.withOpacity(0.1),
+            color: Colors.grey.withValues(alpha: 0.1),
             spreadRadius: 1,
             blurRadius: 6,
             offset: const Offset(0, 2),
@@ -135,15 +150,15 @@ class SearchPageState extends State<SearchPage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            'Search Filters',
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-              color: AppColors.textPrimary,
-            ),
-          ),
-          const SizedBox(height: 16),
+          // const Text(
+          //   'Search Filters',
+          //   style: TextStyle(
+          //     fontSize: 18,
+          //     fontWeight: FontWeight.bold,
+          //     color: AppColors.textPrimary,
+          //   ),
+          // ),
+          // const SizedBox(height: 16),
           _buildFilterDestination(),
           const SizedBox(height: 16),
           _buildFilterButtons(),
@@ -161,11 +176,13 @@ class SearchPageState extends State<SearchPage> {
           hintText: "Departure city",
           headerText: "From",
           validator: Validators.notEmpty,
+          isRequired: false,
           iconPath: "assets/icon/map-point.svg",
         ),
         const SizedBox(height: 16),
         TextFieldWithHeader(
           controller: toController,
+          isRequired: false,
           hintText: "Destination city",
           headerText: "To",
           validator: Validators.notEmpty,
@@ -179,6 +196,7 @@ class SearchPageState extends State<SearchPage> {
                 controller: weightController,
                 hintText: "1.0",
                 headerText: "Max Weight (kg)",
+                isRequired: false,
                 keyboardType: TextInputType.number,
                 validator: Validators.notEmpty,
               ),
@@ -189,6 +207,7 @@ class SearchPageState extends State<SearchPage> {
                 controller: priceController,
                 hintText: "1.0",
                 headerText: "Max price (dh)",
+                isRequired: false,
                 keyboardType: TextInputType.number,
                 validator: Validators.notEmpty,
               ),
@@ -267,7 +286,7 @@ class SearchPageState extends State<SearchPage> {
     );
   }
 
-  Widget _buildResultsSection() {
+Widget _buildResultsSection() {
     if (!_hasSearched) {
       return _buildWelcomeState();
     }
@@ -284,17 +303,15 @@ class SearchPageState extends State<SearchPage> {
     return Column(
       children: [
         _buildFilterSummary(),
-        
-        // Show shipments if type is null, 'Shipment', or both
+         const SizedBox(height: 20),
         if (filters.type == null || filters.type == 'Shipment')
           _buildShipmentListings(activeShipments),
-        
-        // Show trips if type is null, 'Trip', or both
         if (filters.type == null || filters.type == 'Trip')
           _buildTripListings(activeTrips),
       ],
     );
   }
+
 
   Widget _buildWelcomeState() {
     return Container(
@@ -306,7 +323,7 @@ class SearchPageState extends State<SearchPage> {
             width: 120,
             height: 120,
             decoration: BoxDecoration(
-              color: AppColors.blue700.withOpacity(0.1),
+              color: AppColors.blue700.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(60),
             ),
             child: const Icon(
@@ -337,6 +354,7 @@ class SearchPageState extends State<SearchPage> {
       ),
     );
   }
+
 
   void _clearSearchFilter() {
     setState(() {
@@ -430,9 +448,9 @@ class SearchPageState extends State<SearchPage> {
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: AppColors.blue700.withOpacity(0.1),
+        color: AppColors.blue700.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: AppColors.blue700.withOpacity(0.3)),
+        border: Border.all(color: AppColors.blue700.withValues(alpha: 0.3)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -450,7 +468,7 @@ class SearchPageState extends State<SearchPage> {
             appliedFilters.join(' • '),
             style: TextStyle(
               fontSize: 12,
-              color: AppColors.blue700.withOpacity(0.8),
+              color: AppColors.blue700.withValues(alpha: 0.8),
             ),
           ),
         ],
@@ -468,13 +486,13 @@ class SearchPageState extends State<SearchPage> {
             width: 80,
             height: 80,
             decoration: BoxDecoration(
-              color: AppColors.blue700.withOpacity(0.1),
+              color: AppColors.blue700.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(40),
             ),
             child: CustomIcon(
               iconPath: iconPath,
               size: 40,
-              color: AppColors.blue700.withOpacity(0.6),
+              color: AppColors.blue700.withValues(alpha: 0.6),
             ),
           ),
           const SizedBox(height: 16),
@@ -600,7 +618,7 @@ class SearchPageState extends State<SearchPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF9FAFB),
+      backgroundColor: AppColors.background,
       appBar: AppBar(
         title: const Text('Search'),
         backgroundColor: Colors.white,
@@ -611,22 +629,18 @@ class SearchPageState extends State<SearchPage> {
         ),
         systemOverlayStyle: SystemUiOverlayStyle.dark,
       ),
-      body: SingleChildScrollView(
+      body:  FadeTransition(
+        opacity: _fadeAnimation, child: SingleChildScrollView(
         physics: const BouncingScrollPhysics(),
         child: Column(
           children: [
-            // Filter Section
             _buildFilterSection(),
-            
-            // Results Section
             _buildResultsSection(),
-            
-            // Add some bottom padding
             const SizedBox(height: 20),
           ],
         ),
       ),
-    );
+    ));
   }
 }
 
