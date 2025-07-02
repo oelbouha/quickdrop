@@ -100,7 +100,7 @@ class BottomNavScreen extends StatelessWidget {
       width: 48,
       height: 24,
       decoration: BoxDecoration(
-          color: isSelected ? AppColors.blue600.withOpacity(0.4) : null,
+          // color: isSelected ? AppColors.blue600.withOpacity(0.4) : null,
           borderRadius: BorderRadius.circular(20)),
       child: CustomIcon(
         iconPath: iconPath,

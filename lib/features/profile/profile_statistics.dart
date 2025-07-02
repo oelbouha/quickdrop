@@ -25,7 +25,7 @@ class _ProfileStatisticsLoaderState extends State<ProfileStatisticsLoader> {
 
 
 Future<UserData> fetchData() async {
-  print("fetching data");
+  // print("fetching data");
   final user = Provider.of<UserProvider>(context, listen: false).getUserById(widget.userId);
   if (user == null) {
     return Future.error("User not found");
@@ -126,17 +126,14 @@ class ProfileStatisticsState extends State<ProfileStatistics> {
     return Scaffold(
         backgroundColor: AppColors.background,
         appBar: AppBar(
+          backgroundColor: Colors.white,
           title: const Text(
             'Statistics',
-            style: TextStyle(color: AppColors.white),
+            style: TextStyle(color: AppColors.dark, fontWeight: FontWeight.w600),
+            
           ),
-          flexibleSpace: Container(
-            decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                colors: [AppColors.blueStart, AppColors.purpleEnd],
-              ),
-            ),
-          ),
+           iconTheme: const IconThemeData(color: Colors.black),
+          systemOverlayStyle: SystemUiOverlayStyle.dark,
           centerTitle: true,
         ),
         body: _isLoading
@@ -144,10 +141,11 @@ class ProfileStatisticsState extends State<ProfileStatistics> {
                     color: AppColors.blue,
                   ))
                 : SingleChildScrollView(
+                padding: const EdgeInsets.all(16),
                 physics: const BouncingScrollPhysics(),
                 child: Column(children: [
                   // const SizedBox(height: AppTheme.cardPadding),
-                  _buildUserStatus(),
+                  _buildUserStats(),
                   const SizedBox(height: AppTheme.cardPadding),
                   _buildContent()
                 ])));
@@ -249,7 +247,7 @@ class ProfileStatisticsState extends State<ProfileStatistics> {
 
   Widget _buildStatisticsSection() {
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 16),
+      // margin: const EdgeInsets.symmetric(horizontal: 16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -334,7 +332,7 @@ class ProfileStatisticsState extends State<ProfileStatistics> {
         final reviews = reviewProvider.reviews;
         return Container(
             width: double.infinity,
-            margin: const EdgeInsets.symmetric(horizontal: 16),
+            // margin: const EdgeInsets.symmetric(horizontal: 16),
             child: Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -458,137 +456,144 @@ class ProfileStatisticsState extends State<ProfileStatistics> {
     );
   }
 
-  Widget _buildUserStatus() {
-    final userProvider = Provider.of<UserProvider>(context);
-    final user = userProvider.user;
-    // print("photo ${user!.photoUrl}");
-    return Container(
-        width: double.infinity,
-        padding: const EdgeInsets.only(
-          left: AppTheme.cardPadding,
-          right: AppTheme.cardPadding,
-          top: AppTheme.cardPadding * 2,
-          bottom: AppTheme.cardPadding * 2,
-        ),
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            colors: [AppColors.blueStart, AppColors.purpleEnd],
-          ),
-        ),
-        child: Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
-          _buildProfileImage(user),
-          const SizedBox(width: 15),
-          _buildUserInfo(user),
-          const SizedBox(
-            height: 16,
-          ),
-          _buildStatsPreview(),
-        ]));
-  }
 
-  Widget _buildStatsPreview() {
-    // final stats = Provider.of<StatisticsProvider>(context, listen: false).stats;
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-      decoration: BoxDecoration(
-        color: Colors.white.withValues(alpha: 0.15),
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(
-          color: Colors.white.withValues(alpha: 0.2),
+
+Widget _buildUserStats() {
+  final userProvider = Provider.of<UserProvider>(context);
+  final user = userProvider.user;
+
+  return Container(
+    padding: const EdgeInsets.all(24),
+    width: double.infinity,
+    decoration: BoxDecoration(
+      color: AppColors.white,
+      borderRadius: BorderRadius.circular(16),
+      boxShadow: [
+        BoxShadow(
+          color: Colors.black.withValues(alpha: 0.05),
+          blurRadius: 10,
+          offset: const Offset(0, 2),
         ),
+      ],
+    ),
+    child: Column(
+      children: [
+        // Top section - Profile info
+        Row(
+          children: [
+            _buildProfileImage(user),
+            const SizedBox(width: 16),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    user?.displayName ?? 'Guest User',
+                    style: const TextStyle(
+                      fontSize: 22,
+                      fontWeight: FontWeight.w600,
+                      color: AppColors.dark,
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  const SizedBox(height: 6),
+                  Text(
+                    "Member since ${user?.createdAt ?? 'N/A'}",
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: AppColors.dark.withValues(alpha: 0.6),
+                      fontWeight: FontWeight.w400,
+                    ),
+                  ),
+                  // const SizedBox(height: 12),
+                  // _buildVerificationBadge(),
+                ],
+              ),
+            ),
+             _buildViewStatsButton(),
+          ],
+        ),
+      ],
+    ),
+  );
+}
+
+Widget _buildProfileImage(user) {
+  return  Container(
+      width: 70,
+      height: 70,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(35),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.06),
+            blurRadius: 6,
+            offset: const Offset(0, 2),
+          ),
+        ],
       ),
-      child: Row(
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(35),
+        child: Image.network(
+          user?.photoUrl ?? AppTheme.defaultProfileImage,
+          fit: BoxFit.cover,
+          errorBuilder: (context, error, stackTrace) {
+            return Container(
+              decoration: BoxDecoration(
+                color: AppColors.blueStart.withValues(alpha: 0.1),
+                borderRadius: BorderRadius.circular(35),
+              ),
+              child: Icon(
+                Icons.person,
+                color: AppColors.blueStart,
+                size: 32,
+              ),
+            );
+          },
+        ),
+    ),
+  );
+}
+
+
+
+Widget _buildViewStatsButton() {
+  return  Container(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      decoration: BoxDecoration(
+        color: AppColors.dark,
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(
+            color: AppColors.dark.withValues(alpha: 0.2),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: const Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const Icon(
-            Icons.analytics_outlined,
+           Icon(
+            Icons.rate_review_outlined,
             color: Colors.white,
-            size: 16,
+            size: 18,
           ),
-          const SizedBox(width: 8),
+           SizedBox(width: 8),
           Text(
-            '${stats?.completedTrips ?? 0} deliveries',
-            style: const TextStyle(
+            '4.8',
+            style: TextStyle(
               color: Colors.white,
               fontSize: 14,
               fontWeight: FontWeight.w500,
             ),
           ),
-          const SizedBox(width: 8),
-          Icon(
-            Icons.trending_up,
-            color: AppColors.succes.withValues(alpha: 0.8),
-            size: 12,
-          ),
         ],
       ),
-    );
-  }
 
-  Widget _buildUserInfo(user) {
-    return Column(
-      children: [
-        Text(
-          user?.displayName ?? 'Guest',
-          style: const TextStyle(
-            fontSize: 22,
-            fontWeight: FontWeight.bold,
-            color: AppColors.white,
-          ),
-        ),
-        const SizedBox(height: 4),
-        Text(
-          "Member since ${user?.createdAt ?? 'N/A'}",
-          style: const TextStyle(
-            fontSize: 14,
-            color: AppColors.lessImportant,
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildProfileImage(user) {
-    return Stack(
-      children: [
-        Container(
-          width: 110,
-          height: 110,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(55),
-            border: Border.all(
-              color: Colors.white.withValues(alpha: 0.3),
-              width: 3,
-            ),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withValues(alpha: 0.2),
-                blurRadius: 10,
-                offset: const Offset(0, 4),
-              ),
-            ],
-          ),
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(55),
-            child: Image.network(
-              user?.photoUrl ?? AppTheme.defaultProfileImage,
-              fit: BoxFit.cover,
-              errorBuilder: (context, error, stackTrace) {
-                return Container(
-                  color: Colors.white.withValues(alpha: 0.1),
-                  child: const Icon(
-                    Icons.person,
-                    color: AppColors.white,
-                    size: 50,
-                  ),
-                );
-              },
-            ),
-          ),
-        ),
-      ],
-    );
-  }
+  );
+}
 
 
 
