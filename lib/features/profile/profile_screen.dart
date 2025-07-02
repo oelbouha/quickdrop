@@ -35,89 +35,30 @@ class _ProfileScreenState extends State<ProfileScreen>
   }
 
   void _singOutUser() async {
-      final confirmed = await ConfirmationDialog.show(
-        context: context,
-        message: 'Are you sure you want to log out?',
-        header: 'Log Out',
-        buttonHintText: 'Log Out',
-        iconData: Icons.delete_outline,
-      );
-      
-      if (!confirmed) return; 
-
-      try {
-        // AppUtils.showLoading(context);
-        await FirebaseAuth.instance.signOut();
-        if (mounted) {
-          Provider.of<UserProvider>(context, listen: false).clearUser();
-          context.go("/login");
-        }
-      } on FirebaseException catch (e) {
-        AppUtils.showDialog(
-            context, 'Error signing out: $e', AppColors.error);
-      } finally {
-        setState(() {
-          _isSignoutLoading = false;
-        });
-      }
-          
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-        backgroundColor: AppColors.background,
-        appBar: AppBar(
-          title: const Text(
-            'Profile',
-            style: TextStyle(color: AppColors.white),
-          ),
-          flexibleSpace: Container(
-            decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                colors: [AppColors.blueStart, AppColors.purpleEnd],
-              ),
-            ),
-          ),
-          centerTitle: true,
-          elevation: 0,
-        ),
-        body: FadeTransition(
-            opacity: _fadeAnimation,
-            child: SingleChildScrollView(
-                physics: const BouncingScrollPhysics(),
-                child: Column(children: [
-                  _buildUserStatus(),
-                  const SizedBox(height: AppTheme.cardPadding),
-                  Container(
-                      margin: const EdgeInsets.only(
-                          left: AppTheme.homeScreenPadding,
-                          right: AppTheme.homeScreenPadding),
-                      child: Column(children: [
-                        _buildUserProfileSettings(),
-                        const SizedBox(height: AppTheme.cardPadding),
-                        const Text(
-                          "Version 1.0.0 - 2025",
-                          style: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w400,
-                            color: AppColors.lightGray,
-                          ),
-                        ),
-                        const SizedBox(height: AppTheme.cardPadding),
-                      ]))
-                ]))));
-  }
-
-  Widget _buildSectionHeader(String title) {
-    return Text(
-      title,
-      style: const TextStyle(
-        fontSize: 18,
-        fontWeight: FontWeight.w600,
-        color: AppColors.textPrimary,
-      ),
+    final confirmed = await ConfirmationDialog.show(
+      context: context,
+      message: 'Are you sure you want to log out?',
+      header: 'Log Out',
+      buttonHintText: 'Log Out',
+      iconData: Icons.delete_outline,
     );
+    
+    if (!confirmed) return; 
+
+    try {
+      await FirebaseAuth.instance.signOut();
+      if (mounted) {
+        Provider.of<UserProvider>(context, listen: false).clearUser();
+        context.go("/login");
+      }
+    } on FirebaseException catch (e) {
+      AppUtils.showDialog(
+          context, 'Error signing out: $e', AppColors.error);
+    } finally {
+      setState(() {
+        _isSignoutLoading = false;
+      });
+    }
   }
 
   void _showComingSoon(String feature) {
@@ -128,15 +69,374 @@ class _ProfileScreenState extends State<ProfileScreen>
     );
   }
 
-  Widget _buildUserProfileSettings() {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        title: const Text(
+          'Profile',
+          style: TextStyle(color: AppColors.dark, fontWeight: FontWeight.w600),
+        ),
+        centerTitle: true,
+        iconTheme: const IconThemeData(color: Colors.black),
+        systemOverlayStyle: SystemUiOverlayStyle.dark,
+        elevation: 0,
+      ),
+
+      backgroundColor: AppColors.background,
+      body: FadeTransition(
+        opacity: _fadeAnimation,
+        child: SingleChildScrollView(
+                padding: const EdgeInsets.all(20.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _buildUserStats(),
+                    const SizedBox(height: 32),
+                    _buildQuickActions(),
+                    const SizedBox(height: 32),
+                    _buildSettingsSection(),
+                    const SizedBox(height: 32),
+                    _buildSupportSection(),
+                    const SizedBox(height: 32),
+                    _buildLegalSection(),
+                    const SizedBox(height: 24),
+                    _buildLogoutSection(),
+                    const SizedBox(height: 40),
+                    _buildVersionInfo(),
+                  ],
+                ),
+              ),
+        ),
+    );
+  }
+
+
+Widget _buildUserStats() {
+  final userProvider = Provider.of<UserProvider>(context);
+  final user = userProvider.user;
+
+  return Container(
+    padding: const EdgeInsets.all(24),
+    width: double.infinity,
+    decoration: BoxDecoration(
+      color: AppColors.white,
+      borderRadius: BorderRadius.circular(16),
+      boxShadow: [
+        BoxShadow(
+          color: Colors.black.withValues(alpha: 0.05),
+          blurRadius: 10,
+          offset: const Offset(0, 2),
+        ),
+      ],
+    ),
+    child: Column(
+      children: [
+        // Top section - Profile info
+        Row(
+          children: [
+            _buildProfileImage(user),
+            const SizedBox(width: 16),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    user?.displayName ?? 'Guest User',
+                    style: const TextStyle(
+                      fontSize: 22,
+                      fontWeight: FontWeight.w600,
+                      color: AppColors.dark,
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  const SizedBox(height: 6),
+                  Text(
+                    "Member since ${user?.createdAt ?? 'N/A'}",
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: AppColors.dark.withValues(alpha: 0.6),
+                      fontWeight: FontWeight.w400,
+                    ),
+                  ),
+                  // const SizedBox(height: 12),
+                  // _buildVerificationBadge(),
+                ],
+              ),
+            ),
+             _buildViewStatsButton(),
+          ],
+        ),
+      ],
+    ),
+  );
+}
+
+Widget _buildProfileImage(user) {
+  return GestureDetector(
+    onTap: () => _showComingSoon("Update profile picture"),
+    child: Container(
+      width: 70,
+      height: 70,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(35),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.06),
+            blurRadius: 6,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(35),
+        child: Image.network(
+          user?.photoUrl ?? AppTheme.defaultProfileImage,
+          fit: BoxFit.cover,
+          errorBuilder: (context, error, stackTrace) {
+            return Container(
+              decoration: BoxDecoration(
+                color: AppColors.blueStart.withValues(alpha: 0.1),
+                borderRadius: BorderRadius.circular(35),
+              ),
+              child: Icon(
+                Icons.person,
+                color: AppColors.blueStart,
+                size: 32,
+              ),
+            );
+          },
+        ),
+      ),
+    ),
+  );
+}
+
+
+
+Widget _buildViewStatsButton() {
+  return GestureDetector(
+    onTap: () {
+      context.push('/profile/statistics?userId=${FirebaseAuth.instance.currentUser!.uid}');
+    },
+    child: Container(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      decoration: BoxDecoration(
+        color: AppColors.dark,
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(
+            color: AppColors.dark.withValues(alpha: 0.2),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: const Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+           Icon(
+            Icons.analytics_outlined,
+            color: Colors.white,
+            size: 18,
+          ),
+          //  SizedBox(width: 8),
+          // Text(
+          //   'View Details',
+          //   style: TextStyle(
+          //     color: Colors.white,
+          //     fontSize: 14,
+          //     fontWeight: FontWeight.w500,
+          //   ),
+          // ),
+        ],
+      ),
+    ),
+  );
+}
+
+  Widget _buildQuickActions() {
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.05),
+            blurRadius: 10,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Column(
+        children: [
+          _buildQuickActionItem(
+            title: "Become a driver",
+            subtitle: "Earn money by delivering packages",
+            icon: Icons.local_shipping_outlined,
+            color: AppColors.blue700,
+            onTap: () => _showComingSoon("driver registration"),
+          ),
+          const SizedBox(height: 16),
+          _buildQuickActionItem(
+            title: "Refer friends",
+            subtitle: "Get rewards for every friend you invite",
+            icon: Icons.card_giftcard_outlined,
+            color: const Color(0xFF00A699),
+            onTap: () => _showComingSoon("refer to your friend"),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildQuickActionItem({
+    required String title,
+    required String subtitle,
+    required IconData icon,
+    required Color color,
+    required VoidCallback onTap,
+  }) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: color.withValues(alpha: 0.1),
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Row(
+          children: [
+            Container(
+              width: 48,
+              height: 48,
+              decoration: BoxDecoration(
+                color: color,
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Icon(
+                icon,
+                color: Colors.white,
+                size: 24,
+              ),
+            ),
+            const SizedBox(width: 16),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.black87,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    subtitle,
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: Colors.grey[600],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Icon(
+              Icons.arrow_forward_ios,
+              size: 16,
+              color: Colors.grey[400],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSettingsSection() {
+    return _buildSection(
+      title: "Settings",
+      children: [
+        settingsCard(
+          title: "Personal information",
+          subtitle: "Update your details and preferences",
+          iconPath: "assets/icon/edit-user.svg",
+          onTap: () => context.push("/profile/info"),
+        ),
+        settingsCard(
+          title: "Notifications",
+          subtitle: "Manage your notification preferences",
+          iconPath: "assets/icon/notification.svg",
+          onTap: () => _showComingSoon("notifications"),
+        ),
+        settingsCard(
+          title: "Payment methods",
+          subtitle: "Add or remove payment methods",
+          iconPath: "assets/icon/money.svg",
+          onTap: () => _showComingSoon("Payment"),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildSupportSection() {
+    return _buildSection(
+      title: "Support",
+      children: [
+        settingsCard(
+          title: "Get help",
+          subtitle: "Contact our support team",
+          iconPath: "assets/icon/suport.svg",
+          onTap: () => _showComingSoon("Contact support"),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildLegalSection() {
+    return _buildSection(
+      title: "Legal",
+      children: [
+        settingsCard(
+          title: "Terms of Service",
+          subtitle: "Read our terms and conditions",
+          iconPath: "assets/icon/condition.svg",
+          onTap: () => context.push("/terms-of-service"),
+        ),
+        settingsCard(
+          title: "Privacy Policy",
+          subtitle: "Learn how we protect your data",
+          iconPath: "assets/icon/privacy.svg",
+          onTap: () => context.push("/privacy-policy"),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildSection({
+    required String title,
+    required List<Widget> children,
+  }) {
     return Column(
-      mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _buildSectionHeader("Profile Settings"),
-        const SizedBox(height: 12),
+        Padding(
+          padding: const EdgeInsets.only(left: 4, bottom: 12),
+          child: Text(
+            title,
+            style: const TextStyle(
+              fontSize: 22,
+              fontWeight: FontWeight.w600,
+              color: Colors.black87,
+            ),
+          ),
+        ),
         Container(
-          //  color: AppColors.white,
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(16),
@@ -149,275 +449,81 @@ class _ProfileScreenState extends State<ProfileScreen>
             ],
           ),
           child: Column(
-            children: [
-              SettingsCard(
-                onTap: () {
-                  _showComingSoon("update image");
-                },
-                hintText: "Update my profile picture",
-                iconPath: "assets/icon/camera-add.svg",
-              ),
-              Divider(
-                  height: 1,
-                  color: Colors.grey[200],
-                  indent: 40,
-                ),
-              // const SizedBox(height: 6),
-              SettingsCard(
-                onTap: () {
-                  context.push("/profile/info");
-                },
-                hintText: "Update my personal information",
-                iconPath: "assets/icon/edit-user.svg",
-              ),
-              Divider(
-                  height: 1,
-                  color: Colors.grey[200],
-                  indent: 40,
-                ),
-              // const SizedBox(height: 6),
-              SettingsCard(
-                onTap: () {_showComingSoon("notifications");},
-                hintText: "Notifications",
-                iconPath: "assets/icon/notification.svg",
-              ),
-              Divider(
-                  height: 1,
-                  color: Colors.grey[200],
-                  indent: 40,
-                ),
-              // const SizedBox(height: 6),
-              SettingsCard(
-                onTap: () {_showComingSoon("Payment");},
-                hintText: "Payment methods",
-                iconPath: "assets/icon/money.svg",
-              ),
-             
-            ],
+            children: children,
           ),
         ),
-        const SizedBox(height: AppTheme.cardPadding * 1.5),
-        _buildSectionHeader("Resouces"),
-        const SizedBox(
-          height: 12,
-        ),
-        Container(
-            decoration: BoxDecoration(
-               color: Colors.white,
-            borderRadius: BorderRadius.circular(16),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withValues(alpha:0.05),
-                blurRadius: 10,
-                offset: const Offset(0, 2),
-              ),
-            ],
-            ),
-            child: Column(children: [
-              SettingsCard(
-                onTap: () {_showComingSoon("Contact support");},
-                hintText: "Contact support",
-                iconPath: "assets/icon/suport.svg",
-              ),
-              Divider(
-                  height: 1,
-                  color: Colors.grey[200],
-                  indent: 40,
-                ),
-              SettingsCard(
-                onTap: () {
-                  context.push("/terms-of-service");
-                },
-                hintText: "Terms and Conditions",
-                iconPath: "assets/icon/condition.svg",
-              ),
-              Divider(
-                  height: 1,
-                  color: Colors.grey[200],
-                  indent: 40,
-                ),
-              SettingsCard(
-                onTap: () {
-                  context.push("/privacy-policy");
-                },
-                hintText: "Privacy Policy",
-                iconPath: "assets/icon/privacy.svg",
-              ),
-              Divider(
-                  height: 1,
-                  color: Colors.grey[200],
-                  indent: 40,
-                ),
-              SettingsCard(
-                onTap: () {_showComingSoon("refer to your friend");},
-                hintText: "Refer to your friends",
-                iconPath: "assets/icon/share.svg",
-              ),
-              Divider(
-                  height: 1,
-                  color: Colors.grey[200],
-                  indent: 40,
-                ),
-            ])),
-        const SizedBox(height: 20),
-        SettingsCard(
-          onTap: () {_showComingSoon("driver registration");},
-          hintText: "Become a driver",
-          iconPath: "assets/icon/driver.svg",
-          backgroundColor: AppColors.blueStart,
-          hintTextColor: AppColors.white,
-          iconColor: AppColors.white,
-        ),
-        const SizedBox(height: 6),
-        SettingsCard(
-          onTap: () {
-            _singOutUser();
-          },
-          hintText: "LogOut",
-          backgroundColor: Colors.red,
-          iconPath: "assets/icon/logout.svg",
-          hintTextColor: AppColors.white,
-          iconColor: AppColors.white,
-        ),
-        const SizedBox(height: AppTheme.cardPadding),
       ],
     );
   }
 
-  Widget _buildStatsPreview() {
+
+  Widget _buildLogoutSection() {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+      width: double.infinity,
       decoration: BoxDecoration(
-        color: Colors.white.withValues(alpha:0.15),
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(
-          color: Colors.white.withValues(alpha: 0.2),
-        ),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          const Icon(
-            Icons.analytics_outlined,
-            color: Colors.white,
-            size: 16,
-          ),
-          const SizedBox(width: 8),
-          const Text(
-            'View Statistics',
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 14,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-          const SizedBox(width: 8),
-          Icon(
-            Icons.arrow_forward_ios,
-            color: Colors.white.withValues(alpha:0.8),
-            size: 12,
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.05),
+            blurRadius: 10,
+            offset: const Offset(0, 2),
           ),
         ],
       ),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: _singOutUser,
+          borderRadius: BorderRadius.circular(16),
+          child: Padding(
+            padding: const EdgeInsets.all(20),
+            child: Row(
+              children: [
+                Container(
+                  width: 48,
+                  height: 48,
+                  decoration: BoxDecoration(
+                    color: Colors.red[50],
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: const Center(
+                    child: Icon(
+                      Icons.logout_outlined,
+                      color: Colors.red,
+                      size: 24,
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 16),
+                const Expanded(
+                  child: Text(
+                    "Log out",
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                      color: Colors.red,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
     );
   }
 
-  Widget _buildUserStatus() {
-    final userProvider = Provider.of<UserProvider>(context);
-    final user = userProvider.user;
-    // print("photo ${user!.photoUrl}");
-    return GestureDetector(
-        onTap: () {
-          context.push('/profile/statistics?userId=${FirebaseAuth.instance.currentUser!.uid}');
-        },
-        child: Container(
-            width: double.infinity,
-            padding: const EdgeInsets.only(
-              left: AppTheme.cardPadding,
-              right: AppTheme.cardPadding,
-              top: AppTheme.cardPadding * 2,
-              bottom: AppTheme.cardPadding * 2,
-            ),
-            decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                colors: [AppColors.blueStart, AppColors.purpleEnd],
-              ),
-            ),
-            child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  _buildProfileImage(user),
-                  const SizedBox(width: 15),
-                  _buildUserInfo(user),
-                  const SizedBox(
-                    height: 16,
-                  ),
-                  _buildStatsPreview(),
-                ])));
-  }
-
-  Widget _buildUserInfo(user) {
-    return Column(
-      children: [
-        Text(
-          user?.displayName ?? 'Guest',
-          style: const TextStyle(
-            fontSize: 22,
-            fontWeight: FontWeight.bold,
-            color: AppColors.white,
-          ),
+  Widget _buildVersionInfo() {
+    return Center(
+      child: Text(
+        "Version 1.0.0 - 2025",
+        style: TextStyle(
+          fontSize: 14,
+          color: Colors.grey[500],
+          fontWeight: FontWeight.w400,
         ),
-        const SizedBox(height: 4),
-        Text(
-          "Member since ${user?.createdAt ?? 'N/A'}",
-          style: const TextStyle(
-            fontSize: 14,
-            color: AppColors.lessImportant,
-          ),
-        ),
-      ],
-    );
-  }
-      Widget _buildProfileImage(user) {
-    return Stack(
-      children: [
-        Container(
-          width: 110,
-          height: 110,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(55),
-            border: Border.all(
-              color: Colors.white.withValues(alpha: 0.3),
-              width: 3,
-            ),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withValues(alpha: 0.2),
-                blurRadius: 10,
-                offset: const Offset(0, 4),
-              ),
-            ],
-          ),
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(55),
-            child:  Image.network(
-                    user?.photoUrl ?? AppTheme.defaultProfileImage,
-                    fit: BoxFit.cover,
-                    errorBuilder: (context, error, stackTrace) {
-                      return Container(
-                        color: Colors.white.withValues(alpha: 0.15),
-                        child: const Icon(
-                          Icons.person,
-                          color: AppColors.white,
-                          size: 50,
-                        ),
-                      );
-                    },
-                  ),
-          ),
-        ),
-      
-      ],
+      ),
     );
   }
 }

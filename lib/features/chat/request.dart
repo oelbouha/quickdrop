@@ -361,42 +361,68 @@ Widget _buildHeader() {
   Widget _buildFooter() {
     return Container(
       padding: const EdgeInsets.all(16),
-      child: Column(
-        children: [
+      child: 
           Row(
             children: [
+              Expanded(child: 
+               SizedBox(
+                width: double.infinity,
+                child: OutlinedButton.icon(
+                  onPressed: () {
+                    context.push('/negotiation-screen?userId=${widget.user.uid}&shipmentId=${widget.shipment.id}&requestId=${widget.request.id}');
+                  },
+                  icon: const Icon(Icons.chat_bubble_outline, size: 16),
+                  label: const Text('Negotiate Price'),
+                  style: OutlinedButton.styleFrom(
+                    foregroundColor: AppColors.primary,
+                    side: BorderSide(color: AppColors.primary.withValues(alpha: 0.3)),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    padding: const EdgeInsets.symmetric(vertical: 10),
+                  ),
+                ),
+              ),
+              ),
+              const SizedBox(width: 8),
               Expanded(
-                child: ElevatedButton.icon(
+                 child: ElevatedButton(
                   onPressed: (_isProcessing && _processingAction == 'accept') ? null : _acceptRequest,
-                  icon: (_isProcessing && _processingAction == 'accept')
+                 style: ElevatedButton.styleFrom(
+                  backgroundColor: AppColors.succes,
+                  foregroundColor: Colors.white,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  padding: const EdgeInsets.symmetric(vertical: 12),
+                  elevation: 0,
+                ),
+                  child: (_isProcessing && _processingAction == 'accept')
                       ? const SizedBox(
                           width: 16,
                           height: 16,
                           child: CircularProgressIndicator(
                             strokeWidth: 2,
-                            valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                            valueColor: AlwaysStoppedAnimation<Color>(AppColors.error),
                           ),
                         )
-                      : const Icon(Icons.check_circle, size: 18),
-                  label: Text(
-                    (_isProcessing && _processingAction == 'accept') ? 'Accepting...' : 'Accept',
-                  ),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.succes,
-                    foregroundColor: Colors.white,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    padding: const EdgeInsets.symmetric(vertical: 12),
-                    elevation: 0,
-                  ),
+                      : const Icon(Icons.done, size: 18),
                 ),
               ),
               const SizedBox(width: 8),
               Expanded(
-                child: OutlinedButton.icon(
+                child: ElevatedButton(
                   onPressed: (_isProcessing && _processingAction == 'refuse') ? null : _refuseRequest,
-                  icon: (_isProcessing && _processingAction == 'refuse')
+                 style: ElevatedButton.styleFrom(
+                  backgroundColor: AppColors.error,
+                  foregroundColor: Colors.white,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  padding: const EdgeInsets.symmetric(vertical: 12),
+                  elevation: 0,
+                ),
+                  child: (_isProcessing && _processingAction == 'refuse')
                       ? const SizedBox(
                           width: 16,
                           height: 16,
@@ -406,44 +432,10 @@ Widget _buildHeader() {
                           ),
                         )
                       : const Icon(Icons.close, size: 18),
-                  label: Text(
-                    (_isProcessing && _processingAction == 'refuse') ? 'Refusing...' : 'Refuse',
-                  ),
-                  style: OutlinedButton.styleFrom(
-                    foregroundColor: AppColors.error,
-                    side: const BorderSide(color: AppColors.error),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    padding: const EdgeInsets.symmetric(vertical: 12),
-                  ),
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 8),
-          SizedBox(
-            width: double.infinity,
-            child: OutlinedButton.icon(
-              onPressed: () {
-                print("Negotiate clicked!");
-                // Add navigation to negotiation screen
-                 context.push('/negotiation-screen?userId=${widget.user.uid}&shipmentId=${widget.shipment.id}&requestId=${widget.request.id}');
-              },
-              icon: Icon(Icons.chat_bubble_outline, size: 16),
-              label: const Text('Negotiate Price'),
-              style: OutlinedButton.styleFrom(
-                foregroundColor: AppColors.primary,
-                side: BorderSide(color: AppColors.primary.withValues(alpha: 0.3)),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                padding: const EdgeInsets.symmetric(vertical: 10),
-              ),
-            ),
-          ),
-        ],
-      ),
     );
   }
 

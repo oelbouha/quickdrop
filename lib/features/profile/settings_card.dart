@@ -3,90 +3,69 @@ import 'package:quickdrop_app/theme/colors.dart';
 import 'package:quickdrop_app/theme/AppTheme.dart';
 import 'package:quickdrop_app/core/widgets/custom_svg.dart';
 
-class SettingsCard extends StatelessWidget {
- final String hintText;
-  final Color hintTextColor;
-  final Color backgroundColor;
-  final Color iconColor;
-  final String iconPath;
-  final VoidCallback onTap;
-  final bool isLoading;
 
-  const SettingsCard({
-    required this.iconPath,
-    required this.hintText,
-    this.hintTextColor = AppColors.headingText,
-    this.backgroundColor = Colors.transparent,
-    this.iconColor = AppColors.lightGray,
-    required this.onTap,
-    this.isLoading = false,
-    Key? key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
+  Widget settingsCard({
+    required String title,
+    required String subtitle,
+    required String iconPath,
+    required VoidCallback onTap,
+  }) {
     return Material(
-      color: backgroundColor,
-      borderRadius: BorderRadius.circular(12),
+      color: Colors.transparent,
       child: InkWell(
-        onTap: isLoading ? null : onTap,
-        borderRadius: BorderRadius.circular(12),
-        child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(16),
+        child: Padding(
+          padding: const EdgeInsets.all(20),
           child: Row(
             children: [
               Container(
-                width: 40,
-                height: 40,
+                width: 48,
+                height: 48,
                 decoration: BoxDecoration(
-                  color: iconColor == AppColors.lightGray 
-                      ? AppColors.blueStart.withOpacity(0.1)
-                      : AppColors.white.withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(10),
+                  color: Colors.grey[100],
+                  borderRadius: BorderRadius.circular(12),
                 ),
                 child: Center(
                   child: CustomIcon(
                     iconPath: iconPath,
-                    size: 20,
-                    color: iconColor == AppColors.lightGray 
-                        ? AppColors.blueStart 
-                        : iconColor,
+                    size: 24,
+                    color: Colors.grey[600]!,
                   ),
                 ),
               ),
               const SizedBox(width: 16),
               Expanded(
-                child: Text(
-                  hintText,
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w500,
-                    color: hintTextColor,
-                  ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      title,
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
+                        color: Colors.black87,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      subtitle,
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: Colors.grey[600],
+                      ),
+                    ),
+                  ],
                 ),
               ),
-              if (isLoading)
-                SizedBox(
-                  width: 20,
-                  height: 20,
-                  child: CircularProgressIndicator(
-                    strokeWidth: 2,
-                    valueColor: AlwaysStoppedAnimation<Color>(
-                      hintTextColor.withOpacity(0.6),
-                    ),
-                  ),
-                )
-              else
-                Icon(
-                  Icons.arrow_forward_ios,
-                  size: 16,
-                  color: hintTextColor.withOpacity(0.6),
-                ),
+              Icon(
+                Icons.arrow_forward_ios,
+                size: 16,
+                color: Colors.grey[400],
+              ),
             ],
           ),
         ),
       ),
     );
   }
- 
-}

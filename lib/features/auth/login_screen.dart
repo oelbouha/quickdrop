@@ -167,9 +167,8 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
 
           // Save credentials
           await saveCredentials(email, password);
-          print("switching to home");
-          // if (mounted)  
-           context.go('/home');
+          // print("switching to home");
+          if (mounted) context.go('/home');
         } catch (e) {
           if (mounted) {
             AppUtils.showDialog(context, "failed to log in user $e", AppColors.error);
@@ -295,7 +294,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                 SizedBox(height: 8),
+                const SizedBox(height: 8),
                  const Text(
                   "Sign in to continue",
                   style: TextStyle(
