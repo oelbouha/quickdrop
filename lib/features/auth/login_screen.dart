@@ -280,11 +280,11 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
             child:  Column(
               children: [
                 
-              Image.asset(
-                'assets/images/quickdrop.png',
-                height: 180,
-                fit: BoxFit.cover,
-              ),
+              // Image.asset(
+              //   'assets/images/quickdrop.png',
+              //   height: 180,
+              //   fit: BoxFit.cover,
+              // ),
                 //  SizedBox(height: 16),
                 const Text(
                   "Welcome back",
@@ -306,9 +306,9 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
             ),
           ),
         ),
-            const SizedBox(
-              height: 25,
-            ),
+            // const SizedBox(
+            //   height: 25,
+            // ),
             AuthButton(
               hintText: "Sign in with Google",
               onPressed: _signInWithGoogle,
@@ -346,7 +346,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
               ],
             ),
             const SizedBox(
-              height: 30,
+              height: 24,
             ),
 // Replace your current text fields with more polished versions
 Container(
@@ -384,7 +384,7 @@ Container(
     ],
   ),
 ),
-            const SizedBox(height: 15),
+            // const SizedBox(height: 15),
 
         Container(
   margin: const EdgeInsets.only(bottom: 20),
@@ -430,17 +430,17 @@ Container(
             //   controller: passwordController,
             //   validator: Validators.notEmpty,
             // ),
-            const SizedBox(
-              height: 25,
-            ),
+            // const SizedBox(
+            //   height: 25,
+            // ),
             Button(
               hintText: "Sign in",
               onPressed: _signInUserWithEmail,
               isLoading: _isEmailLoading,
             ),
-            const SizedBox(
-              height: 10,
-            ),
+            // const SizedBox(
+            //   height: 10,
+            // ),
             textWithLink(
                 text: "Don't have an account? ",
                 textLink: "sign up",

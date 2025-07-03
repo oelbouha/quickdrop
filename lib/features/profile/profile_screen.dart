@@ -118,7 +118,7 @@ Widget _buildUserStats() {
   final user = userProvider.user;
 
   return Container(
-    padding: const EdgeInsets.all(24),
+    padding: const EdgeInsets.all(16),
     width: double.infinity,
     decoration: BoxDecoration(
       color: AppColors.white,
@@ -134,18 +134,17 @@ Widget _buildUserStats() {
     child: Column(
       children: [
         // Top section - Profile info
-        Row(
+        Column(
           children: [
             _buildProfileImage(user),
-            const SizedBox(width: 16),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+            const SizedBox(width: 8),
+             Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Text(
                     user?.displayName ?? 'Guest User',
                     style: const TextStyle(
-                      fontSize: 22,
+                      fontSize: 18,
                       fontWeight: FontWeight.w600,
                       color: AppColors.dark,
                     ),
@@ -156,16 +155,16 @@ Widget _buildUserStats() {
                   Text(
                     "Member since ${user?.createdAt ?? 'N/A'}",
                     style: TextStyle(
-                      fontSize: 14,
+                      fontSize: 12,
                       color: AppColors.dark.withValues(alpha: 0.6),
                       fontWeight: FontWeight.w400,
                     ),
                   ),
-                  // const SizedBox(height: 12),
                   // _buildVerificationBadge(),
                 ],
               ),
-            ),
+
+                  const SizedBox(height: 12),
              _buildViewStatsButton(),
           ],
         ),
@@ -178,10 +177,10 @@ Widget _buildProfileImage(user) {
   return GestureDetector(
     onTap: () => _showComingSoon("Update profile picture"),
     child: Container(
-      width: 70,
-      height: 70,
+      width: 90,
+      height: 90,
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(35),
+        borderRadius: BorderRadius.circular(50),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.06),
@@ -191,7 +190,7 @@ Widget _buildProfileImage(user) {
         ],
       ),
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(35),
+        borderRadius: BorderRadius.circular(50),
         child: Image.network(
           user?.photoUrl ?? AppTheme.defaultProfileImage,
           fit: BoxFit.cover,
@@ -204,7 +203,7 @@ Widget _buildProfileImage(user) {
               child: Icon(
                 Icons.person,
                 color: AppColors.blueStart,
-                size: 32,
+                size: 52,
               ),
             );
           },
@@ -242,15 +241,15 @@ Widget _buildViewStatsButton() {
             color: Colors.white,
             size: 18,
           ),
-          //  SizedBox(width: 8),
-          // Text(
-          //   'View Details',
-          //   style: TextStyle(
-          //     color: Colors.white,
-          //     fontSize: 14,
-          //     fontWeight: FontWeight.w500,
-          //   ),
-          // ),
+           SizedBox(width: 8),
+          Text(
+            'View Details',
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 14,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
         ],
       ),
     ),
@@ -258,20 +257,7 @@ Widget _buildViewStatsButton() {
 }
 
   Widget _buildQuickActions() {
-    return Container(
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.05),
-            blurRadius: 10,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      child: Column(
+    return Column(
         children: [
           _buildQuickActionItem(
             title: "Become a driver",
@@ -283,13 +269,13 @@ Widget _buildViewStatsButton() {
           const SizedBox(height: 16),
           _buildQuickActionItem(
             title: "Refer friends",
-            subtitle: "Get rewards for every friend you invite",
+            subtitle: "Invite friends and earn rewards",
             icon: Icons.card_giftcard_outlined,
             color: const Color(0xFF00A699),
             onTap: () => _showComingSoon("refer to your friend"),
           ),
         ],
-      ),
+
     );
   }
 
@@ -307,12 +293,19 @@ Widget _buildViewStatsButton() {
         decoration: BoxDecoration(
           color: color.withValues(alpha: 0.1),
           borderRadius: BorderRadius.circular(12),
+         boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.05),
+            blurRadius: 4,
+            offset: const Offset(0, 2),
+          ),
+        ],
         ),
         child: Row(
           children: [
             Container(
-              width: 48,
-              height: 48,
+              width:  40,
+              height: 40,
               decoration: BoxDecoration(
                 color: color,
                 borderRadius: BorderRadius.circular(12),
@@ -320,7 +313,7 @@ Widget _buildViewStatsButton() {
               child: Icon(
                 icon,
                 color: Colors.white,
-                size: 24,
+                size: 20,
               ),
             ),
             const SizedBox(width: 16),
@@ -331,7 +324,7 @@ Widget _buildViewStatsButton() {
                   Text(
                     title,
                     style: const TextStyle(
-                      fontSize: 16,
+                      fontSize: 15,
                       fontWeight: FontWeight.w600,
                       color: Colors.black87,
                     ),
@@ -340,7 +333,7 @@ Widget _buildViewStatsButton() {
                   Text(
                     subtitle,
                     style: TextStyle(
-                      fontSize: 14,
+                      fontSize: 12,
                       color: Colors.grey[600],
                     ),
                   ),
@@ -349,7 +342,7 @@ Widget _buildViewStatsButton() {
             ),
             Icon(
               Icons.arrow_forward_ios,
-              size: 16,
+              size: 14,
               color: Colors.grey[400],
             ),
           ],
@@ -477,12 +470,12 @@ Widget _buildViewStatsButton() {
           onTap: _singOutUser,
           borderRadius: BorderRadius.circular(16),
           child: Padding(
-            padding: const EdgeInsets.all(20),
+            padding: const EdgeInsets.all(12),
             child: Row(
               children: [
                 Container(
-                  width: 48,
-                  height: 48,
+                  width: 40,
+                  height: 40,
                   decoration: BoxDecoration(
                     color: Colors.red[50],
                     borderRadius: BorderRadius.circular(12),
