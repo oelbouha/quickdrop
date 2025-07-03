@@ -335,7 +335,7 @@ class ShipmentCardState extends State<ShipmentCard>
         mainAxisSize: MainAxisSize.min,
         children: [
            Text(
-            "View Details",
+            "Request",
             style: TextStyle(
               fontSize: 10,
               fontWeight: FontWeight.w600,
@@ -393,26 +393,17 @@ class ShipmentCardState extends State<ShipmentCard>
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
             children: [
-              // const Text(
-              //   "From",
-              //   style: TextStyle(
-              //     fontSize: 10,
-              //     fontWeight: FontWeight.w500,
-              //     color: AppColors.lessImportant,
-              //     letterSpacing: 0.8,
-              //   ),
-              // ),
               Row(
                 crossAxisAlignment: CrossAxisAlignment.baseline,
                 textBaseline: TextBaseline.alphabetic,
-                mainAxisSize: MainAxisSize.min, // Added this
+                mainAxisSize: MainAxisSize.min, 
                 children: [
                   Flexible(
                     // Added Flexible for price text
                     child: Text(
                       widget.shipment.price,
                       style: const TextStyle(
-                        fontSize: 32,
+                        fontSize: 30,
                         fontWeight: FontWeight.bold,
                         color: AppColors.blue700,
                       ),
@@ -433,8 +424,8 @@ class ShipmentCardState extends State<ShipmentCard>
             ],
           ),
         ),
-              const Spacer(),
-              _buildViewDetailsButton(),
+        // const Spacer(),
+        _buildViewDetailsButton(),
       ],
     );
   }
