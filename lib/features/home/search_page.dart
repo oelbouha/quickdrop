@@ -51,6 +51,7 @@ class SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
     weightController.dispose();
     priceController.dispose();
     typeController.dispose();
+    _animationController.dispose();
     super.dispose();
   }
 
@@ -130,163 +131,199 @@ class SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
     }).toList();
   }
 
-  Widget _buildFilterSection() {
+  // Compact filter section designed for AppBar
+  Widget _buildCompactFilterSection() {
     return Container(
       width: double.infinity,
-      margin: const EdgeInsets.all(16),
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withValues(alpha: 0.1),
-            spreadRadius: 1,
-            blurRadius: 6,
-            offset: const Offset(0, 2),
-          ),
-        ],
+      margin: const EdgeInsets.only(
+        top: 48,
       ),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
         children: [
-          // const Text(
-          //   'Search Filters',
-          //   style: TextStyle(
-          //     fontSize: 18,
-          //     fontWeight: FontWeight.bold,
-          //     color: AppColors.textPrimary,
-          //   ),
-          // ),
-          // const SizedBox(height: 16),
-          _buildFilterDestination(),
-          const SizedBox(height: 16),
-          _buildFilterButtons(),
+          // const SizedBox(height: 48),
+          Row(
+            children: [
+              Expanded(
+                child: Container(
+                  height: 45,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(8),
+                    border: Border.all(color: Colors.grey[300]!),
+                  ),
+                  child: TextField(
+                    controller: fromController,
+                    decoration: const InputDecoration(
+                      hintText: "From",
+                      hintStyle: TextStyle(fontSize: 14),
+                      prefixIcon: Icon(Icons.location_on, size: 18),
+                      border: InputBorder.none,
+                      contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(width: 8),
+              Expanded(
+                child: Container(
+                  height: 45,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(8),
+                    border: Border.all(color: Colors.grey[300]!),
+                  ),
+                  child: TextField(
+                    controller: toController,
+                    decoration: const InputDecoration(
+                      hintText: "To",
+                      hintStyle: TextStyle(fontSize: 14),
+                      prefixIcon: Icon(Icons.location_on, size: 18),
+                      border: InputBorder.none,
+                      contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          
+          // Weight, Price, and Type in a row
+          Row(
+            children: [
+              Expanded(
+                child: Container(
+                  height: 45,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(8),
+                    border: Border.all(color: Colors.grey[300]!),
+                  ),
+                  child: TextField(
+                    controller: weightController,
+                    keyboardType: TextInputType.number,
+                    decoration: const InputDecoration(
+                      hintText: "Weight (kg)",
+                      hintStyle: TextStyle(fontSize: 14),
+                      prefixIcon: Icon(Icons.scale, size: 18),
+                      border: InputBorder.none,
+                      contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(width: 8),
+              Expanded(
+                child: Container(
+                  height: 45,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(8),
+                    border: Border.all(color: Colors.grey[300]!),
+                  ),
+                  child: TextField(
+                    controller: priceController,
+                    keyboardType: TextInputType.number,
+                    decoration: const InputDecoration(
+                      hintText: "Price (dh)",
+                      hintStyle: TextStyle(fontSize: 14),
+                      prefixIcon: Icon(Icons.attach_money, size: 18),
+                      border: InputBorder.none,
+                      contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(width: 8),
+              // Compact Type Selector
+              Container(
+                height: 45,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(color: Colors.grey[300]!),
+                ),
+                child: DropdownButtonHideUnderline(
+                  child: DropdownButton<String>(
+                    value: typeController.text.isEmpty ? "Shipment" : typeController.text,
+                    onChanged: (String? newValue) {
+                      if (newValue != null) {
+                        setState(() {
+                          typeController.text = newValue;
+                        });
+                      }
+                    },
+                    items: ["Shipment", "Trip"].map<DropdownMenuItem<String>>((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 12),
+                          child: Text(value, style: const TextStyle(fontSize: 14)),
+                        ),
+                      );
+                    }).toList(),
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          
+          // Action buttons
+          Row(
+            children: [
+              Expanded(
+                child: OutlinedButton.icon(
+                  onPressed: _clearSearchFilter,
+                  icon: const Icon(Icons.clear_all, size: 16),
+                  label: const Text('Clear', style: TextStyle(fontSize: 14)),
+                  style: OutlinedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(vertical: 10),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    side: BorderSide(color: Colors.grey[300]!),
+                  ),
+                ),
+              ),
+              const SizedBox(width: 8),
+              Expanded(
+                flex: 2,
+                child: ElevatedButton.icon(
+                  onPressed: _isSearching ? null : _applySearchFilter,
+                  icon: _isSearching 
+                      ? const SizedBox(
+                          width: 16,
+                          height: 16,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                          ),
+                        )
+                      : const Icon(Icons.search, size: 16),
+                  label: Text(_isSearching ? 'Searching...' : 'Search', 
+                             style: const TextStyle(fontSize: 14)),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColors.blue700,
+                    foregroundColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(vertical: 10),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    elevation: 2,
+                  ),
+                ),
+              ),
+            ],
+          ),
         ],
       ),
     );
   }
 
-  Widget _buildFilterDestination() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        TextFieldWithHeader(
-          controller: fromController,
-          hintText: "Departure city",
-          headerText: "From",
-          validator: Validators.notEmpty,
-          isRequired: false,
-          iconPath: "assets/icon/map-point.svg",
-        ),
-        const SizedBox(height: 16),
-        TextFieldWithHeader(
-          controller: toController,
-          isRequired: false,
-          hintText: "Destination city",
-          headerText: "To",
-          validator: Validators.notEmpty,
-          iconPath: "assets/icon/map-point.svg",
-        ),
-        const SizedBox(height: 16),
-        Row(
-          children: [
-            Expanded(
-              child: TextFieldWithHeader(
-                controller: weightController,
-                hintText: "1.0",
-                headerText: "Max Weight (kg)",
-                isRequired: false,
-                keyboardType: TextInputType.number,
-                validator: Validators.notEmpty,
-              ),
-            ),
-            const SizedBox(width: 16),
-            Expanded(
-              child: TextFieldWithHeader(
-                controller: priceController,
-                hintText: "1.0",
-                headerText: "Max price (dh)",
-                isRequired: false,
-                keyboardType: TextInputType.number,
-                validator: Validators.notEmpty,
-              ),
-            ),
-          ],
-        ),
-        const SizedBox(height: 16),
-        const Text(
-          "Select Type",
-          style: TextStyle(
-            color: AppColors.textPrimary,
-            fontSize: 14,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        const SizedBox(height: 8),
-        TypeSelectorWidget(
-          onTypeSelected: (type) {
-            typeController.text = type;
-          },
-          initialSelection: "Shipment",
-          types: const ["Shipment", "Trip"],
-          selectedColor: AppColors.blue600,
-          unselectedColor: AppColors.textSecondary,
-        ),
-      ],
-    );
-  }
-
-  Widget _buildFilterButtons() {
-    return Row(
-      children: [
-        Expanded(
-          flex: 2,
-          child: OutlinedButton.icon(
-            onPressed: _clearSearchFilter,
-            icon: const Icon(Icons.clear_all, size: 18),
-            label: const Text('Clear'),
-            style: OutlinedButton.styleFrom(
-              padding: const EdgeInsets.symmetric(vertical: 12),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8),
-              ),
-              side: BorderSide(color: Colors.grey[300]!),
-            ),
-          ),
-        ),
-        const SizedBox(width: 12),
-        Expanded(
-          flex: 3,
-          child: ElevatedButton.icon(
-            onPressed: _isSearching ? null : _applySearchFilter,
-            icon: _isSearching 
-                ? const SizedBox(
-                    width: 18,
-                    height: 18,
-                    child: CircularProgressIndicator(
-                      strokeWidth: 2,
-                      valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                    ),
-                  )
-                : const Icon(Icons.search, size: 18),
-            label: Text(_isSearching ? 'Searching...' : 'Search'),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.blue700,
-              foregroundColor: Colors.white,
-              padding: const EdgeInsets.symmetric(vertical: 12),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8),
-              ),
-              elevation: 2,
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
-Widget _buildResultsSection() {
+  Widget _buildResultsSection() {
     if (!_hasSearched) {
       return _buildWelcomeState();
     }
@@ -303,7 +340,7 @@ Widget _buildResultsSection() {
     return Column(
       children: [
         _buildFilterSummary(),
-         const SizedBox(height: 20),
+        //  const SizedBox(height: 20),
         if (filters.type == null || filters.type == 'Shipment')
           _buildShipmentListings(activeShipments),
         if (filters.type == null || filters.type == 'Trip')
@@ -311,7 +348,6 @@ Widget _buildResultsSection() {
       ],
     );
   }
-
 
   Widget _buildWelcomeState() {
     return Container(
@@ -354,7 +390,6 @@ Widget _buildResultsSection() {
       ),
     );
   }
-
 
   void _clearSearchFilter() {
     setState(() {
@@ -615,32 +650,64 @@ Widget _buildResultsSection() {
     );
   }
 
+  Widget _buildSliverApp() {
+    return SliverAppBar(
+      expandedHeight: 240, 
+      floating: true,
+      pinned: true,
+      stretch: true,
+      title: const Text(
+        'Search',
+        style: TextStyle(
+          color: Colors.black,
+          fontSize: 20,
+          fontWeight: FontWeight.w600,
+        ),
+      ),
+      centerTitle: true,
+      backgroundColor: AppColors.background,
+      leading: IconButton(
+          icon: const Icon(Icons.close, color: Colors.black),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+      ),
+      flexibleSpace: FlexibleSpaceBar(
+        background: Container(
+          color: AppColors.blue700.withValues(alpha: 0.1),
+          child: SafeArea(
+            child: Container(
+              // margin: const EdgeInsets.only(
+              //   top: 26,
+              // ),
+              child: _buildCompactFilterSection(),
+          )),
+        ),
+      ),     
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.background,
-      appBar: AppBar(
-        title: const Text('Search'),
-        backgroundColor: Colors.white,
-        elevation: 0,
-        centerTitle: true,
-        iconTheme: const IconThemeData(
-          color: Colors.black,
-        ),
-        systemOverlayStyle: SystemUiOverlayStyle.dark,
+      body: CustomScrollView(
+        slivers: [
+          _buildSliverApp(),
+          SliverToBoxAdapter(
+            child: SingleChildScrollView(
+              physics: const BouncingScrollPhysics(),
+              child: Column(
+                children: [
+                  _buildResultsSection(),
+                  const SizedBox(height: 20),
+                ],
+              ),
+            ),
+          ),
+        ],
       ),
-      body:  FadeTransition(
-        opacity: _fadeAnimation, child: SingleChildScrollView(
-        physics: const BouncingScrollPhysics(),
-        child: Column(
-          children: [
-            _buildFilterSection(),
-            _buildResultsSection(),
-            const SizedBox(height: 20),
-          ],
-        ),
-      ),
-    ));
+    );
   }
 }
 
