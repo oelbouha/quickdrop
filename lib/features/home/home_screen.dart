@@ -518,7 +518,7 @@ class _HomeScreenState extends State<HomeScreen> {
           user: user,
           header: 'Welcome, ${user?.firstName ?? 'Guest'}',
           avatarSize: 42,
-          headerFontSize: 12,
+          headerFontSize: 14,
           onPressed: () => context.push("/profile"),
         ),
         const Spacer(),
@@ -550,8 +550,14 @@ class _HomeScreenState extends State<HomeScreen> {
       child: Container(
         padding: const EdgeInsets.all(6),
         decoration: BoxDecoration(
-          color: AppColors.white.withValues(alpha: 0.4),
-          borderRadius: BorderRadius.circular(8),
+          // color: AppColors.white.withValues(alpha: 0.4),
+          // borderRadius: BorderRadius.circular(30),
+          // border: Border.all(
+          //   color: AppColors.borderGray200,
+          //   width: 1,
+          //   strokeAlign: BorderSide.strokeAlignInside,
+          // ),
+
         ),
         child: Stack(
           children: [

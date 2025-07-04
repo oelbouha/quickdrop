@@ -290,7 +290,7 @@ class _ListingCardDetailsState extends State<ListingCardDetails> {
                 _buildDescription(),
                 const SizedBox(height: 20),
                 _buildDetailsSection(),
-                const SizedBox(height: 150), // space for bottom bar
+                const SizedBox(height: 150),
               ],
             ),
           ),
