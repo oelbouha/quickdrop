@@ -463,7 +463,7 @@ Widget _buildUserStats() {
   final user = userProvider.user;
 
   return Container(
-    padding: const EdgeInsets.all(24),
+    padding: const EdgeInsets.all(16),
     width: double.infinity,
     decoration: BoxDecoration(
       color: AppColors.white,
@@ -479,18 +479,17 @@ Widget _buildUserStats() {
     child: Column(
       children: [
         // Top section - Profile info
-        Row(
+        Column(
           children: [
             _buildProfileImage(user),
-            const SizedBox(width: 16),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+            const SizedBox(width: 8),
+             Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Text(
                     user?.displayName ?? 'Guest User',
                     style: const TextStyle(
-                      fontSize: 22,
+                      fontSize: 18,
                       fontWeight: FontWeight.w600,
                       color: AppColors.dark,
                     ),
@@ -501,17 +500,16 @@ Widget _buildUserStats() {
                   Text(
                     "Member since ${user?.createdAt ?? 'N/A'}",
                     style: TextStyle(
-                      fontSize: 14,
+                      fontSize: 12,
                       color: AppColors.dark.withValues(alpha: 0.6),
                       fontWeight: FontWeight.w400,
                     ),
                   ),
-                  // const SizedBox(height: 12),
                   // _buildVerificationBadge(),
                 ],
               ),
-            ),
-             _buildViewStatsButton(),
+
+         
           ],
         ),
       ],
@@ -520,11 +518,11 @@ Widget _buildUserStats() {
 }
 
 Widget _buildProfileImage(user) {
-  return  Container(
-      width: 70,
-      height: 70,
+  return Container(
+      width: 90,
+      height: 90,
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(35),
+        borderRadius: BorderRadius.circular(50),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.06),
@@ -534,7 +532,7 @@ Widget _buildProfileImage(user) {
         ],
       ),
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(35),
+        borderRadius: BorderRadius.circular(50),
         child: Image.network(
           user?.photoUrl ?? AppTheme.defaultProfileImage,
           fit: BoxFit.cover,
@@ -547,19 +545,24 @@ Widget _buildProfileImage(user) {
               child: Icon(
                 Icons.person,
                 color: AppColors.blueStart,
-                size: 32,
+                size: 52,
               ),
             );
           },
         ),
-    ),
+      ),
+    
   );
 }
 
 
 
 Widget _buildViewStatsButton() {
-  return  Container(
+  return GestureDetector(
+    onTap: () {
+      context.push('/profile/statistics?userId=${FirebaseAuth.instance.currentUser!.uid}');
+    },
+    child: Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       decoration: BoxDecoration(
         color: AppColors.dark,
@@ -576,13 +579,13 @@ Widget _buildViewStatsButton() {
         mainAxisSize: MainAxisSize.min,
         children: [
            Icon(
-            Icons.rate_review_outlined,
+            Icons.analytics_outlined,
             color: Colors.white,
             size: 18,
           ),
            SizedBox(width: 8),
           Text(
-            '4.8',
+            'View Details',
             style: TextStyle(
               color: Colors.white,
               fontSize: 14,
@@ -591,10 +594,9 @@ Widget _buildViewStatsButton() {
           ),
         ],
       ),
-
+    ),
   );
 }
-
 
 
 }

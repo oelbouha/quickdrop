@@ -833,7 +833,7 @@ Widget _buildCompactStatusIndicator(bool isMyTurn) {
 Widget _buildCompactInputSection(bool isMyTurn) {
   return Column(
     children: [
-      // Price input - most important, so it's prominent
+      
       Container(
         decoration: BoxDecoration(
           border: Border.all(color: AppColors.blue700.withValues(alpha: 0.3)),

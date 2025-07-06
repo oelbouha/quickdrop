@@ -10,16 +10,20 @@ class TextFieldWithHeader extends StatelessWidget {
   final bool obsecureText;
   final bool isRequired;
   final String? iconPath;
+  final IconData? prefixIcon;
+  final String? suffixText;
   final TextInputType keyboardType;
   final String? Function(String?)? validator;
   final void Function(String)? onChanged;
   int maxLines;
 
-   TextFieldWithHeader({
+  TextFieldWithHeader({
     super.key,
     required this.controller,
     required this.hintText,
-    this.iconPath ,
+    this.iconPath,
+    this.prefixIcon,
+    this.suffixText,
     required this.headerText,
     this.obsecureText = false,
     this.keyboardType = TextInputType.text,
@@ -29,7 +33,6 @@ class TextFieldWithHeader extends StatelessWidget {
     this.onChanged,
   });
 
-  @override
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -58,60 +61,71 @@ class TextFieldWithHeader extends StatelessWidget {
           ],
         ),
         const SizedBox(height: 4),
-        TextFormField(
-          maxLines: maxLines,
-          controller: controller,
-          obscureText: obsecureText,
-          validator: validator,
-          onChanged: onChanged,
-          keyboardType: keyboardType,
-          style: const TextStyle(color: AppColors.shipmentText),
-          decoration: InputDecoration(
-            hintText: hintText,
-            hintStyle: TextStyle(
-              color: Colors.grey[400],
-            ),
-            prefixIcon: iconPath != null ? Padding(
-                padding:  const EdgeInsets.all(12),
-                child: CustomIcon(
-                  iconPath: iconPath!,
-                  size: 20,
-                  color: AppColors.textSecondary,
+        Container(
+          decoration: BoxDecoration(
+            border: Border.all(color: AppColors.lessImportant),
+            borderRadius: BorderRadius.circular(12),
+            color: Colors.white,
+          ),
+          child: Row(
+            children: [
+              Expanded(
+                child: TextFormField(
+                  maxLines: maxLines,
+                  controller: controller,
+                  obscureText: obsecureText,
+                  validator: validator,
+                  onChanged: onChanged,
+                  keyboardType: keyboardType,
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                    color: AppColors.shipmentText,
+                  ),
+                  decoration: InputDecoration(
+                    hintText: hintText,
+                    hintStyle: TextStyle(
+                      color: Colors.grey[400],
+                      fontWeight: FontWeight.normal,
+                    ),
+                    prefixIcon: _buildPrefixIcon(),
+                    suffixText: suffixText,
+                    suffixStyle: TextStyle(
+                      color: Colors.grey[600],
+                      fontWeight: FontWeight.w500,
+                    ),
+                    border: InputBorder.none,
+                    contentPadding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 12,
+                    ),
+                  ),
                 ),
-              ) : null,
-            filled: true,
-            fillColor: AppColors.white,
-            enabledBorder: OutlineInputBorder(
-              borderSide:  const BorderSide(
-                color: AppColors.textSecondary,
-                width: AppTheme.textFieldBorderWidth,
               ),
-              borderRadius: BorderRadius.circular(AppTheme.textFeildRadius),
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderSide: const BorderSide(
-                color: AppColors.blue,
-                // width: AppTheme.textFieldBorderWidth,
-              ),
-              borderRadius: BorderRadius.circular(AppTheme.cardRadius),
-            ),
-            errorBorder: OutlineInputBorder(
-              borderSide: const BorderSide(
-                color: AppColors.error,
-                // width: AppTheme.textFieldBorderWidth,
-              ),
-              borderRadius: BorderRadius.circular(AppTheme.cardRadius),
-            ),
-            focusedErrorBorder: OutlineInputBorder(
-              borderSide: const BorderSide(
-                color: AppColors.error,
-                // width: AppTheme.textFieldBorderWidth,
-              ),
-              borderRadius: BorderRadius.circular(AppTheme.cardRadius),
-            ),
+            ],
           ),
         ),
       ],
     );
+  }
+
+  Widget? _buildPrefixIcon() {
+    if (prefixIcon != null) {
+      return Icon(
+        prefixIcon,
+        color: AppColors.lessImportant,
+        size: 20,
+      );
+    } else if (iconPath != null) {
+      return Padding(
+        padding: const EdgeInsets.all(12),
+        child: CustomIcon(
+          iconPath: iconPath!,
+          size: 20,
+          color: AppColors.lessImportant,
+        ),
+      );
+    }
+    return null;
   }
 }

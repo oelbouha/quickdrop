@@ -322,7 +322,7 @@ class AppRouter {
             //   state.uri.queryParameters,
             // );
             return buildCustomTransitionPage(
-                context, SearchPage());
+                context, SearchFilterScreen());
           },
         ),
         GoRoute(

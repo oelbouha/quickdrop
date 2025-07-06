@@ -36,6 +36,8 @@ class AppColors {
 
   static const Color input = Color(0xFFeeeeee);
 
+  static const Color inputBorder = Color(0xFFDDDDDD);
+
   static const Color requestButton = Color(0xFFD3DFFB);
   static const Color chatMessageInput = Color(0xFFFAFAFA);
 
@@ -52,7 +54,7 @@ class AppColors {
 
   static const Color dark = Color(0xFF0d0c22);
   static const Color navTextActive = blue;
-  static const Color navTextInactive = lessImportant;
+  static const Color navTextInactive = Color(0xFF6A6A6A);
   static const Color navBackground = white;
 
   // TabBar
