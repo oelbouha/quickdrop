@@ -303,14 +303,14 @@ class CompletedItemCardState extends State<CompletedItemCard> {
           // Price
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-            decoration: BoxDecoration(
-              color: AppColors.blue.withOpacity(0.1),
-              borderRadius: BorderRadius.circular(20),
-              border: Border.all(
-                color: AppColors.blue.withOpacity(0.2),
-                width: 1,
-              ),
-            ),
+            // decoration: BoxDecoration(
+            //   color: AppColors.blue.withOpacity(0.1),
+            //   borderRadius: BorderRadius.circular(20),
+            //   border: Border.all(
+            //     color: AppColors.blue.withOpacity(0.2),
+            //     width: 1,
+            //   ),
+            // ),
             child: Text(
               '${widget.item.price} DH',
               style: const TextStyle(

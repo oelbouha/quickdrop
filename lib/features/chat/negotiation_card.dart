@@ -1,4 +1,5 @@
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:go_router/go_router.dart';
 // import 'package:quickdrop_app/core/widgets/custom_svg.dart';
 import 'package:quickdrop_app/core/widgets/destination.dart';
@@ -6,6 +7,9 @@ import 'package:quickdrop_app/core/widgets/button.dart';
 import 'package:quickdrop_app/core/widgets/item_details.dart';
 import 'package:quickdrop_app/features/chat/convo_screen.dart';
 import 'package:quickdrop_app/core/utils/imports.dart';
+import 'package:quickdrop_app/core/providers/negotiation_provider.dart';
+import 'package:quickdrop_app/features/models/negotiation_model.dart';
+
 
 class NegotiationCard extends StatefulWidget {
 
@@ -35,6 +39,45 @@ class NegotiationCard extends StatefulWidget {
 }
 
 class NegotiationCardState extends State<NegotiationCard> {
+
+   bool _isProcessing = false;
+
+
+
+  void _refuseRequest() async {
+     if (_isProcessing) return;
+    
+    setState(() {
+      _isProcessing = true;
+    });
+    
+    try {
+        await FirebaseFirestore.instance.runTransaction((transaction) async {
+
+        await Provider.of<DeliveryRequestProvider>(context, listen: false)
+          .deleteRequest(widget.requestId);
+        // final chatId = getChatId(FirebaseAuth.instance.currentUser!.uid, widget.user.uid);
+        await Provider.of<NegotiationProvider>(context, listen: false).deleteNegotiation(widget.requestId); 
+      });
+
+      if (mounted) {
+        context.pop();
+        AppUtils.showDialog(context, "Request refused successfully", AppColors.succes);
+      }
+    } catch (e) {
+      if (mounted) {
+        AppUtils.showDialog(context, "Failed to refuse request $e", AppColors.error);
+      }
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isProcessing = false;
+        });
+      }
+    }
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -59,7 +102,9 @@ class NegotiationCardState extends State<NegotiationCard> {
           children: [
             _buildStatusBanner(),
            _buildHeader(),
-          // _buildBottomStatusBanner(),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            child: _buildActionButton()),
           ],)
         ));
   }
@@ -123,7 +168,7 @@ class NegotiationCardState extends State<NegotiationCard> {
           ),
           SizedBox(width: 4),
           Text(
-             'Negotiation expires automatically within 24 hours',
+             'Negotiation in progress',
             style: TextStyle(
               color: AppColors.warning,
               fontSize: 12,
@@ -136,5 +181,60 @@ class NegotiationCardState extends State<NegotiationCard> {
   }
 
  
+
+
+  Widget _buildActionButton() {
+    return Container(
+      width: double.infinity,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(
+            color: AppColors.error.withOpacity(0.15),
+            spreadRadius: 0,
+            blurRadius: 8,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: ElevatedButton.icon(
+        onPressed: _isProcessing ? null : _refuseRequest,
+        icon: _isProcessing
+            ? SizedBox(
+                width: 18,
+                height: 18,
+                child: CircularProgressIndicator(
+                  strokeWidth: 2.5,
+                  valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                ),
+              )
+            : Icon(
+                Icons.close_rounded,
+                size: 20,
+                color: Colors.white,
+              ),
+        label: Text(
+          _isProcessing ? 'Cancelling...' : 'Cancel Negotiation',
+          style: const TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.w600,
+            color: Colors.white,
+            letterSpacing: 0.5,
+          ),
+        ),
+        style: ElevatedButton.styleFrom(
+          backgroundColor: AppColors.error,
+          elevation: 0,
+          shadowColor: Colors.transparent,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+          padding: const EdgeInsets.symmetric(vertical: 16),
+          disabledBackgroundColor: AppColors.error.withOpacity(0.6),
+        ),
+      ),
+    );
+  }
+
 
 }

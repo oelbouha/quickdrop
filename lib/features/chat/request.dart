@@ -372,7 +372,7 @@ Widget _buildHeader() {
                     context.push('/negotiation-screen?userId=${widget.user.uid}&shipmentId=${widget.shipment.id}&requestId=${widget.request.id}');
                   },
                   icon: const Icon(Icons.chat_bubble_outline, size: 16),
-                  label: const Text('Negotiate Price'),
+                  label: const Text('Negotiate'),
                   style: OutlinedButton.styleFrom(
                     foregroundColor: AppColors.primary,
                     side: BorderSide(color: AppColors.primary.withValues(alpha: 0.3)),
@@ -394,7 +394,7 @@ Widget _buildHeader() {
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
                   ),
-                  padding: const EdgeInsets.symmetric(vertical: 12),
+                  padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 0),
                   elevation: 0,
                 ),
                   child: (_isProcessing && _processingAction == 'accept')
@@ -419,7 +419,7 @@ Widget _buildHeader() {
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
                   ),
-                  padding: const EdgeInsets.symmetric(vertical: 12),
+                  padding: const EdgeInsets.symmetric(vertical: 4),
                   elevation: 0,
                 ),
                   child: (_isProcessing && _processingAction == 'refuse')
