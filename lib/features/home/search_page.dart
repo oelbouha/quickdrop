@@ -2,25 +2,21 @@ import 'package:quickdrop_app/core/utils/imports.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/gestures.dart';
 
-class SearchPage extends StatefulWidget {
-  const SearchPage({super.key});
+class SearchFilterScreen extends StatefulWidget {
+  const SearchFilterScreen({super.key});
 
   @override
-  SearchPageState createState() => SearchPageState();
+  SearchFilterScreenState createState() => SearchFilterScreenState();
 }
 
-class SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
+class SearchFilterScreenState extends State<SearchFilterScreen> with TickerProviderStateMixin {
   bool _isSearching = false;
-  bool _hasSearched = false;
-  List<Shipment> activeShipments = [];
-  List<Trip> activeTrips = [];
 
   final fromController = TextEditingController();
   final toController = TextEditingController();
   final weightController = TextEditingController();
   final priceController = TextEditingController();
   final typeController = TextEditingController();
-  late SearchFilters filters;
 
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
@@ -28,9 +24,8 @@ class SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
-    filters = const SearchFilters();
     typeController.text = "Shipment";
-     _animationController = AnimationController(
+    _animationController = AnimationController(
       duration: const Duration(milliseconds: 1200),
       vsync: this,
     );
@@ -55,339 +50,176 @@ class SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
     super.dispose();
   }
 
-  List<Shipment> _filterShipments(List<Shipment> shipments) {
-    return shipments.where((shipment) {
-      // Filter by 'from' location
-      if (filters.from != null && filters.from!.isNotEmpty) {
-        if (!shipment.from.toLowerCase().contains(filters.from!.toLowerCase())) {
-          return false;
-        }
-      }
-
-      // Filter by 'to' location
-      if (filters.to != null && filters.to!.isNotEmpty) {
-        if (!shipment.to.toLowerCase().contains(filters.to!.toLowerCase())) {
-          return false;
-        }
-      }
-
-      // Filter by price
-      if (filters.price != null && filters.price!.isNotEmpty) {
-        final filterPrice = double.tryParse(filters.price!);
-        final shipmentPrice = double.tryParse(shipment.price);
-        if (filterPrice != null && shipmentPrice != null && shipmentPrice > filterPrice) {
-          return false;
-        }
-      }
-
-      // Filter by weight
-      if (filters.weight != null && filters.weight!.isNotEmpty) {
-        final filterWeight = double.tryParse(filters.weight!);
-        final shipmentWeight = double.tryParse(shipment.weight);
-        if (filterWeight != null && shipmentWeight != null && shipmentWeight > filterWeight) {
-          return false;
-        }
-      }
-
-      return true;
-    }).toList();
-  }
-
-  List<Trip> _filterTrips(List<Trip> trips) {
-    return trips.where((trip) {
-      // Filter by 'from' location
-      if (filters.from != null && filters.from!.isNotEmpty) {
-        if (!trip.from.toLowerCase().contains(filters.from!.toLowerCase())) {
-          return false;
-        }
-      }
-
-      // Filter by 'to' location
-      if (filters.to != null && filters.to!.isNotEmpty) {
-        if (!trip.to.toLowerCase().contains(filters.to!.toLowerCase())) {
-          return false;
-        }
-      }
-
-      // Filter by price
-      if (filters.price != null && filters.price!.isNotEmpty) {
-        final filterPrice = double.tryParse(filters.price!);
-        final tripPrice = double.tryParse(trip.price);
-        if (filterPrice != null && tripPrice != null && tripPrice > filterPrice) {
-          return false;
-        }
-      }
-
-      // Filter by weight
-      if (filters.weight != null && filters.weight!.isNotEmpty) {
-        final filterWeight = double.tryParse(filters.weight!);
-        final tripWeight = double.tryParse(trip.weight);
-        if (filterWeight != null && tripWeight != null && tripWeight < filterWeight) {
-          return false;
-        }
-      }
-
-      return true;
-    }).toList();
-  }
-
-  // Compact filter section designed for AppBar
-  Widget _buildCompactFilterSection() {
+Widget _buildFilterTypeSection() {
+  return Container(
+    width: double.infinity,
+    margin: const EdgeInsets.all(16),
+    padding: const EdgeInsets.all(16),
+    decoration: BoxDecoration(
+      color: Colors.white,
+      borderRadius: BorderRadius.circular(12),
+      boxShadow: [
+        BoxShadow(
+          color: Colors.grey.withValues(alpha: 0.1),
+          spreadRadius: 1,
+          blurRadius: 6,
+          offset: const Offset(0, 2),
+        ),
+      ],
+    ),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        const Text(
+          "Select Type",
+          style: TextStyle(
+            color: AppColors.textPrimary,
+            fontSize: 14,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        const SizedBox(height: 8),
+        TypeSelectorWidget(
+          onTypeSelected: (type) {
+            typeController.text = type;
+          },
+          initialSelection: "Shipment",
+          types: const ["Shipment", "Trip"],
+          selectedColor: AppColors.blue600,
+          unselectedColor: AppColors.textSecondary,
+          topSpacing: 0, // Explicitly set to 0 to remove any top padding
+        ),
+      ],
+    ),
+  );
+}
+  Widget _buildFilterSection() {
     return Container(
       width: double.infinity,
-      margin: const EdgeInsets.only(
-        top: 48,
+      margin: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withValues(alpha: 0.1),
+            spreadRadius: 1,
+            blurRadius: 6,
+            offset: const Offset(0, 2),
+          ),
+        ],
       ),
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       child: Column(
-        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // const SizedBox(height: 48),
-          Row(
-            children: [
-              Expanded(
-                child: Container(
-                  height: 45,
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(8),
-                    border: Border.all(color: Colors.grey[300]!),
-                  ),
-                  child: TextField(
-                    controller: fromController,
-                    decoration: const InputDecoration(
-                      hintText: "From",
-                      hintStyle: TextStyle(fontSize: 14),
-                      prefixIcon: Icon(Icons.location_on, size: 18),
-                      border: InputBorder.none,
-                      contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 12),
-                    ),
-                  ),
-                ),
-              ),
-              const SizedBox(width: 8),
-              Expanded(
-                child: Container(
-                  height: 45,
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(8),
-                    border: Border.all(color: Colors.grey[300]!),
-                  ),
-                  child: TextField(
-                    controller: toController,
-                    decoration: const InputDecoration(
-                      hintText: "To",
-                      hintStyle: TextStyle(fontSize: 14),
-                      prefixIcon: Icon(Icons.location_on, size: 18),
-                      border: InputBorder.none,
-                      contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 12),
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 12),
+          _buildFilterDestination(),
           
-          // Weight, Price, and Type in a row
-          Row(
-            children: [
-              Expanded(
-                child: Container(
-                  height: 45,
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(8),
-                    border: Border.all(color: Colors.grey[300]!),
-                  ),
-                  child: TextField(
-                    controller: weightController,
-                    keyboardType: TextInputType.number,
-                    decoration: const InputDecoration(
-                      hintText: "Weight (kg)",
-                      hintStyle: TextStyle(fontSize: 14),
-                      prefixIcon: Icon(Icons.scale, size: 18),
-                      border: InputBorder.none,
-                      contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 12),
-                    ),
-                  ),
-                ),
-              ),
-              const SizedBox(width: 8),
-              Expanded(
-                child: Container(
-                  height: 45,
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(8),
-                    border: Border.all(color: Colors.grey[300]!),
-                  ),
-                  child: TextField(
-                    controller: priceController,
-                    keyboardType: TextInputType.number,
-                    decoration: const InputDecoration(
-                      hintText: "Price (dh)",
-                      hintStyle: TextStyle(fontSize: 14),
-                      prefixIcon: Icon(Icons.attach_money, size: 18),
-                      border: InputBorder.none,
-                      contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 12),
-                    ),
-                  ),
-                ),
-              ),
-              const SizedBox(width: 8),
-              // Compact Type Selector
-              Container(
-                height: 45,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(8),
-                  border: Border.all(color: Colors.grey[300]!),
-                ),
-                child: DropdownButtonHideUnderline(
-                  child: DropdownButton<String>(
-                    value: typeController.text.isEmpty ? "Shipment" : typeController.text,
-                    onChanged: (String? newValue) {
-                      if (newValue != null) {
-                        setState(() {
-                          typeController.text = newValue;
-                        });
-                      }
-                    },
-                    items: ["Shipment", "Trip"].map<DropdownMenuItem<String>>((String value) {
-                      return DropdownMenuItem<String>(
-                        value: value,
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 12),
-                          child: Text(value, style: const TextStyle(fontSize: 14)),
-                        ),
-                      );
-                    }).toList(),
-                  ),
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 12),
-          
-          // Action buttons
-          Row(
-            children: [
-              Expanded(
-                child: OutlinedButton.icon(
-                  onPressed: _clearSearchFilter,
-                  icon: const Icon(Icons.clear_all, size: 16),
-                  label: const Text('Clear', style: TextStyle(fontSize: 14)),
-                  style: OutlinedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(vertical: 10),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    side: BorderSide(color: Colors.grey[300]!),
-                  ),
-                ),
-              ),
-              const SizedBox(width: 8),
-              Expanded(
-                flex: 2,
-                child: ElevatedButton.icon(
-                  onPressed: _isSearching ? null : _applySearchFilter,
-                  icon: _isSearching 
-                      ? const SizedBox(
-                          width: 16,
-                          height: 16,
-                          child: CircularProgressIndicator(
-                            strokeWidth: 2,
-                            valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                          ),
-                        )
-                      : const Icon(Icons.search, size: 16),
-                  label: Text(_isSearching ? 'Searching...' : 'Search', 
-                             style: const TextStyle(fontSize: 14)),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.blue700,
-                    foregroundColor: Colors.white,
-                    padding: const EdgeInsets.symmetric(vertical: 10),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    elevation: 2,
-                  ),
-                ),
-              ),
-            ],
-          ),
         ],
       ),
     );
   }
 
-  Widget _buildResultsSection() {
-    if (!_hasSearched) {
-      return _buildWelcomeState();
-    }
-
-    if (_isSearching) {
-      return const Center(
-        child: Padding(
-          padding: EdgeInsets.all(32.0),
-          child: CircularProgressIndicator(),
-        ),
-      );
-    }
-
+  Widget _buildFilterDestination() {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _buildFilterSummary(),
-        //  const SizedBox(height: 20),
-        if (filters.type == null || filters.type == 'Shipment')
-          _buildShipmentListings(activeShipments),
-        if (filters.type == null || filters.type == 'Trip')
-          _buildTripListings(activeTrips),
+        TextFieldWithHeader(
+          controller: fromController,
+          hintText: "Departure city",
+          headerText: "From",
+          validator: Validators.notEmpty,
+          isRequired: false,
+          iconPath: "assets/icon/map-point.svg",
+        ),
+        const SizedBox(height: 16),
+        TextFieldWithHeader(
+          controller: toController,
+          isRequired: false,
+          hintText: "Destination city",
+          headerText: "To",
+          validator: Validators.notEmpty,
+          iconPath: "assets/icon/map-point.svg",
+        ),
+        const SizedBox(height: 16),
+        Row(
+          children: [
+            Expanded(
+              child: TextFieldWithHeader(
+                controller: weightController,
+                hintText: "1.0",
+                headerText: "Weight (kg)",
+                isRequired: false,
+                keyboardType: TextInputType.number,
+                validator: Validators.notEmpty,
+              ),
+            ),
+            const SizedBox(width: 16),
+            Expanded(
+              child: TextFieldWithHeader(
+                controller: priceController,
+                hintText: "1.0",
+                headerText: "price (dh)",
+                isRequired: false,
+                keyboardType: TextInputType.number,
+                validator: Validators.notEmpty,
+              ),
+            ),
+          ],
+        ),
+        // const SizedBox(height: 16),
+       
       ],
     );
   }
 
-  Widget _buildWelcomeState() {
-    return Container(
-      padding: const EdgeInsets.all(32.0),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Container(
-            width: 120,
-            height: 120,
-            decoration: BoxDecoration(
-              color: AppColors.blue700.withValues(alpha: 0.1),
-              borderRadius: BorderRadius.circular(60),
-            ),
-            child: const Icon(
-              Icons.search,
-              size: 60,
-              color: AppColors.blue700,
+  Widget _buildFilterButtons() {
+    return Row(
+      children: [
+        Expanded(
+          flex: 2,
+          child: OutlinedButton.icon(
+            onPressed: _clearSearchFilter,
+            icon: const Icon(Icons.clear_all, size: 18, color: Colors.black),
+            label: const Text('Clear', style: TextStyle(fontSize: 16, color: Colors.black)),
+            style: OutlinedButton.styleFrom(
+              padding: const EdgeInsets.symmetric(vertical: 12),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
+              side: BorderSide(color: Colors.grey[300]!),
             ),
           ),
-          const SizedBox(height: 24),
-          const Text(
-            'Ready to Search',
-            style: TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.w600,
-              color: Color(0xFF1F2937),
+        ),
+        const SizedBox(width: 12),
+        Expanded(
+          flex: 3,
+          child: ElevatedButton.icon(
+            onPressed: _isSearching ? null : _performSearch,
+            icon: _isSearching 
+                ? const SizedBox(
+                    width: 18,
+                    height: 18,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2,
+                      valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                    ),
+                  )
+                : const Icon(Icons.search, size: 18),
+            label: Text(_isSearching ? 'Searching...' : 'Search', style: const TextStyle(fontSize: 16)),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppColors.blue700,
+              foregroundColor: Colors.white,
+              padding: const EdgeInsets.symmetric(vertical: 12),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
+              elevation: 2,
             ),
           ),
-          const SizedBox(height: 8),
-          const Text(
-            'Fill in the filters above and tap search to find shipments and trips',
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              fontSize: 14,
-              color: Color(0xFF6B7280),
-            ),
-          ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 
@@ -398,14 +230,10 @@ class SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
       weightController.clear();
       priceController.clear();
       typeController.text = "Shipment";
-      _hasSearched = false;
-      activeShipments.clear();
-      activeTrips.clear();
-      filters = const SearchFilters();
     });
   }
 
-  void _applySearchFilter() async {
+  void _performSearch() async {
     if (fromController.text.isEmpty &&
         toController.text.isEmpty &&
         weightController.text.isEmpty &&
@@ -420,11 +248,8 @@ class SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
       _isSearching = true;
     });
 
-    // Simulate network delay
-    await Future.delayed(const Duration(milliseconds: 500));
-
     // Create filters from form input
-    SearchFilters newFilters = SearchFilters(
+    SearchFilters filters = SearchFilters(
       from: fromController.text.isEmpty ? null : fromController.text,
       to: toController.text.isEmpty ? null : toController.text,
       price: priceController.text.isEmpty ? null : priceController.text,
@@ -432,48 +257,252 @@ class SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
       type: typeController.text.isEmpty ? "Shipment" : typeController.text,
     );
 
+    // Navigate to results page
+    await Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => SearchResultsScreen(filters: filters),
+      ),
+    );
+
+    setState(() {
+      _isSearching = false;
+    });
+  }
+
+  Widget _buildSliverApp() {
+    return SliverAppBar(
+      floating: true,
+      pinned: true,
+      stretch: true,
+      backgroundColor: AppColors.background,
+      leading: IconButton(
+          icon: const Icon(Icons.close, color: Colors.black),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+      ),
+      title: const Text(
+        'Search',
+        style: TextStyle(
+          color: Colors.black,
+          fontSize: 20,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+      centerTitle: true,
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: AppColors.background,
+      body: CustomScrollView(
+        slivers: [
+          _buildSliverApp(),
+          SliverToBoxAdapter(
+            child: SingleChildScrollView(
+              physics: const BouncingScrollPhysics(),
+              child: Column(
+                children :[
+                  _buildFilterSection(),
+                  const SizedBox(height: 16),
+                  _buildFilterTypeSection(),
+                  ])
+            ),
+          ),
+        ],
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      floatingActionButton: Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(8),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withValues(alpha: 0.1),
+              spreadRadius: 1,
+              blurRadius: 6,
+              offset: const Offset(0, 2),
+            ),
+          ],
+        ),
+        child: _buildFilterButtons(),
+      ),
+    );
+  }
+}
+
+
+
+class SearchResultsScreen extends StatefulWidget {
+  final SearchFilters filters;
+  
+  const SearchResultsScreen({
+    super.key,
+    required this.filters,
+  });
+
+  @override
+  SearchResultsScreenState createState() => SearchResultsScreenState();
+}
+
+class SearchResultsScreenState extends State<SearchResultsScreen> with TickerProviderStateMixin {
+  bool _isLoading = true;
+  List<Shipment> activeShipments = [];
+  List<Trip> activeTrips = [];
+
+  late AnimationController _animationController;
+  late Animation<double> _fadeAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _animationController = AnimationController(
+      duration: const Duration(milliseconds: 1200),
+      vsync: this,
+    );
+    _fadeAnimation = Tween<double>(
+      begin: 0.0,
+      end: 1.0,
+    ).animate(CurvedAnimation(
+      parent: _animationController,
+      curve: Curves.easeInOut,
+    ));
+    _animationController.forward();
+    _performSearch();
+  }
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
+  }
+
+  List<Shipment> _filterShipments(List<Shipment> shipments) {
+    return shipments.where((shipment) {
+      // Filter by 'from' location
+      if (widget.filters.from != null && widget.filters.from!.isNotEmpty) {
+        if (!shipment.from.toLowerCase().contains(widget.filters.from!.toLowerCase())) {
+          return false;
+        }
+      }
+
+      // Filter by 'to' location
+      if (widget.filters.to != null && widget.filters.to!.isNotEmpty) {
+        if (!shipment.to.toLowerCase().contains(widget.filters.to!.toLowerCase())) {
+          return false;
+        }
+      }
+
+      // Filter by price
+      if (widget.filters.price != null && widget.filters.price!.isNotEmpty) {
+        final filterPrice = double.tryParse(widget.filters.price!);
+        final shipmentPrice = double.tryParse(shipment.price);
+        if (filterPrice != null && shipmentPrice != null && shipmentPrice > filterPrice) {
+          return false;
+        }
+      }
+
+      // Filter by weight
+      if (widget.filters.weight != null && widget.filters.weight!.isNotEmpty) {
+        final filterWeight = double.tryParse(widget.filters.weight!);
+        final shipmentWeight = double.tryParse(shipment.weight);
+        if (filterWeight != null && shipmentWeight != null && shipmentWeight > filterWeight) {
+          return false;
+        }
+      }
+
+      return true;
+    }).toList();
+  }
+
+  List<Trip> _filterTrips(List<Trip> trips) {
+    return trips.where((trip) {
+      // Filter by 'from' location
+      if (widget.filters.from != null && widget.filters.from!.isNotEmpty) {
+        if (!trip.from.toLowerCase().contains(widget.filters.from!.toLowerCase())) {
+          return false;
+        }
+      }
+
+      // Filter by 'to' location
+      if (widget.filters.to != null && widget.filters.to!.isNotEmpty) {
+        if (!trip.to.toLowerCase().contains(widget.filters.to!.toLowerCase())) {
+          return false;
+        }
+      }
+
+      // Filter by price
+      if (widget.filters.price != null && widget.filters.price!.isNotEmpty) {
+        final filterPrice = double.tryParse(widget.filters.price!);
+        final tripPrice = double.tryParse(trip.price);
+        if (filterPrice != null && tripPrice != null && tripPrice > filterPrice) {
+          return false;
+        }
+      }
+
+      // Filter by weight
+      if (widget.filters.weight != null && widget.filters.weight!.isNotEmpty) {
+        final filterWeight = double.tryParse(widget.filters.weight!);
+        final tripWeight = double.tryParse(trip.weight);
+        if (filterWeight != null && tripWeight != null && tripWeight < filterWeight) {
+          return false;
+        }
+      }
+
+      return true;
+    }).toList();
+  }
+
+  void _performSearch() async {
+    setState(() {
+      _isLoading = true;
+    });
+
+    // Simulate network delay
+    await Future.delayed(const Duration(milliseconds: 800));
+
     final shipmentProvider = Provider.of<ShipmentProvider>(context, listen: false);
     final tripProvider = Provider.of<TripProvider>(context, listen: false);
 
-    // Clear previous results
     List<Shipment> filteredShipments = [];
     List<Trip> filteredTrips = [];
 
     // Apply filters based on type
-    if (newFilters.type == null || newFilters.type == 'Shipment') {
+    if (widget.filters.type == null || widget.filters.type == 'Shipment') {
       filteredShipments = _filterShipments(shipmentProvider.activeShipments);
     }
     
-    if (newFilters.type == null || newFilters.type == 'Trip') {
+    if (widget.filters.type == null || widget.filters.type == 'Trip') {
       filteredTrips = _filterTrips(tripProvider.activeTrips);
     }
 
     setState(() {
-      filters = newFilters;
       activeShipments = filteredShipments;
       activeTrips = filteredTrips;
-      _isSearching = false;
-      _hasSearched = true;
+      _isLoading = false;
     });
   }
 
   Widget _buildFilterSummary() {
     List<String> appliedFilters = [];
     
-    if (filters.from != null && filters.from!.isNotEmpty) {
-      appliedFilters.add('From: ${filters.from}');
+    if (widget.filters.from != null && widget.filters.from!.isNotEmpty) {
+      appliedFilters.add('From: ${widget.filters.from}');
     }
-    if (filters.to != null && filters.to!.isNotEmpty) {
-      appliedFilters.add('To: ${filters.to}');
+    if (widget.filters.to != null && widget.filters.to!.isNotEmpty) {
+      appliedFilters.add('To: ${widget.filters.to}');
     }
-    if (filters.weight != null && filters.weight!.isNotEmpty) {
-      appliedFilters.add('Max Weight: ${filters.weight} kg');
+    if (widget.filters.weight != null && widget.filters.weight!.isNotEmpty) {
+      appliedFilters.add('Max Weight: ${widget.filters.weight} kg');
     }
-    if (filters.price != null && filters.price!.isNotEmpty) {
-      appliedFilters.add('Max Price: ${filters.price} dh');
+    if (widget.filters.price != null && widget.filters.price!.isNotEmpty) {
+      appliedFilters.add('Max Price: ${widget.filters.price} dh');
     }
-    if (filters.type != null && filters.type!.isNotEmpty) {
-      appliedFilters.add('Type: ${filters.type}');
+    if (widget.filters.type != null && widget.filters.type!.isNotEmpty) {
+      appliedFilters.add('Type: ${widget.filters.type}');
     }
 
     if (appliedFilters.isEmpty) return const SizedBox.shrink();
@@ -554,7 +583,7 @@ class SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    if (filters.type == null || (filters.type != 'Trip' && activeTrips.isNotEmpty))
+                    if (widget.filters.type == null || (widget.filters.type != 'Trip' && activeTrips.isNotEmpty))
                       Padding(
                         padding: const EdgeInsets.only(bottom: 16.0),
                         child: Text(
@@ -607,7 +636,7 @@ class SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    if (filters.type == null || (filters.type != 'Shipment' && activeShipments.isNotEmpty))
+                    if (widget.filters.type == null || (widget.filters.type != 'Shipment' && activeShipments.isNotEmpty))
                       Padding(
                         padding: const EdgeInsets.only(bottom: 16.0),
                         child: Text(
@@ -650,40 +679,62 @@ class SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
     );
   }
 
+  Widget _buildResultsContent() {
+    if (_isLoading) {
+      return const Center(
+        child: Padding(
+          padding: EdgeInsets.all(32.0),
+          child: CircularProgressIndicator(
+            color: AppColors.blue700,
+            strokeWidth: 3.0,
+          ),
+        ),
+      );
+    }
+
+    bool hasResults = activeShipments.isNotEmpty || activeTrips.isNotEmpty;
+
+    if (!hasResults) {
+      return _buildEmptyState(
+        "No results found for your search criteria",
+        'assets/icons/search.svg',
+      );
+    }
+
+    return Column(
+      children: [
+        _buildFilterSummary(),
+        // const SizedBox(height: 20),
+        if (widget.filters.type == null || widget.filters.type == 'Shipment')
+          _buildShipmentListings(activeShipments),
+        if (widget.filters.type == null || widget.filters.type == 'Trip')
+          _buildTripListings(activeTrips),
+        const SizedBox(height: 100), 
+      ],
+    );
+  }
+
   Widget _buildSliverApp() {
     return SliverAppBar(
-      expandedHeight: 240, 
       floating: true,
       pinned: true,
       stretch: true,
+      backgroundColor: AppColors.background,
+      leading: IconButton(
+        icon: const Icon(Icons.arrow_back, color: Colors.black),
+        onPressed: () {
+          Navigator.of(context).pop();
+        },
+      ),
       title: const Text(
-        'Search',
+        'Search Results',
         style: TextStyle(
           color: Colors.black,
           fontSize: 20,
-          fontWeight: FontWeight.w600,
+          fontWeight: FontWeight.bold,
         ),
       ),
       centerTitle: true,
-      backgroundColor: AppColors.background,
-      leading: IconButton(
-          icon: const Icon(Icons.close, color: Colors.black),
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-      ),
-      flexibleSpace: FlexibleSpaceBar(
-        background: Container(
-          color: AppColors.blue700.withValues(alpha: 0.1),
-          child: SafeArea(
-            child: Container(
-              // margin: const EdgeInsets.only(
-              //   top: 26,
-              // ),
-              child: _buildCompactFilterSection(),
-          )),
-        ),
-      ),     
     );
   }
 
@@ -697,15 +748,20 @@ class SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
           SliverToBoxAdapter(
             child: SingleChildScrollView(
               physics: const BouncingScrollPhysics(),
-              child: Column(
-                children: [
-                  _buildResultsSection(),
-                  const SizedBox(height: 20),
-                ],
-              ),
+              child: _buildResultsContent(),
             ),
           ),
         ],
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () {
+          Navigator.of(context).pop();
+        },
+        backgroundColor: AppColors.blue700,
+        foregroundColor: Colors.white,
+        label: const Text('New Search'),
+        icon: const Icon(Icons.search),
       ),
     );
   }
@@ -725,4 +781,46 @@ class SearchFilters {
     this.to,
     this.type,
   });
+
+  // Copy with method for easier filter updates
+  SearchFilters copyWith({
+    String? from,
+    String? price,
+    String? weight,
+    String? to,
+    String? type,
+  }) {
+    return SearchFilters(
+      from: from ?? this.from,
+      price: price ?? this.price,
+      weight: weight ?? this.weight,
+      to: to ?? this.to,
+      type: type ?? this.type,
+    );
+  }
+
+  // Check if filters are empty
+  bool get isEmpty {
+    return (from == null || from!.isEmpty) &&
+           (price == null || price!.isEmpty) &&
+           (weight == null || weight!.isEmpty) &&
+           (to == null || to!.isEmpty) &&
+           (type == null || type!.isEmpty);
+  }
+
+  // Convert to map for easy debugging or serialization
+  Map<String, dynamic> toMap() {
+    return {
+      'from': from,
+      'price': price,
+      'weight': weight,
+      'to': to,
+      'type': type,
+    };
+  }
+
+  @override
+  String toString() {
+    return 'SearchFilters(from: $from, to: $to, price: $price, weight: $weight, type: $type)';
+  }
 }
