@@ -1,7 +1,6 @@
 import 'package:quickdrop_app/core/utils/imports.dart';
 import 'package:quickdrop_app/core/widgets/destination.dart';
 
-
 class PendingRequest extends StatefulWidget {
   final DeliveryRequest request;
   final UserData user;
@@ -17,7 +16,6 @@ class PendingRequest extends StatefulWidget {
   @override
   DeliveryRequestState createState() => DeliveryRequestState();
 }
-
 
 class DeliveryRequestState extends State<PendingRequest> {
   bool _isProcessing = false;
@@ -126,6 +124,92 @@ class DeliveryRequestState extends State<PendingRequest> {
     );
   }
 
+  Widget _buildBody() {
+    return Column(
+      children: [
+        Container(
+          padding: const EdgeInsets.all(12),
+          decoration: BoxDecoration(
+            color: AppColors.primary.withValues(alpha: 0.05),
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(
+              color: AppColors.primary.withValues(alpha: 0.1),
+            ),
+          ),
+          child: Destination(
+            from: widget.shipment.from,
+            to: widget.shipment.to,
+          ),
+        ),
+        const SizedBox(height: 16),
+        _buildPriceCard(),
+        const SizedBox(height: 16),
+      ],
+    );
+  }
+
+  Widget _buildPriceCard() {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            AppColors.primary.withValues(alpha: 0.08),
+            AppColors.primary.withValues(alpha: 0.03),
+          ],
+        ),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(
+          color: AppColors.primary.withValues(alpha: 0.2),
+        ),
+      ),
+      child: Row(
+        children: [
+          Container(
+            padding: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              color: AppColors.primary.withValues(alpha: 0.1),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Icon(
+              Icons.local_offer,
+              color: AppColors.primary,
+              size: 20,
+            ),
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Offered Price',
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: AppColors.shipmentText,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                const SizedBox(height: 2),
+                Text(
+                  '${widget.request.price} dh',
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.primary,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget _buildContent() {
     return Padding(
       padding: const EdgeInsets.all(20),
@@ -133,7 +217,8 @@ class DeliveryRequestState extends State<PendingRequest> {
         children: [
           _buildUserSection(),
           const SizedBox(height: 20),
-          _buildMainContent(),
+          // _buildMainContent(),
+          _buildBody(),
           const SizedBox(height: 20),
           _buildActionButton(),
         ],
@@ -142,159 +227,14 @@ class DeliveryRequestState extends State<PendingRequest> {
   }
 
   Widget _buildUserSection() {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: AppColors.primary.withOpacity(0.04),
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(
-          color: AppColors.primary.withOpacity(0.1),
-          width: 1,
-        ),
-      ),
-      child: UserProfileWithRating(
-        user: widget.user,
-        header: widget.user.displayName ?? 'Guest',
-        avatarSize: 40,
-        headerFontSize: 16,
-        subHeaderFontSize: 12,
-        onPressed: () =>
-            {context.push('/profile/statistics?userId=${widget.user.uid}')},
-      ),
-    );
-  }
-
-  Widget _buildMainContent() {
-    return Container(
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: Colors.grey.withOpacity(0.02),
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(
-          color: Colors.grey.withOpacity(0.1),
-          width: 1,
-        ),
-      ),
-      child: Column(
-        children: [
-          _buildDestinationSection(),
-          const SizedBox(height: 20),
-          _buildPriceSection(),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildDestinationSection() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          children: [
-            Container(
-              padding: const EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                color: AppColors.primary.withOpacity(0.1),
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Icon(
-                Icons.route_rounded,
-                size: 18,
-                color: AppColors.primary,
-              ),
-            ),
-            const SizedBox(width: 12),
-            Text(
-              'Delivery Route',
-              style: TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.w600,
-                color: AppColors.headingText,
-                letterSpacing: 0.3,
-              ),
-            ),
-          ],
-        ),
-        const SizedBox(height: 16),
-        Container(
-          padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(
-            color: AppColors.cardBackground,
-            borderRadius: BorderRadius.circular(12),
-            border: Border.all(
-              color: Colors.grey.withOpacity(0.15),
-              width: 1,
-            ),
-          ),
-          child: Destination(
-            from: widget.shipment.from,
-            to: widget.shipment.to,
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildPriceSection() {
-    return Container(
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [
-            AppColors.primary.withOpacity(0.08),
-            AppColors.primary.withOpacity(0.04),
-          ],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(
-          color: AppColors.primary.withOpacity(0.2),
-          width: 1,
-        ),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Container(
-            padding: const EdgeInsets.all(10),
-            decoration: BoxDecoration(
-              color: AppColors.primary.withOpacity(0.15),
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: Icon(
-              Icons.local_offer_rounded,
-              size: 20,
-              color: AppColors.primary,
-            ),
-          ),
-          const SizedBox(width: 16),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Your Offer',
-                style: TextStyle(
-                  fontSize: 12,
-                  color: AppColors.shipmentText,
-                  fontWeight: FontWeight.w500,
-                  letterSpacing: 0.5,
-                ),
-              ),
-              const SizedBox(height: 4),
-              Text(
-                '${widget.request.price} dh',
-                style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.w700,
-                  color: AppColors.primary,
-                  letterSpacing: 0.5,
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
+    return UserProfileWithRating(
+      user: widget.user,
+      header: widget.user.displayName ?? 'Guest',
+      avatarSize: 40,
+      headerFontSize: 16,
+      subHeaderFontSize: 12,
+      onPressed: () =>
+          {context.push('/profile/statistics?userId=${widget.user.uid}')},
     );
   }
 
@@ -350,4 +290,6 @@ class DeliveryRequestState extends State<PendingRequest> {
       ),
     );
   }
+
+
 }
