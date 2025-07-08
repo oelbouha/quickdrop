@@ -505,12 +505,26 @@ class _ListingCardDetailsState extends State<ListingCardDetails> {
   }
 
   Widget _displayImage() {
+    if (_selectedShipment != null){
+      return Row(
+        children: [
+          Expanded(
+            child: ClipRRect(
+              child: Image.asset(
+                _selectedShipment!.imageUrl ?? 'assets/images/box.jpg',
+                height: AppTheme.imageHeight * 2.5,
+                fit: BoxFit.cover,
+              ),
+            ),
+          ),
+        ],
+      );
+    }
     return Row(
       children: [
         Expanded(
           child: ClipRRect(
-            child: Image.asset(
-              'assets/images/box.jpg',
+            child: Image.asset( 'assets/images/box.jpg',
               height: AppTheme.imageHeight * 2.5,
               fit: BoxFit.cover,
             ),

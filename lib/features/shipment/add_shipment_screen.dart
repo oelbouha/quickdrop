@@ -4,8 +4,12 @@ import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import 'package:quickdrop_app/core/utils/imports.dart';
 import 'package:quickdrop_app/core/widgets/dropDownTextField.dart';
-
+import 'package:supabase_flutter/supabase_flutter.dart';
 export 'package:quickdrop_app/core/widgets/tipWidget.dart';
+
+
+
+
 
 class AddShipmentScreen extends StatefulWidget {
   final Shipment? existingShipment;
@@ -26,6 +30,7 @@ class _AddShipmentScreenState extends State<AddShipmentScreen>
   bool _isLoadingExistingShipment = true;
 
   File? _selectedImage;
+  String? imagePath;
   final fromController = TextEditingController();
   final toController = TextEditingController();
   final weightController = TextEditingController();
@@ -40,6 +45,7 @@ class _AddShipmentScreenState extends State<AddShipmentScreen>
   final priceController = TextEditingController();
 
   bool _isListButtonLoading = false;
+  bool _isImageLoading = true;
   final _formKey = GlobalKey<FormState>();
   late AnimationController _fadeController;
   late AnimationController _slideController;
@@ -182,7 +188,7 @@ void _updateShipment() async {
     // Add haptic feedback
     HapticFeedback.mediumImpact();
 
-    if (_isListButtonLoading) return;
+    if (_isListButtonLoading || _isImageLoading) return;
     if (_formKey.currentState!.validate()) {
       setState(() {
         _isListButtonLoading = true;
@@ -211,7 +217,7 @@ void _updateShipment() async {
         height: heightController.text,
         packageName: packageNameController.text,
         packageQuantity: packageQuantityController.text,
-        imageUrl: null,
+        imageUrl: imagePath ,
         userId: user.uid,
       );
 
@@ -647,8 +653,13 @@ void _updateShipment() async {
         await picker.pickImage(source: ImageSource.gallery);
 
     if (pickerFile != null) {
-      setState(() {
         _selectedImage = File(pickerFile.path);
+         imagePath =  await Provider.of<ShipmentProvider>(context, listen: false)
+            .uploadImageToSupabase(File(pickerFile.path));
+          print("Image uploaded to Supabase: $imagePath");
+      setState(() {
+        _isImageLoading = false;
+        print("Image selected: ${_selectedImage!.path}");
       });
     }
   }

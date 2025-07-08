@@ -6,6 +6,8 @@ import 'package:quickdrop_app/core/utils/delivery_status.dart';
 import 'dart:io'; 
 import 'package:firebase_storage/firebase_storage.dart';
 
+import 'package:supabase_flutter/supabase_flutter.dart';
+
 class ShipmentProvider with ChangeNotifier {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   List<Shipment> _shipments = [];
@@ -140,17 +142,28 @@ class ShipmentProvider with ChangeNotifier {
   //   }
   // }
 
-  Future<String?> uploadImageToFirebase(File image) async {
-    try {
-      String fileName = 'shipments/${DateTime.now().millisecondsSinceEpoch}.jpg';
-      final ref = FirebaseStorage.instance.ref().child(fileName);
-      await ref.putFile(image);
-      final downloadUrl = await ref.getDownloadURL();
-      return downloadUrl;
-    } catch (e) {
-      print('Image upload error: $e');
-      return null;
-    }
+ Future<String?> uploadImageToSupabase(File image) async {
+  try {
+    final supabase = Supabase.instance.client;
+    
+    // Generate unique filename
+    String fileName = 'shipments/${DateTime.now().millisecondsSinceEpoch}.jpg';
+    
+    // Upload file to Supabase Storage
+    await supabase.storage
+        .from('images') 
+        .upload(fileName, image);
+    
+    // Get public URL
+    final publicUrl = supabase.storage
+        .from('images')
+        .getPublicUrl(fileName);
+    
+    return publicUrl;
+  } catch (e) {
+    print('Image upload error: $e');
+    return null;
+  }
 }
 
   List<Shipment> getActiveShipments(String userId) {

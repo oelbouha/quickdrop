@@ -180,8 +180,6 @@ class NegotiationCardState extends State<NegotiationCard> {
     );
   }
 
- 
-
 
   Widget _buildActionButton() {
     return Container(
