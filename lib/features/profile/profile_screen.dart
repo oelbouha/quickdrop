@@ -1,3 +1,4 @@
+import 'package:quickdrop_app/core/widgets/profile_image.dart';
 import 'package:quickdrop_app/features/profile/settings_card.dart';
 import 'package:quickdrop_app/core/utils/imports.dart';
 
@@ -133,10 +134,9 @@ Widget _buildUserStats() {
     ),
     child: Column(
       children: [
-        // Top section - Profile info
         Column(
           children: [
-            _buildProfileImage(user),
+            buildProfileImage(user: user),
             const SizedBox(width: 8),
              Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -160,7 +160,6 @@ Widget _buildUserStats() {
                       fontWeight: FontWeight.w400,
                     ),
                   ),
-                  // _buildVerificationBadge(),
                 ],
               ),
 
@@ -172,47 +171,6 @@ Widget _buildUserStats() {
     ),
   );
 }
-
-Widget _buildProfileImage(user) {
-  return GestureDetector(
-    onTap: () => _showComingSoon("Update profile picture"),
-    child: Container(
-      width: 90,
-      height: 90,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(50),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.06),
-            blurRadius: 6,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(50),
-        child: Image.network(
-          user?.photoUrl ?? AppTheme.defaultProfileImage,
-          fit: BoxFit.cover,
-          errorBuilder: (context, error, stackTrace) {
-            return Container(
-              decoration: BoxDecoration(
-                color: AppColors.blueStart.withValues(alpha: 0.1),
-                borderRadius: BorderRadius.circular(35),
-              ),
-              child: Icon(
-                Icons.person,
-                color: AppColors.blueStart,
-                size: 52,
-              ),
-            );
-          },
-        ),
-      ),
-    ),
-  );
-}
-
 
 
 Widget _buildViewStatsButton() {
@@ -295,7 +253,7 @@ Widget _buildViewStatsButton() {
           borderRadius: BorderRadius.circular(12),
          boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.05),
+            color: color.withValues(alpha: 0.05),
             blurRadius: 4,
             offset: const Offset(0, 2),
           ),

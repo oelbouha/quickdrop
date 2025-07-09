@@ -100,17 +100,13 @@ class ShipmentCardState extends State<ShipmentCard>
       width: 130,
       child: Stack(
         children: [
-          // Image with zoom effect
-          Container(
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage(shipment.imageUrl ?? 'assets/images/box.jpg'),
+          ClipRRect(
+              child: Image.network(
+                shipment.imageUrl!,
                 fit: BoxFit.cover,
               ),
             ),
-          ),
 
-          // Gradient overlay
           Container(
             decoration: BoxDecoration(
               gradient: LinearGradient(

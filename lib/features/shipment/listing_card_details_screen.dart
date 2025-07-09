@@ -510,11 +510,15 @@ class _ListingCardDetailsState extends State<ListingCardDetails> {
         children: [
           Expanded(
             child: ClipRRect(
-              child: Image.asset(
-                _selectedShipment!.imageUrl ?? 'assets/images/box.jpg',
-                height: AppTheme.imageHeight * 2.5,
+              child: _selectedShipment?.imageUrl != null ? Image.network(
+                _selectedShipment!.imageUrl! ,
+                height: AppTheme.imageHeight * 2.8,
                 fit: BoxFit.cover,
-              ),
+              ) : Image.asset(
+                'assets/images/box.jpg',
+                  height: AppTheme.imageHeight * 2.8,
+                  fit: BoxFit.cover,
+              )
             ),
           ),
         ],
