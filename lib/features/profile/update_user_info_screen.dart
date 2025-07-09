@@ -1,4 +1,8 @@
+import 'dart:io';
+
+import 'package:quickdrop_app/features/profile/settings_card.dart';
 import 'package:quickdrop_app/core/utils/imports.dart';
+import 'package:quickdrop_app/core/widgets/profile_image.dart';
 
 class UpdateUserInfoScreen extends StatefulWidget {
   const UpdateUserInfoScreen({Key? key}) : super(key: key);
@@ -18,6 +22,10 @@ class UpdateUserInfoScreenState extends State<UpdateUserInfoScreen>
 
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
+
+  File? _selectedImage;
+  String? imagePath;
+  bool _isImageLoading = false;
 
   UserData? user;
 
@@ -64,6 +72,10 @@ class UpdateUserInfoScreenState extends State<UpdateUserInfoScreen>
     // Haptic feedback
     HapticFeedback.lightImpact();
 
+    if (_isImageLoading) {
+      AppUtils.showDialog(context, "Image is still uploading, please wait", AppColors.error);
+      return;
+    }
     if (_formKey.currentState!.validate()) {
       // Show confirmation dialog
       final confirmed =  await ConfirmationDialog.show(
@@ -89,6 +101,7 @@ class UpdateUserInfoScreenState extends State<UpdateUserInfoScreen>
           firstName: firstNameController.text.trim(),
           lastName: lastNameController.text.trim(),
           phoneNumber: phoneNumberController.text.trim(),
+          photoUrl: imagePath ?? user.photoUrl,
         );
 
         await Provider.of<UserProvider>(context, listen: false)
@@ -117,6 +130,27 @@ class UpdateUserInfoScreenState extends State<UpdateUserInfoScreen>
     } else {
       // Validation failed haptic feedback
       HapticFeedback.heavyImpact();
+    }
+  }
+
+
+Future<void> _pickImage() async {
+    final ImagePicker picker = ImagePicker();
+    final XFile? pickerFile =
+        await picker.pickImage(source: ImageSource.gallery);
+
+    if (pickerFile != null) {
+      setState(() {
+        _isImageLoading = true;
+      });
+        _selectedImage = File(pickerFile.path);
+         imagePath =  await Provider.of<ShipmentProvider>(context, listen: false)
+            .uploadImageToSupabase(File(pickerFile.path));
+          print("Image uploaded to Supabase: $imagePath");
+      setState(() {
+        _isImageLoading = false;
+        print("Image selected: ${_selectedImage!.path}");
+      });
     }
   }
 
@@ -159,6 +193,8 @@ class UpdateUserInfoScreenState extends State<UpdateUserInfoScreen>
         children: [
           _buildHeaderSection(),
           const SizedBox(height: 32),
+          _buildImageInfoSection(),
+          const SizedBox(height: 24),
           _buildPersonalInfoSection(),
           const SizedBox(height: 24),
           _buildContactInfoSection(),
@@ -229,6 +265,66 @@ class UpdateUserInfoScreenState extends State<UpdateUserInfoScreen>
       ),
     );
   }
+
+
+
+ Widget _buildImageInfoSection() {
+    return _buildSection(
+      title: "Profile Image",
+      icon: Icons.image,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            buildProfileImage(
+              user: user,
+              onTap: () async {
+                // Show image picker
+                await _pickImage();
+              },
+              size: 110,
+            ),
+            const SizedBox(width: 16),
+            ElevatedButton(
+              onPressed: () async {
+                // Show image picker
+                await _pickImage();
+              },
+              style: ElevatedButton.styleFrom(
+                // color: AppColors.blue,
+                elevation: 0,
+                  backgroundColor: AppColors.blue700.withOpacity(0.8),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+              ),
+              child: const Text(
+                'Change Image',
+                style: TextStyle(color: Colors.white),
+              ),
+            ),
+          ],
+        ),
+        // buildProfileImage(user: user, 
+        //   onTap: () async {
+        //     // Show image picker
+        //     await _pickImage();
+        //   },
+        //   size: 110,
+        // ),
+        const SizedBox(height: 16),
+        buildInfoCard(
+          icon: Icons.info_outline,
+          title: "Important",
+          message:
+              "Make sure your profile image is clear and recognizable.",
+          color: Colors.blue,
+        ),
+      ],
+    );
+  }
+
+
 
   Widget _buildPersonalInfoSection() {
     return _buildSection(

@@ -188,6 +188,14 @@ void _updateShipment() async {
     // Add haptic feedback
     HapticFeedback.mediumImpact();
 
+     if (imagePath == null) {
+          _showErrorWithAnimation('Please select an image');
+          return ;
+    }
+    if (_isImageLoading) {
+      _showErrorWithAnimation('Image is still uploading, please wait');
+      return ;
+    }
     if (_isListButtonLoading || _isImageLoading) return;
     if (_formKey.currentState!.validate()) {
       setState(() {
@@ -619,6 +627,14 @@ void _updateShipment() async {
       case 3: // Timing
         if (dateController.text.isEmpty) {
           _showErrorWithAnimation('Pickup date is required');
+          return false;
+        }
+        if (imagePath == null) {
+          _showErrorWithAnimation('Please select an image');
+          return false;
+        }
+        if (_isImageLoading) {
+          _showErrorWithAnimation('Image is still uploading, please wait');
           return false;
         }
         return true;
