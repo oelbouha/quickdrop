@@ -1,8 +1,8 @@
 import 'dart:io';
-
 import 'package:quickdrop_app/features/profile/settings_card.dart';
 import 'package:quickdrop_app/core/utils/imports.dart';
 import 'package:quickdrop_app/core/widgets/profile_image.dart';
+
 
 class UpdateUserInfoScreen extends StatefulWidget {
   const UpdateUserInfoScreen({Key? key}) : super(key: key);

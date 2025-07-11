@@ -12,17 +12,19 @@ class UserData {
   final String? photoUrl;
   String? phoneNumber;
   String? createdAt;
+  String? fcmToken;
   String status;
 
   UserData(
       {required this.uid,
       this.email,
-      this.displayName ,
+      this.displayName,
       this.firstName,
       this.lastName,
       this.photoUrl,
       this.phoneNumber,
       this.createdAt,
+      this.fcmToken,
       this.status = "normal"
       });
   Map<String, dynamic> toMap() {
@@ -36,6 +38,7 @@ class UserData {
       'createdAt': createdAt,
       'status': status,
       'phoneNumber': phoneNumber,
+      'fcmToken': fcmToken
     };
   }
 
@@ -49,6 +52,7 @@ class UserData {
         firstName: map['firstName'],
         lastName: map['lastName'],
         status: map['status'] ?? "normal",
+        fcmToken: map['fcmToken'],
         createdAt: map["createdAt"]);
   }
 }
