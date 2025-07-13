@@ -15,40 +15,37 @@ Widget buildProfileImage({
       child: Container(
         width: size,
         height: size,
-        child: Image.network(
-          user?.photoUrl ?? AppTheme.defaultProfileImage,
-          fit: BoxFit.cover,
-          loadingBuilder: (context, child, loadingProgress) {
-            if (loadingProgress == null) return child;
-
-            return Container(
-              decoration: BoxDecoration(
-                color: AppColors.blueStart.withValues(alpha: 0.1),
-                borderRadius: BorderRadius.circular(50),
-              ),
-              child: const Center(
-                child: CircularProgressIndicator(
-                  color: AppColors.blue,
-                  strokeWidth: 2,
-                ),
-              ),
-            );
-          },
-          errorBuilder: (context, error, stackTrace) {
-            return Container(
-              decoration: BoxDecoration(
-                color: AppColors.blueStart.withValues(alpha: 0.1),
-                borderRadius: BorderRadius.circular(50),
-              ),
-              child: Icon(
-                Icons.person,
-                color: AppColors.blueStart,
-                size: size * 0.6,
-              ),
-            );
-          },
-        ),
+        decoration: BoxDecoration(
+            color: AppColors.blueStart.withValues(alpha: 0.1),
+            borderRadius: BorderRadius.circular(50),
+          ),
+        child: CachedNetworkImage(
+              imageUrl: user!.photoUrl!,
+              fit: BoxFit.cover,
+              placeholder: (context, url) => Container(
+                  decoration: BoxDecoration(
+                    color: AppColors.blueStart.withValues(alpha: 0.1),
+                    borderRadius: BorderRadius.circular(50),
+                  ),
+                  child: const Center(
+                      child: CircularProgressIndicator(
+                          color: AppColors.blue700, strokeWidth: 2))),
+              errorWidget: (context, error, stackTrace) {
+                  return Container(
+                    decoration: BoxDecoration(
+                      color: AppColors.blueStart.withValues(alpha: 0.1),
+                      borderRadius: BorderRadius.circular(50),
+                    ),
+                    child: Icon(
+                      Icons.person,
+                      color: AppColors.blueStart,
+                      size: size * 0.6,
+                    ),
+                  );
+                },
+            ),
       ),
     ),
   );
 }
+

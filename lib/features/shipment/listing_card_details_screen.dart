@@ -1,5 +1,8 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:quickdrop_app/core/utils/imports.dart';
 import 'package:quickdrop_app/core/widgets/destination.dart';
+
+import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 
 class ListingShipmentLoader extends StatefulWidget {
   final String userId;
@@ -145,17 +148,33 @@ class _ListingCardDetailsState extends State<ListingCardDetails> {
   bool _isMenuOpen = false;
 
   @override
-  void initState() {
+  void initState()  {
     super.initState();
-    if (widget.shipment is Shipment) {
-      _selectedShipment = widget.shipment as Shipment?;
-    }
-    // _isTrip = widget.shipment is Trip;
-    if (widget.shipment is Trip) {
-      _selectedTrip = widget.shipment as Trip?;
-    }
 
+      if (widget.shipment is Shipment) {
+        _selectedShipment = widget.shipment as Shipment?;
+         _precacheImages();
+      }
+      // _isTrip = widget.shipment is Trip;
+      if (widget.shipment is Trip) {
+        _selectedTrip = widget.shipment as Trip?;
+      }
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+    });
     // print("is trip ${_isTrip}");
+  }
+
+  Future<void> _precacheImages() async {
+    
+      try {
+        // if (_selectedShipment != null ) {
+          await DefaultCacheManager().downloadFile(
+            _selectedShipment!.imageUrl!,
+          );
+        // }
+      } catch (e) {
+        print('Failed to precache image: $e');
+      }
   }
 
   @override
@@ -505,45 +524,32 @@ class _ListingCardDetailsState extends State<ListingCardDetails> {
   }
 
   Widget _displayImage() {
-    if (_selectedShipment != null){
+    if (_selectedShipment != null) {
       return Row(
         children: [
           Expanded(
             child: ClipRRect(
-              child: Image.network(
-          _selectedShipment!.imageUrl!,
-          fit: BoxFit.cover,
-          loadingBuilder: (context, child, loadingProgress) {
-            if (loadingProgress == null) return child;
-
-            return Container(
-              decoration: BoxDecoration(
-                color: AppColors.blueStart.withValues(alpha: 0.1),
-                // borderRadius: BorderRadius.circular(50),
-              ),
-              child: const Center(
-                child: CircularProgressIndicator(
-                  color: AppColors.blue,
-                  strokeWidth: 3,
-                ),
-              ),
-            );
-          },
-          errorBuilder: (context, error, stackTrace) {
-            return Container(
-              decoration: BoxDecoration(
-                color: AppColors.blueStart.withValues(alpha: 0.1),
-                borderRadius: BorderRadius.circular(50),
-              ),
-              child: Icon(
-                Icons.person,
-                color: AppColors.blueStart,
-                size: 25,
-              ),
-            );
-          },
-        )
-            ),
+                child: CachedNetworkImage(
+                  imageUrl:  _selectedShipment!.imageUrl ?? AppTheme.defaultProfileImage,
+                  fit: BoxFit.cover,
+                  placeholder: (context, url) => Container(
+                      decoration: BoxDecoration(
+                        color: AppColors.blueStart.withValues(alpha: 0.1),
+                        // borderRadius: BorderRadius.circular(50),
+                      ),
+                      child: const Center(
+                          child: CircularProgressIndicator(
+                              color: AppColors.blue700, strokeWidth: 2))),
+                  errorWidget: (context, url, error) => Container(
+                      decoration: BoxDecoration(
+                        color: AppColors.blueStart.withValues(alpha: 0.1),
+                        // borderRadius: BorderRadius.circular(50),
+                      ),
+                  child: Image.asset(
+                    "assets/images/box.jpg",
+                    fit: BoxFit.cover,
+                  )),
+            )),
           ),
         ],
       );
@@ -552,7 +558,8 @@ class _ListingCardDetailsState extends State<ListingCardDetails> {
       children: [
         Expanded(
           child: ClipRRect(
-            child: Image.asset( 'assets/images/box.jpg',
+            child: Image.asset(
+              'assets/images/box.jpg',
               height: AppTheme.imageHeight * 2.5,
               fit: BoxFit.cover,
             ),
@@ -649,10 +656,8 @@ class _ListingCardDetailsState extends State<ListingCardDetails> {
         ]));
   }
 
- void _showRequestSheet() {
-    
-    
-    showModalBottomSheet (
+  void _showRequestSheet() {
+    showModalBottomSheet(
       context: context,
       backgroundColor: AppColors.cardBackground,
       isScrollControlled: true, // Allows resizing when the keyboard appears
@@ -684,200 +689,196 @@ class _ListingCardDetailsState extends State<ListingCardDetails> {
   }
 // Replace the _sendDeliveryRequest method with this version:
 
-void _sendDeliveryRequest(Trip? trip, [StateSetter? setModalState]) async {
-  if (_isLoading) return;
+  void _sendDeliveryRequest(Trip? trip, [StateSetter? setModalState]) async {
+    if (_isLoading) return;
 
-  if (!_formKey.currentState!.validate()) {
-    AppUtils.showDialog(
-        context, 'Please complete all required fields', AppColors.error);
-    return;
-  }
-  if (trip == null) {
-    AppUtils.showDialog(context, 'Please select a trip', AppColors.error);
-    return;
-  }
-  if (trip.id == null) {
-    AppUtils.showDialog(context, 'Selected trip is invalid', AppColors.error);
-    return;
-  }
-
-  // Helper function to update loading state
-  void updateLoadingState(bool isLoading) {
-    if (setModalState != null) {
-      setModalState(() {
-        _isLoading = isLoading;
-      });
-    }
-    setState(() {
-      _isLoading = isLoading;
-    });
-  }
-
-  try {
-    updateLoadingState(true);
-
-    final user = FirebaseAuth.instance.currentUser;
-    if (user == null) {
-      updateLoadingState(false);
+    if (!_formKey.currentState!.validate()) {
       AppUtils.showDialog(
-          context, 'Please log in to list a shipment', AppColors.error);
+          context, 'Please complete all required fields', AppColors.error);
+      return;
+    }
+    if (trip == null) {
+      AppUtils.showDialog(context, 'Please select a trip', AppColors.error);
+      return;
+    }
+    if (trip.id == null) {
+      AppUtils.showDialog(context, 'Selected trip is invalid', AppColors.error);
       return;
     }
 
-    final DeliveryRequest request = DeliveryRequest(
-        tripId: trip.id!,
-        senderId: user.uid,
-        receiverId: widget.shipment.userId,
-        status: DeliveryStatus.active,
-        date: DateTime.now().toIso8601String(),
-        shipmentId: widget.shipment.id!,
-        price: priceController.text);
-
-    await Provider.of<DeliveryRequestProvider>(context, listen: false)
-        .addRequest(request);
-
-    // Stop loading
-    updateLoadingState(false);
-
-    if (mounted) {
-      // Clear form and reset state
-      priceController.clear();
-      noteController.clear();
+    // Helper function to update loading state
+    void updateLoadingState(bool isLoading) {
+      if (setModalState != null) {
+        setModalState(() {
+          _isLoading = isLoading;
+        });
+      }
       setState(() {
-        _selectedTrip = null;
-      });
-      
-      // Show success message
-      AppUtils.showDialog(
-          context, 'Request sent successfully', AppColors.succes);
-      
-      // Close the bottom sheet after a short delay
-      Future.delayed(const Duration(milliseconds: 1000), () {
-        if (mounted) {
-          Navigator.pop(context);
-        }
+        _isLoading = isLoading;
       });
     }
-  } catch (e) {
-    updateLoadingState(false);
-    if (mounted) {
-      AppUtils.showDialog(
-          context, 'Failed to send request: $e', AppColors.error);
+
+    try {
+      updateLoadingState(true);
+
+      final user = FirebaseAuth.instance.currentUser;
+      if (user == null) {
+        updateLoadingState(false);
+        AppUtils.showDialog(
+            context, 'Please log in to list a shipment', AppColors.error);
+        return;
+      }
+
+      final DeliveryRequest request = DeliveryRequest(
+          tripId: trip.id!,
+          senderId: user.uid,
+          receiverId: widget.shipment.userId,
+          status: DeliveryStatus.active,
+          date: DateTime.now().toIso8601String(),
+          shipmentId: widget.shipment.id!,
+          price: priceController.text);
+
+      await Provider.of<DeliveryRequestProvider>(context, listen: false)
+          .addRequest(request);
+
+      // Stop loading
+      updateLoadingState(false);
+
+      if (mounted) {
+        // Clear form and reset state
+        priceController.clear();
+        noteController.clear();
+        setState(() {
+          _selectedTrip = null;
+        });
+
+        // Show success message
+        AppUtils.showDialog(
+            context, 'Request sent successfully', AppColors.succes);
+
+        // Close the bottom sheet after a short delay
+        Future.delayed(const Duration(milliseconds: 1000), () {
+          if (mounted) {
+            Navigator.pop(context);
+          }
+        });
+      }
+    } catch (e) {
+      updateLoadingState(false);
+      if (mounted) {
+        AppUtils.showDialog(
+            context, 'Failed to send request: $e', AppColors.error);
+      }
     }
   }
-}
 
 // Also update the _buildRequesBody method to use StatefulBuilder:
 
-Widget _buildRequesBody() {
-  return Consumer<TripProvider>(builder: (context, tripProvider, child) {
-    final user = FirebaseAuth.instance.currentUser;
-    if (user == null) {
-      return const Center(
-        child: Text('Please log in to send a request')
-      );
-    }
+  Widget _buildRequesBody() {
+    return Consumer<TripProvider>(builder: (context, tripProvider, child) {
+      final user = FirebaseAuth.instance.currentUser;
+      if (user == null) {
+        return const Center(child: Text('Please log in to send a request'));
+      }
 
-    final activeTrips = tripProvider.trips
-        .where((trip) => trip.userId == user.uid && trip.status == "active")
-        .toList();
+      final activeTrips = tripProvider.trips
+          .where((trip) => trip.userId == user.uid && trip.status == "active")
+          .toList();
 
-    return StatefulBuilder(
-      builder: (BuildContext context, StateSetter setModalState) {
+      return StatefulBuilder(
+          builder: (BuildContext context, StateSetter setModalState) {
         return Form(
-          key: _formKey,
-          child: Padding(
-            padding: const EdgeInsets.all(AppTheme.cardPadding),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Center(
-                  child: Container(
-                    margin: const EdgeInsets.symmetric(vertical: 10),
-                    width: 40,
-                    height: 5,
-                    decoration: BoxDecoration(
-                      color: AppColors.lessImportant,
-                      borderRadius: BorderRadius.circular(10),
+            key: _formKey,
+            child: Padding(
+              padding: const EdgeInsets.all(AppTheme.cardPadding),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Center(
+                    child: Container(
+                      margin: const EdgeInsets.symmetric(vertical: 10),
+                      width: 40,
+                      height: 5,
+                      decoration: BoxDecoration(
+                        color: AppColors.lessImportant,
+                        borderRadius: BorderRadius.circular(10),
+                      ),
                     ),
                   ),
-                ),
-                const Text(
-                  "Select a Trip",
-                  style: TextStyle(color: AppColors.headingText, fontSize: 16),
-                ),
-                const SizedBox(height: 10),
-                activeTrips.isEmpty
-                    ? const Text(
-                        "No active trips match this shipment's destination",
-                        style: TextStyle(color: AppColors.error, fontSize: 14),
-                      )
-                    : DropdownButtonFormField<Trip>(
-                        decoration: InputDecoration(
-                            filled: true,
-                            fillColor: AppColors.background,
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
-                              borderSide: const BorderSide(
-                                  color: AppColors.lessImportant),
-                            )),
-                        dropdownColor: AppColors.background,
-                        hint: const Text(
-                          "Choose a trip",
-                          style: TextStyle(color: AppColors.headingText),
+                  const Text(
+                    "Select a Trip",
+                    style:
+                        TextStyle(color: AppColors.headingText, fontSize: 16),
+                  ),
+                  const SizedBox(height: 10),
+                  activeTrips.isEmpty
+                      ? const Text(
+                          "No active trips match this shipment's destination",
+                          style:
+                              TextStyle(color: AppColors.error, fontSize: 14),
+                        )
+                      : DropdownButtonFormField<Trip>(
+                          decoration: InputDecoration(
+                              filled: true,
+                              fillColor: AppColors.background,
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                                borderSide: const BorderSide(
+                                    color: AppColors.lessImportant),
+                              )),
+                          dropdownColor: AppColors.background,
+                          hint: const Text(
+                            "Choose a trip",
+                            style: TextStyle(color: AppColors.headingText),
+                          ),
+                          items: activeTrips.map((trip) {
+                            return DropdownMenuItem<Trip>(
+                              value: trip,
+                              child: Text(
+                                "${trip.from} to ${trip.to} - ${trip.date}",
+                                style: const TextStyle(
+                                    color: AppColors.headingText),
+                              ),
+                            );
+                          }).toList(),
+                          onChanged: (Trip? trip) {
+                            setState(() {
+                              _selectedTrip = trip;
+                            });
+                          },
+                          validator: (value) =>
+                              value == null ? "Please select a trip" : null,
                         ),
-                        items: activeTrips.map((trip) {
-                          return DropdownMenuItem<Trip>(
-                            value: trip,
-                            child: Text(
-                              "${trip.from} to ${trip.to} - ${trip.date}",
-                              style:
-                                  const TextStyle(color: AppColors.headingText),
-                            ),
-                          );
-                        }).toList(),
-                        onChanged: (Trip? trip) {
-                          setState(() {
-                            _selectedTrip = trip;
-                          });
-                        },
-                        validator: (value) =>
-                            value == null ? "Please select a trip" : null,
-                      ),
-                const SizedBox(height: 20),
-                TextFieldWithHeader(
-                  controller: noteController,
-                  hintText: "Add a note",
-                  headerText: "Note",
-                  keyboardType: TextInputType.text,
-                  isRequired: false,
-                  maxLines: 2,
-                ),
-                const SizedBox(height: 10),
-                TextFieldWithHeader(
-                  controller: priceController,
-                  hintText: "0.00",
-                  headerText: "Price (dh)",
-                  validator: Validators.notEmpty,
-                  keyboardType: TextInputType.number,
-                ),
-                const SizedBox(height: 20),
-                Button(
-                  hintText: "Send request",
-                  isLoading: _isLoading,
-                  onPressed: () {
-                    _sendDeliveryRequest(_selectedTrip, setModalState);
-                  }
-                ),
-                const SizedBox(height: 10),
-              ],
-            ),
-          )
-        );
-      }
-    );
-  });
-}
-
+                  const SizedBox(height: 20),
+                  TextFieldWithHeader(
+                    controller: noteController,
+                    hintText: "Add a note",
+                    headerText: "Note",
+                    keyboardType: TextInputType.text,
+                    isRequired: false,
+                    maxLines: 2,
+                  ),
+                  const SizedBox(height: 10),
+                  TextFieldWithHeader(
+                    controller: priceController,
+                    hintText: "0.00",
+                    headerText: "Price (dh)",
+                    validator: Validators.notEmpty,
+                    keyboardType: TextInputType.number,
+                  ),
+                  const SizedBox(height: 20),
+                  Button(
+                      hintText: "Send request",
+                      isLoading: _isLoading,
+                      onPressed: () {
+                        _sendDeliveryRequest(_selectedTrip, setModalState);
+                      }),
+                  const SizedBox(height: 10),
+                ],
+              ),
+            ));
+      });
+    });
+  }
 }
