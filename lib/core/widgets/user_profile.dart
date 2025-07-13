@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:quickdrop_app/theme/colors.dart';
 import 'package:quickdrop_app/core/utils/appUtils.dart';
@@ -107,20 +108,30 @@ Widget buildUserProfileImage(String photoUrl, Color borderColor, double avatarSi
           ),
           child: ClipRRect(
             borderRadius: BorderRadius.circular(21),
-            child: Image.network(
-              photoUrl ,
-              fit: BoxFit.cover,
-              errorBuilder: (context, error, stackTrace) {
-                return Container(
-                  color: borderColor.withOpacity(0.1),
-                  child:  Icon(
-                    Icons.person,
-                    color: AppColors.blue,
-                    size: avatarSize * 0.6,
-                  ),
-                );
-              },
-            ),
+            child: CachedNetworkImage(
+            imageUrl:  photoUrl,
+            fit: BoxFit.cover,
+            placeholder: (context, url) => Container(
+                decoration: BoxDecoration(
+                  color: AppColors.blueStart.withValues(alpha: 0.1),
+                ),
+                child: const Center(
+                    child: CircularProgressIndicator(
+                        color: AppColors.blue700, strokeWidth: 2))),
+            errorWidget: (context, error, stackTrace) {
+                  return Container(
+                    decoration: BoxDecoration(
+                      color: AppColors.blueStart.withValues(alpha: 0.1),
+                      borderRadius: BorderRadius.circular(50),
+                    ),
+                    child: Icon(
+                      Icons.person,
+                      color: AppColors.blueStart,
+                      size: avatarSize * 0.6,
+                    ),
+                  );
+                },
+          )
           ),
         ),
       ],

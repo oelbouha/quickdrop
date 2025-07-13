@@ -2,6 +2,8 @@ import 'package:quickdrop_app/core/widgets/profile_image.dart';
 import 'package:quickdrop_app/features/profile/settings_card.dart';
 import 'package:quickdrop_app/core/utils/imports.dart';
 
+import 'package:flutter_cache_manager/flutter_cache_manager.dart';
+
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
 
@@ -19,6 +21,7 @@ class _ProfileScreenState extends State<ProfileScreen>
   @override
   void initState() {
     super.initState();
+    _precacheImages();
     _animationController = AnimationController(
       duration: const Duration(milliseconds: 800),
       vsync: this,
@@ -27,6 +30,18 @@ class _ProfileScreenState extends State<ProfileScreen>
       CurvedAnimation(parent: _animationController, curve: Curves.easeInOut),
     );
     _animationController.forward();
+  }
+
+  Future<void> _precacheImages() async {
+    try {
+      // if (_selectedShipment != null ) {
+      await DefaultCacheManager().downloadFile(
+        Provider.of<UserProvider>(context, listen: false).user!.photoUrl!,
+      );
+      // }
+    } catch (e) {
+      print('Failed to precache image: $e');
+    }
   }
 
   @override
@@ -43,8 +58,8 @@ class _ProfileScreenState extends State<ProfileScreen>
       buttonHintText: 'Log Out',
       iconData: Icons.delete_outline,
     );
-    
-    if (!confirmed) return; 
+
+    if (!confirmed) return;
 
     try {
       await FirebaseAuth.instance.signOut();
@@ -53,8 +68,7 @@ class _ProfileScreenState extends State<ProfileScreen>
         context.go("/login");
       }
     } on FirebaseException catch (e) {
-      AppUtils.showDialog(
-          context, 'Error signing out: $e', AppColors.error);
+      AppUtils.showDialog(context, 'Error signing out: $e', AppColors.error);
     } finally {
       setState(() {
         _isSignoutLoading = false;
@@ -84,61 +98,59 @@ class _ProfileScreenState extends State<ProfileScreen>
         systemOverlayStyle: SystemUiOverlayStyle.dark,
         elevation: 0,
       ),
-
       backgroundColor: AppColors.background,
       body: FadeTransition(
         opacity: _fadeAnimation,
         child: SingleChildScrollView(
-                padding: const EdgeInsets.all(20.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    _buildUserStats(),
-                    const SizedBox(height: 32),
-                    _buildQuickActions(),
-                    const SizedBox(height: 32),
-                    _buildSettingsSection(),
-                    const SizedBox(height: 32),
-                    _buildSupportSection(),
-                    const SizedBox(height: 32),
-                    _buildLegalSection(),
-                    const SizedBox(height: 24),
-                    _buildLogoutSection(),
-                    const SizedBox(height: 40),
-                    _buildVersionInfo(),
-                  ],
-                ),
-              ),
+          padding: const EdgeInsets.all(20.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _buildUserStats(),
+              const SizedBox(height: 32),
+              _buildQuickActions(),
+              const SizedBox(height: 32),
+              _buildSettingsSection(),
+              const SizedBox(height: 32),
+              _buildSupportSection(),
+              const SizedBox(height: 32),
+              _buildLegalSection(),
+              const SizedBox(height: 24),
+              _buildLogoutSection(),
+              const SizedBox(height: 40),
+              _buildVersionInfo(),
+            ],
+          ),
         ),
+      ),
     );
   }
 
+  Widget _buildUserStats() {
+    final userProvider = Provider.of<UserProvider>(context);
+    final user = userProvider.user;
 
-Widget _buildUserStats() {
-  final userProvider = Provider.of<UserProvider>(context);
-  final user = userProvider.user;
-
-  return Container(
-    padding: const EdgeInsets.all(16),
-    width: double.infinity,
-    decoration: BoxDecoration(
-      color: AppColors.white,
-      borderRadius: BorderRadius.circular(16),
-      boxShadow: [
-        BoxShadow(
-          color: Colors.black.withValues(alpha: 0.05),
-          blurRadius: 10,
-          offset: const Offset(0, 2),
-        ),
-      ],
-    ),
-    child: Column(
-      children: [
-        Column(
-          children: [
-            buildProfileImage(user: user),
-            const SizedBox(width: 8),
-             Column(
+    return Container(
+      padding: const EdgeInsets.all(16),
+      width: double.infinity,
+      decoration: BoxDecoration(
+        color: AppColors.white,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.05),
+            blurRadius: 10,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Column(
+        children: [
+          Column(
+            children: [
+              buildProfileImage(user: user),
+              const SizedBox(width: 8),
+              Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Text(
@@ -162,78 +174,76 @@ Widget _buildUserStats() {
                   ),
                 ],
               ),
+              const SizedBox(height: 12),
+              _buildViewStatsButton(),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
 
-                  const SizedBox(height: 12),
-             _buildViewStatsButton(),
+  Widget _buildViewStatsButton() {
+    return GestureDetector(
+      onTap: () {
+        context.push(
+            '/profile/statistics?userId=${FirebaseAuth.instance.currentUser!.uid}');
+      },
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        decoration: BoxDecoration(
+          color: AppColors.dark,
+          borderRadius: BorderRadius.circular(12),
+          boxShadow: [
+            BoxShadow(
+              color: AppColors.dark.withValues(alpha: 0.2),
+              blurRadius: 8,
+              offset: const Offset(0, 2),
+            ),
           ],
         ),
-      ],
-    ),
-  );
-}
-
-
-Widget _buildViewStatsButton() {
-  return GestureDetector(
-    onTap: () {
-      context.push('/profile/statistics?userId=${FirebaseAuth.instance.currentUser!.uid}');
-    },
-    child: Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-      decoration: BoxDecoration(
-        color: AppColors.dark,
-        borderRadius: BorderRadius.circular(12),
-        boxShadow: [
-          BoxShadow(
-            color: AppColors.dark.withValues(alpha: 0.2),
-            blurRadius: 8,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      child: const Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-           Icon(
-            Icons.analytics_outlined,
-            color: Colors.white,
-            size: 18,
-          ),
-           SizedBox(width: 8),
-          Text(
-            'View Details',
-            style: TextStyle(
+        child: const Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(
+              Icons.analytics_outlined,
               color: Colors.white,
-              fontSize: 14,
-              fontWeight: FontWeight.w500,
+              size: 18,
             ),
-          ),
-        ],
+            SizedBox(width: 8),
+            Text(
+              'View Details',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 14,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ],
+        ),
       ),
-    ),
-  );
-}
+    );
+  }
 
   Widget _buildQuickActions() {
     return Column(
-        children: [
-          _buildQuickActionItem(
-            title: "Become a driver",
-            subtitle: "Earn money by delivering packages",
-            icon: Icons.local_shipping_outlined,
-            color: AppColors.blue700,
-            onTap: () => _showComingSoon("driver registration"),
-          ),
-          const SizedBox(height: 16),
-          _buildQuickActionItem(
-            title: "Refer friends",
-            subtitle: "Invite friends and earn rewards",
-            icon: Icons.card_giftcard_outlined,
-            color: const Color(0xFF00A699),
-            onTap: () => _showComingSoon("refer to your friend"),
-          ),
-        ],
-
+      children: [
+        _buildQuickActionItem(
+          title: "Become a driver",
+          subtitle: "Earn money by delivering packages",
+          icon: Icons.local_shipping_outlined,
+          color: AppColors.blue700,
+          onTap: () => _showComingSoon("driver registration"),
+        ),
+        const SizedBox(height: 16),
+        _buildQuickActionItem(
+          title: "Refer friends",
+          subtitle: "Invite friends and earn rewards",
+          icon: Icons.card_giftcard_outlined,
+          color: const Color(0xFF00A699),
+          onTap: () => _showComingSoon("refer to your friend"),
+        ),
+      ],
     );
   }
 
@@ -251,18 +261,18 @@ Widget _buildViewStatsButton() {
         decoration: BoxDecoration(
           color: color.withValues(alpha: 0.1),
           borderRadius: BorderRadius.circular(12),
-         boxShadow: [
-          BoxShadow(
-            color: color.withValues(alpha: 0.05),
-            blurRadius: 4,
-            offset: const Offset(0, 2),
-          ),
-        ],
+          boxShadow: [
+            BoxShadow(
+              color: color.withValues(alpha: 0.05),
+              blurRadius: 4,
+              offset: const Offset(0, 2),
+            ),
+          ],
         ),
         child: Row(
           children: [
             Container(
-              width:  40,
+              width: 40,
               height: 40,
               decoration: BoxDecoration(
                 color: color,
@@ -406,7 +416,6 @@ Widget _buildViewStatsButton() {
       ],
     );
   }
-
 
   Widget _buildLogoutSection() {
     return Container(

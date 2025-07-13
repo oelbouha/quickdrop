@@ -1,6 +1,9 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:quickdrop_app/features/models/base_transport.dart';
 import 'package:quickdrop_app/core/utils/imports.dart';
 import 'package:quickdrop_app/features/models/statictics_model.dart';
+
+import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 
 class ShipmentCard extends StatefulWidget {
   final TransportItem shipment;
@@ -32,15 +35,36 @@ class ShipmentCardState extends State<ShipmentCard>
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-     final  fetchedStats = await Provider.of<StatisticsProvider>(context, listen: false)
-          .getStatictics(widget.shipment.userId);
+       _precacheImages();
+      final fetchedStats =
+          await Provider.of<StatisticsProvider>(context, listen: false)
+              .getStatictics(widget.shipment.userId);
       // print(stats?.completedTrips);
       if (mounted) {
-      setState(() {
-        stats = fetchedStats;
-      });
-    }
+        setState(() {
+          stats = fetchedStats;
+        });
+      }
     });
+  }
+
+  Future<void> _precacheImages() async {
+    Shipment? shipment;
+    if (widget.shipment is Shipment) {
+      shipment = widget.shipment as Shipment;
+    }
+    if (shipment == null) {
+      return;
+    }
+    if (shipment.imageUrl != null) {
+      try {
+        await DefaultCacheManager().downloadFile(
+          shipment.imageUrl!,
+        );
+      } catch (e) {
+        print('Failed to precache image: $e');
+      }
+    }
   }
 
   @override
@@ -68,9 +92,8 @@ class ShipmentCardState extends State<ShipmentCard>
           child: ClipRRect(
             borderRadius: BorderRadius.circular(24),
             child: IntrinsicHeight(
-              // Added IntrinsicHeight
               child: Row(
-                crossAxisAlignment: CrossAxisAlignment.stretch, // Added this
+                crossAxisAlignment: CrossAxisAlignment.stretch, 
                 children: [
                   _buildImageSection(),
                   Expanded(
@@ -95,48 +118,66 @@ class ShipmentCardState extends State<ShipmentCard>
     if (shipment == null) {
       return const SizedBox.shrink();
     }
-    return SizedBox(
-      height: 180,
+    
+    // Fixed: Always maintain consistent container dimensions
+    return Container(
+      height: 215,
       width: 130,
       child: Stack(
         children: [
-          ClipRRect(
-              child: Image.network(
-          shipment.imageUrl!,
-          fit: BoxFit.cover,
-          loadingBuilder: (context, child, loadingProgress) {
-            if (loadingProgress == null) return child;
-
-            return Container(
-              decoration: BoxDecoration(
-                color: AppColors.blueStart.withValues(alpha: 0.1),
-                // borderRadius: BorderRadius.circular(50),
-              ),
-              child: const Center(
-                child: CircularProgressIndicator(
-                  color: AppColors.blue,
-                  strokeWidth: 2,
-                ),
-              ),
-            );
-          },
-          errorBuilder: (context, error, stackTrace) {
-            return Container(
-              decoration: BoxDecoration(
-                color: AppColors.blueStart.withValues(alpha: 0.1),
-                borderRadius: BorderRadius.circular(50),
-              ),
-              child: Icon(
-                Icons.person,
-                color: AppColors.blueStart,
-                size: 25,
-              ),
-            );
-          },
-        ),
-            ),
-
+          // Fixed: Use a consistent placeholder that maintains dimensions
           Container(
+            width: 130,
+            height: 215,
+            decoration: BoxDecoration(
+              color: AppColors.blueStart.withValues(alpha: 0.1),
+            ),
+            child: ClipRRect(
+              child: CachedNetworkImage(
+                imageUrl: shipment.imageUrl!,
+                fit: BoxFit.cover,
+                width: 130,
+                height: 215,
+                // Fixed: Use memCacheWidth and memCacheHeight for consistent sizing
+                memCacheWidth: (130 * MediaQuery.of(context).devicePixelRatio).round(),
+                memCacheHeight: (215 * MediaQuery.of(context).devicePixelRatio).round(),
+                placeholder: (context, url) => Container(
+                  width: 130,
+                  height: 215,
+                  decoration: BoxDecoration(
+                    color: AppColors.blueStart.withValues(alpha: 0.1),
+                  ),
+                  child: const Center(
+                    child: CircularProgressIndicator(
+                      color: AppColors.blue700, 
+                      strokeWidth: 2
+                    )
+                  )
+                ),
+                errorWidget: (context, url, error) => Container(
+                  width: 130,
+                  height: 215,
+                  decoration: BoxDecoration(
+                    color: AppColors.blueStart.withValues(alpha: 0.1),
+                  ),
+                  child: Image.asset(
+                    "assets/images/box.jpg",
+                    fit: BoxFit.cover,
+                    width: 130,
+                    height: 215,
+                  )
+                ),
+                // Fixed: Add fadeInDuration to reduce visual jump
+                fadeInDuration: const Duration(milliseconds: 200),
+                // Fixed: Add fade out duration for smooth transitions
+                fadeOutDuration: const Duration(milliseconds: 200),
+              ),
+            ),
+          ),
+          // Gradient overlay
+          Container(
+            width: 130,
+            height: 215,
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 begin: Alignment.topCenter,
@@ -150,7 +191,7 @@ class ShipmentCardState extends State<ShipmentCard>
               ),
             ),
           ),
-
+          // Status badge
           Positioned(
             top: 16,
             left: 16,
@@ -227,15 +268,14 @@ class ShipmentCardState extends State<ShipmentCard>
 
   Widget _buildUserProfile() {
     return UserProfileWithRating(
-        user: widget.userData,
-        header: widget.userData.displayName ?? 'Guest',
-        avatarSize: 34,
-        headerFontSize: 10,
-        subHeaderFontSize: 8,
-        onPressed: () =>  {
-          context.push('/profile/statistics?userId=${widget.userData.uid}')
-          },
-      );
+      user: widget.userData,
+      header: widget.userData.displayName ?? 'Guest',
+      avatarSize: 34,
+      headerFontSize: 10,
+      subHeaderFontSize: 8,
+      onPressed: () =>
+          {context.push('/profile/statistics?userId=${widget.userData.uid}')},
+    );
   }
 
   Widget _buildDestination() {
@@ -339,43 +379,40 @@ class ShipmentCardState extends State<ShipmentCard>
             "${shipment.weight} kg",
             Colors.purple,
           ),
-          
       ],
     );
   }
 
-
-    Widget _buildViewDetailsButton() {
+  Widget _buildViewDetailsButton() {
     return GestureDetector(
-      onTap: widget.onPressed,
-      child:  Container(
-      
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-      decoration: BoxDecoration(
-        color: AppColors.blue700.withOpacity(0.1),
-        borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: AppColors.blue700.withOpacity(0.2)),
-      ),
-      child: const Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-           Text(
-            "Request",
-            style: TextStyle(
-              fontSize: 10,
-              fontWeight: FontWeight.w600,
-              color: AppColors.dark,
-            ),
+        onTap: widget.onPressed,
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+          decoration: BoxDecoration(
+            color: AppColors.blue700.withOpacity(0.1),
+            borderRadius: BorderRadius.circular(8),
+            border: Border.all(color: AppColors.blue700.withOpacity(0.2)),
           ),
-           SizedBox(width: 4),
-           Icon(
-            Icons.arrow_forward_ios,
-            size: 12,
-            color: AppColors.blue700,
+          child: const Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                "Request",
+                style: TextStyle(
+                  fontSize: 10,
+                  fontWeight: FontWeight.w600,
+                  color: AppColors.dark,
+                ),
+              ),
+              SizedBox(width: 4),
+              Icon(
+                Icons.arrow_forward_ios,
+                size: 12,
+                color: AppColors.blue700,
+              ),
+            ],
           ),
-        ],
-      ),
-    ));
+        ));
   }
 
   Widget _buildDetailChip(IconData icon, String text, Color color) {
@@ -421,7 +458,7 @@ class ShipmentCardState extends State<ShipmentCard>
               Row(
                 crossAxisAlignment: CrossAxisAlignment.baseline,
                 textBaseline: TextBaseline.alphabetic,
-                mainAxisSize: MainAxisSize.min, 
+                mainAxisSize: MainAxisSize.min,
                 children: [
                   Flexible(
                     // Added Flexible for price text
