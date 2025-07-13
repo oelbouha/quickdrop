@@ -9,6 +9,9 @@ import 'package:quickdrop_app/core/utils/imports.dart';
 import 'package:quickdrop_app/features/models/statictics_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:intl/intl.dart';
 
@@ -23,11 +26,11 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
-
+  FirebaseMessaging messaging = FirebaseMessaging.instance;
   bool _isEmailLoading = false;
   bool _isGoogleLoading = false;
 
- late AnimationController _animationController;
+  late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
 
   @override
@@ -63,24 +66,39 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
     }
   }
 
+  Future<void> saveFcmToken(String userId) async {
+    final fcm = FirebaseMessaging.instance;
+    final token = await fcm.getToken();
+    // AppUtils.showDialog(context, token ?? "empty", AppColors.blue);
+    print("token :::::::: $token");
+
+    if (token != null) {
+      await FirebaseFirestore.instance.collection('users').doc(userId).set({
+        'fcmToken': token,
+      }, SetOptions(merge: true));
+    }
+
+    // Listen to token refresh in background
+    FirebaseMessaging.instance.onTokenRefresh.listen((newToken) {
+      FirebaseFirestore.instance.collection('users').doc(userId).update({
+        'fcmToken': newToken,
+      });
+    });
+  }
+
   Future<void> setUserData(userCredential) async {
     _createStatsIfNewUser(userCredential.user.uid);
     UserData user = UserData(
-      uid: userCredential.user.uid,
-      email: userCredential.user!.email,
-      displayName: userCredential.user!.displayName,
-      photoUrl: userCredential.user!.photoURL,
-      createdAt: DateFormat('dd/MM/yyyy').format(DateTime.now()).toString(),
-    );
+        uid: userCredential.user.uid,
+        email: userCredential.user!.email,
+        displayName: userCredential.user!.displayName,
+        photoUrl: userCredential.user!.photoURL,
+        createdAt: DateFormat('dd/MM/yyyy').format(DateTime.now()).toString(),
+        fcmToken: null);
 
-    // bool userExist = await doesUserExist(user.uid);
     final userProvider = Provider.of<UserProvider>(context, listen: false);
-    // if (userExist == false) {
-    // userProvider.setUser(user);
-    // userProvider.saveUserToFirestore(user);
-    // } else {
+
     await userProvider.fetchUser(user.uid);
-    // }
   }
 
   Future<bool> doesUserExist(String uid) async {
@@ -122,23 +140,27 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
       // await FirebaseService().saveUserToFirestore(userCredential.user!);
       try {
         await setUserData(userCredential);
+        await saveFcmToken(userCredential.user!.uid);
         if (mounted) {
           // print("switching to home");
           context.go('/home');
         }
       } catch (e) {
         if (mounted) {
-          AppUtils.showDialog(context, "failed to log in user $e", AppColors.error);
+          AppUtils.showDialog(
+              context, "failed to log in user $e", AppColors.error);
           return;
         }
       }
     } on FirebaseAuthException catch (e) {
       if (mounted) {
-        AppUtils.showDialog(context, 'Google Sign-In failed: ${e.message}', AppColors.error);
+        AppUtils.showDialog(
+            context, 'Google Sign-In failed: ${e.message}', AppColors.error);
       }
     } catch (e) {
       if (mounted) {
-        AppUtils.showDialog(context, 'An unexpected error occurred: $e', AppColors.error);
+        AppUtils.showDialog(
+            context, 'An unexpected error occurred: $e', AppColors.error);
       }
     } finally {
       setState(() {
@@ -167,11 +189,15 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
 
           // Save credentials
           await saveCredentials(email, password);
+
+          // await saveFcmToken(userCredential.user!.uid);
           // print("switching to home");
           if (mounted) context.go('/home');
         } catch (e) {
+          // print("error ::  $e");
           if (mounted) {
-            AppUtils.showDialog(context, "failed to log in user $e", AppColors.error);
+            AppUtils.showDialog(
+                context, "failed to log in user $e", AppColors.error);
             return;
           }
         }
@@ -213,8 +239,6 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
     return {'email': email, 'password': password};
   }
 
- 
-
   void _loadSavedCredentials() async {
     final creds = await getSavedCredentials();
     setState(() {
@@ -236,35 +260,35 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
     return AnnotatedRegion<SystemUiOverlayStyle>(
         value: SystemUiOverlayStyle.dark,
         child: FadeTransition(
-        opacity: _fadeAnimation,
-        child: Scaffold(
-            backgroundColor: AppColors.background,
-            resizeToAvoidBottomInset: false,
-            body: Container(
-                padding: const EdgeInsets.all(AppTheme.homeScreenPadding),
-                decoration: const BoxDecoration(
-                  color: AppColors.white,
-                  // gradient: LinearGradient(
-                  //   begin: Alignment.topLeft,
-                  //   end: Alignment.bottomRight,
-                  //   colors: [
-                  //     AppColors.backgroundStart,
-                  //     AppColors.backgroundMiddle,
-                  //     AppColors.backgroundEnd,
-                  //   ],
-                  //   stops: [0.0, 0.5, 1.0],
-                  // ),
-                ),
-                child: Center(
-                    child: Column(
-                  children: [
-                    Expanded(
-                      child: Center(
-                          child: SingleChildScrollView(
-                              child: _buildLogInScreen())),
+            opacity: _fadeAnimation,
+            child: Scaffold(
+                backgroundColor: AppColors.background,
+                resizeToAvoidBottomInset: false,
+                body: Container(
+                    padding: const EdgeInsets.all(AppTheme.homeScreenPadding),
+                    decoration: const BoxDecoration(
+                      color: AppColors.white,
+                      // gradient: LinearGradient(
+                      //   begin: Alignment.topLeft,
+                      //   end: Alignment.bottomRight,
+                      //   colors: [
+                      //     AppColors.backgroundStart,
+                      //     AppColors.backgroundMiddle,
+                      //     AppColors.backgroundEnd,
+                      //   ],
+                      //   stops: [0.0, 0.5, 1.0],
+                      // ),
                     ),
-                  ],
-                ))))));
+                    child: Center(
+                        child: Column(
+                      children: [
+                        Expanded(
+                          child: Center(
+                              child: SingleChildScrollView(
+                                  child: _buildLogInScreen())),
+                        ),
+                      ],
+                    ))))));
   }
 
   Widget _buildLogInScreen() {
@@ -275,37 +299,36 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Center(
-          child: Container(
-            margin: const EdgeInsets.only(bottom: 40),
-            child:  Column(
-              children: [
-                
-              // Image.asset(
-              //   'assets/images/quickdrop.png',
-              //   height: 180,
-              //   fit: BoxFit.cover,
-              // ),
-                //  SizedBox(height: 16),
-                const Text(
-                  "Welcome back",
-                  style: TextStyle(
-                    color: AppColors.dark,
-                    fontSize: 28,
-                    fontWeight: FontWeight.bold,
-                  ),
+              child: Container(
+                margin: const EdgeInsets.only(bottom: 40),
+                child: Column(
+                  children: [
+                    // Image.asset(
+                    //   'assets/images/quickdrop.png',
+                    //   height: 180,
+                    //   fit: BoxFit.cover,
+                    // ),
+                    //  SizedBox(height: 16),
+                    const Text(
+                      "Welcome back",
+                      style: TextStyle(
+                        color: AppColors.dark,
+                        fontSize: 28,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    const Text(
+                      "Sign in to continue",
+                      style: TextStyle(
+                        color: AppColors.shipmentText,
+                        fontSize: 16,
+                      ),
+                    ),
+                  ],
                 ),
-                const SizedBox(height: 8),
-                 const Text(
-                  "Sign in to continue",
-                  style: TextStyle(
-                    color: AppColors.shipmentText,
-                    fontSize: 16,
-                  ),
-                ),
-              ],
+              ),
             ),
-          ),
-        ),
             // const SizedBox(
             //   height: 25,
             // ),
@@ -349,74 +372,74 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
               height: 24,
             ),
 // Replace your current text fields with more polished versions
-Container(
-  margin: const EdgeInsets.only(bottom: 20),
-  child: Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      const Text(
-        "Email",
-        style: TextStyle(
-          color: AppColors.shipmentText,
-          fontSize: 14,
-          fontWeight: FontWeight.w500,
-        ),
-      ),
-      const SizedBox(height: 8),
-      Container(
-        decoration: BoxDecoration(
-          color: AppColors.background,
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(
-            color: AppColors.lessImportant,
-            width: 1,
-          ),
-        ),
-        child: IconTextField(
-          controller: emailController,
-          keyboardType: TextInputType.emailAddress,
-          hintText: 'Enter your email',
-          obsecureText: false,
-          iconPath: "assets/icon/email.svg",
-          validator: Validators.email,
-        ),
-      ),
-    ],
-  ),
-),
+            Container(
+              margin: const EdgeInsets.only(bottom: 20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    "Email",
+                    style: TextStyle(
+                      color: AppColors.shipmentText,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Container(
+                    decoration: BoxDecoration(
+                      color: AppColors.background,
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(
+                        color: AppColors.lessImportant,
+                        width: 1,
+                      ),
+                    ),
+                    child: IconTextField(
+                      controller: emailController,
+                      keyboardType: TextInputType.emailAddress,
+                      hintText: 'Enter your email',
+                      obsecureText: false,
+                      iconPath: "assets/icon/email.svg",
+                      validator: Validators.email,
+                    ),
+                  ),
+                ],
+              ),
+            ),
             // const SizedBox(height: 15),
 
-        Container(
-  margin: const EdgeInsets.only(bottom: 20),
-  child: Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      const Text(
-        "Password",
-        style: TextStyle(
-          color: AppColors.shipmentText,
-          fontSize: 14,
-          fontWeight: FontWeight.w500,
-        ),
-      ),
-      const SizedBox(height: 8),
-      Container(
-        decoration: BoxDecoration(
-          color: AppColors.background,
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(
-            color: AppColors.lessImportant,
-            width: 1,
-          ),
-        ),
-        child:   PasswordTextfield(
-              controller: passwordController,
-              validator: Validators.notEmpty,
+            Container(
+              margin: const EdgeInsets.only(bottom: 20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    "Password",
+                    style: TextStyle(
+                      color: AppColors.shipmentText,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Container(
+                    decoration: BoxDecoration(
+                      color: AppColors.background,
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(
+                        color: AppColors.lessImportant,
+                        width: 1,
+                      ),
+                    ),
+                    child: PasswordTextfield(
+                      controller: passwordController,
+                      validator: Validators.notEmpty,
+                    ),
+                  ),
+                ],
+              ),
             ),
-      ),
-    ],
-  ),
-),    
             // const Text(
             //   "Password",
             //   style: const TextStyle(

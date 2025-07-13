@@ -5,6 +5,7 @@ import 'package:quickdrop_app/features/profile/statistic_card.dart';
 import 'package:quickdrop_app/features/profile/review_card.dart';
 import 'package:quickdrop_app/core/providers/review_provider.dart';
 import 'package:quickdrop_app/features/models/review_model.dart';
+import 'package:quickdrop_app/core/widgets/profile_image.dart';
 
 
 class ProfileStatisticsLoader extends StatefulWidget {
@@ -459,9 +460,6 @@ class ProfileStatisticsState extends State<ProfileStatistics> {
 
 
 Widget _buildUserStats() {
-  final userProvider = Provider.of<UserProvider>(context);
-  final user = userProvider.user;
-
   return Container(
     padding: const EdgeInsets.all(16),
     width: double.infinity,
@@ -481,13 +479,13 @@ Widget _buildUserStats() {
         // Top section - Profile info
         Column(
           children: [
-            _buildProfileImage(user),
+            buildProfileImage(user: widget.user),
             const SizedBox(width: 8),
              Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Text(
-                    user?.displayName ?? 'Guest User',
+                    widget.user.displayName ?? 'Guest User',
                     style: const TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.w600,
@@ -498,14 +496,13 @@ Widget _buildUserStats() {
                   ),
                   const SizedBox(height: 6),
                   Text(
-                    "Member since ${user?.createdAt ?? 'N/A'}",
+                    "Member since ${widget.user.createdAt ?? 'N/A'}",
                     style: TextStyle(
                       fontSize: 12,
                       color: AppColors.dark.withValues(alpha: 0.6),
                       fontWeight: FontWeight.w400,
                     ),
                   ),
-                  // _buildVerificationBadge(),
                 ],
               ),
 
@@ -517,86 +514,6 @@ Widget _buildUserStats() {
   );
 }
 
-Widget _buildProfileImage(user) {
-  return Container(
-      width: 90,
-      height: 90,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(50),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.06),
-            blurRadius: 6,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(50),
-        child: Image.network(
-          user?.photoUrl ?? AppTheme.defaultProfileImage,
-          fit: BoxFit.cover,
-          errorBuilder: (context, error, stackTrace) {
-            return Container(
-              decoration: BoxDecoration(
-                color: AppColors.blueStart.withValues(alpha: 0.1),
-                borderRadius: BorderRadius.circular(35),
-              ),
-              child: Icon(
-                Icons.person,
-                color: AppColors.blueStart,
-                size: 52,
-              ),
-            );
-          },
-        ),
-      ),
-    
-  );
-}
-
-
-
-Widget _buildViewStatsButton() {
-  return GestureDetector(
-    onTap: () {
-      context.push('/profile/statistics?userId=${FirebaseAuth.instance.currentUser!.uid}');
-    },
-    child: Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-      decoration: BoxDecoration(
-        color: AppColors.dark,
-        borderRadius: BorderRadius.circular(12),
-        boxShadow: [
-          BoxShadow(
-            color: AppColors.dark.withValues(alpha: 0.2),
-            blurRadius: 8,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      child: const Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-           Icon(
-            Icons.analytics_outlined,
-            color: Colors.white,
-            size: 18,
-          ),
-           SizedBox(width: 8),
-          Text(
-            'View Details',
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 14,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-        ],
-      ),
-    ),
-  );
-}
 
 
 }
