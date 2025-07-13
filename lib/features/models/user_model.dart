@@ -75,9 +75,19 @@ class UserProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  void updateUserFcmToken(String token, String userId) {
+    FirebaseFirestore.instance.collection('users').doc(userId).set({
+      'fcmToken': token,
+    }, SetOptions(merge: true));
+  }
+
+
+
+
   Future<void> updateUserInfo(UserData updatedUser) async {
     final userDocRef =
         FirebaseFirestore.instance.collection('users').doc(updatedUser.uid);
+        
     // final docSnapshot = await userDocRef.get();
 
     final updateMap = {

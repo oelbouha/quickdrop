@@ -1,14 +1,25 @@
 import 'package:quickdrop_app/core/providers/negotiation_provider.dart';
+import 'package:quickdrop_app/features/notification/notification_handler.dart';
 
 import 'firebase_options.dart';
 import 'package:quickdrop_app/core/utils/imports.dart';
 import 'package:quickdrop_app/core/providers/review_provider.dart';
 
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+
+@pragma('vm:entry-point')
+Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  await Firebase.initializeApp();
+  print("🔔 Background message: ${message.messageId}");
+}
 
 const String supabaseUrl = "https://tkybfgcldgoqrleaxlmb.supabase.co";
 const String anonKey =
     "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRreWJmZ2NsZGdvcXJsZWF4bG1iIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQ2MzM3MDksImV4cCI6MjA2MDIwOTcwOX0.h7dCsmBJvcEkOgnFixtHQVuyxqtqN3FnOI9liKUeJQM";
+  
+  NotificationHandler notificationHandler = NotificationHandler();
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -17,6 +28,8 @@ void main() async {
     anonKey: anonKey,
   );
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  notificationHandler.setupNotifications();
+  
   runApp(
     MultiProvider(
       providers: [
@@ -36,6 +49,7 @@ void main() async {
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
+  
 
   @override
   Widget build(BuildContext context) {

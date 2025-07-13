@@ -510,15 +510,39 @@ class _ListingCardDetailsState extends State<ListingCardDetails> {
         children: [
           Expanded(
             child: ClipRRect(
-              child: _selectedShipment?.imageUrl != null ? Image.network(
-                _selectedShipment!.imageUrl! ,
-                height: AppTheme.imageHeight * 2.8,
-                fit: BoxFit.cover,
-              ) : Image.asset(
-                'assets/images/box.jpg',
-                  height: AppTheme.imageHeight * 2.8,
-                  fit: BoxFit.cover,
-              )
+              child: Image.network(
+          _selectedShipment!.imageUrl!,
+          fit: BoxFit.cover,
+          loadingBuilder: (context, child, loadingProgress) {
+            if (loadingProgress == null) return child;
+
+            return Container(
+              decoration: BoxDecoration(
+                color: AppColors.blueStart.withValues(alpha: 0.1),
+                // borderRadius: BorderRadius.circular(50),
+              ),
+              child: const Center(
+                child: CircularProgressIndicator(
+                  color: AppColors.blue,
+                  strokeWidth: 3,
+                ),
+              ),
+            );
+          },
+          errorBuilder: (context, error, stackTrace) {
+            return Container(
+              decoration: BoxDecoration(
+                color: AppColors.blueStart.withValues(alpha: 0.1),
+                borderRadius: BorderRadius.circular(50),
+              ),
+              child: Icon(
+                Icons.person,
+                color: AppColors.blueStart,
+                size: 25,
+              ),
+            );
+          },
+        )
             ),
           ),
         ],

@@ -102,9 +102,38 @@ class ShipmentCardState extends State<ShipmentCard>
         children: [
           ClipRRect(
               child: Image.network(
-                shipment.imageUrl!,
-                fit: BoxFit.cover,
+          shipment.imageUrl!,
+          fit: BoxFit.cover,
+          loadingBuilder: (context, child, loadingProgress) {
+            if (loadingProgress == null) return child;
+
+            return Container(
+              decoration: BoxDecoration(
+                color: AppColors.blueStart.withValues(alpha: 0.1),
+                // borderRadius: BorderRadius.circular(50),
               ),
+              child: const Center(
+                child: CircularProgressIndicator(
+                  color: AppColors.blue,
+                  strokeWidth: 2,
+                ),
+              ),
+            );
+          },
+          errorBuilder: (context, error, stackTrace) {
+            return Container(
+              decoration: BoxDecoration(
+                color: AppColors.blueStart.withValues(alpha: 0.1),
+                borderRadius: BorderRadius.circular(50),
+              ),
+              child: Icon(
+                Icons.person,
+                color: AppColors.blueStart,
+                size: 25,
+              ),
+            );
+          },
+        ),
             ),
 
           Container(
