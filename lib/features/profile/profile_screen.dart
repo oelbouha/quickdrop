@@ -233,7 +233,9 @@ class _ProfileScreenState extends State<ProfileScreen>
           subtitle: "Earn money by delivering packages",
           icon: Icons.local_shipping_outlined,
           color: AppColors.blue700,
-          onTap: () => _showComingSoon("driver registration"),
+          onTap: () => {
+            context.push("/Register-driver")
+          },
         ),
         const SizedBox(height: 16),
         _buildQuickActionItem(

@@ -9,6 +9,7 @@ import 'package:quickdrop_app/features/profile/profile_screen.dart';
 import 'package:quickdrop_app/features/shipment/shipment_screen.dart';
 import 'package:quickdrop_app/features/trip/trip_screen.dart';
 import 'package:quickdrop_app/features/chat/convo_screen.dart';
+import 'package:quickdrop_app/features/profile/become_driver_screen.dart';
 import 'package:quickdrop_app/features/profile/update_user_info_screen.dart';
 import 'package:quickdrop_app/features/profile/profile_statistics.dart';
 import 'package:quickdrop_app/features/shipment/listing_card_details_screen.dart';
@@ -202,6 +203,14 @@ class AppRouter {
           pageBuilder: (context, state) => buildCustomTransitionPage(
             context,
             const ProfileScreen(),
+          ),
+        ),
+         GoRoute(
+          name: "Register-driver",
+          path: "/Register-driver",
+          pageBuilder: (context, state) => buildCustomTransitionPage(
+            context,
+            const BecomeDriverScreen(),
           ),
         ),
         GoRoute(
