@@ -27,72 +27,28 @@ class SecurityScreenState extends State<SecurityScreen>
     super.dispose();
   }
 
-  Future<void> _showSuccessAnimation() async {
-    HapticFeedback.lightImpact();
-
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (dialogContext) {
-        Future.delayed(const Duration(seconds: 2), () {
-          if (mounted) {
-            Navigator.of(dialogContext).pop();
-            Navigator.of(context).pop();
-          }
-        });
-        return AlertDialog(
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              TweenAnimationBuilder<double>(
-                tween: Tween(begin: 0.0, end: 1.0),
-                duration: const Duration(milliseconds: 600),
-                builder: (context, value, child) {
-                  return Transform.scale(
-                    scale: value,
-                    child: Container(
-                      padding: const EdgeInsets.all(20),
-                      decoration: BoxDecoration(
-                        color: AppColors.success.withOpacity(0.1),
-                        shape: BoxShape.circle,
-                      ),
-                      child: Icon(
-                        Icons.check_circle,
-                        color: AppColors.success,
-                        size: 64 * value,
-                      ),
-                    ),
-                  );
-                },
-              ),
-              const SizedBox(height: 24),
-              const Text(
-                'Account deleted Successfully!',
-                style:
-                    const TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 8),
-              Text(
-                'Your sccount and data has been deleted Successfully.',
-                style:
-                    const TextStyle(fontSize: 14, color: AppColors.textMuted),
-                textAlign: TextAlign.center,
-              ),
-            ],
-          ),
-        );
-      },
-    );
-  }
+  
 
   Future<void> deleteAccount() async {
     if (_isLoading) return;
     setState(() {
       _isLoading = true;
     });
+    final confirmed =  await ConfirmationDialog.show(
+        context: context,
+        message: 'Are you sure you want to delete your Account?',
+        header: 'Delete account',
+        buttonHintText: 'Confirm',
+        buttonColor: AppColors.error,
+        iconColor: AppColors.error,
+        iconData: Icons.delete,
+      );
+    if (!confirmed){
+       setState(() {
+      _isLoading = false;
+    });
+    return ;
+    }
     await FirebaseFirestore.instance.runTransaction((transaction) async {
       String userId = FirebaseAuth.instance.currentUser!.uid;
       await Provider.of<ShipmentProvider>(context, listen: false)
@@ -101,7 +57,12 @@ class SecurityScreenState extends State<SecurityScreen>
           .deleteTripsByUserId(userId);
       // await Provider.of<UserProvider>(context, listen: false)
       //     .deleteUser(userId);
-      _showSuccessAnimation();
+      if (mounted) {
+        await showSuccessAnimation(context,
+          title: "Account deleted Successfully!",
+          message: "Your sccount and data has been deleted Successfully."
+        );
+      }
     });
   }
 
@@ -123,16 +84,18 @@ class SecurityScreenState extends State<SecurityScreen>
         iconTheme: const IconThemeData(color: Colors.black),
         systemOverlayStyle: SystemUiOverlayStyle.dark,
       ),
-      body: SingleChildScrollView(
+      body: _isLoading
+    ? const Center(
+        child: CircularProgressIndicator(
+          color: AppColors.blue700,
+          strokeWidth: 3,
+        ),
+      )
+    : SingleChildScrollView(
         physics: const BouncingScrollPhysics(),
         child: Padding(
           padding: const EdgeInsets.all(20),
-          child: _isLoading
-              ? const Center(child:CircularProgressIndicator(
-                  color: AppColors.blue700,
-                  strokeWidth: 3,
-                ))
-              : _buildUpdateScreen(),
+          child: _buildUpdateScreen(),
         ),
       ),
     );

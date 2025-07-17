@@ -15,7 +15,7 @@ class AppUtils {
   // }
 
   static void showDialog(
-      BuildContext context, String message, Color backgroundColor) {
+      BuildContext context, String message, Color? backgroundColor ) {
     // Clear any existing SnackBar
     ScaffoldMessenger.of(context).removeCurrentSnackBar();
 

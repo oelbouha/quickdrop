@@ -124,13 +124,19 @@ class _AddTripScreenState extends State<AddTripScreen>
       try {
         if (widget.isEditMode) {
           _updateTrip();
-          await _showSuccessAnimation();
+          await showSuccessAnimation(context,
+                  title: widget.isEditMode ? 'Trip Updated Successfully!' : 'Trip Listed Successfully!',
+                  message:  widget.isEditMode ? 'Your Trip has been updated and is now visible to couriers.' : 'Your Trip has been added and is now visible to couriers.',
+                );
         } else {
           await Provider.of<TripProvider>(context, listen: false).addTrip(trip);
           if (mounted) {
             Provider.of<StatisticsProvider>(context, listen: false)
                 .incrementField(user.uid, "pendingTrips");
-            await _showSuccessAnimation();
+            await showSuccessAnimation(context,
+                  title: widget.isEditMode ? 'Trip Updated Successfully!' : 'Trip Listed Successfully!',
+                  message:  widget.isEditMode ? 'Your Trip has been updated and is now visible to couriers.' : 'Your Trip has been added and is now visible to couriers.',
+                );
           }
         }
       } catch (e) {
@@ -166,65 +172,8 @@ class _AddTripScreenState extends State<AddTripScreen>
     }
   }
 
-  Future<void> _showSuccessAnimation() async {
-    HapticFeedback.lightImpact();
 
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (dialogContext) {
-        Future.delayed(const Duration(seconds: 2), () {
-          if (mounted) {
-            Navigator.of(dialogContext).pop();
-            Navigator.of(context).pop();
-          }
-        });
-        return AlertDialog(
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              TweenAnimationBuilder<double>(
-                tween: Tween(begin: 0.0, end: 1.0),
-                duration: const Duration(milliseconds: 600),
-                builder: (context, value, child) {
-                  return Transform.scale(
-                    scale: value,
-                    child: Container(
-                      padding: const EdgeInsets.all(20),
-                      decoration: BoxDecoration(
-                        color: AppColors.success.withOpacity(0.1),
-                        shape: BoxShape.circle,
-                      ),
-                      child: Icon(
-                        Icons.check_circle,
-                        color: AppColors.success,
-                        size: 64 * value,
-                      ),
-                    ),
-                  );
-                },
-              ),
-              const SizedBox(height: 24),
-               Text(
-                widget.isEditMode ? 'Trip updated Successfully!' : 'Trip Listed Successfully!',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 8),
-              Text(
-                widget.isEditMode ? 'Your Trip has been Updated and is now visible to peaple looking to send or receive packages.' 
-                :'Your Trip has been added and is now visible to peaple looking to send or receive packages.',
-                style: TextStyle(fontSize: 14, color: AppColors.textMuted),
-                textAlign: TextAlign.center,
-              ),
-            ],
-          ),
-        );
-      },
-    );
-  }
+
 
   void _initializeDefaults() {
     if (widget.isEditMode && widget.existingTrip != null) {
@@ -362,46 +311,42 @@ class _AddTripScreenState extends State<AddTripScreen>
     );
   }
 
-  void _showErrorWithAnimation(String message) {
-    AppUtils.showDialog(context, message, AppColors.error);
-    HapticFeedback.heavyImpact();
-  }
 
   bool _validateCurrentStep() {
     switch (_currentStep) {
       case 0: // Locations
         if (fromController.text.isEmpty) {
-          _showErrorWithAnimation('Pickup location is required');
+          AppUtils.showDialog(context,'Pickup location is required', AppColors.error);
           return false;
         }
         if (toController.text.isEmpty) {
-          _showErrorWithAnimation('Delivery location is required');
+          AppUtils.showDialog(context,'Delivery location is required', AppColors.error);
           return false;
         }
         return true;
       case 1: // Package Details
         if (priceController.text.isEmpty) {
-          _showErrorWithAnimation('Price is required');
+          AppUtils.showDialog(context,'Price is required', AppColors.error);
           return false;
         }
         if (Validators.isNumber(priceController.text) != null) {
-          _showErrorWithAnimation('Price must be a number');
+          AppUtils.showDialog(context,'Price must be a number', AppColors.error);
           return false;
         }
         return true;
       case 2: // Dimensions
         if (weightController.text.isEmpty) {
-          _showErrorWithAnimation('Weight is required');
+          AppUtils.showDialog(context,'Weight is required', AppColors.error);
           return false;
         }
         if (Validators.isNumber(weightController.text) != null) {
-          _showErrorWithAnimation('Weight must be a number');
+          AppUtils.showDialog(context,'Weight must be a number', AppColors.error);
           return false;
         }
         return true;
       case 3: // Timing
         if (dateController.text.isEmpty) {
-          _showErrorWithAnimation('Pickup date is required');
+          AppUtils.showDialog(context,'Pickup date is required', AppColors.error);
           return false;
         }
         return true;

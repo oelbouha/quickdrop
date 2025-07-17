@@ -137,7 +137,6 @@ class _AddShipmentScreenState extends State<AddShipmentScreen>
     _fadeController.dispose();
     _slideController.dispose();
     _pageController.dispose();
-    // Dispose all controllers
     fromController.dispose();
     toController.dispose();
     weightController.dispose();
@@ -153,10 +152,6 @@ class _AddShipmentScreenState extends State<AddShipmentScreen>
     super.dispose();
   }
 
-  void _showErrorWithAnimation(String message) {
-    AppUtils.showDialog(context, message, AppColors.error);
-    HapticFeedback.heavyImpact();
-  }
 
 
 void _updateShipment() async {
@@ -185,15 +180,13 @@ void _updateShipment() async {
 }
 
   void _listShipment() async {
-    // Add haptic feedback
-    HapticFeedback.mediumImpact();
 
      if (imagePath == null) {
-          _showErrorWithAnimation('Please select an image');
+          AppUtils.showDialog(context,  'Please select an image',AppColors.error);
           return ;
     }
     if (_isImageLoading) {
-      _showErrorWithAnimation('Image is still uploading, please wait');
+     AppUtils.showDialog(context, 'Image is still uploading, please wait',AppColors.error);
       return ;
     }
     if (_isListButtonLoading || _isImageLoading) return;
@@ -232,7 +225,10 @@ void _updateShipment() async {
       try {
           if (widget.isEditMode) {
             _updateShipment();
-             await _showSuccessAnimation();
+             await showSuccessAnimation(context,
+                  title: widget.isEditMode ? 'Shipment Updated Successfully!' : 'Package Listed Successfully!',
+                  message:  widget.isEditMode ? 'Your shipment has been updated and is now visible to couriers.' : 'Your shipment has been added and is now visible to couriers.',
+                );
           }
           else {
             await Provider.of<ShipmentProvider>(context, listen: false)
@@ -240,14 +236,18 @@ void _updateShipment() async {
             if (mounted) {
               Provider.of<StatisticsProvider>(context, listen: false)
                   .incrementField(user.uid, "pendingShipments");
-              await _showSuccessAnimation();
+              await showSuccessAnimation(context,
+                  title: widget.isEditMode ? 'Shipment Updated Successfully!' : 'Package Listed Successfully!',
+                  message:  widget.isEditMode ? 'Your shipment has been updated and is now visible to couriers.' : 'Your shipment has been added and is now visible to couriers.',
+                );
+             
           }
         
         
         }
       } catch (e) {
         if (mounted) {
-          _showErrorWithAnimation( widget.isEditMode ? 'Failed to update shipment: $e' : 'Failed to list shipment: $e');
+          AppUtils.showDialog(context,  widget.isEditMode ? 'Failed to update shipment: $e' : 'Failed to list shipment: $e', AppColors.error);
         }
       } finally {
         if (mounted) {
@@ -257,69 +257,11 @@ void _updateShipment() async {
         }
       }
     } else {
-      _showErrorWithAnimation('Please fill in all required fields');
-      HapticFeedback.heavyImpact();
+      AppUtils.showDialog(context, 'Please fill in all required fields', AppColors.error);
     }
   }
 
-  Future<void> _showSuccessAnimation() async {
-    HapticFeedback.lightImpact();
 
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (dialogContext) {
-        Future.delayed(const Duration(seconds: 2), () {
-          if (mounted) {
-            Navigator.of(dialogContext).pop();
-            Navigator.of(context).pop();
-          }
-        });
-        return AlertDialog(
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              TweenAnimationBuilder<double>(
-                tween: Tween(begin: 0.0, end: 1.0),
-                duration: const Duration(milliseconds: 600),
-                builder: (context, value, child) {
-                  return Transform.scale(
-                    scale: value,
-                    child: Container(
-                      padding: const EdgeInsets.all(20),
-                      decoration: BoxDecoration(
-                        color: AppColors.success.withOpacity(0.1),
-                        shape: BoxShape.circle,
-                      ),
-                      child: Icon(
-                        Icons.check_circle,
-                        color: AppColors.success,
-                        size: 64 * value,
-                      ),
-                    ),
-                  );
-                },
-              ),
-              const SizedBox(height: 24),
-               Text(
-                widget.isEditMode ? 'Shipment Updated Successfully!' : 'Package Listed Successfully!',
-                style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 8),
-              Text(
-                widget.isEditMode ? 'Your shipment has been updated and is now visible to couriers.' : 'Your shipment has been added and is now visible to couriers.',
-                style: const TextStyle(fontSize: 14, color: AppColors.textMuted),
-                textAlign: TextAlign.center,
-              ),
-            ],
-          ),
-        );
-      },
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -588,53 +530,53 @@ void _updateShipment() async {
     switch (_currentStep) {
       case 1: // Package Details
         if (packageNameController.text.isEmpty) {
-          _showErrorWithAnimation('Package name is required');
+          AppUtils.showDialog(context, 'Package name is required', AppColors.error);
           return false;
         }
         if (descriptionController.text.isEmpty) {
-          _showErrorWithAnimation('Description is required');
+          AppUtils.showDialog(context, 'Description is required', AppColors.error);
           return false;
         }
         if (typeController.text.isEmpty) {
-          _showErrorWithAnimation('Package type is required');
+          AppUtils.showDialog(context, 'Package type is required', AppColors.error);
           return false;
         }
         if (priceController.text.isEmpty) {
-          _showErrorWithAnimation('Price is required');
+          AppUtils.showDialog(context, 'Price is required', AppColors.error);
           return false;
         }
         return true;
       case 0: // Locations
         if (fromController.text.isEmpty) {
-          _showErrorWithAnimation('Pickup location is required');
+          AppUtils.showDialog(context, 'Pickup location is required', AppColors.error);
           return false;
         }
         if (toController.text.isEmpty) {
-          _showErrorWithAnimation('Delivery location is required');
+          AppUtils.showDialog(context, 'Delivery location is required', AppColors.error);
           return false;
         }
         return true;
       case 2: // Dimensions
         if (weightController.text.isEmpty) {
-          _showErrorWithAnimation('Weight is required');
+          AppUtils.showDialog(context, 'Weight is required', AppColors.error);
           return false;
         }
         if (packageQuantityController.text.isEmpty) {
-          _showErrorWithAnimation('Quantity is required');
+          AppUtils.showDialog(context, 'Quantity is required', AppColors.error);
           return false;
         }
         return true;
       case 3: // Timing
         if (dateController.text.isEmpty) {
-          _showErrorWithAnimation('Pickup date is required');
+          AppUtils.showDialog(context, 'Pickup date is required', AppColors.error);
           return false;
         }
         if (imagePath == null) {
-          _showErrorWithAnimation('Please select an image');
+          AppUtils.showDialog(context, 'Please select an image', AppColors.error);
           return false;
         }
         if (_isImageLoading) {
-          _showErrorWithAnimation('Image is still uploading, please wait');
+          AppUtils.showDialog(context, 'Image is still uploading, please wait', AppColors.error);
           return false;
         }
         return true;
