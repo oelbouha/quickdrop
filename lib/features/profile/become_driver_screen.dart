@@ -24,8 +24,7 @@ class BecomeDriverScreenState extends State<BecomeDriverScreen>
   final vehicleTypeController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
 
-  late AnimationController _animationController;
-  late Animation<double> _fadeAnimation;
+ 
 
   File? _selectedImage;
   String? imagePath;
@@ -37,20 +36,11 @@ class BecomeDriverScreenState extends State<BecomeDriverScreen>
   void initState() {
     super.initState();
 
-    // Initialize animation
-    _animationController = AnimationController(
-      duration: const Duration(milliseconds: 800),
-      vsync: this,
-    );
-    _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
-      CurvedAnimation(parent: _animationController, curve: Curves.easeInOut),
-    );
+    
 
     user = Provider.of<UserProvider>(context, listen: false).user;
     _initializeFields();
 
-    // Start animation
-    _animationController.forward();
   }
 
   void _initializeFields() {
@@ -62,7 +52,6 @@ class BecomeDriverScreenState extends State<BecomeDriverScreen>
 
   @override
   void dispose() {
-    _animationController.dispose();
     firstNameController.dispose();
     lastNameController.dispose();
     phoneNumberController.dispose();
@@ -70,23 +59,21 @@ class BecomeDriverScreenState extends State<BecomeDriverScreen>
     super.dispose();
   }
 
-  Future<void> updateInfo() async {
+  Future<void> requestDriverMode() async {
     if (_isLoading) return;
 
-    // Haptic feedback
-    HapticFeedback.lightImpact();
 
     if (_isImageLoading) {
       AppUtils.showDialog(context, "Image is still uploading, please wait", AppColors.error);
       return;
     }
-    if (_formKey.currentState!.validate()) {
+    if (!_formKey.currentState!.validate()) {
       // Show confirmation dialog
       final confirmed =  await ConfirmationDialog.show(
         context: context,
-        message: 'Are you sure you want to update your information?',
-        header: 'Save Changes',
-        buttonHintText: 'save',
+        message: 'Are you sure all information is correct!',
+        header: 'Register Request',
+        buttonHintText: 'confirm',
         buttonColor: AppColors.blue700,
         iconColor: AppColors.blue700,
         iconData: Icons.save,
@@ -96,34 +83,27 @@ class BecomeDriverScreenState extends State<BecomeDriverScreen>
       setState(() => _isLoading = true);
 
       try {
-        final user = Provider.of<UserProvider>(context, listen: false).user;
-        UserData updatedUser = UserData(
-          uid: user!.uid,
-          displayName:
-              '${firstNameController.text.trim()} ${lastNameController.text.trim()}',
-          email: emailController.text.trim(),
-          firstName: firstNameController.text.trim(),
-          lastName: lastNameController.text.trim(),
-          phoneNumber: phoneNumberController.text.trim(),
-          photoUrl: imagePath ?? user.photoUrl,
+        // final user = Provider.of<UserProvider>(context, listen: false).user;
+        // UserData updatedUser = UserData(
+        //   uid: user!.uid,
+        //   displayName:
+        //       '${firstNameController.text.trim()} ${lastNameController.text.trim()}',
+        //   email: emailController.text.trim(),
+        //   firstName: firstNameController.text.trim(),
+        //   lastName: lastNameController.text.trim(),
+        //   phoneNumber: phoneNumberController.text.trim(),
+        //   photoUrl: imagePath ?? user.photoUrl,
+        // );
+
+        // await Provider.of<UserProvider>(context, listen: false)
+        //     .updateUserInfo(updatedUser);
+
+        await showSuccessAnimation(context,
+          title: "Driver Mode",
+          message: "Your request has been sent Successfully. We will update you after review your documents"
         );
-
-        await Provider.of<UserProvider>(context, listen: false)
-            .updateUserInfo(updatedUser);
-
-        if (mounted) {
-          // Success haptic feedback
-          HapticFeedback.mediumImpact();
-
-          AppUtils.showDialog(context, "Information updated successfully!", AppColors.succes);
-
-          // Delay navigation to show success message
-          await Future.delayed(const Duration(milliseconds: 1500));
-          Navigator.pop(context, true); // Return true to indicate success
-        }
       } catch (e) {
         if (mounted) {
-          HapticFeedback.heavyImpact();
           AppUtils.showDialog(context, "Failed to update profile information", AppColors.error);
         }
       } finally {
@@ -132,8 +112,6 @@ class BecomeDriverScreenState extends State<BecomeDriverScreen>
         }
       }
     } else {
-      // Validation failed haptic feedback
-      HapticFeedback.heavyImpact();
     }
   }
 
@@ -176,15 +154,13 @@ Future<void> _pickImage() async {
         iconTheme: const IconThemeData(color: Colors.black),
         systemOverlayStyle: SystemUiOverlayStyle.dark,
       ),
-      body: FadeTransition(
-        opacity: _fadeAnimation,
-        child: SingleChildScrollView(
+      body:  SingleChildScrollView(
           physics: const BouncingScrollPhysics(),
           child: Padding(
             padding: const EdgeInsets.all(20),
             child: _buildUpdateScreen(),
           ),
-        ),
+        
       ),
     );
   }
@@ -522,7 +498,7 @@ Future<void> _pickImage() async {
       child: Material(
         color: Colors.transparent,
         child: InkWell(
-          onTap: _isLoading ? null : updateInfo,
+          onTap: _isLoading ? null : requestDriverMode,
           borderRadius: BorderRadius.circular(16),
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 24),

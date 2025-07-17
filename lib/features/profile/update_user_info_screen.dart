@@ -70,7 +70,7 @@ class UpdateUserInfoScreenState extends State<UpdateUserInfoScreen>
     if (_isLoading) return;
 
     // Haptic feedback
-    HapticFeedback.lightImpact();
+    // HapticFeedback.lightImpact();
 
     if (_isImageLoading) {
       AppUtils.showDialog(context, "Image is still uploading, please wait", AppColors.error);
@@ -108,14 +108,10 @@ class UpdateUserInfoScreenState extends State<UpdateUserInfoScreen>
             .updateUserInfo(updatedUser);
 
         if (mounted) {
-          // Success haptic feedback
-          HapticFeedback.mediumImpact();
-
-          AppUtils.showDialog(context, "Information updated successfully!", AppColors.succes);
-
-          // Delay navigation to show success message
-          await Future.delayed(const Duration(milliseconds: 1500));
-          Navigator.pop(context, true); // Return true to indicate success
+          await showSuccessAnimation(context,
+            title: "Information updated Successfully!",
+            message: "Your sccount information has beenu pdated Successfully."
+          );
         }
       } catch (e) {
         if (mounted) {

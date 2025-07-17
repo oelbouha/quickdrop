@@ -187,7 +187,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
           await setUserData(userCredential);
 
           // Save credentials
-          // await saveCredentials(email, password);
+          await saveCredentials(email, password);
 
           // await saveFcmToken(userCredential.user!.uid);
           print("switching to home");
