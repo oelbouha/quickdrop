@@ -140,7 +140,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
       // await FirebaseService().saveUserToFirestore(userCredential.user!);
       try {
         await setUserData(userCredential);
-        await saveFcmToken(userCredential.user!.uid);
+        // await saveFcmToken(userCredential.user!.uid);
         if (mounted) {
           // print("switching to home");
           context.go('/home');
@@ -171,7 +171,6 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
 
   void _signInUserWithEmail() async {
     if (_isEmailLoading) return;
-
     // Validate the form
     if (_formKey.currentState!.validate()) {
       setState(() => _isEmailLoading = true);
@@ -185,14 +184,14 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
         );
 
         try {
-          setUserData(userCredential);
+          await setUserData(userCredential);
 
           // Save credentials
-          await saveCredentials(email, password);
+          // await saveCredentials(email, password);
 
           // await saveFcmToken(userCredential.user!.uid);
-          // print("switching to home");
-          if (mounted) context.go('/home');
+          print("switching to home");
+          context.go('/home');
         } catch (e) {
           // print("error ::  $e");
           if (mounted) {

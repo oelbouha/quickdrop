@@ -25,6 +25,23 @@ Map<String, String> getUserData(userId) {
   return map;
 }
 
+
+ Future<void> deleteTripsByUserId(String userId) async {
+    try {
+        final snapshot = await _firestore.collection('trips')
+        .where('userId', isEqualTo: userId)
+        .get();
+        for (var doc in snapshot.docs) {
+          await doc.reference.delete();
+        }
+       
+        notifyListeners();
+    } catch (e) {
+      // print("Error fetching shipments: $e");
+      rethrow;
+    }
+  }
+
   Future<void> fetchTrips() async {
     try{
       final snapshot = await _firestore.collection('trips').get();

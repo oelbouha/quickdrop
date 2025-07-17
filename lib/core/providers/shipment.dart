@@ -45,6 +45,22 @@ class ShipmentProvider with ChangeNotifier {
   }
 
 
+ Future<void> deleteShipmentsByUserId(String userId) async {
+    try {
+        final snapshot = await _firestore.collection('shipments')
+        .where('userId', isEqualTo: userId)
+        .get();
+        for (var doc in snapshot.docs) {
+          await doc.reference.delete();
+        }
+       
+        notifyListeners();
+    } catch (e) {
+      // print("Error fetching shipments: $e");
+      rethrow;
+    }
+  }
+
   Future<void> fetchShipmentsByUserId(String userId) async {
     try {
         final snapshot = await _firestore.collection('shipments')
@@ -62,6 +78,8 @@ class ShipmentProvider with ChangeNotifier {
       rethrow;
     }
   }
+
+
   Future<void> updateStatus(String id, String newStatus) async {
     await FirebaseFirestore.instance
         .collection("shipments")

@@ -19,8 +19,8 @@ Widget buildProfileImage({
             color: AppColors.blueStart.withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(50),
           ),
-        child: CachedNetworkImage(
-              imageUrl: user!.photoUrl!,
+        child: user!.photoUrl != null ? CachedNetworkImage(
+              imageUrl: user.photoUrl!,
               fit: BoxFit.cover,
               placeholder: (context, url) => Container(
                   decoration: BoxDecoration(
@@ -43,7 +43,9 @@ Widget buildProfileImage({
                     ),
                   );
                 },
-            ),
+            ) : Image.asset(
+              "assets/images/profile.png",
+            )
       ),
     ),
   );
