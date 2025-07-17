@@ -82,6 +82,21 @@ class UserProvider with ChangeNotifier {
   }
 
 
+ Future<void> deleteUser(String userId) async {
+    try {
+        final snapshot = await FirebaseFirestore.instance.collection('users')
+        .doc(userId)
+        .get();
+          await snapshot.reference.delete();
+        // for (var doc in snapshot.docs) {
+        // }
+       
+        notifyListeners();
+    } catch (e) {
+      // print("Error fetching shipments: $e");
+      rethrow;
+    }
+  }
 
 
   Future<void> updateUserInfo(UserData updatedUser) async {

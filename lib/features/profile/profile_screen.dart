@@ -34,11 +34,11 @@ class _ProfileScreenState extends State<ProfileScreen>
 
   Future<void> _precacheImages() async {
     try {
-      // if (_selectedShipment != null ) {
-      await DefaultCacheManager().downloadFile(
-        Provider.of<UserProvider>(context, listen: false).user!.photoUrl!,
-      );
-      // }
+      String? image =
+          Provider.of<UserProvider>(context, listen: false).user!.photoUrl!;
+      
+      await DefaultCacheManager().downloadFile(image);
+      
     } catch (e) {
       print('Failed to precache image: $e');
     }
@@ -64,7 +64,7 @@ class _ProfileScreenState extends State<ProfileScreen>
     try {
       await FirebaseAuth.instance.signOut();
       if (mounted) {
-        Provider.of<UserProvider>(context, listen: false).clearUser();
+        // Provider.of<UserProvider>(context, listen: false).clearUser();
         context.go("/login");
       }
     } on FirebaseException catch (e) {
@@ -233,9 +233,7 @@ class _ProfileScreenState extends State<ProfileScreen>
           subtitle: "Earn money by delivering packages",
           icon: Icons.local_shipping_outlined,
           color: AppColors.blue700,
-          onTap: () => {
-            context.push("/Register-driver")
-          },
+          onTap: () => {context.push("/Register-driver")},
         ),
         const SizedBox(height: 16),
         _buildQuickActionItem(
@@ -330,6 +328,12 @@ class _ProfileScreenState extends State<ProfileScreen>
           subtitle: "Update your details and preferences",
           iconPath: "assets/icon/edit-user.svg",
           onTap: () => context.push("/profile/info"),
+        ),
+        settingsCard(
+          title: "Security",
+          subtitle: "Manage account preferences",
+          iconPath: "assets/icon/edit-user.svg",
+          onTap: () => context.push("/profile-security"),
         ),
         settingsCard(
           title: "Notifications",
