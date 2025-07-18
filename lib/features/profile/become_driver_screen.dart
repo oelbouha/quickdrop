@@ -67,7 +67,7 @@ class BecomeDriverScreenState extends State<BecomeDriverScreen>
       AppUtils.showDialog(context, "Image is still uploading, please wait", AppColors.error);
       return;
     }
-    if (!_formKey.currentState!.validate()) {
+    if (_formKey.currentState!.validate()) {
       // Show confirmation dialog
       final confirmed =  await ConfirmationDialog.show(
         context: context,

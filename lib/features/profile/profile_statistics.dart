@@ -34,6 +34,7 @@ Future<UserData> fetchData() async {
   return (user);
 }
 
+
 @override
 Widget build(BuildContext context) {
   return FutureBuilder<UserData>(
@@ -459,33 +460,30 @@ class ProfileStatisticsState extends State<ProfileStatistics> {
 
 
 
-Widget _buildUserStats() {
-  return Container(
-    padding: const EdgeInsets.all(16),
-    width: double.infinity,
-    decoration: BoxDecoration(
-      color: AppColors.white,
-      borderRadius: BorderRadius.circular(16),
-      boxShadow: [
-        BoxShadow(
-          color: Colors.black.withValues(alpha: 0.05),
-          blurRadius: 10,
-          offset: const Offset(0, 2),
-        ),
-      ],
-    ),
-    child: Column(
-      children: [
-        // Top section - Profile info
-        Column(
-          children: [
-            buildProfileImage(user: widget.user),
-            const SizedBox(width: 8),
-             Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Text(
-                    widget.user.displayName ?? 'Guest User',
+  Widget _buildUserStats() {
+    final userProvider = Provider.of<UserProvider>(context);
+    final user = userProvider.user;
+
+    return Container(
+      padding: const EdgeInsets.all(16),
+      width: double.infinity,
+      decoration: BoxDecoration(
+        color: AppColors.white,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.05),
+            blurRadius: 10,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Row(
+        children: [
+           buildProfileImage(user: user),
+              const SizedBox(width: 8),
+               Text(
+                    user?.displayName ?? 'Guest User',
                     style: const TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.w600,
@@ -494,25 +492,11 @@ Widget _buildUserStats() {
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
-                  const SizedBox(height: 6),
-                  Text(
-                    "Member since ${widget.user.createdAt ?? 'N/A'}",
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: AppColors.dark.withValues(alpha: 0.6),
-                      fontWeight: FontWeight.w400,
-                    ),
-                  ),
-                ],
-              ),
+        ],
+      ),
+    );
+  }
 
-         
-          ],
-        ),
-      ],
-    ),
-  );
-}
 
 
 

@@ -6,7 +6,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 Widget buildProfileImage({
   required UserData? user,
   VoidCallback? onTap,
-  double size = 90,
+  double size = 60,
 }) {
   return GestureDetector(
     onTap: onTap,

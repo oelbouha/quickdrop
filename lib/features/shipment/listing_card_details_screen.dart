@@ -264,20 +264,20 @@ class _ListingCardDetailsState extends State<ListingCardDetails> {
       leading: Container(
         margin: const EdgeInsets.all(9),
         decoration: BoxDecoration(
-          color: Colors.black.withValues(alpha: 0.3),
-          borderRadius: BorderRadius.circular(12),
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(50),
         ),
-        child: BackButton(color: Colors.white),
+        child: BackButton(color: Colors.black),
       ),
       actions: [
         Container(
           margin: const EdgeInsets.all(9),
           decoration: BoxDecoration(
-            color: Colors.black.withValues(alpha: 0.3),
-            borderRadius: BorderRadius.circular(12),
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(50),
           ),
           child: IconButton(
-            icon: const Icon(Icons.share, color: Colors.white),
+            icon: const Icon(Icons.share, color: Colors.black),
             onPressed: () {
               // Share functionality
               AppUtils.showDialog(

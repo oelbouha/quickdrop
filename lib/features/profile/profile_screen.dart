@@ -144,16 +144,11 @@ class _ProfileScreenState extends State<ProfileScreen>
           ),
         ],
       ),
-      child: Column(
+      child: Row(
         children: [
-          Column(
-            children: [
-              buildProfileImage(user: user),
-              const SizedBox(width: 8),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Text(
+           buildProfileImage(user: user),
+              const SizedBox(width: 16),
+               Text(
                     user?.displayName ?? 'Guest User',
                     style: const TextStyle(
                       fontSize: 18,
@@ -163,21 +158,8 @@ class _ProfileScreenState extends State<ProfileScreen>
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
-                  const SizedBox(height: 6),
-                  Text(
-                    "Member since ${user?.createdAt ?? 'N/A'}",
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: AppColors.dark.withValues(alpha: 0.6),
-                      fontWeight: FontWeight.w400,
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 12),
-              _buildViewStatsButton(),
-            ],
-          ),
+                  const Spacer(),
+                  _buildViewStatsButton(),
         ],
       ),
     );
@@ -189,39 +171,16 @@ class _ProfileScreenState extends State<ProfileScreen>
         context.push(
             '/profile/statistics?userId=${FirebaseAuth.instance.currentUser!.uid}');
       },
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-        decoration: BoxDecoration(
-          color: AppColors.dark,
-          borderRadius: BorderRadius.circular(12),
-          boxShadow: [
-            BoxShadow(
-              color: AppColors.dark.withValues(alpha: 0.2),
-              blurRadius: 8,
-              offset: const Offset(0, 2),
-            ),
-          ],
-        ),
-        child: const Row(
+      child:  const Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(
-              Icons.analytics_outlined,
-              color: Colors.white,
+            CustomIcon(
+              iconPath: "assets/icon/alt-arrow-right.svg",
+              color: Colors.black,
               size: 18,
             ),
-            SizedBox(width: 8),
-            Text(
-              'View Details',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 14,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-          ],
-        ),
-      ),
+          ]),
+      
     );
   }
 
