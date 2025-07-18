@@ -7,23 +7,9 @@ class HomePageSkeleton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
           backgroundColor: AppColors.white,
-          // appBar: AppBar(
-          //   title: _buildAppBarSkeleton(),
-          //   backgroundColor: AppColors.white,
-          // ),
           body: Container(
             decoration: const BoxDecoration(
               color: AppColors.white,
-              // gradient: LinearGradient(
-              //   begin: Alignment.topLeft,
-              //   end: Alignment.bottomRight,
-              //   colors: [
-              //     Color(0xFFF8FAFC), 
-              //     Color(0xFFF1F5F9), 
-              //     Color(0xFFE2E8F0), 
-              //   ],
-              //   stops: [0.0, 0.5, 1.0],
-              // ),
             ),
             child: SingleChildScrollView(
               padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -75,7 +61,7 @@ class HomePageSkeleton extends StatelessWidget {
                     height: 14,
                     decoration: BoxDecoration(
                       color: AppColors.skeletonColor,
-                      borderRadius: BorderRadius.circular(6),
+                      borderRadius: BorderRadius.circular(60),
                     ),
                   ),
                 ),

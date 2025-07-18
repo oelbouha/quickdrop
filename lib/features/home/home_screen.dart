@@ -78,16 +78,6 @@ class _HomeScreenState extends State<HomeScreen> {
         body: Container(
           decoration: const BoxDecoration(
             color: AppColors.background,
-            // gradient: LinearGradient(
-            //   begin: Alignment.topLeft,
-            //   end: Alignment.bottomRight,
-            //   colors: [
-            //     AppColors.backgroundStart,
-            //     AppColors.backgroundMiddle,
-            //     AppColors.backgroundEnd,
-            //   ],
-            //   stops: [0.0, 0.5, 1.0],
-            // ),
           ),
           child: SafeArea(
             child: _isLoading
@@ -97,10 +87,8 @@ class _HomeScreenState extends State<HomeScreen> {
                       // App Bar
                       Container(
                         // color: Colors.white.withOpacity(0.8),
-                        child: Padding(
-                          padding: const EdgeInsets.all(16.0),
-                          child: _buildAppBar(),
-                        ),
+                         padding: const EdgeInsets.all(16.0),
+                        child:  _buildAppBar(),
                       ),
                       Expanded(
                         child: SingleChildScrollView(
@@ -115,8 +103,6 @@ class _HomeScreenState extends State<HomeScreen> {
                               _buildValuePropsRow(),
                               // const SizedBox(height: 32),
                               // _buildOurServices(),
-                              // const SizedBox(height: 32),
-                              // _buildToggleButtons(),
                               const SizedBox(height: 24),
                               _buildListingsHeader(),
                               const SizedBox(height: 16),
