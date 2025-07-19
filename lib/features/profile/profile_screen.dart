@@ -130,7 +130,12 @@ class _ProfileScreenState extends State<ProfileScreen>
     final userProvider = Provider.of<UserProvider>(context);
     final user = userProvider.user;
 
-    return Container(
+    return GestureDetector (
+      onTap: () {
+        context.push(
+            '/profile/statistics?userId=${FirebaseAuth.instance.currentUser!.uid}');
+      },
+      child: Container(
       padding: const EdgeInsets.all(16),
       width: double.infinity,
       decoration: BoxDecoration(
@@ -146,43 +151,42 @@ class _ProfileScreenState extends State<ProfileScreen>
       ),
       child: Row(
         children: [
-           buildProfileImage(user: user),
+           buildProfileImage(user: user, size: 60),
               const SizedBox(width: 16),
-               Text(
+              Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [ 
+                  Text(
                     user?.displayName ?? 'Guest User',
                     style: const TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.w600,
-                      color: AppColors.dark,
+                      color: Colors.black87,
                     ),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
-                  const Spacer(),
-                  _buildViewStatsButton(),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildViewStatsButton() {
-    return GestureDetector(
-      onTap: () {
-        context.push(
-            '/profile/statistics?userId=${FirebaseAuth.instance.currentUser!.uid}');
-      },
-      child:  const Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            CustomIcon(
+                   Text(
+                    'Show profile',
+                    style:  TextStyle(
+                      fontSize: 12,
+                      color: Colors.grey[600],
+                    ),
+                  ),
+                ]),
+            const Spacer(),
+            const CustomIcon(
               iconPath: "assets/icon/alt-arrow-right.svg",
               color: Colors.black,
-              size: 18,
+              size: 20,
             ),
-          ]),
-      
-    );
+        ],
+      ),
+    ));
   }
+
+
 
   Widget _buildQuickActions() {
     return Column(
@@ -270,7 +274,7 @@ class _ProfileScreenState extends State<ProfileScreen>
             Icon(
               Icons.arrow_forward_ios,
               size: 14,
-              color: Colors.grey[400],
+              color: Colors.black,
             ),
           ],
         ),
