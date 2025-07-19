@@ -4,7 +4,7 @@ import 'package:quickdrop_app/core/utils/imports.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/gestures.dart';
 
-  Widget buildEmptyState(IconData icon,String message, ) {
+  Widget buildEmptyState(IconData icon, String message, String subMessage) {
     return Container(
       padding: const EdgeInsets.all(32.0),
       child: Column(
@@ -27,9 +27,18 @@ import 'package:flutter/gestures.dart';
           Text(
             message,
             style: const TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.w600,
+              color: AppColors.textSecondary,
+            ),
+            textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: 8),
+          Text(
+            subMessage,
+            style: const TextStyle(
+              color: AppColors.textMuted,
               fontSize: 16,
-              fontWeight: FontWeight.w500,
-              color: Color(0xFF6B7280),
             ),
             textAlign: TextAlign.center,
           ),

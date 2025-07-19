@@ -540,44 +540,13 @@ class SearchResultsScreenState extends State<SearchResultsScreen> with TickerPro
     );
   }
 
-  Widget _buildEmptyState(String message, String iconPath) {
-    return Container(
-      padding: const EdgeInsets.all(32.0),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Container(
-            width: 80,
-            height: 80,
-            decoration: BoxDecoration(
-              color: AppColors.blue700.withValues(alpha: 0.1),
-              borderRadius: BorderRadius.circular(40),
-            ),
-            child: CustomIcon(
-              iconPath: iconPath,
-              size: 40,
-              color: AppColors.blue700.withValues(alpha: 0.6),
-            ),
-          ),
-          const SizedBox(height: 16),
-          Text(
-            message,
-            style: const TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.w500,
-              color: Color(0xFF6B7280),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
+
 
   Widget _buildShipmentListings(List<Shipment> activeShipments) {
     return Consumer2<ShipmentProvider, UserProvider>(
       builder: (context, shipmentProvider, userProvider, child) {
         return activeShipments.isEmpty
-            ? buildEmptyState( Icons.add_box, "No Shipments Found",)
+            ? buildEmptyState( Icons.add_box, "No Shipments Found", "No results found for your search criteria",)
             : Container(
                 margin: const EdgeInsets.symmetric(horizontal: 16),
                 child: Column(
@@ -630,7 +599,7 @@ class SearchResultsScreenState extends State<SearchResultsScreen> with TickerPro
     return Consumer2<TripProvider, UserProvider>(
       builder: (context, tripProvider, userProvider, child) {
         return activeTrips.isEmpty
-            ? buildEmptyState( Icons.trip_origin, "No Trips Found",)
+            ? buildEmptyState( Icons.trip_origin, "No Trips Found", "No trip found for your fillter")
             : Container(
                 margin: const EdgeInsets.symmetric(horizontal: 16),
                 child: Column(
@@ -697,6 +666,7 @@ class SearchResultsScreenState extends State<SearchResultsScreen> with TickerPro
     if (!hasResults) {
       return buildEmptyState(
           Icons.add_box,
+        "No results",
         "No results found for your search criteria",
         
       );

@@ -11,9 +11,9 @@ import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 
 class BottomNavScreen extends StatelessWidget {
-  int _curentIndex = 0;
+ 
   final Widget child;
-  BottomNavScreen({
+ const BottomNavScreen({
     Key? key,
     required this.child,
   }) : super(key: key);
