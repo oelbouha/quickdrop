@@ -61,7 +61,7 @@ import 'package:quickdrop_app/core/widgets/custom_svg.dart';
               Icon(
                 Icons.arrow_forward_ios,
                 size: 12,
-                color: Colors.grey[400],
+                color: Colors.black,
               ),
             ],
           ),

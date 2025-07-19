@@ -102,44 +102,7 @@ class _ChatScreenState extends State<ChatScreen>
   }
 
 
- Widget _buildEmptyState({
-    required IconData icon,
-    required String title,
-    required String subtitle,
-  }) {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(48),
-      child: Column(
-        children: [
-          Icon(
-            icon,
-            size: 64,
-            color: AppColors.textLight,
-          ),
-          const SizedBox(height: 16),
-          Text(
-            title,
-            style: const TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.w600,
-              color: AppColors.textSecondary,
-            ),
-            textAlign: TextAlign.center,
-          ),
-          const SizedBox(height: 8),
-          Text(
-            subtitle,
-            style: const TextStyle(
-              color: AppColors.textMuted,
-              fontSize: 16,
-            ),
-            textAlign: TextAlign.center,
-          ),
-        ],
-      ),
-    );
-  }
+
 
 
   Widget _buildNegotiationRequests() {
@@ -162,12 +125,10 @@ class _ChatScreenState extends State<ChatScreen>
                             // print("data ${snapshot.data as List}");
                             // final user =
                             if (snapshot.data == null) {
-                              return  Center(
-                                  child: _buildEmptyState(
-                                     icon: Icons.chat,
-                                      title: "No active negotiations",
-                                      subtitle: "",
-                                  ));
+                              return  buildEmptyState(
+                                     Icons.chat,
+                                      "No active negotiations",
+                                  );
                             }
                             final conversation = (snapshot.data as List)[index];
                             if (conversation['userId'] == null || conversation == null 
@@ -200,12 +161,10 @@ class _ChatScreenState extends State<ChatScreen>
                             ]);
                           },
                         )
-                      :  Center(
-                          child: _buildEmptyState(
-                              icon: Icons.request_page,
-                              title: "No active negotiations",
-                              subtitle: "",
-                          ))
+                      :  buildEmptyState(
+                              Icons.request_page,
+                              "No active negotiations",
+                          )
         ));
   }
 
@@ -231,12 +190,10 @@ class _ChatScreenState extends State<ChatScreen>
                             // print("data ${snapshot.data as List}");
                             // final user =
                             if (snapshot.data == null) {
-                              return  Center(
-                                  child: _buildEmptyState(
-                                      icon: Icons.chat_bubble,
-                                      title: "No Conversation",
-                                      subtitle: "empty",
-                                  ));
+                              return  buildEmptyState(
+                                      Icons.chat_bubble,
+                                      "No Conversation",
+                                  );
                             }
                             final conversation = (snapshot.data as List)[index];
                             if (conversation['userId'] == null || conversation == null) {
@@ -262,12 +219,10 @@ class _ChatScreenState extends State<ChatScreen>
                             ]);
                           },
                         )
-                      : Center(
-                          child: _buildEmptyState(
-                              icon: Icons.chat,
-                              title: "No active conversation",
-                              subtitle: "",
-                          ))
+                      :buildEmptyState(
+                          Icons.chat_bubble,
+                          "No Conversation",
+                      )
         ));
   }
 
@@ -280,12 +235,10 @@ class _ChatScreenState extends State<ChatScreen>
         .toList();
 
     if (requests.isEmpty) {
-      return  Center(
-          child: _buildEmptyState(
-              icon: Icons.request_page,
-              title: "No Delivery request",
-              subtitle: "",
-          ));
+      return  buildEmptyState(
+              Icons.request_page,
+               "No Delivery request",
+          );
     }
     return Consumer<UserProvider>(builder: (context, userProvider, _) {
       return Container(
@@ -337,12 +290,10 @@ class _ChatScreenState extends State<ChatScreen>
         .toList();
 
     if (requests.isEmpty) {
-      return Center(
-          child: _buildEmptyState(
-              icon: Icons.request_page,
-              title: "No Delivery request",
-              subtitle: "",
-          ));
+      return buildEmptyState(
+              Icons.request_page,
+              "No Delivery request",
+          );
     }
     return Consumer<UserProvider>(builder: (context, userProvider, _) {
       return Container(

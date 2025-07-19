@@ -577,7 +577,7 @@ class SearchResultsScreenState extends State<SearchResultsScreen> with TickerPro
     return Consumer2<ShipmentProvider, UserProvider>(
       builder: (context, shipmentProvider, userProvider, child) {
         return activeShipments.isEmpty
-            ? _buildEmptyState("No Shipments Found", 'assets/icons/package.svg')
+            ? buildEmptyState( Icons.add_box, "No Shipments Found",)
             : Container(
                 margin: const EdgeInsets.symmetric(horizontal: 16),
                 child: Column(
@@ -630,7 +630,7 @@ class SearchResultsScreenState extends State<SearchResultsScreen> with TickerPro
     return Consumer2<TripProvider, UserProvider>(
       builder: (context, tripProvider, userProvider, child) {
         return activeTrips.isEmpty
-            ? _buildEmptyState("No Trips Found", 'assets/icons/car.svg')
+            ? buildEmptyState( Icons.trip_origin, "No Trips Found",)
             : Container(
                 margin: const EdgeInsets.symmetric(horizontal: 16),
                 child: Column(
@@ -695,9 +695,10 @@ class SearchResultsScreenState extends State<SearchResultsScreen> with TickerPro
     bool hasResults = activeShipments.isNotEmpty || activeTrips.isNotEmpty;
 
     if (!hasResults) {
-      return _buildEmptyState(
+      return buildEmptyState(
+          Icons.add_box,
         "No results found for your search criteria",
-        'assets/icons/search.svg',
+        
       );
     }
 

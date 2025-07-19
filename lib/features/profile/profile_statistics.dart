@@ -465,7 +465,12 @@ class ProfileStatisticsState extends State<ProfileStatistics> {
     final user = userProvider.user;
 
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.only(
+        top: 32,
+        left: 16,
+        right: 16,
+        bottom: 32
+      ),
       width: double.infinity,
       decoration: BoxDecoration(
         color: AppColors.white,
@@ -478,21 +483,48 @@ class ProfileStatisticsState extends State<ProfileStatistics> {
           ),
         ],
       ),
-      child: Row(
+      child: Row (
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-           buildProfileImage(user: user),
-              const SizedBox(width: 8),
+        Column(
+        children: [
+           buildProfileImage(user: user, size: 120),
+              const SizedBox(width: 12),
                Text(
                     user?.displayName ?? 'Guest User',
                     style: const TextStyle(
-                      fontSize: 18,
+                      fontSize: 22,
                       fontWeight: FontWeight.w600,
                       color: AppColors.dark,
                     ),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
-        ],
+        ]
+        ),
+
+         const SizedBox(width: 32),
+        const  Column (
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.start,
+        children: [  
+           Text(
+              '1',
+              style:  TextStyle(
+                fontSize: 18,
+                 fontWeight: FontWeight.w600,
+                color: AppColors.dark,
+              ),
+            ),   
+          Text(
+              'Month on quickdrop',
+              style:  TextStyle(
+                fontSize: 14,
+                color: AppColors.dark,
+              ),
+            ),
+        ])
+      ],
       ),
     );
   }

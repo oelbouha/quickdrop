@@ -108,16 +108,24 @@ class _ShipmentScreenState extends State<ShipmentScreen>
     required String subtitle,
     required String buttonText,
   }) {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(48),
-      child: Column(
+    return  SizedBox.expand(
+    child: Center(
+      child: Padding(
+        padding: EdgeInsets.all(48),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(
+          Container(
+             padding: EdgeInsets.all(16),
+             decoration: BoxDecoration(
+              color: AppColors.blue700.withValues(alpha: 0.1),
+              borderRadius: BorderRadius.circular(60),
+            ),
+          child: Icon(
             icon,
             size: 64,
-            color: AppColors.textLight,
-          ),
+            color: AppColors.blue700.withValues(alpha: 0.6),
+          ),),
           const SizedBox(height: 16),
           Text(
             title,
@@ -166,7 +174,7 @@ class _ShipmentScreenState extends State<ShipmentScreen>
             ),
           ),
         ],
-      ),
+      ),))
     );
   }
 

@@ -6,18 +6,18 @@ import 'package:cached_network_image/cached_network_image.dart';
 Widget buildProfileImage({
   required UserData? user,
   VoidCallback? onTap,
-  double size = 60,
+  double size = 50,
 }) {
   return GestureDetector(
     onTap: onTap,
     child: ClipRRect(
-      borderRadius: BorderRadius.circular(50),
+      borderRadius: BorderRadius.circular(500),
       child: Container(
         width: size,
         height: size,
         decoration: BoxDecoration(
             color: AppColors.blueStart.withValues(alpha: 0.1),
-            borderRadius: BorderRadius.circular(50),
+            borderRadius: BorderRadius.circular(500),
           ),
         child: user!.photoUrl != null ? CachedNetworkImage(
               imageUrl: user.photoUrl!,
@@ -25,7 +25,7 @@ Widget buildProfileImage({
               placeholder: (context, url) => Container(
                   decoration: BoxDecoration(
                     color: AppColors.blueStart.withValues(alpha: 0.1),
-                    borderRadius: BorderRadius.circular(50),
+                    borderRadius: BorderRadius.circular(100),
                   ),
                   child: const Center(
                       child: CircularProgressIndicator(
@@ -34,7 +34,7 @@ Widget buildProfileImage({
                   return Container(
                     decoration: BoxDecoration(
                       color: AppColors.blueStart.withValues(alpha: 0.1),
-                      borderRadius: BorderRadius.circular(50),
+                      borderRadius: BorderRadius.circular(100),
                     ),
                     child: Icon(
                       Icons.person,
