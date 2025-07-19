@@ -64,10 +64,10 @@ class ChatConversationCardState extends State<ChatConversationCard> {
               UserProfileCard(
                 photoUrl: widget.photoUrl!,
                 header: widget.header!,
-                onPressed: () => print("user profile  Clicked"),
+                onPressed: () => {context.push('/profile/statistics?userId=${widget.userId}')},
                 headerFontSize: 16,
                 subHeaderFontSize: 12,
-                avatarSize: 40,
+                avatarSize: 48,
                 subHeader: widget.subHeader! ,
                 subHeaderColor: widget.isMessageSeen == false && widget.messageSender == widget.userId
                     ? AppColors.shipmentText:

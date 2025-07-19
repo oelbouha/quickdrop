@@ -128,6 +128,7 @@ class _ChatScreenState extends State<ChatScreen>
                               return  buildEmptyState(
                                      Icons.chat,
                                       "No active negotiations",
+                                      "Start negotiating on delivery requests to see them here"
                                   );
                             }
                             final conversation = (snapshot.data as List)[index];
@@ -164,6 +165,7 @@ class _ChatScreenState extends State<ChatScreen>
                       :  buildEmptyState(
                               Icons.request_page,
                               "No active negotiations",
+                              "Start negotiating on delivery requests to see them here"
                           )
         ));
   }
@@ -192,7 +194,8 @@ class _ChatScreenState extends State<ChatScreen>
                             if (snapshot.data == null) {
                               return  buildEmptyState(
                                       Icons.chat_bubble,
-                                      "No Conversation",
+                                      "No Conversation yet",
+                                      "Your chat conversations will appear here once you start messaging"
                                   );
                             }
                             final conversation = (snapshot.data as List)[index];
@@ -221,7 +224,8 @@ class _ChatScreenState extends State<ChatScreen>
                         )
                       :buildEmptyState(
                           Icons.chat_bubble,
-                          "No Conversation",
+                          "No Conversation yet",
+                          "Your chat conversations will appear here once you start messaging"
                       )
         ));
   }
@@ -237,7 +241,8 @@ class _ChatScreenState extends State<ChatScreen>
     if (requests.isEmpty) {
       return  buildEmptyState(
               Icons.request_page,
-               "No Delivery request",
+               "No Delivery requests",
+               "Incoming delivery requests will show up here"
           );
     }
     return Consumer<UserProvider>(builder: (context, userProvider, _) {
@@ -292,7 +297,8 @@ class _ChatScreenState extends State<ChatScreen>
     if (requests.isEmpty) {
       return buildEmptyState(
               Icons.request_page,
-              "No Delivery request",
+              "No delivery requests sent",
+              "Requests you've sent to others will appear here"
           );
     }
     return Consumer<UserProvider>(builder: (context, userProvider, _) {

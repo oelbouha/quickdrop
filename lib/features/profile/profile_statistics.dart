@@ -458,78 +458,87 @@ class ProfileStatisticsState extends State<ProfileStatistics> {
     );
   }
 
-
-
-  Widget _buildUserStats() {
-    final userProvider = Provider.of<UserProvider>(context);
-    final user = userProvider.user;
-
-    return Container(
-      padding: const EdgeInsets.only(
-        top: 32,
-        left: 16,
-        right: 16,
-        bottom: 32
-      ),
-      width: double.infinity,
-      decoration: BoxDecoration(
-        color: AppColors.white,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.05),
-            blurRadius: 10,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      child: Row (
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-        Column(
-        children: [
-           buildProfileImage(user: user, size: 120),
-              const SizedBox(width: 12),
-               Text(
-                    user?.displayName ?? 'Guest User',
-                    style: const TextStyle(
-                      fontSize: 22,
-                      fontWeight: FontWeight.w600,
-                      color: AppColors.dark,
-                    ),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-        ]
+Widget _buildUserStats() {
+  return Container(
+    padding: const EdgeInsets.only(
+      top: 32,
+      left: 16,
+      right: 16,
+      bottom: 32
+    ),
+    width: double.infinity,
+    decoration: BoxDecoration(
+      color: AppColors.white,
+      borderRadius: BorderRadius.circular(16),
+      boxShadow: [
+        BoxShadow(
+          color: Colors.black.withValues(alpha: 0.05),
+          blurRadius: 10,
+          offset: const Offset(0, 2),
         ),
-
-         const SizedBox(width: 32),
-        const  Column (
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.start,
-        children: [  
-           Text(
-              '1',
-              style:  TextStyle(
-                fontSize: 18,
-                 fontWeight: FontWeight.w600,
-                color: AppColors.dark,
-              ),
-            ),   
-          Text(
-              'Month on quickdrop',
-              style:  TextStyle(
-                fontSize: 14,
-                color: AppColors.dark,
-              ),
-            ),
-        ])
       ],
+    ),
+    child: FittedBox( // Scale entire content
+      fit: BoxFit.scaleDown,
+      child: IntrinsicWidth(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Column(
+              children: [
+                buildProfileImage(user: widget.user, size: 120),
+                const SizedBox(height: 12),
+                Text(
+                  widget.user.displayName ?? 'Guest User',
+                  style: const TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.w600,
+                    color: AppColors.dark,
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                const Text(
+                  "Customer",
+                  style:  TextStyle(
+                    fontSize: 14,
+                    color: AppColors.dark,
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ],
+            ),
+            const SizedBox(width: 32),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Text(
+                  '1',
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w600,
+                    color: AppColors.dark,
+                  ),
+                ),
+                Text(
+                  'Month on quickdrop',
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: AppColors.dark,
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
-    );
-  }
-
-
-
+    ),
+  );
+}
 
 }
+
+
+

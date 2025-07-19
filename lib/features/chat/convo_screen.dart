@@ -68,7 +68,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
             photoUrl: widget.user['photoUrl'],
             headerFontSize: 16,
             subHeaderFontSize: 10,
-            avatarSize: 36,
+            avatarSize: 40,
             borderColor: AppColors.blue700,
             headerColor: AppColors.appBarText,
           ),
