@@ -8,6 +8,7 @@ class TextFieldWithHeader extends StatelessWidget {
   final String hintText;
   final String headerText;
   final bool obsecureText;
+  final bool displayHeader;
   final bool isRequired;
   final String? iconPath;
   final IconData? prefixIcon;
@@ -24,8 +25,9 @@ class TextFieldWithHeader extends StatelessWidget {
     this.iconPath,
     this.prefixIcon,
     this.suffixText,
-    required this.headerText,
+     this.headerText = "",
     this.obsecureText = false,
+    this.displayHeader = false,
     this.keyboardType = TextInputType.text,
     this.validator,
     this.maxLines = 1,
@@ -35,17 +37,27 @@ class TextFieldWithHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+     final BorderSide borderSide = BorderSide(
+      color: Colors.grey,
+      width: AppTheme.textFieldBorderWidth,
+    );
+
+     final BorderSide focusedBorderSide = BorderSide(
+      color:  AppColors.blue,
+      width: AppTheme.textFieldBorderWidth,
+    );
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
+            if (displayHeader)
             Text(
               headerText,
               style: const TextStyle(
                 color: AppColors.headingText,
-                fontSize: 16,
+                fontSize: 14,
                 fontWeight: FontWeight.w600,
               ),
             ),
@@ -54,23 +66,15 @@ class TextFieldWithHeader extends StatelessWidget {
                 ' *',
                 style: TextStyle(
                   color: Colors.red,
-                  fontSize: 16,
+                  fontSize: 14,
                   fontWeight: FontWeight.bold,
                 ),
               ),
           ],
         ),
-        const SizedBox(height: 4),
-        Container(
-          decoration: BoxDecoration(
-            border: Border.all(color: AppColors.lessImportant),
-            borderRadius: BorderRadius.circular(12),
-            color: Colors.white,
-          ),
-          child: Row(
-            children: [
-              Expanded(
-                child: TextFormField(
+        if (displayHeader) const SizedBox(height: 8),
+        TextFormField(
+          
                   maxLines: maxLines,
                   controller: controller,
                   obscureText: obsecureText,
@@ -79,32 +83,44 @@ class TextFieldWithHeader extends StatelessWidget {
                   keyboardType: keyboardType,
                   style: const TextStyle(
                     fontSize: 16,
-                    fontWeight: FontWeight.w600,
+                    fontWeight: FontWeight.w500,
                     color: AppColors.shipmentText,
                   ),
                   decoration: InputDecoration(
+
+    // contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 8),
                     hintText: hintText,
                     hintStyle: TextStyle(
                       color: Colors.grey[400],
                       fontWeight: FontWeight.normal,
                     ),
-                    prefixIcon: _buildPrefixIcon(),
-                    suffixText: suffixText,
-                    suffixStyle: TextStyle(
-                      color: Colors.grey[600],
-                      fontWeight: FontWeight.w500,
-                    ),
-                    border: InputBorder.none,
-                    contentPadding: const EdgeInsets.symmetric(
-                      horizontal: 16,
-                      vertical: 12,
-                    ),
+                    enabledBorder: OutlineInputBorder(
+                    borderSide: borderSide,
+                    borderRadius: BorderRadius.circular(AppTheme.textFeildRadius),
                   ),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: focusedBorderSide,
+                    borderRadius: BorderRadius.circular(AppTheme.cardRadius),
+                  ),
+                  errorBorder: OutlineInputBorder(
+                    borderSide: const BorderSide(
+                      color: AppColors.error,
+                      width: AppTheme.textFieldBorderWidth,
+                    ),
+                    borderRadius: BorderRadius.circular(AppTheme.cardRadius),
+                  ),
+                  focusedErrorBorder: OutlineInputBorder(
+                    borderSide: const BorderSide(
+                      color: AppColors.error,
+                      width: AppTheme.textFieldBorderWidth,
+                    ),
+                    borderRadius: BorderRadius.circular(AppTheme.cardRadius),
+                  ),
+                    prefixIcon: _buildPrefixIcon(),        
+                  ),
+                    
+                  
                 ),
-              ),
-            ],
-          ),
-        ),
       ],
     );
   }

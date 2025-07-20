@@ -68,13 +68,13 @@ class StatisticsProvider with ChangeNotifier {
       if (userId.isEmpty) {
         throw Exception("Invalid userId: empty or null");
       }
-      print("Attempting to save stats for userId: $userId");
-      print("Stats data: ${stats.toMap()}");
+      // print("Attempting to save stats for userId: $userId");
+      // print("Stats data: ${stats.toMap()}");
       await _firestore.collection('statistics').doc(userId).set(
             stats.toMap(),
             SetOptions(merge: true),
           );
-      print("Stats saved successfully for userId: $userId");
+      // print("Stats saved successfully for userId: $userId");
       // notifyListeners();
     } catch (e) {
       print("Error saving stats: $e");

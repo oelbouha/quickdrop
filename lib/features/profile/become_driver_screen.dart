@@ -83,20 +83,25 @@ class BecomeDriverScreenState extends State<BecomeDriverScreen>
       setState(() => _isLoading = true);
 
       try {
-        // final user = Provider.of<UserProvider>(context, listen: false).user;
-        // UserData updatedUser = UserData(
-        //   uid: user!.uid,
-        //   displayName:
-        //       '${firstNameController.text.trim()} ${lastNameController.text.trim()}',
-        //   email: emailController.text.trim(),
-        //   firstName: firstNameController.text.trim(),
-        //   lastName: lastNameController.text.trim(),
-        //   phoneNumber: phoneNumberController.text.trim(),
-        //   photoUrl: imagePath ?? user.photoUrl,
-        // );
+        final user = Provider.of<UserProvider>(context, listen: false).user;
+        UserData driver = UserData(
+          uid: user!.uid,
+          displayName:
+              '${firstNameController.text.trim()} ${lastNameController.text.trim()}',
+          email: emailController.text.trim(),
+          firstName: firstNameController.text.trim(),
+          lastName: lastNameController.text.trim(),
+          phoneNumber: phoneNumberController.text.trim(),
+          photoUrl: imagePath ?? user.photoUrl,
+          idNumber: idNumberController.text.trim(),
+          carPlateNumber: vehiclePlateNumberController.text.trim(),
+          carModel: vehicleTypeController.text.trim(),
+          driverNumber: driverNumberController.text.trim(),
+          createdAt: DateTime.now().toIso8601String(),
+        );
 
-        // await Provider.of<UserProvider>(context, listen: false)
-        //     .updateUserInfo(updatedUser);
+        await Provider.of<UserProvider>(context, listen: false)
+            .requestDriverMode(driver);
 
         await showSuccessAnimation(context,
           title: "Driver Mode",
@@ -104,7 +109,7 @@ class BecomeDriverScreenState extends State<BecomeDriverScreen>
         );
       } catch (e) {
         if (mounted) {
-          AppUtils.showDialog(context, "Failed to update profile information", AppColors.error);
+          AppUtils.showDialog(context, "Failed to send request please try again later", AppColors.error);
         }
       } finally {
         if (mounted) {
@@ -112,6 +117,7 @@ class BecomeDriverScreenState extends State<BecomeDriverScreen>
         }
       }
     } else {
+      AppUtils.showDialog(context, "Please fill all fields", AppColors.error);
     }
   }
 
@@ -157,7 +163,7 @@ Future<void> _pickImage() async {
       body:  SingleChildScrollView(
           physics: const BouncingScrollPhysics(),
           child: Padding(
-            padding: const EdgeInsets.all(20),
+            padding: const EdgeInsets.all(AppTheme.homeScreenPadding),
             child: _buildUpdateScreen(),
           ),
         
@@ -232,7 +238,7 @@ Future<void> _pickImage() async {
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      "Get income with Us",
+                      "Get income with Us, become a driver",
                       style: TextStyle(
                         color: Colors.grey[600],
                         fontSize: 14,
@@ -351,10 +357,10 @@ Future<void> _pickImage() async {
         ImprovedTextField(
           controller: idNumberController,
           label: 'Id cart number',
-          hint: '',
+          hint: 'Enter your National ID',
           icon: Icons.person,
           keyboardType: TextInputType.emailAddress,
-          validator: Validators.email,
+          validator: Validators.notEmpty,
         ),
         const SizedBox(height: 16),
         buildInfoCard(
@@ -385,7 +391,7 @@ Future<void> _pickImage() async {
         ImprovedTextField(
           controller: phoneNumberController,
           label: 'Phone Number',
-          hint: '06 000 00 00',
+          hint: '00 000 00 00',
           icon: Icons.phone_outlined,
           keyboardType: TextInputType.phone,
           validator: Validators.phone,
@@ -403,28 +409,36 @@ Future<void> _pickImage() async {
         ImprovedTextField(
           controller: vehiclePlateNumberController,
           label: 'Rgistration plate',
-          hint: '',
+          hint: 'vehicle plate number ',
           icon: Icons.car_crash_outlined,
           keyboardType: TextInputType.emailAddress,
-          validator: Validators.email,
+          validator: Validators.notEmpty,
         ),
         const SizedBox(height: 16),
         ImprovedTextField(
           controller: driverNumberController,
           label: 'Driver number',
-          hint: '00 000 00 00',
+          hint: '(e.g. 00125)',
           icon: Icons.car_crash_outlined,
           keyboardType: TextInputType.phone,
-          validator: Validators.phone,
+          validator: Validators.notEmpty,
         ),
         const SizedBox(height: 16),
         ImprovedTextField(
           controller: vehicleTypeController,
-          label: 'Brand ',
-          hint: '',
+          label: 'Vehicle Type',
+          hint: 'vehicle type (car, truck, etc.)',
           icon: Icons.car_crash_outlined,
-          keyboardType: TextInputType.phone,
-          validator: Validators.phone,
+          keyboardType: TextInputType.text,
+          validator: Validators.notEmpty,
+        ),
+         const SizedBox(height: 16),
+        buildInfoCard(
+          icon: Icons.info_outline,
+          title: "Important",
+          message:
+              "Make sure the vehicle information matches your vehicle registration documents.",
+          color: Colors.green,
         ),
       ],
     );
@@ -544,106 +558,3 @@ Future<void> _pickImage() async {
   }
 }
 
-// Improved TextField Widget
-class ImprovedTextField extends StatefulWidget {
-  final TextEditingController controller;
-  final String label;
-  final String hint;
-  final IconData icon;
-  final TextInputType? keyboardType;
-  final String? Function(String?)? validator;
-
-  const ImprovedTextField({
-    Key? key,
-    required this.controller,
-    required this.label,
-    required this.hint,
-    required this.icon,
-    this.keyboardType,
-    this.validator,
-  }) : super(key: key);
-
-  @override
-  State<ImprovedTextField> createState() => _ImprovedTextFieldState();
-}
-
-class _ImprovedTextFieldState extends State<ImprovedTextField> {
-  bool _isFocused = false;
-  bool _hasError = false;
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          widget.label,
-          style: const TextStyle(
-            fontSize: 14,
-            fontWeight: FontWeight.w600,
-            color: AppColors.headingText,
-          ),
-        ),
-        const SizedBox(height: 8),
-        TextFormField(
-          controller: widget.controller,
-          keyboardType: widget.keyboardType,
-          validator: (value) {
-            final result = widget.validator?.call(value);
-            setState(() {
-              _hasError = result != null;
-            });
-            return result;
-          },
-          onChanged: (value) {
-            if (_hasError) {
-              setState(() {
-                _hasError = widget.validator?.call(value) != null;
-              });
-            }
-          },
-          decoration: InputDecoration(
-            hintText: widget.hint,
-            hintStyle: TextStyle(color: Colors.grey[400]),
-            prefixIcon: Icon(
-              widget.icon,
-              color: _isFocused
-                  ? AppColors.blue700
-                  : _hasError
-                      ? AppColors.error
-                      : Colors.grey[400],
-              size: 20,
-            ),
-            filled: true,
-            fillColor: _isFocused
-                ? AppColors.blue700.withOpacity(0.05)
-                : Colors.grey[50],
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-              borderSide: BorderSide.none,
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-              borderSide: BorderSide(color: AppColors.blue700, width: 2),
-            ),
-            errorBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-              borderSide: BorderSide(color: AppColors.error, width: 2),
-            ),
-            focusedErrorBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-              borderSide: BorderSide(color: AppColors.error, width: 2),
-            ),
-            contentPadding:
-                const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-          ),
-          // onFocusChange: (focused) {
-          //   setState(() {
-          //     _isFocused = focused;
-          //   });
-          // },
-        ),
-      ],
-    );
-  }
-}

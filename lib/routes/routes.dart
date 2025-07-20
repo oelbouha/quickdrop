@@ -56,7 +56,7 @@ class AppRouter {
               '/privacy-policy',
           '/terms-of-service',
         };
-        // return '/add-trip';
+        // return '/create-account';
         // Debugging prints
         // print("isLoggingIn: $isLoggingIn");
         // print("currentPath: $currentPath");

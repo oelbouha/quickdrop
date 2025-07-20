@@ -201,14 +201,14 @@ class _SingupPageState extends State<SignUpScreen> {
               validator: Validators.name,
             ),
             const SizedBox(height: 8),
-            TextFieldWithoutHeader(
+            TextFieldWithHeader(
               controller: lastNameController,
               hintText: 'Last name on ID',
               iconPath: "assets/icon/user.svg",
-              obsecureText: false,
+              isRequired: false,
               validator: Validators.name,
             ),
-            const SizedBox(height: 6),
+            const SizedBox(height: 8),
             
              buildInfoCard(
               icon: Icons.info_outline,
@@ -235,7 +235,7 @@ class _SingupPageState extends State<SignUpScreen> {
             //   message: "To Sign up, you must be at least 18 years old. other peaaple  who use quickdrop won't see your birthday.",
             //   color: Colors.blue,
             // ),
-            const SizedBox(height: 15),
+            const SizedBox(height: 24),
             TextFieldWithHeader(
               controller: emailController,
               hintText: 'example@gmail.com',
@@ -252,7 +252,7 @@ class _SingupPageState extends State<SignUpScreen> {
               showPrefix: true,
             ),
             const SizedBox(
-              height: 20,
+              height: 24,
             ),
             Text.rich(
               TextSpan(
@@ -303,7 +303,7 @@ class _SingupPageState extends State<SignUpScreen> {
               textAlign: TextAlign.start,
             ),
             const SizedBox(
-              height: 20,
+              height: 24,
             ),
             Button(
                 hintText: "Continue",
@@ -311,7 +311,7 @@ class _SingupPageState extends State<SignUpScreen> {
                 onPressed: _singUpUserWithEmail,
                 isLoading: _isEmailLoading),
             const SizedBox(
-              height: 30,
+              height: 32,
             ),
           ],
         ));
