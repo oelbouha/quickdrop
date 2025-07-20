@@ -267,16 +267,6 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                     padding: const EdgeInsets.all(AppTheme.homeScreenPadding),
                     decoration: const BoxDecoration(
                       color: AppColors.white,
-                      // gradient: LinearGradient(
-                      //   begin: Alignment.topLeft,
-                      //   end: Alignment.bottomRight,
-                      //   colors: [
-                      //     AppColors.backgroundStart,
-                      //     AppColors.backgroundMiddle,
-                      //     AppColors.backgroundEnd,
-                      //   ],
-                      //   stops: [0.0, 0.5, 1.0],
-                      // ),
                     ),
                     child: Center(
                         child: Column(
@@ -299,8 +289,8 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
           children: [
             Center(
               child: Container(
-                margin: const EdgeInsets.only(bottom: 40),
-                child: Column(
+                margin: const EdgeInsets.only(bottom: 24),
+                child: const Column(
                   children: [
                     // Image.asset(
                     //   'assets/images/quickdrop.png',
@@ -308,7 +298,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                     //   fit: BoxFit.cover,
                     // ),
                     //  SizedBox(height: 16),
-                    const Text(
+                     Text(
                       "Welcome back",
                       style: TextStyle(
                         color: AppColors.dark,
@@ -316,153 +306,99 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    const SizedBox(height: 8),
-                    const Text(
+                     SizedBox(height: 8),
+                     Text(
                       "Sign in to continue",
                       style: TextStyle(
                         color: AppColors.shipmentText,
-                        fontSize: 16,
+                        fontSize: 14,
                       ),
                     ),
                   ],
                 ),
               ),
             ),
-            // const SizedBox(
-            //   height: 25,
-            // ),
-            AuthButton(
-              hintText: "Sign in with Google",
-              onPressed: _signInWithGoogle,
-              imagePath: "assets/images/google.png",
-              isLoading: _isGoogleLoading,
-              backgroundColor: AppColors.background,
-            ),
-            const SizedBox(
-              height: 15,
-            ),
-            const Row(
-              children: [
-                Expanded(
-                  child: Divider(
-                    color: AppColors.lessImportant,
-                    thickness: 0.4,
-                  ),
-                ),
-                SizedBox(
-                  width: 12,
-                ),
-                Text(
-                  "or",
-                  style: TextStyle(color: AppColors.shipmentText, fontSize: 12),
-                ),
-                SizedBox(
-                  width: 12,
-                ),
-                Expanded(
-                  child: Divider(
-                    color: AppColors.lessImportant,
-                    thickness: 0.4,
-                  ),
-                )
-              ],
-            ),
-            const SizedBox(
-              height: 24,
-            ),
-// Replace your current text fields with more polished versions
-            Container(
-              margin: const EdgeInsets.only(bottom: 20),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text(
-                    "Email",
-                    style: TextStyle(
-                      color: AppColors.shipmentText,
-                      fontSize: 14,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  Container(
-                    decoration: BoxDecoration(
-                      color: AppColors.background,
-                      borderRadius: BorderRadius.circular(12),
-                      border: Border.all(
-                        color: AppColors.lessImportant,
-                        width: 1,
-                      ),
-                    ),
-                    child: IconTextField(
-                      controller: emailController,
-                      keyboardType: TextInputType.emailAddress,
-                      hintText: 'Enter your email',
-                      obsecureText: false,
-                      iconPath: "assets/icon/email.svg",
-                      validator: Validators.email,
-                    ),
-                  ),
-                ],
+            const Text(
+              "Email",
+              style:  TextStyle(
+                color: AppColors.shipmentText,
+                fontSize: 14,
+                fontWeight: FontWeight.w600,
               ),
+              textAlign: TextAlign.start,
             ),
-            // const SizedBox(height: 15),
-
-            Container(
-              margin: const EdgeInsets.only(bottom: 20),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text(
-                    "Password",
-                    style: TextStyle(
-                      color: AppColors.shipmentText,
-                      fontSize: 14,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  Container(
-                    decoration: BoxDecoration(
-                      color: AppColors.background,
-                      borderRadius: BorderRadius.circular(12),
-                      border: Border.all(
-                        color: AppColors.lessImportant,
-                        width: 1,
-                      ),
-                    ),
-                    child: PasswordTextfield(
-                      controller: passwordController,
-                      validator: Validators.notEmpty,
-                    ),
-                  ),
-                ],
+             const SizedBox(
+              height: 8,
+            ),
+            IconTextField(
+              controller: emailController,
+              keyboardType: TextInputType.emailAddress,
+              hintText: 'Enter your email',
+              obsecureText: false,
+              iconPath: "assets/icon/email.svg",
+              validator: Validators.email,
+            ),    
+            const SizedBox(
+              height: 16,
+            ),
+            const Text(
+              "Password",
+              style:  TextStyle(
+                color: AppColors.shipmentText,
+                fontSize: 14,
+                fontWeight: FontWeight.w600,
               ),
+              textAlign: TextAlign.start,
             ),
-            // const Text(
-            //   "Password",
-            //   style: const TextStyle(
-            //     color: AppColors.shipmentText,
-            //     fontSize: 16,
-            //     fontWeight: FontWeight.w600,
-            //   ),
-            //   textAlign: TextAlign.start,
-            // ),
-            // PasswordTextfield(
-            //   controller: passwordController,
-            //   validator: Validators.notEmpty,
-            // ),
+             const SizedBox(
+              height: 8,
+            ),
+            PasswordTextfield(
+              controller: passwordController,
+              validator: Validators.notEmpty,
+            ),
             // const SizedBox(
-            //   height: 25,
+            //   height: 16,
             // ),
             Button(
               hintText: "Sign in",
               onPressed: _signInUserWithEmail,
               isLoading: _isEmailLoading,
             ),
-            // const SizedBox(
-            //   height: 10,
-            // ),
+            Container(
+              margin: const EdgeInsets.only(top: 0, bottom: 16), 
+              child: const Row(
+                children: [
+                  Expanded(
+                    child: Divider(
+                      color: AppColors.lessImportant,
+                      thickness: 0.4,
+                    ),
+                  ),
+                  SizedBox(width: 16), 
+                  Text(
+                    "or",
+                    style: TextStyle(color: AppColors.shipmentText, fontSize: 12),
+                  ),
+                  SizedBox(width: 16), 
+                  Expanded(
+                    child: Divider(
+                      color: AppColors.lessImportant,
+                      thickness: 0.4,
+                    ),
+                  )
+                ],
+              ),
+            ),
+
+             AuthButton(
+              hintText: "Sign in with Google",
+              onPressed: _signInWithGoogle,
+              imagePath: "assets/images/google.png",
+              isLoading: _isGoogleLoading,
+              backgroundColor: AppColors.background,
+            ),
+             const SizedBox(height: 24),
             textWithLink(
                 text: "Don't have an account? ",
                 textLink: "sign up",
@@ -471,4 +407,6 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
           ],
         ));
   }
+
+
 }

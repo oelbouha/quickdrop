@@ -94,7 +94,7 @@ class SecurityScreenState extends State<SecurityScreen>
     : SingleChildScrollView(
         physics: const BouncingScrollPhysics(),
         child: Padding(
-          padding: const EdgeInsets.all(20),
+          padding: const EdgeInsets.all(AppTheme.homeScreenPadding),
           child: _buildUpdateScreen(),
         ),
       ),

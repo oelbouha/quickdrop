@@ -102,7 +102,8 @@ class _ProfileScreenState extends State<ProfileScreen>
       body: FadeTransition(
         opacity: _fadeAnimation,
         child: SingleChildScrollView(
-          padding: const EdgeInsets.all(20.0),
+          padding: const EdgeInsets.all(AppTheme.homeScreenPadding),
+          physics: const BouncingScrollPhysics(),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -390,15 +391,15 @@ class _ProfileScreenState extends State<ProfileScreen>
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.background,
         borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.05),
-            blurRadius: 10,
-            offset: const Offset(0, 2),
-          ),
-        ],
+        // boxShadow: [
+        //   BoxShadow(
+        //     color: Colors.black.withValues(alpha: 0.05),
+        //     blurRadius: 10,
+        //     offset: const Offset(0, 2),
+        //   ),
+        // ],
       ),
       child: Material(
         color: Colors.transparent,

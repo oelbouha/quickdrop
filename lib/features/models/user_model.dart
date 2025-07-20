@@ -13,6 +13,10 @@ class UserData {
   String? phoneNumber;
   String? createdAt;
   String? fcmToken;
+  String? idNumber;
+  String? carPlateNumber;
+  String? carModel;
+  String? driverNumber;
   String status;
 
   UserData(
@@ -25,6 +29,10 @@ class UserData {
       this.phoneNumber,
       this.createdAt,
       this.fcmToken,
+      this.idNumber,
+      this.carPlateNumber,
+      this.carModel,
+      this.driverNumber,
       this.status = "normal"
       });
   Map<String, dynamic> toMap() {
@@ -38,6 +46,10 @@ class UserData {
       'createdAt': createdAt,
       'status': status,
       'phoneNumber': phoneNumber,
+      'idNumber': idNumber,
+      'carPlateNumber': carPlateNumber,
+      'carModel': carModel,
+      'driverNumber': driverNumber,
       'fcmToken': fcmToken
     };
   }
@@ -53,6 +65,10 @@ class UserData {
         lastName: map['lastName'],
         status: map['status'] ?? "normal",
         fcmToken: map['fcmToken'],
+        idNumber: map['idNumber'],
+        carPlateNumber: map['carPlateNumber'],
+        carModel: map['carModel'],
+        driverNumber: map['driverNumber'],
         createdAt: map["createdAt"]);
   }
 }
@@ -81,6 +97,20 @@ class UserProvider with ChangeNotifier {
     }, SetOptions(merge: true));
   }
 
+ Future<void> requestDriverMode(UserData user) async {
+     try {
+      
+      FirebaseFirestore.instance.collection('driverRequests').doc(user.uid).set(
+        user.toMap(),
+        SetOptions(merge: true),
+      );
+      
+        notifyListeners();
+      
+    } catch (e) {
+      rethrow;
+    }
+  }
 
  Future<void> deleteUser(String userId) async {
     try {
