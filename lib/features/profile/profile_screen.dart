@@ -11,25 +11,13 @@ class ProfileScreen extends StatefulWidget {
   State<ProfileScreen> createState() => _ProfileScreenState();
 }
 
-class _ProfileScreenState extends State<ProfileScreen>
-    with TickerProviderStateMixin {
+class _ProfileScreenState extends State<ProfileScreen> {
   bool _isSignoutLoading = false;
-
-  late AnimationController _animationController;
-  late Animation<double> _fadeAnimation;
 
   @override
   void initState() {
     super.initState();
     _precacheImages();
-    _animationController = AnimationController(
-      duration: const Duration(milliseconds: 800),
-      vsync: this,
-    );
-    _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
-      CurvedAnimation(parent: _animationController, curve: Curves.easeInOut),
-    );
-    _animationController.forward();
   }
 
   Future<void> _precacheImages() async {
@@ -44,13 +32,11 @@ class _ProfileScreenState extends State<ProfileScreen>
     }
   }
 
-  @override
-  void dispose() {
-    _animationController.dispose();
-    super.dispose();
-  }
-
   void _singOutUser() async {
+    if (_isSignoutLoading) return ;
+    setState(() {
+      _isSignoutLoading = true;
+    });
     final confirmed = await ConfirmationDialog.show(
       context: context,
       message: 'Are you sure you want to log out?',
@@ -60,7 +46,6 @@ class _ProfileScreenState extends State<ProfileScreen>
     );
 
     if (!confirmed) return;
-
     try {
       await FirebaseAuth.instance.signOut();
       if (mounted) {
@@ -99,30 +84,29 @@ class _ProfileScreenState extends State<ProfileScreen>
         elevation: 0,
       ),
       backgroundColor: AppColors.background,
-      body: FadeTransition(
-        opacity: _fadeAnimation,
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(AppTheme.homeScreenPadding),
-          physics: const BouncingScrollPhysics(),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _buildUserStats(),
-              const SizedBox(height: 32),
-              _buildQuickActions(),
-              const SizedBox(height: 32),
-              _buildSettingsSection(),
-              const SizedBox(height: 32),
-              _buildSupportSection(),
-              const SizedBox(height: 32),
-              _buildLegalSection(),
-              const SizedBox(height: 24),
-              _buildLogoutSection(),
-              const SizedBox(height: 40),
-              _buildVersionInfo(),
-            ],
-          ),
-        ),
+      body: _isSignoutLoading ?
+          loadingAnimation()
+          : SingleChildScrollView(
+            padding: const EdgeInsets.all(AppTheme.homeScreenPadding),
+            physics: const BouncingScrollPhysics(),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _buildUserStats(),
+                const SizedBox(height: 32),
+                _buildQuickActions(),
+                const SizedBox(height: 32),
+                _buildSettingsSection(),
+                const SizedBox(height: 32),
+                _buildSupportSection(),
+                const SizedBox(height: 32),
+                _buildLegalSection(),
+                const SizedBox(height: 24),
+                _buildLogoutSection(),
+                const SizedBox(height: 40),
+                _buildVersionInfo(),
+              ],
+            ),
       ),
     );
   }
@@ -130,11 +114,17 @@ class _ProfileScreenState extends State<ProfileScreen>
   Widget _buildUserStats() {
     final userProvider = Provider.of<UserProvider>(context);
     final user = userProvider.user;
-
+    if (user == null) {
+      return const Center(
+        child: Text(
+          'No user data available',
+          style: TextStyle(fontSize: 16, color: Colors.grey),
+        ),
+      );
+    }
     return GestureDetector (
       onTap: () {
-        context.push(
-            '/profile/statistics?userId=${FirebaseAuth.instance.currentUser!.uid}');
+       context.push('/profile/statistics?userId=${user.uid}'); // Navigate to user statistics screen
       },
       child: Container(
       padding: const EdgeInsets.all(16),
@@ -159,7 +149,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [ 
                   Text(
-                    user?.displayName ?? 'Guest User',
+                    user.displayName ?? 'Guest User',
                     style: const TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.w600,
@@ -456,4 +446,6 @@ class _ProfileScreenState extends State<ProfileScreen>
       ),
     );
   }
+
+
 }

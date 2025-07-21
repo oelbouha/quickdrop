@@ -1,7 +1,8 @@
 import 'dart:io';
-import 'package:quickdrop_app/features/profile/settings_card.dart';
 import 'package:quickdrop_app/core/utils/imports.dart';
 import 'package:quickdrop_app/core/widgets/profile_image.dart';
+
+
 
 
 class BecomeDriverScreen extends StatefulWidget {
@@ -14,6 +15,9 @@ class BecomeDriverScreen extends StatefulWidget {
 class BecomeDriverScreenState extends State<BecomeDriverScreen>
     with TickerProviderStateMixin {
   bool _isLoading = false;
+  bool _isLoadingData = true;
+  bool _isUserRequestedDriver = false;
+
   final firstNameController = TextEditingController();
   final lastNameController = TextEditingController();
   final phoneNumberController = TextEditingController();
@@ -36,6 +40,13 @@ class BecomeDriverScreenState extends State<BecomeDriverScreen>
   void initState() {
     super.initState();
 
+    WidgetsBinding.instance.addPostFrameCallback((_)  async{
+      _isUserRequestedDriver = await Provider.of<UserProvider>(context, listen: false)
+          .doesUserRequestDriverMode(user!.uid);
+      setState(() {
+        _isLoadingData = false;
+      });
+    });
     
 
     user = Provider.of<UserProvider>(context, listen: false).user;
@@ -134,10 +145,10 @@ Future<void> _pickImage() async {
         _selectedImage = File(pickerFile.path);
          imagePath =  await Provider.of<ShipmentProvider>(context, listen: false)
             .uploadImageToSupabase(File(pickerFile.path));
-          print("Image uploaded to Supabase: $imagePath");
+          // print("Image uploaded to Supabase: $imagePath");
       setState(() {
         _isImageLoading = false;
-        print("Image selected: ${_selectedImage!.path}");
+        // print("Image selected: ${_selectedImage!.path}");
       });
     }
   }
@@ -160,7 +171,9 @@ Future<void> _pickImage() async {
         iconTheme: const IconThemeData(color: Colors.black),
         systemOverlayStyle: SystemUiOverlayStyle.dark,
       ),
-      body:  SingleChildScrollView(
+      body: _isLoadingData 
+      ? loadingAnimation()
+      : SingleChildScrollView(
           physics: const BouncingScrollPhysics(),
           child: Padding(
             padding: const EdgeInsets.all(AppTheme.homeScreenPadding),
@@ -178,6 +191,14 @@ Future<void> _pickImage() async {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           _buildHeaderSection(),
+           const SizedBox(height: 24),
+           if (_isUserRequestedDriver) buildInfoCard(
+              icon: Icons.info_outline,
+              title: "Request Driver Mode",
+              message:
+                  "You have been requested to become a driver. please wait for the admin to review your request. You will be notified once your request is approved.",
+              color: AppColors.succes,
+            ),
           const SizedBox(height: 32),
           _buildImageInfoSection(),
           const SizedBox(height: 24),
@@ -199,7 +220,7 @@ Future<void> _pickImage() async {
       padding: const EdgeInsets.all(18),
       decoration: BoxDecoration(
         gradient: LinearGradient(
-          colors: [AppColors.blue.withOpacity(0.1), Colors.white],
+          colors: [AppColors.blue.withOpacity(0.1), AppColors.purple600.withOpacity(0.1)],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
@@ -209,6 +230,7 @@ Future<void> _pickImage() async {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          
           Row(
             children: [
               Container(
@@ -238,7 +260,8 @@ Future<void> _pickImage() async {
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      "Get income with Us, become a driver",
+                     "You can request to become a driver by filling out the form below.",
+                      maxLines: 2,
                       style: TextStyle(
                         color: Colors.grey[600],
                         fontSize: 14,
@@ -283,7 +306,7 @@ Future<void> _pickImage() async {
               },
               size: 110,
             ),
-            const SizedBox(width: 24),
+            const SizedBox(width: 32),
             ElevatedButton(
               onPressed: () async {
                 // Show image picker
@@ -304,21 +327,6 @@ Future<void> _pickImage() async {
             ),
           ],
         ),
-        // buildProfileImage(user: user, 
-        //   onTap: () async {
-        //     // Show image picker
-        //     await _pickImage();
-        //   },
-        //   size: 110,
-        // ),
-        // const SizedBox(height: 16),
-        // buildInfoCard(
-        //   icon: Icons.info_outline,
-        //   title: "Important",
-        //   message:
-        //       "Make sure your profile image is clear and recognizable.",
-        //   color: Colors.blue,
-        // ),
       
     );
   }

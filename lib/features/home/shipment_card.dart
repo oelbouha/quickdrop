@@ -39,6 +39,7 @@ class ShipmentCardState extends State<ShipmentCard>
       final fetchedStats =
           await Provider.of<StatisticsProvider>(context, listen: false)
               .getStatictics(widget.shipment.userId);
+              
       // print(stats?.completedTrips);
       if (mounted) {
         setState(() {

@@ -13,7 +13,6 @@ class TripScreen extends StatefulWidget {
 class _TripScreenState extends State<TripScreen>
     with SingleTickerProviderStateMixin {
   int selectedIndex = 0;
-  String? userPhotoUrl;
   UserData? user;
   bool _isLoading = true;
   late TabController _tabController;
@@ -54,11 +53,6 @@ class _TripScreenState extends State<TripScreen>
     super.initState();
     _scrollController.addListener(_handleScroll);
     _tabController = TabController(length: 3, vsync: this);
-    userPhotoUrl =
-        Provider.of<UserProvider>(context, listen: false).user?.photoUrl;
-    if (userPhotoUrl == null || userPhotoUrl!.isEmpty) {
-      userPhotoUrl = "assets/images/profile.png"; // Default image
-    }
 
     // Fetch trips when the screen loads
     WidgetsBinding.instance.addPostFrameCallback((_) async {
@@ -111,7 +105,6 @@ class _TripScreenState extends State<TripScreen>
       backgroundColor: AppColors.background,
       appBar: CustomAppBar(
         expanded: _isExpanded,
-        userPhotoUrl: userPhotoUrl!,
         tabController: _tabController,
         tabs: const [
           "Active",
@@ -121,11 +114,7 @@ class _TripScreenState extends State<TripScreen>
         title: "Trips",
       ),
       body: _isLoading
-          ? const Center(
-              child: CircularProgressIndicator(
-                color: AppColors.blue700,
-              ),
-            )
+          ? loadingAnimation()
           : Consumer<TripProvider>(builder: (context, provider, child) {
               final user = FirebaseAuth.instance.currentUser;
               if (user == null) {
@@ -148,12 +137,9 @@ class _TripScreenState extends State<TripScreen>
                       s.status == DeliveryStatus.completed)
                   .toList();
 
-              // print("trips");
-              // print(activeTrips.length);
 
               return TabBarView(
                 controller: _tabController,
-                
                 children: [
                   _buildActiveTrips(activeTrips),
                   _buildOngoingTrips(ongoingTrips),

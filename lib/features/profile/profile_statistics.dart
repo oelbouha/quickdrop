@@ -1,9 +1,6 @@
 import 'package:quickdrop_app/core/utils/imports.dart';
-import 'package:quickdrop_app/core/widgets/home_page_skeleton.dart';
 import 'package:quickdrop_app/features/models/statictics_model.dart';
-import 'package:quickdrop_app/features/profile/statistic_card.dart';
 import 'package:quickdrop_app/features/profile/review_card.dart';
-import 'package:quickdrop_app/core/providers/review_provider.dart';
 import 'package:quickdrop_app/features/models/review_model.dart';
 import 'package:quickdrop_app/core/widgets/profile_image.dart';
 
@@ -21,31 +18,43 @@ class ProfileStatisticsLoader extends StatefulWidget {
 }
 
 
-
 class _ProfileStatisticsLoaderState extends State<ProfileStatisticsLoader> {
 
 
-Future<UserData> fetchData() async {
-  // print("fetching data");
-  final user = Provider.of<UserProvider>(context, listen: false).getUserById(widget.userId);
-  if (user == null) {
-    return Future.error("User not found");
+Future<(UserData, StatisticsModel)> fetchData() async {
+  try {
+      final user = await Provider.of<UserProvider>(context, listen: false).fetchUserData(widget.userId);
+      final stats = await Provider.of<StatisticsProvider>(context, listen: false)
+            .getStatictics(user.uid);
+      await Provider.of<ReviewProvider>(context, listen: false)
+              .fetchReviews(user.uid);
+          final userIds = Provider.of<ReviewProvider>(context, listen: false)
+              .reviews
+              .map((r) => r.senderId)
+              .toSet()
+              .toList();
+          await Provider.of<UserProvider>(context, listen: false)
+              .fetchUsersData(userIds);
+      if (stats == null) {
+        return Future.error("Statistics not found for user ${user.displayName}");
+    }
+    return (user, stats);
+  } catch (e) {
+    // print('Error fetching user data: $e');
+    return Future.error("Error fetching user data: $e");
   }
-  return (user);
 }
 
 
 @override
 Widget build(BuildContext context) {
-  return FutureBuilder<UserData>(
+  return FutureBuilder<(UserData, StatisticsModel)>(
     future: fetchData(),
     builder: (context, snapshot) {
       if (snapshot.connectionState != ConnectionState.done) {
-        return  const Scaffold(
+        return   Scaffold(
           backgroundColor: AppColors.background,
-          body:  Center(child: CircularProgressIndicator(
-            color: AppColors.blue700,
-          )),
+          body:  loadingAnimation()
         );
       }
 
@@ -53,10 +62,11 @@ Widget build(BuildContext context) {
         return ErrorPage(errorMessage: snapshot.error.toString());
       }
 
-      final userData = snapshot.data!;
+      final (userData, stats) = snapshot.data!;
 
       return ProfileStatistics(
         user: userData,
+        stats: stats,
       );
     },
   );
@@ -66,62 +76,20 @@ Widget build(BuildContext context) {
 
 class ProfileStatistics extends StatefulWidget {
   final UserData user;
+   final StatisticsModel? stats;
   const ProfileStatistics({
     Key? key,
     required this.user,
-  });
+    required this.stats,
+  }) : super(key: key);
+
 
   @override
   State<ProfileStatistics> createState() => ProfileStatisticsState();
 }
 
 class ProfileStatisticsState extends State<ProfileStatistics> {
-  bool _isLoading = true;
-  late int pendingShipments;
-  late int ongoingShipments;
-  late int completedShipments;
 
-   late StatisticsModel? stats;
-
-  @override
-  void initState() {
-    super.initState();
-
-    // Fetch trips when the screen loads
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
-      try {
-        // final user = FirebaseAuth.instance.currentUser;
-
-         stats = await Provider.of<StatisticsProvider>(context, listen: false)
-          .getStatictics(widget.user.uid);
-            // print(stats?.completedTrips);
-            // if (mounted) {
-            // setState(() {
-            //   stats = fetchedStats;
-            // });
-          // }
-
-        Provider.of<ReviewProvider>(context, listen: false)
-            .fetchReviews(widget.user.uid);
-        final userIds = Provider.of<ReviewProvider>(context, listen: false)
-            .reviews
-            .map((r) => r.senderId)
-            .toSet()
-            .toList();
-        await Provider.of<UserProvider>(context, listen: false)
-            .fetchUsersData(userIds);
-
-        setState(() {
-          _isLoading = false;
-        });
-      } catch (e) {
-        if (mounted) {
-          AppUtils.showDialog(
-            context, "Failed to fetch Shipments analytics", AppColors.error);
-        }
-      }
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -138,25 +106,20 @@ class ProfileStatisticsState extends State<ProfileStatistics> {
           systemOverlayStyle: SystemUiOverlayStyle.dark,
           centerTitle: true,
         ),
-        body: _isLoading
-                ? const Center(child: CircularProgressIndicator(
-                    color: AppColors.blue,
-                  ))
-                : SingleChildScrollView(
-                padding: const EdgeInsets.all(AppTheme.homeScreenPadding),
-                physics: const BouncingScrollPhysics(),
-                child: Column(children: [
-                  // const SizedBox(height: AppTheme.cardPadding),
-                  _buildUserStats(),
-                  const SizedBox(height: AppTheme.cardPadding),
-                  _buildContent()
-                ])));
+        body:  SingleChildScrollView(
+            padding: const EdgeInsets.all(AppTheme.homeScreenPadding),
+            physics: const BouncingScrollPhysics(),
+            child: Column(children: [
+              // const SizedBox(height: AppTheme.cardPadding),
+              _buildUserStats(),
+              const SizedBox(height: AppTheme.cardPadding),
+              _buildContent()
+          ])));
   }
 
   Widget _buildContent() {
     return Column(
       children: [
-        // const SizedBox(height: 24),
         _buildStatisticsSection(),
         const SizedBox(height: 32),
         _buildReviewsSection(),
@@ -223,21 +186,21 @@ class ProfileStatisticsState extends State<ProfileStatistics> {
         return _buildStatsRow([
           _buildStatCard(
             title: "Pending",
-            value: stats?.pendingShipments.toString() ?? "0",
+            value: widget.stats?.pendingShipments.toString() ?? "0",
             backgroundColor: AppColors.contactBackground,
             textColor: AppColors.blue,
             icon: Icons.pending_actions,
           ),
           _buildStatCard(
             title: "Ongoing",
-            value: stats?.ongoingShipments.toString() ?? "0",
+            value: widget.stats?.ongoingShipments.toString() ?? "0",
             backgroundColor: AppColors.ongoingstatusBackground,
             textColor: AppColors.ongoingStatusText,
             icon: Icons.local_shipping,
           ),
           _buildStatCard(
             title: "Completed",
-            value: stats?.completedShipments.toString() ?? "0",
+            value: widget.stats?.completedShipments.toString() ?? "0",
             backgroundColor: AppColors.completedstatusBackground,
             textColor: AppColors.completedStatusText,
             icon: Icons.check_circle,
@@ -298,21 +261,21 @@ class ProfileStatisticsState extends State<ProfileStatistics> {
         return _buildStatsRow([
           _buildStatCard(
             title: "Pending",
-            value: stats?.pendingTrips.toString() ?? "0",
+            value: widget.stats?.pendingTrips.toString() ?? "0",
             backgroundColor: AppColors.contactBackground,
             textColor: AppColors.blue,
             icon: Icons.pending_actions,
           ),
           _buildStatCard(
             title: "Ongoing",
-            value: stats?.ongoingTrips.toString() ?? "0",
+            value: widget.stats?.ongoingTrips.toString() ?? "0",
             backgroundColor: AppColors.ongoingstatusBackground,
             textColor: AppColors.ongoingStatusText,
             icon: Icons.directions_car,
           ),
           _buildStatCard(
             title: "Completed",
-            value: stats?.completedTrips.toString() ?? "0",
+            value: widget.stats?.completedTrips.toString() ?? "0",
             backgroundColor: AppColors.completedstatusBackground,
             textColor: AppColors.completedStatusText,
             icon: Icons.check_circle,

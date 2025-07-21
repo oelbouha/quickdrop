@@ -20,8 +20,6 @@ class UpdateUserInfoScreenState extends State<UpdateUserInfoScreen>
   final emailController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
 
-  late AnimationController _animationController;
-  late Animation<double> _fadeAnimation;
 
   File? _selectedImage;
   String? imagePath;
@@ -33,20 +31,9 @@ class UpdateUserInfoScreenState extends State<UpdateUserInfoScreen>
   void initState() {
     super.initState();
 
-    // Initialize animation
-    _animationController = AnimationController(
-      duration: const Duration(milliseconds: 800),
-      vsync: this,
-    );
-    _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
-      CurvedAnimation(parent: _animationController, curve: Curves.easeInOut),
-    );
-
     user = Provider.of<UserProvider>(context, listen: false).user;
     _initializeFields();
 
-    // Start animation
-    _animationController.forward();
   }
 
   void _initializeFields() {
@@ -58,7 +45,6 @@ class UpdateUserInfoScreenState extends State<UpdateUserInfoScreen>
 
   @override
   void dispose() {
-    _animationController.dispose();
     firstNameController.dispose();
     lastNameController.dispose();
     phoneNumberController.dispose();
@@ -168,16 +154,13 @@ Future<void> _pickImage() async {
         iconTheme: const IconThemeData(color: Colors.black),
         systemOverlayStyle: SystemUiOverlayStyle.dark,
       ),
-      body: FadeTransition(
-        opacity: _fadeAnimation,
-        child: SingleChildScrollView(
+      body:  SingleChildScrollView(
           physics: const BouncingScrollPhysics(),
           child: Padding(
             padding: const EdgeInsets.all(AppTheme.homeScreenPadding),
             child: _buildUpdateScreen(),
           ),
         ),
-      ),
     );
   }
 

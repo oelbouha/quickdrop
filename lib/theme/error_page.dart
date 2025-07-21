@@ -9,8 +9,6 @@ class ErrorPage extends StatefulWidget {
 }
 
 class ErrorPageState extends State<ErrorPage> {
-  bool _isLoading = true;
-
 
   @override
   Widget build(BuildContext context) {
@@ -19,20 +17,17 @@ class ErrorPageState extends State<ErrorPage> {
       appBar: AppBar(
         title: const Text(
           'Error page',
-          style: TextStyle(color: AppColors.white),
+          style: TextStyle(color: AppColors.dark, ),
         ),
-        backgroundColor: AppColors.barColor,
+        backgroundColor: AppColors.white,
+        iconTheme: const IconThemeData(color: AppColors.dark),
         centerTitle: true,
       ),
-      body: Center(child: Text(
-       widget.errorMessage ?? "Failed to load resources please try again !",
-        style: const TextStyle(
-          fontSize: 20,
-          color: AppColors.headingText,
-          
-        ),
-        textAlign: TextAlign.center,
-      ),
-    ));
+      body: Center(child: buildEmptyState(
+            Icons.error_outline,
+            "Error Occurred",
+            "${widget.errorMessage ?? 'An unexpected error occurred.'}",
+        ) )
+      );
   }
 }

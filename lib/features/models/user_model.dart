@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 export 'package:firebase_core/firebase_core.dart';
 export 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:quickdrop_app/core/utils/imports.dart';
 
 class UserData {
   final String uid;
@@ -97,6 +98,19 @@ class UserProvider with ChangeNotifier {
     }, SetOptions(merge: true));
   }
 
+  Future<bool> doesUserRequestDriverMode(String uid) async {
+    try {
+      final doc = await FirebaseFirestore.instance
+          .collection('driverRequests')
+          .doc(uid)
+          .get();
+      return doc.exists;
+    } catch (e) {
+      // print("Error checking driver request: $e");
+      return false;
+    }
+  }
+
  Future<void> requestDriverMode(UserData user) async {
      try {
       
@@ -183,6 +197,26 @@ class UserProvider with ChangeNotifier {
     }
   }
 
+
+  Future<UserData> fetchUserData(String uid) async {
+    if (_users.containsKey(uid)) {
+      return _users[uid]!;
+    }
+    try {
+      final userDoc =
+          await FirebaseFirestore.instance.collection('users').doc(uid).get();
+      if (userDoc.exists) {
+        final user = UserData.fromMap(userDoc.data()!);
+        _users[uid] = user;
+        return user;
+      } else {
+        throw Exception('User not found');
+      }
+    } catch (e) {
+      throw Exception('Error fetching user data: $e');
+    }
+  }
+  
   Future<void> fetchUser(String uid) async {
     // if (_users.containsKey(uid)) {
     //   _user = _users[uid];

@@ -62,6 +62,14 @@ class StatisticsProvider with ChangeNotifier {
       rethrow;
     }
   }
+  Future<void> deleteStatistics(String userId) async {
+    try {
+      final doc = await _firestore.collection('statistics').doc(userId).get();
+      await doc.reference.delete();
+    } catch (e) {
+      rethrow;
+    }
+  }
 
   Future<void> addStatictics(String userId, StatisticsModel stats) async {
     try {
