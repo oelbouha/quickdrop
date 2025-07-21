@@ -7,26 +7,18 @@ import 'package:quickdrop_app/core/widgets/dropDownTextField.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 export 'package:quickdrop_app/core/widgets/tipWidget.dart';
 
-
-
-
-
 class AddShipmentScreen extends StatefulWidget {
   final Shipment? existingShipment;
   final bool isEditMode;
 
-   AddShipmentScreen({
-    Key? key, 
-    this.existingShipment, 
-    this.isEditMode = false 
-    });
+  AddShipmentScreen({Key? key, this.existingShipment, this.isEditMode = false});
 
   @override
   State<AddShipmentScreen> createState() => _AddShipmentScreenState();
 }
 
 class _AddShipmentScreenState extends State<AddShipmentScreen>
-  with TickerProviderStateMixin {
+    with TickerProviderStateMixin {
   bool _isLoadingExistingShipment = true;
 
   File? _selectedImage;
@@ -45,7 +37,7 @@ class _AddShipmentScreenState extends State<AddShipmentScreen>
   final priceController = TextEditingController();
 
   bool _isListButtonLoading = false;
-  bool _isImageLoading = true;
+  bool _isImageLoading = false;
   final _formKey = GlobalKey<FormState>();
   late AnimationController _fadeController;
   late AnimationController _slideController;
@@ -70,7 +62,7 @@ class _AddShipmentScreenState extends State<AddShipmentScreen>
   ];
 
   @override
-  void initState()  {
+  void initState() {
     super.initState();
     _initializeDefaults();
     _setupAnimations();
@@ -82,14 +74,15 @@ class _AddShipmentScreenState extends State<AddShipmentScreen>
       toController.text = widget.existingShipment?.to ?? "";
       weightController.text = widget.existingShipment?.weight ?? "";
       descriptionController.text = widget.existingShipment?.description ?? "";
-      dateController.text = widget.existingShipment?.date ??   "";
+      dateController.text = widget.existingShipment?.date ?? "";
       lengthController.text = widget.existingShipment?.length ?? "";
       widthController.text = widget.existingShipment?.width ?? "";
       heightController.text = widget.existingShipment?.height ?? "";
       packageNameController.text = widget.existingShipment?.packageName ?? "";
-      packageQuantityController.text = widget.existingShipment?.packageQuantity ??   "";
+      packageQuantityController.text =
+          widget.existingShipment?.packageQuantity ?? "";
       typeController.text = widget.existingShipment?.type ?? "";
-      priceController.text = widget.existingShipment?.price ?? ""; 
+      priceController.text = widget.existingShipment?.price ?? "";
     } else {
       packageQuantityController.text = "1";
       weightController.text = "1";
@@ -152,44 +145,41 @@ class _AddShipmentScreenState extends State<AddShipmentScreen>
     super.dispose();
   }
 
-
-
-void _updateShipment() async {
-
- Shipment shipment = Shipment(
-    id: widget.existingShipment!.id,
-    price: priceController.text,
-    type: typeController.text,
-    from: fromController.text,
-    to: toController.text,
-    weight: weightController.text,
-    description: descriptionController.text,
-    date: dateController.text,
-    length: lengthController.text,
-    width: widthController.text,
-    height: heightController.text,
-    packageName: packageNameController.text,
-    packageQuantity: packageQuantityController.text,
-    imageUrl: null,
-    userId: widget.existingShipment!.userId,
-  );
+  void _updateShipment() async {
+    Shipment shipment = Shipment(
+      id: widget.existingShipment!.id,
+      price: priceController.text,
+      type: typeController.text,
+      from: fromController.text,
+      to: toController.text,
+      weight: weightController.text,
+      description: descriptionController.text,
+      date: dateController.text,
+      length: lengthController.text,
+      width: widthController.text,
+      height: heightController.text,
+      packageName: packageNameController.text,
+      packageQuantity: packageQuantityController.text,
+      imageUrl: widget.existingShipment!.imageUrl ?? imagePath,
+      userId: widget.existingShipment!.userId,
+    );
 
     // print("existing shipment id: ${widget.existingShipment!.id}");
     await Provider.of<ShipmentProvider>(context, listen: false)
         .updateShipment(widget.existingShipment!.id!, shipment);
-}
+  }
 
   void _listShipment() async {
-
-     if (imagePath == null) {
-          AppUtils.showDialog(context,  'Please select an image',AppColors.error);
-          return ;
+    if (_selectedImage == null) {
+      AppUtils.showDialog(context, 'Please select an image', AppColors.error);
+      return;
     }
-    if (_isImageLoading) {
-     AppUtils.showDialog(context, 'Image is still uploading, please wait',AppColors.error);
-      return ;
-    }
-    if (_isListButtonLoading || _isImageLoading) return;
+    // if (_isImageLoading) {
+    //   AppUtils.showDialog(
+    //       context, 'Image is still uploading, please wait', AppColors.error);
+    //   return;
+    // }
+    // if (_isListButtonLoading || _isImageLoading) return;
     if (_formKey.currentState!.validate()) {
       setState(() {
         _isListButtonLoading = true;
@@ -205,6 +195,24 @@ void _updateShipment() async {
         return;
       }
 
+      try {
+
+       imagePath =  await Provider.of<ShipmentProvider>(context, listen: false)
+          .uploadImageToSupabase(File(_selectedImage!.path));
+      if (imagePath == null) {
+        AppUtils.showDialog(context, 'Image upload failed', AppColors.error);
+        setState(() {
+          _isListButtonLoading = false;
+        });
+        return;
+      }
+      } catch (e) {
+        AppUtils.showDialog(context, 'Image upload failed: $e', AppColors.error);
+        setState(() {
+          _isListButtonLoading = false;
+        });
+        return;
+      }
       Shipment shipment = Shipment(
         price: priceController.text,
         type: typeController.text,
@@ -218,36 +226,47 @@ void _updateShipment() async {
         height: heightController.text,
         packageName: packageNameController.text,
         packageQuantity: packageQuantityController.text,
-        imageUrl: imagePath ,
+        imageUrl: imagePath,
         userId: user.uid,
       );
 
       try {
-          if (widget.isEditMode) {
-            _updateShipment();
-             await showSuccessAnimation(context,
-                  title: widget.isEditMode ? 'Shipment Updated Successfully!' : 'Package Listed Successfully!',
-                  message:  widget.isEditMode ? 'Your shipment has been updated and is now visible to couriers.' : 'Your shipment has been added and is now visible to couriers.',
-                );
+        if (widget.isEditMode) {
+          _updateShipment();
+          await showSuccessAnimation(
+            context,
+            title: widget.isEditMode
+                ? 'Shipment Updated Successfully!'
+                : 'Package Listed Successfully!',
+            message: widget.isEditMode
+                ? 'Your shipment has been updated and is now visible to couriers.'
+                : 'Your shipment has been added and is now visible to couriers.',
+          );
+        } else {
+          await Provider.of<ShipmentProvider>(context, listen: false)
+              .addShipment(shipment);
+          if (mounted) {
+            Provider.of<StatisticsProvider>(context, listen: false)
+                .incrementField(user.uid, "pendingShipments");
+            await showSuccessAnimation(
+              context,
+              title: widget.isEditMode
+                  ? 'Shipment Updated Successfully!'
+                  : 'Package Listed Successfully!',
+              message: widget.isEditMode
+                  ? 'Your shipment has been updated and is now visible to couriers.'
+                  : 'Your shipment has been added and is now visible to couriers.',
+            );
           }
-          else {
-            await Provider.of<ShipmentProvider>(context, listen: false)
-                .addShipment(shipment);
-            if (mounted) {
-              Provider.of<StatisticsProvider>(context, listen: false)
-                  .incrementField(user.uid, "pendingShipments");
-              await showSuccessAnimation(context,
-                  title: widget.isEditMode ? 'Shipment Updated Successfully!' : 'Package Listed Successfully!',
-                  message:  widget.isEditMode ? 'Your shipment has been updated and is now visible to couriers.' : 'Your shipment has been added and is now visible to couriers.',
-                );
-             
-          }
-        
-        
         }
       } catch (e) {
         if (mounted) {
-          AppUtils.showDialog(context,  widget.isEditMode ? 'Failed to update shipment: $e' : 'Failed to list shipment: $e', AppColors.error);
+          AppUtils.showDialog(
+              context,
+              widget.isEditMode
+                  ? 'Failed to update shipment: $e'
+                  : 'Failed to list shipment: $e',
+              AppColors.error);
         }
       } finally {
         if (mounted) {
@@ -257,11 +276,10 @@ void _updateShipment() async {
         }
       }
     } else {
-      AppUtils.showDialog(context, 'Please fill in all required fields', AppColors.error);
+      AppUtils.showDialog(
+          context, 'Please fill in all required fields', AppColors.error);
     }
   }
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -270,7 +288,7 @@ void _updateShipment() async {
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
-        title:  Text(
+        title: Text(
           widget.isEditMode ? 'Update Shipment' : 'Create Shipment',
           style: const TextStyle(
             color: AppColors.headingText,
@@ -280,10 +298,9 @@ void _updateShipment() async {
         ),
         centerTitle: true,
         iconTheme: const IconThemeData(
-            color: Colors.black, // Set the arrow back color to black
-          ),
-          systemOverlayStyle:
-              SystemUiOverlayStyle.dark,
+          color: Colors.black, // Set the arrow back color to black
+        ),
+        systemOverlayStyle: SystemUiOverlayStyle.dark,
       ),
       body: Form(
         key: _formKey,
@@ -292,7 +309,6 @@ void _updateShipment() async {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             _buildProgressBar(),
-
             Expanded(
               child: AnimatedBuilder(
                 animation: _slideAnimation,
@@ -301,7 +317,7 @@ void _updateShipment() async {
                     offset: _slideAnimation.value,
                     child: FadeTransition(
                       opacity: _fadeAnimation,
-                      child:  PageView(
+                      child: PageView(
                         controller: _pageController,
                         physics: const NeverScrollableScrollPhysics(),
                         children: [
@@ -483,7 +499,7 @@ void _updateShipment() async {
                   onPressed: _isListButtonLoading
                       ? null
                       : (_currentStep == _stepTitles.length - 1
-                          ? _listShipment 
+                          ? _listShipment
                           : _goToNextStep),
                   icon: _isListButtonLoading
                       ? const SizedBox(
@@ -505,7 +521,9 @@ void _updateShipment() async {
                     _isListButtonLoading
                         ? 'Processing...'
                         : (_currentStep == _stepTitles.length - 1
-                            ? widget.isEditMode ? 'Update Shipment' : 'Create Shipment'
+                            ? widget.isEditMode
+                                ? 'Update Shipment'
+                                : 'Create Shipment'
                             : 'Continue'),
                   ),
                   style: ElevatedButton.styleFrom(
@@ -530,15 +548,18 @@ void _updateShipment() async {
     switch (_currentStep) {
       case 1: // Package Details
         if (packageNameController.text.isEmpty) {
-          AppUtils.showDialog(context, 'Package name is required', AppColors.error);
+          AppUtils.showDialog(
+              context, 'Package name is required', AppColors.error);
           return false;
         }
         if (descriptionController.text.isEmpty) {
-          AppUtils.showDialog(context, 'Description is required', AppColors.error);
+          AppUtils.showDialog(
+              context, 'Description is required', AppColors.error);
           return false;
         }
         if (typeController.text.isEmpty) {
-          AppUtils.showDialog(context, 'Package type is required', AppColors.error);
+          AppUtils.showDialog(
+              context, 'Package type is required', AppColors.error);
           return false;
         }
         if (priceController.text.isEmpty) {
@@ -548,11 +569,13 @@ void _updateShipment() async {
         return true;
       case 0: // Locations
         if (fromController.text.isEmpty) {
-          AppUtils.showDialog(context, 'Pickup location is required', AppColors.error);
+          AppUtils.showDialog(
+              context, 'Pickup location is required', AppColors.error);
           return false;
         }
         if (toController.text.isEmpty) {
-          AppUtils.showDialog(context, 'Delivery location is required', AppColors.error);
+          AppUtils.showDialog(
+              context, 'Delivery location is required', AppColors.error);
           return false;
         }
         return true;
@@ -568,15 +591,18 @@ void _updateShipment() async {
         return true;
       case 3: // Timing
         if (dateController.text.isEmpty) {
-          AppUtils.showDialog(context, 'Pickup date is required', AppColors.error);
+          AppUtils.showDialog(
+              context, 'Pickup date is required', AppColors.error);
           return false;
         }
         if (imagePath == null) {
-          AppUtils.showDialog(context, 'Please select an image', AppColors.error);
+          AppUtils.showDialog(
+              context, 'Please select an image', AppColors.error);
           return false;
         }
         if (_isImageLoading) {
-          AppUtils.showDialog(context, 'Image is still uploading, please wait', AppColors.error);
+          AppUtils.showDialog(context, 'Image is still uploading, please wait',
+              AppColors.error);
           return false;
         }
         return true;
@@ -606,19 +632,26 @@ void _updateShipment() async {
   }
 
   Future<void> _pickImage() async {
+    if (_isImageLoading) return;
+    setState(() {
+      _isImageLoading = true;
+    });
     final ImagePicker picker = ImagePicker();
     final XFile? pickerFile =
         await picker.pickImage(source: ImageSource.gallery);
 
     if (pickerFile != null) {
-        _selectedImage = File(pickerFile.path);
-         imagePath =  await Provider.of<ShipmentProvider>(context, listen: false)
-            .uploadImageToSupabase(File(pickerFile.path));
-          print("Image uploaded to Supabase: $imagePath");
+      _selectedImage = File(pickerFile.path);
+      setState(() {
+        imagePath = _selectedImage!.path;
+        _isImageLoading = false;
+        // print("Image selected: ${_selectedImage!.path}");
+      });
+    } else {
       setState(() {
         _isImageLoading = false;
-        print("Image selected: ${_selectedImage!.path}");
       });
+      AppUtils.showDialog(context, 'No image selected', AppColors.error);
     }
   }
 
@@ -660,7 +693,7 @@ void _updateShipment() async {
           color: Colors.white,
           borderRadius: BorderRadius.circular(16),
           boxShadow: [
-             BoxShadow(
+            BoxShadow(
               color: Colors.black.withOpacity(0.05),
               blurRadius: 10,
               offset: const Offset(0, 4),
@@ -684,7 +717,6 @@ void _updateShipment() async {
             backgroundColor: AppColors.blue700.withOpacity(0.1),
           ),
           const SizedBox(height: 24),
-
           TextFieldWithHeader(
             controller: packageNameController,
             headerText: "Package Name",
@@ -694,14 +726,12 @@ void _updateShipment() async {
             validator: Validators.notEmpty,
           ),
           const SizedBox(height: 16),
-
           TextFieldWithHeader(
             controller: descriptionController,
             hintText: "Describe your package content in detail...",
             headerText: "Package Description",
             maxLines: 3,
             validator: Validators.notEmpty,
-           
           ),
           const SizedBox(height: 16),
           TextFieldWithHeader(
@@ -711,7 +741,6 @@ void _updateShipment() async {
             validator: Validators.notEmpty,
             keyboardType: TextInputType.number,
           ),
-
           const SizedBox(height: 20),
           buildInfoCard(
             icon: Icons.info_outline,
@@ -839,20 +868,18 @@ void _updateShipment() async {
           ),
           const SizedBox(height: 24),
           TextFieldWithHeader(
-            controller: fromController,
-            hintText: "Departure city",
-            headerText: "From",
-            validator: Validators.notEmpty,
-             iconPath : "assets/icon/map-point.svg"
-          ),
+              controller: fromController,
+              hintText: "Departure city",
+              headerText: "From",
+              validator: Validators.notEmpty,
+              iconPath: "assets/icon/map-point.svg"),
           const SizedBox(height: 16),
           TextFieldWithHeader(
-            controller: toController,
-            hintText: "Destination city",
-            headerText: "To",
-            validator: Validators.notEmpty,
-             iconPath : "assets/icon/map-point.svg"
-          ),
+              controller: toController,
+              hintText: "Destination city",
+              headerText: "To",
+              validator: Validators.notEmpty,
+              iconPath: "assets/icon/map-point.svg"),
           const SizedBox(height: 20),
           buildInfoCard(
             icon: Icons.location_on,
@@ -882,9 +909,11 @@ void _updateShipment() async {
           const SizedBox(height: 8),
           ImageUpload(
             onPressed: _pickImage,
+            imagePath: _selectedImage?.path,
             backgroundColor: AppColors.cardBackground,
             controller: dateController,
             hintText: "",
+            isLoading: _isImageLoading,
           ),
           const SizedBox(height: 20),
           TextWithRequiredIcon(text: "Preferred Pickup Date"),

@@ -71,6 +71,35 @@ Widget _buildFilterTypeSection() {
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
       children: [
+        
+        Row(
+          children: [
+            Expanded(
+              child: TextFieldWithHeader(
+                controller: weightController,
+                hintText: "1.0",
+                headerText: "Weight (kg)",
+                isRequired: false,
+                displayHeader: true,
+                keyboardType: TextInputType.number,
+                validator: Validators.notEmpty,
+              ),
+            ),
+            const SizedBox(width: 16),
+            Expanded(
+              child: TextFieldWithHeader(
+                controller: priceController,
+                hintText: "1.0",
+                headerText: "price (dh)",
+                isRequired: false,
+                displayHeader : true,
+                keyboardType: TextInputType.number,
+                validator: Validators.notEmpty,
+              ),
+            ),
+          ],
+        ),
+         const SizedBox(height: 16),
         const Text(
           "Select Type",
           style: TextStyle(
@@ -142,34 +171,7 @@ Widget _buildFilterTypeSection() {
           validator: Validators.notEmpty,
           iconPath: "assets/icon/map-point.svg",
         ),
-        const SizedBox(height: 16),
-        Row(
-          children: [
-            Expanded(
-              child: TextFieldWithHeader(
-                controller: weightController,
-                hintText: "1.0",
-                headerText: "Weight (kg)",
-                isRequired: false,
-                displayHeader: true,
-                keyboardType: TextInputType.number,
-                validator: Validators.notEmpty,
-              ),
-            ),
-            const SizedBox(width: 16),
-            Expanded(
-              child: TextFieldWithHeader(
-                controller: priceController,
-                hintText: "1.0",
-                headerText: "price (dh)",
-                isRequired: false,
-                displayHeader : true,
-                keyboardType: TextInputType.number,
-                validator: Validators.notEmpty,
-              ),
-            ),
-          ],
-        ),
+       
         // const SizedBox(height: 16),
        
       ],

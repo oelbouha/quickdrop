@@ -171,7 +171,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                    Text(
                     'Show profile',
                     style:  TextStyle(
-                      fontSize: 12,
+                      fontSize: 14,
                       color: Colors.grey[600],
                     ),
                   ),

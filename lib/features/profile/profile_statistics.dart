@@ -498,11 +498,13 @@ Widget _buildUserStats() {
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
-                const Text(
-                  "Customer",
+                 Text(
+                  widget.user.status,
                   style:  TextStyle(
-                    fontSize: 14,
+                    fontSize: 12,
                     color: AppColors.dark,
+
+                    fontWeight: FontWeight.w600,
                   ),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
@@ -525,8 +527,9 @@ Widget _buildUserStats() {
                 Text(
                   'Month on quickdrop',
                   style: TextStyle(
-                    fontSize: 14,
+                    fontSize: 12,
                     color: AppColors.dark,
+                    fontWeight: FontWeight.w600,
                   ),
                 ),
               ],
