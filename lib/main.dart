@@ -68,7 +68,7 @@ class MyApp extends StatelessWidget {
             appBarTheme: const AppBarTheme(
               // backgroundColor: Colors.blue,
               iconTheme: IconThemeData(
-                  color: Colors.white), // Makes the back arrow white
+                  color: Colors.black12), // Makes the back arrow white
             ),
           ),
           routerConfig: router,

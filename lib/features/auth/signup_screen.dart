@@ -204,6 +204,7 @@ class _SingupPageState extends State<SignUpScreen> {
             TextFieldWithHeader(
               controller: lastNameController,
               hintText: 'Last name on ID',
+              displayHeader: false,
               iconPath: "assets/icon/user.svg",
               isRequired: false,
               validator: Validators.name,

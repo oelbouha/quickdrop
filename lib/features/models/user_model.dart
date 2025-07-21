@@ -33,7 +33,7 @@ class UserData {
       this.carPlateNumber,
       this.carModel,
       this.driverNumber,
-      this.status = "normal"
+      this.status = "Customer"
       });
   Map<String, dynamic> toMap() {
     return {
@@ -63,7 +63,7 @@ class UserData {
         phoneNumber: map['phoneNumber'],
         firstName: map['firstName'],
         lastName: map['lastName'],
-        status: map['status'] ?? "normal",
+        status: map['status'] ?? "Customer",
         fcmToken: map['fcmToken'],
         idNumber: map['idNumber'],
         carPlateNumber: map['carPlateNumber'],

@@ -27,7 +27,7 @@ class TextFieldWithHeader extends StatelessWidget {
     this.suffixText,
      this.headerText = "",
     this.obsecureText = false,
-    this.displayHeader = false,
+    this.displayHeader = true,
     this.keyboardType = TextInputType.text,
     this.validator,
     this.maxLines = 1,
