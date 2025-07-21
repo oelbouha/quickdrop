@@ -11,23 +11,9 @@ class SecurityScreen extends StatefulWidget {
   State<SecurityScreen> createState() => SecurityScreenState();
 }
 
-class SecurityScreenState extends State<SecurityScreen>
-    with TickerProviderStateMixin {
+class SecurityScreenState extends State<SecurityScreen> {
   bool _isLoading = false;
-
   UserData? user;
-
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-  }
-
-  
 
   Future<void> deleteAccount() async {
     if (_isLoading) return;
@@ -55,6 +41,7 @@ class SecurityScreenState extends State<SecurityScreen>
           .deleteShipmentsByUserId(userId);
       await Provider.of<TripProvider>(context, listen: false)
           .deleteTripsByUserId(userId);
+      await Provider.of<StatisticsProvider>(context, listen: false).deleteStatistics(userId);
       // await Provider.of<UserProvider>(context, listen: false)
       //     .deleteUser(userId);
       if (mounted) {
@@ -85,18 +72,11 @@ class SecurityScreenState extends State<SecurityScreen>
         systemOverlayStyle: SystemUiOverlayStyle.dark,
       ),
       body: _isLoading
-    ? const Center(
-        child: CircularProgressIndicator(
-          color: AppColors.blue700,
-          strokeWidth: 3,
-        ),
-      )
+    ? loadingAnimation()
     : SingleChildScrollView(
         physics: const BouncingScrollPhysics(),
-        child: Padding(
-          padding: const EdgeInsets.all(AppTheme.homeScreenPadding),
-          child: _buildUpdateScreen(),
-        ),
+        padding: const EdgeInsets.all(AppTheme.homeScreenPadding),
+        child: _buildUpdateScreen(),
       ),
     );
   }

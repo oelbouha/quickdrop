@@ -20,16 +20,11 @@ class _ChatScreenState extends State<ChatScreen>
   int selectedIndex = 0;
   bool _isLoading = true;
   late TabController _tabController;
-  String? userPhotoUrl;
 
   @override
   void initState() {
     super.initState();
-    userPhotoUrl =
-        Provider.of<UserProvider>(context, listen: false).user?.photoUrl;
-    if (userPhotoUrl == null || userPhotoUrl!.isEmpty) {
-      userPhotoUrl = "assets/images/profile.png";
-    }
+
 
     user = Provider.of<UserProvider>(context, listen: false).user;
 
@@ -79,7 +74,6 @@ class _ChatScreenState extends State<ChatScreen>
     return Scaffold(
         backgroundColor: AppColors.background,
         appBar: CustomAppBar(
-          userPhotoUrl: userPhotoUrl!,
           tabController: _tabController,
           tabs: const [
             "Send",
@@ -89,7 +83,9 @@ class _ChatScreenState extends State<ChatScreen>
           ],
           title: "Offers",
         ),
-        body: TabBarView(
+        body: _isLoading
+          ? loadingAnimation() 
+          :TabBarView(
             controller: _tabController,
             children: [
               _buildMyRequests(),
@@ -115,7 +111,7 @@ class _ChatScreenState extends State<ChatScreen>
           stream: negotiationProvider.getConversations(),
           builder: (context, snapshot) => snapshot.connectionState ==
                   ConnectionState.waiting
-              ? const Center(child: CircularProgressIndicator())
+              ? loadingAnimation()
               : snapshot.hasError
                   ? const Center(child: Text("Error loading conversations"))
                   : snapshot.hasData && (snapshot.data as List).isNotEmpty
@@ -182,7 +178,7 @@ class _ChatScreenState extends State<ChatScreen>
           stream: chatProvider.getConversations(),
           builder: (context, snapshot) => snapshot.connectionState ==
                   ConnectionState.waiting
-              ? const Center(child: CircularProgressIndicator())
+              ?  loadingAnimation()
               : snapshot.hasError
                   ? const Center(child: Text("Error loading conversations"))
                   : snapshot.hasData && (snapshot.data as List).isNotEmpty

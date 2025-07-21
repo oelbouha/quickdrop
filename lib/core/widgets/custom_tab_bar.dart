@@ -6,14 +6,13 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
-  final String userPhotoUrl;
+
   final TabController tabController;
   final List tabs;
   final String? title;
   final bool expanded;
   const CustomAppBar({
     super.key,
-    required this.userPhotoUrl,
     required this.tabController,
     this.expanded = true,
     required this.tabs,

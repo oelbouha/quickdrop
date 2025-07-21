@@ -1,6 +1,5 @@
 import 'package:flutter/rendering.dart';
 import 'package:quickdrop_app/core/utils/imports.dart';
-import 'package:quickdrop_app/core/widgets/listing_skeleton.dart';
 
 class ShipmentScreen extends StatefulWidget {
   const ShipmentScreen({Key? key}) : super(key: key);
@@ -18,7 +17,6 @@ class _ShipmentScreenState extends State<ShipmentScreen>
   int selectedIndex = 0;
   bool _isLoading = true;
   UserData? user;
-  String? userPhotoUrl;
   late TabController _tabController;
 
   @override
@@ -28,9 +26,7 @@ class _ShipmentScreenState extends State<ShipmentScreen>
     _scrollController.addListener(_handleScroll);
 
     _tabController = TabController(length: 3, vsync: this);
-    userPhotoUrl =
-        Provider.of<UserProvider>(context, listen: false).user?.photoUrl ??
-            AppTheme.defaultProfileImage;
+
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       try {
         user = Provider.of<UserProvider>(context, listen: false).user;
@@ -47,11 +43,11 @@ class _ShipmentScreenState extends State<ShipmentScreen>
               .fetchUsersData(userIds);
         }
       } catch (e) {
-        if (mounted)
+        if (mounted) {
           AppUtils.showDialog(
               context, "Failed to fetch Shipments", AppColors.error);
+        }
       } finally {
-        // Ensure the loading state is updated even if an error occurs
         if (mounted) {
           setState(() {
             _isLoading = false;
@@ -184,7 +180,6 @@ class _ShipmentScreenState extends State<ShipmentScreen>
       backgroundColor: AppColors.background,
       appBar: CustomAppBar(
         expanded: _isExpanded,
-        userPhotoUrl: userPhotoUrl!,
         tabController: _tabController,
         tabs: const [
           "Active",
@@ -194,14 +189,9 @@ class _ShipmentScreenState extends State<ShipmentScreen>
         title: "Shipments",
       ),
       body: _isLoading
-          ? const Center(
-              child: CircularProgressIndicator(
-                color: AppColors.blue700,
-              ),
-            )
+          ? loadingAnimation()
           : Consumer<ShipmentProvider>(builder: (context, provider, child) {
-              final user =
-                  Provider.of<UserProvider>(context, listen: false).user;
+              final user = Provider.of<UserProvider>(context, listen: false).user;
               if (user == null) {
                 return const Center(
                     child: Text('Please log in to view shipments'));

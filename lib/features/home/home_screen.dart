@@ -12,7 +12,6 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   int selectedIndex = 0;
   bool _isLoading = true;
-  String? userPhotoUrl;
   UserData? user;
 
   final fromController = TextEditingController();
@@ -24,7 +23,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    typeController.text = "Shipment"; // Default type
+    typeController.text = "Shipment"; 
     user = Provider.of<UserProvider>(context, listen: false).user;
     if (user == null) {
       // If user is null, redirect to login
@@ -35,11 +34,7 @@ class _HomeScreenState extends State<HomeScreen> {
       });
       return;
     }
-    userPhotoUrl =
-        Provider.of<UserProvider>(context, listen: false).user?.photoUrl;
-    if (userPhotoUrl == null || userPhotoUrl!.isEmpty) {
-      userPhotoUrl = AppTheme.defaultProfileImage;
-    }
+   
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       try {
         final shipmentProvider =
