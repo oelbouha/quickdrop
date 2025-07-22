@@ -53,6 +53,17 @@ Widget build(BuildContext context) {
     builder: (context, snapshot) {
       if (snapshot.connectionState != ConnectionState.done) {
         return   Scaffold(
+           appBar: AppBar(
+          backgroundColor: Colors.white,
+          title: const Text(
+            'Profile',
+            style: TextStyle(color: AppColors.dark, fontWeight: FontWeight.w600),
+            
+          ),
+           iconTheme: const IconThemeData(color: Colors.black),
+          systemOverlayStyle: SystemUiOverlayStyle.dark,
+          centerTitle: true,
+        ),
           backgroundColor: AppColors.background,
           body:  loadingAnimation()
         );
@@ -98,7 +109,7 @@ class ProfileStatisticsState extends State<ProfileStatistics> {
         appBar: AppBar(
           backgroundColor: Colors.white,
           title: const Text(
-            'Statistics',
+            'Profile',
             style: TextStyle(color: AppColors.dark, fontWeight: FontWeight.w600),
             
           ),

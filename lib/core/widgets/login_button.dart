@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:quickdrop_app/core/widgets/loading.dart';
 import 'package:quickdrop_app/theme/colors.dart';
 import 'package:quickdrop_app/theme/AppTheme.dart';
 
@@ -34,13 +35,10 @@ class LoginButton extends StatelessWidget {
           ),
           child: Center(
             child: isLoading?
-                const SizedBox(
+                 SizedBox(
                   width: 28,
                   height: 28,
-                  child: CircularProgressIndicator(
-                    strokeWidth: 3,
-                    color: AppColors.white,
-                  ),
+                  child: loadingAnimation(size: 30)
               ) 
             :
               Text(
@@ -95,13 +93,10 @@ class Button extends StatelessWidget {
             ),
           child: Center(
             child: isLoading?
-               const SizedBox(
+                SizedBox(
                 width: 24,
                 height: 24,
-                child: CircularProgressIndicator(
-                  strokeWidth: 2.5,
-                  valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                ),
+                child: loadingAnimation(size: 30)
               )
             : Text(
                 hintText,

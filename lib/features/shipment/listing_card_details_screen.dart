@@ -39,12 +39,9 @@ class _ListingShipmentLoaderState extends State<ListingShipmentLoader> {
       future: fetchData(),
       builder: (context, snapshot) {
         if (snapshot.connectionState != ConnectionState.done) {
-          return const Scaffold(
-            backgroundColor: Colors.white,
-            body: Center(
-                child: CircularProgressIndicator(
-              color: AppColors.blue700,
-            )),
+          return  Scaffold(
+            backgroundColor: AppColors.background,
+            body: loadingAnimation(),
           );
         }
 
@@ -97,12 +94,9 @@ class _ListingTripLoaderState extends State<ListingTripLoader> {
       future: fetchData(),
       builder: (context, snapshot) {
         if (snapshot.connectionState != ConnectionState.done) {
-          return const Scaffold(
-            backgroundColor: Colors.white,
-            body: Center(
-                child: CircularProgressIndicator(
-              color: AppColors.blue700,
-            )),
+          return  Scaffold(
+            backgroundColor: AppColors.background,
+            body: loadingAnimation(),
           );
         }
 
@@ -184,72 +178,6 @@ class _ListingCardDetailsState extends State<ListingCardDetails> {
     super.dispose();
   }
 
-  // void _sendDeliveryRequest(Trip? trip) async {
-  //   if (_isLoading) return;
-
-  //   // setState(() {
-  //   //   _isLoading = true;
-  //   // });
-  //   if (!_formKey.currentState!.validate()) {
-  //     AppUtils.showDialog(
-  //         context, 'Please complete all required fields', AppColors.error);
-  //     return;
-  //   }
-  //   if (trip == null) {
-  //     AppUtils.showDialog(context, 'Please select a trip', AppColors.error);
-  //     return;
-  //   }
-  //   if (trip.id == null) {
-  //     AppUtils.showDialog(context, 'Selected trip is invalid', AppColors.error);
-  //     return;
-  //   }
-  //   if (_formKey.currentState!.validate()) {
-  //     try {
-  //       setState(() {
-  //         _isLoading = true;
-  //       });
-  //       final user = FirebaseAuth.instance.currentUser;
-  //       if (user == null) {
-  //         AppUtils.showDialog(
-  //             context, 'Please log in to list a shipment', AppColors.error);
-  //         return;
-  //       }
-  //       final DeliveryRequest request = DeliveryRequest(
-  //           tripId: trip.id!,
-  //           senderId: user.uid,
-  //           receiverId: widget.shipment.userId,
-  //           status: DeliveryStatus.active,
-  //           date: DateTime.now().toIso8601String(),
-  //           shipmentId: widget.shipment.id!,
-  //           price: priceController.text);
-  //       await Provider.of<DeliveryRequestProvider>(context, listen: false)
-  //           .addRequest(request);
-  //       // delay(const Duration(seconds: 1));
-  //       // add delay
-  //       // await Future.delayed(const Duration(seconds: 1));
-  //       if (mounted) {
-  //         Navigator.pop(context);
-  //         priceController.text = "";
-  //         noteController.text = "";
-  //         setState(() {
-  //           _selectedTrip = null;
-  //         });
-  //         AppUtils.showDialog(
-  //             context, 'Request sent successfully', AppColors.succes);
-  //       }
-  //     } catch (e) {
-  //       if (mounted) {
-  //         Navigator.pop(context);
-  //         AppUtils.showDialog(
-  //             context, 'Failed to send request $e', AppColors.error);
-  //       }
-  //     } finally {
-  //       setState(() {
-  //         _isLoading = false;
-  //       });
-  //     }
-  //   }
-  // }
 
   Widget _buildSliverApp() {
     return SliverAppBar(
