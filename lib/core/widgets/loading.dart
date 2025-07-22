@@ -9,9 +9,10 @@ Widget loadingAnimation({
 }) {
   return (
   Center(
-      child: LoadingAnimationWidget.twistingDots(
-        leftDotColor: AppColors.blue700,
-        rightDotColor: AppColors.dark,
+      child: LoadingAnimationWidget.staggeredDotsWave(
+        // leftDotColor: AppColors.blue700,
+        // rightDotColor: AppColors.dark,
+        color: AppColors.blue700,
         size: size,
       ),
   ));

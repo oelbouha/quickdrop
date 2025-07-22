@@ -33,7 +33,7 @@ class ReviewModel {
       senderId: map['senderId'],
       date: map['date'],
       message : map['message'],
-      rating: map['rating'],
+      rating: (map['rating'] as num?)?.toDouble() ?? 0.0,
     );
  
  }

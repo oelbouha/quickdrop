@@ -9,7 +9,8 @@ class SearchFilterScreen extends StatefulWidget {
   SearchFilterScreenState createState() => SearchFilterScreenState();
 }
 
-class SearchFilterScreenState extends State<SearchFilterScreen> with TickerProviderStateMixin {
+class SearchFilterScreenState extends State<SearchFilterScreen>
+    with TickerProviderStateMixin {
   bool _isSearching = false;
 
   final fromController = TextEditingController();
@@ -50,79 +51,79 @@ class SearchFilterScreenState extends State<SearchFilterScreen> with TickerProvi
     super.dispose();
   }
 
-Widget _buildFilterTypeSection() {
-  return Container(
-    width: double.infinity,
-    margin: const EdgeInsets.all(16),
-    padding: const EdgeInsets.all(16),
-    decoration: BoxDecoration(
-      color: Colors.white,
-      borderRadius: BorderRadius.circular(12),
-      boxShadow: [
-        BoxShadow(
-          color: Colors.grey.withValues(alpha: 0.1),
-          spreadRadius: 1,
-          blurRadius: 6,
-          offset: const Offset(0, 2),
-        ),
-      ],
-    ),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        
-        Row(
-          children: [
-            Expanded(
-              child: TextFieldWithHeader(
-                controller: weightController,
-                hintText: "1.0",
-                headerText: "Weight (kg)",
-                isRequired: false,
-                displayHeader: true,
-                keyboardType: TextInputType.number,
-                validator: Validators.notEmpty,
-              ),
-            ),
-            const SizedBox(width: 16),
-            Expanded(
-              child: TextFieldWithHeader(
-                controller: priceController,
-                hintText: "1.0",
-                headerText: "price (dh)",
-                isRequired: false,
-                displayHeader : true,
-                keyboardType: TextInputType.number,
-                validator: Validators.notEmpty,
-              ),
-            ),
-          ],
-        ),
-         const SizedBox(height: 16),
-        const Text(
-          "Select Type",
-          style: TextStyle(
-            color: AppColors.textPrimary,
-            fontSize: 14,
-            fontWeight: FontWeight.bold,
+  Widget _buildFilterTypeSection() {
+    return Container(
+      width: double.infinity,
+      margin: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withValues(alpha: 0.1),
+            spreadRadius: 1,
+            blurRadius: 6,
+            offset: const Offset(0, 2),
           ),
-        ),
-        const SizedBox(height: 8),
-        TypeSelectorWidget(
-          onTypeSelected: (type) {
-            typeController.text = type;
-          },
-          initialSelection: "Shipment",
-          types: const ["Shipment", "Trip"],
-          selectedColor: AppColors.blue600,
-          unselectedColor: AppColors.textSecondary,
-          topSpacing: 0, // Explicitly set to 0 to remove any top padding
-        ),
-      ],
-    ),
-  );
-}
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Row(
+            children: [
+              Expanded(
+                child: TextFieldWithHeader(
+                  controller: weightController,
+                  hintText: "1.0",
+                  headerText: "Weight (kg)",
+                  isRequired: false,
+                  displayHeader: true,
+                  keyboardType: TextInputType.number,
+                  validator: Validators.notEmpty,
+                ),
+              ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: TextFieldWithHeader(
+                  controller: priceController,
+                  hintText: "1.0",
+                  headerText: "price (dh)",
+                  isRequired: false,
+                  displayHeader: true,
+                  keyboardType: TextInputType.number,
+                  validator: Validators.notEmpty,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+          const Text(
+            "Select Type",
+            style: TextStyle(
+              color: AppColors.textPrimary,
+              fontSize: 14,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          const SizedBox(height: 8),
+          TypeSelectorWidget(
+            onTypeSelected: (type) {
+              typeController.text = type;
+            },
+            initialSelection: "Shipment",
+            types: const ["Shipment", "Trip"],
+            selectedColor: AppColors.blue600,
+            unselectedColor: AppColors.textSecondary,
+            topSpacing: 0, // Explicitly set to 0 to remove any top padding
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget _buildFilterSection() {
     return Container(
       width: double.infinity,
@@ -144,7 +145,6 @@ Widget _buildFilterTypeSection() {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _buildFilterDestination(),
-          
         ],
       ),
     );
@@ -171,9 +171,8 @@ Widget _buildFilterTypeSection() {
           validator: Validators.notEmpty,
           iconPath: "assets/icon/map-point.svg",
         ),
-       
+
         // const SizedBox(height: 16),
-       
       ],
     );
   }
@@ -186,7 +185,8 @@ Widget _buildFilterTypeSection() {
           child: OutlinedButton.icon(
             onPressed: _clearSearchFilter,
             icon: const Icon(Icons.clear_all, size: 18, color: Colors.black),
-            label: const Text('Clear', style: TextStyle(fontSize: 16, color: Colors.black)),
+            label: const Text('Clear',
+                style: TextStyle(fontSize: 16, color: Colors.black)),
             style: OutlinedButton.styleFrom(
               padding: const EdgeInsets.symmetric(vertical: 12),
               shape: RoundedRectangleBorder(
@@ -201,7 +201,7 @@ Widget _buildFilterTypeSection() {
           flex: 3,
           child: ElevatedButton.icon(
             onPressed: _isSearching ? null : _performSearch,
-            icon: _isSearching 
+            icon: _isSearching
                 ? const SizedBox(
                     width: 18,
                     height: 18,
@@ -211,7 +211,8 @@ Widget _buildFilterTypeSection() {
                     ),
                   )
                 : const Icon(Icons.search, size: 18),
-            label: Text(_isSearching ? 'Searching...' : 'Search', style: const TextStyle(fontSize: 16)),
+            label: Text(_isSearching ? 'Searching...' : 'Search',
+                style: const TextStyle(fontSize: 16)),
             style: ElevatedButton.styleFrom(
               backgroundColor: AppColors.blue700,
               foregroundColor: Colors.white,
@@ -280,10 +281,10 @@ Widget _buildFilterTypeSection() {
       stretch: true,
       backgroundColor: AppColors.background,
       leading: IconButton(
-          icon: const Icon(Icons.close, color: Colors.black),
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
+        icon: const Icon(Icons.close, color: Colors.black),
+        onPressed: () {
+          Navigator.of(context).pop();
+        },
       ),
       title: const Text(
         'Search',
@@ -306,14 +307,12 @@ Widget _buildFilterTypeSection() {
           _buildSliverApp(),
           SliverToBoxAdapter(
             child: SingleChildScrollView(
-              physics: const BouncingScrollPhysics(),
-              child: Column(
-                children :[
+                physics: const BouncingScrollPhysics(),
+                child: Column(children: [
                   _buildFilterSection(),
                   const SizedBox(height: 16),
                   _buildFilterTypeSection(),
-                  ])
-            ),
+                ])),
           ),
         ],
       ),
@@ -338,11 +337,9 @@ Widget _buildFilterTypeSection() {
   }
 }
 
-
-
 class SearchResultsScreen extends StatefulWidget {
   final SearchFilters filters;
-  
+
   const SearchResultsScreen({
     super.key,
     required this.filters,
@@ -352,7 +349,8 @@ class SearchResultsScreen extends StatefulWidget {
   SearchResultsScreenState createState() => SearchResultsScreenState();
 }
 
-class SearchResultsScreenState extends State<SearchResultsScreen> with TickerProviderStateMixin {
+class SearchResultsScreenState extends State<SearchResultsScreen>
+    with TickerProviderStateMixin {
   bool _isLoading = true;
   List<Shipment> activeShipments = [];
   List<Trip> activeTrips = [];
@@ -388,14 +386,18 @@ class SearchResultsScreenState extends State<SearchResultsScreen> with TickerPro
     return shipments.where((shipment) {
       // Filter by 'from' location
       if (widget.filters.from != null && widget.filters.from!.isNotEmpty) {
-        if (!shipment.from.toLowerCase().contains(widget.filters.from!.toLowerCase())) {
+        if (!shipment.from
+            .toLowerCase()
+            .contains(widget.filters.from!.toLowerCase())) {
           return false;
         }
       }
 
       // Filter by 'to' location
       if (widget.filters.to != null && widget.filters.to!.isNotEmpty) {
-        if (!shipment.to.toLowerCase().contains(widget.filters.to!.toLowerCase())) {
+        if (!shipment.to
+            .toLowerCase()
+            .contains(widget.filters.to!.toLowerCase())) {
           return false;
         }
       }
@@ -404,7 +406,9 @@ class SearchResultsScreenState extends State<SearchResultsScreen> with TickerPro
       if (widget.filters.price != null && widget.filters.price!.isNotEmpty) {
         final filterPrice = double.tryParse(widget.filters.price!);
         final shipmentPrice = double.tryParse(shipment.price);
-        if (filterPrice != null && shipmentPrice != null && shipmentPrice > filterPrice) {
+        if (filterPrice != null &&
+            shipmentPrice != null &&
+            shipmentPrice > filterPrice) {
           return false;
         }
       }
@@ -413,7 +417,9 @@ class SearchResultsScreenState extends State<SearchResultsScreen> with TickerPro
       if (widget.filters.weight != null && widget.filters.weight!.isNotEmpty) {
         final filterWeight = double.tryParse(widget.filters.weight!);
         final shipmentWeight = double.tryParse(shipment.weight);
-        if (filterWeight != null && shipmentWeight != null && shipmentWeight > filterWeight) {
+        if (filterWeight != null &&
+            shipmentWeight != null &&
+            shipmentWeight > filterWeight) {
           return false;
         }
       }
@@ -426,7 +432,9 @@ class SearchResultsScreenState extends State<SearchResultsScreen> with TickerPro
     return trips.where((trip) {
       // Filter by 'from' location
       if (widget.filters.from != null && widget.filters.from!.isNotEmpty) {
-        if (!trip.from.toLowerCase().contains(widget.filters.from!.toLowerCase())) {
+        if (!trip.from
+            .toLowerCase()
+            .contains(widget.filters.from!.toLowerCase())) {
           return false;
         }
       }
@@ -442,7 +450,9 @@ class SearchResultsScreenState extends State<SearchResultsScreen> with TickerPro
       if (widget.filters.price != null && widget.filters.price!.isNotEmpty) {
         final filterPrice = double.tryParse(widget.filters.price!);
         final tripPrice = double.tryParse(trip.price);
-        if (filterPrice != null && tripPrice != null && tripPrice > filterPrice) {
+        if (filterPrice != null &&
+            tripPrice != null &&
+            tripPrice > filterPrice) {
           return false;
         }
       }
@@ -451,7 +461,9 @@ class SearchResultsScreenState extends State<SearchResultsScreen> with TickerPro
       if (widget.filters.weight != null && widget.filters.weight!.isNotEmpty) {
         final filterWeight = double.tryParse(widget.filters.weight!);
         final tripWeight = double.tryParse(trip.weight);
-        if (filterWeight != null && tripWeight != null && tripWeight < filterWeight) {
+        if (filterWeight != null &&
+            tripWeight != null &&
+            tripWeight < filterWeight) {
           return false;
         }
       }
@@ -468,7 +480,8 @@ class SearchResultsScreenState extends State<SearchResultsScreen> with TickerPro
     // Simulate network delay
     await Future.delayed(const Duration(milliseconds: 800));
 
-    final shipmentProvider = Provider.of<ShipmentProvider>(context, listen: false);
+    final shipmentProvider =
+        Provider.of<ShipmentProvider>(context, listen: false);
     final tripProvider = Provider.of<TripProvider>(context, listen: false);
 
     List<Shipment> filteredShipments = [];
@@ -478,7 +491,7 @@ class SearchResultsScreenState extends State<SearchResultsScreen> with TickerPro
     if (widget.filters.type == null || widget.filters.type == 'Shipment') {
       filteredShipments = _filterShipments(shipmentProvider.activeShipments);
     }
-    
+
     if (widget.filters.type == null || widget.filters.type == 'Trip') {
       filteredTrips = _filterTrips(tripProvider.activeTrips);
     }
@@ -492,7 +505,7 @@ class SearchResultsScreenState extends State<SearchResultsScreen> with TickerPro
 
   Widget _buildFilterSummary() {
     List<String> appliedFilters = [];
-    
+
     if (widget.filters.from != null && widget.filters.from!.isNotEmpty) {
       appliedFilters.add('From: ${widget.filters.from}');
     }
@@ -544,19 +557,23 @@ class SearchResultsScreenState extends State<SearchResultsScreen> with TickerPro
     );
   }
 
-
-
   Widget _buildShipmentListings(List<Shipment> activeShipments) {
     return Consumer2<ShipmentProvider, UserProvider>(
       builder: (context, shipmentProvider, userProvider, child) {
         return activeShipments.isEmpty
-            ? buildEmptyState( Icons.add_box, "No Shipments Found", "No results found for your search criteria",)
+            ? buildEmptyState(
+                Icons.add_box,
+                "No Shipments Found",
+                "No results found for your search criteria",
+              )
             : Container(
                 margin: const EdgeInsets.symmetric(horizontal: 16),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    if (widget.filters.type == null || (widget.filters.type != 'Trip' && activeTrips.isNotEmpty))
+                    if (widget.filters.type == null ||
+                        (widget.filters.type != 'Trip' &&
+                            activeTrips.isNotEmpty))
                       Padding(
                         padding: const EdgeInsets.only(bottom: 16.0),
                         child: Text(
@@ -573,7 +590,8 @@ class SearchResultsScreenState extends State<SearchResultsScreen> with TickerPro
                       itemCount: activeShipments.length,
                       itemBuilder: (context, index) {
                         final shipment = activeShipments[index];
-                        final userData = userProvider.getUserById(shipment.userId);
+                        final userData =
+                            userProvider.getUserById(shipment.userId);
                         if (userData == null) {
                           return const SizedBox.shrink();
                         }
@@ -603,13 +621,16 @@ class SearchResultsScreenState extends State<SearchResultsScreen> with TickerPro
     return Consumer2<TripProvider, UserProvider>(
       builder: (context, tripProvider, userProvider, child) {
         return activeTrips.isEmpty
-            ? buildEmptyState( Icons.trip_origin, "No Trips Found", "No trip found for your fillter")
+            ? buildEmptyState(Icons.trip_origin, "No Trips Found",
+                "No trip found for your fillter")
             : Container(
                 margin: const EdgeInsets.symmetric(horizontal: 16),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    if (widget.filters.type == null || (widget.filters.type != 'Shipment' && activeShipments.isNotEmpty))
+                    if (widget.filters.type == null ||
+                        (widget.filters.type != 'Shipment' &&
+                            activeShipments.isNotEmpty))
                       Padding(
                         padding: const EdgeInsets.only(bottom: 16.0),
                         child: Text(
@@ -653,26 +674,22 @@ class SearchResultsScreenState extends State<SearchResultsScreen> with TickerPro
   }
 
   Widget _buildResultsContent() {
+  final screenHeight = MediaQuery.of(context).size.height;
     if (_isLoading) {
-      return const Center(
-        child: Padding(
-          padding: EdgeInsets.all(32.0),
-          child: CircularProgressIndicator(
-            color: AppColors.blue700,
-            strokeWidth: 3.0,
-          ),
-        ),
-      );
+      return Container(
+      height: screenHeight * 0.7, 
+      alignment: Alignment.center,
+      child: loadingAnimation(),
+    );
     }
 
     bool hasResults = activeShipments.isNotEmpty || activeTrips.isNotEmpty;
 
     if (!hasResults) {
       return buildEmptyState(
-          Icons.add_box,
+        Icons.add_box,
         "No results",
         "No results found for your search criteria",
-        
       );
     }
 
@@ -684,7 +701,7 @@ class SearchResultsScreenState extends State<SearchResultsScreen> with TickerPro
           _buildShipmentListings(activeShipments),
         if (widget.filters.type == null || widget.filters.type == 'Trip')
           _buildTripListings(activeTrips),
-        const SizedBox(height: 100), 
+        const SizedBox(height: 100),
       ],
     );
   }
@@ -702,7 +719,7 @@ class SearchResultsScreenState extends State<SearchResultsScreen> with TickerPro
         },
       ),
       title: const Text(
-        'Search Results',
+        'Search',
         style: TextStyle(
           color: Colors.black,
           fontSize: 20,
@@ -777,10 +794,10 @@ class SearchFilters {
   // Check if filters are empty
   bool get isEmpty {
     return (from == null || from!.isEmpty) &&
-           (price == null || price!.isEmpty) &&
-           (weight == null || weight!.isEmpty) &&
-           (to == null || to!.isEmpty) &&
-           (type == null || type!.isEmpty);
+        (price == null || price!.isEmpty) &&
+        (weight == null || weight!.isEmpty) &&
+        (to == null || to!.isEmpty) &&
+        (type == null || type!.isEmpty);
   }
 
   // Convert to map for easy debugging or serialization
