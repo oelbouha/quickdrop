@@ -255,158 +255,141 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return AnnotatedRegion<SystemUiOverlayStyle>(
-        value: SystemUiOverlayStyle.dark,
-        child: FadeTransition(
-            opacity: _fadeAnimation,
-            child: Scaffold(
-                backgroundColor: AppColors.background,
-                resizeToAvoidBottomInset: false,
-                body: Container(
-                    padding: const EdgeInsets.all(AppTheme.homeScreenPadding),
-                    decoration: const BoxDecoration(
-                      color: AppColors.white,
-                    ),
-                    child: Center(
-                        child: Column(
-                      children: [
-                        Expanded(
-                          child: Center(
-                              child: SingleChildScrollView(
-                                  child: _buildLogInScreen())),
-                        ),
-                      ],
-                    ))))));
-  }
+ Widget build(BuildContext context) {
+  return Scaffold(
+    backgroundColor: AppColors.background,
+    resizeToAvoidBottomInset: false,
+    body: Stack(
+      children: [
+        // Background image with dark overlay
+        Container(
+          width: double.infinity,
+          height: double.infinity,
+          decoration: const BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage('assets/images/box.jpg'),
+              fit: BoxFit.cover,
+            ),
+          ),
+          // Dark overlay
+          child: Container(
+            color: Colors.black.withOpacity(0.4), // Adjust opacity as needed
+          ),
+        ),
+        // Login content positioned at top 70% of screen
+        Positioned(
+          bottom: 0,
+          left: 0,
+          right: 0,
+          height: MediaQuery.of(context).size.height * 0.75, // 70% of screen height
+          child: Container(
+            decoration: BoxDecoration(
+              color: AppColors.white,
+              borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(30),
+                topRight: Radius.circular(30),
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: AppColors.dark.withOpacity(0.1),
+                  blurRadius: 10,
+                  offset: const Offset(0, 5),
+                ),
+              ],
+            ),
+            child: SafeArea(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.all(16),
+                child: Center(child:_buildLogInScreen()),
+              ),
+            ),
+          ),
+        ),
+      ],
+    ),
+  );
+}
 
-  Widget _buildLogInScreen() {
-    return Form(
-        key: _formKey,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Center(
-              child: Container(
-                margin: const EdgeInsets.only(bottom: 24),
-                child: const Column(
-                  children: [
-                    // Image.asset(
-                    //   'assets/images/quickdrop.png',
-                    //   height: 180,
-                    //   fit: BoxFit.cover,
-                    // ),
-                    //  SizedBox(height: 16),
-                     Text(
-                      "Welcome back",
-                      style: TextStyle(
-                        color: AppColors.dark,
-                        fontSize: 28,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                     SizedBox(height: 8),
-                     Text(
-                      "Sign in to continue",
-                      style: TextStyle(
-                        color: AppColors.shipmentText,
-                        fontSize: 14,
-                      ),
-                    ),
-                  ],
+Widget _buildLogInScreen() {
+  return Form(
+    key: _formKey,
+    child: Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const SizedBox(height: 40), // Add some top spacing
+        IconTextField(
+          controller: emailController,
+          keyboardType: TextInputType.emailAddress,
+          hintText: 'Email',
+          obsecureText: false,
+          iconPath: "assets/icon/email.svg",
+          validator: Validators.email,
+        ),
+        const SizedBox(height: 16),
+        PasswordTextfield(
+          controller: passwordController,
+          validator: Validators.notEmpty,
+        ),
+        const SizedBox(height: 24), // Add spacing before button
+        Button(
+          hintText: "Sign in",
+          onPressed: _signInUserWithEmail,
+          isLoading: _isEmailLoading,
+          radius: 60,
+        ),
+        Container(
+          margin: const EdgeInsets.only(top: 16, bottom: 16),
+          child: const Row(
+            children: [
+              Expanded(
+                child: Divider(
+                  color: AppColors.lessImportant,
+                  thickness: 0.4,
                 ),
               ),
-            ),
-            const Text(
-              "Email",
-              style:  TextStyle(
-                color: AppColors.shipmentText,
-                fontSize: 14,
-                fontWeight: FontWeight.w600,
+              SizedBox(width: 16),
+              Text(
+                "or",
+                style: TextStyle(color: AppColors.shipmentText, fontSize: 12),
               ),
-              textAlign: TextAlign.start,
-            ),
-             const SizedBox(
-              height: 8,
-            ),
-            IconTextField(
-              controller: emailController,
-              keyboardType: TextInputType.emailAddress,
-              hintText: 'Enter your email',
-              obsecureText: false,
-              iconPath: "assets/icon/email.svg",
-              validator: Validators.email,
-            ),    
-            const SizedBox(
-              height: 16,
-            ),
-            const Text(
-              "Password",
-              style:  TextStyle(
-                color: AppColors.shipmentText,
-                fontSize: 14,
-                fontWeight: FontWeight.w600,
-              ),
-              textAlign: TextAlign.start,
-            ),
-             const SizedBox(
-              height: 8,
-            ),
-            PasswordTextfield(
-              controller: passwordController,
-              validator: Validators.notEmpty,
-            ),
-            // const SizedBox(
-            //   height: 16,
-            // ),
-            Button(
-              hintText: "Sign in",
-              onPressed: _signInUserWithEmail,
-              isLoading: _isEmailLoading,
-            ),
-            Container(
-              margin: const EdgeInsets.only(top: 0, bottom: 16), 
-              child: const Row(
-                children: [
-                  Expanded(
-                    child: Divider(
-                      color: AppColors.lessImportant,
-                      thickness: 0.4,
-                    ),
-                  ),
-                  SizedBox(width: 16), 
-                  Text(
-                    "or",
-                    style: TextStyle(color: AppColors.shipmentText, fontSize: 12),
-                  ),
-                  SizedBox(width: 16), 
-                  Expanded(
-                    child: Divider(
-                      color: AppColors.lessImportant,
-                      thickness: 0.4,
-                    ),
-                  )
-                ],
-              ),
-            ),
-
-             AuthButton(
-              hintText: "Sign in with Google",
-              onPressed: _signInWithGoogle,
-              imagePath: "assets/images/google.png",
-              isLoading: _isGoogleLoading,
-              backgroundColor: AppColors.background,
-            ),
-             const SizedBox(height: 24),
-            textWithLink(
-                text: "Don't have an account? ",
-                textLink: "sign up",
-                navigatTo: '/signup',
-                context: context),
-          ],
-        ));
-  }
-
-
+              SizedBox(width: 16),
+              Expanded(
+                child: Divider(
+                  color: AppColors.lessImportant,
+                  thickness: 0.4,
+                ),
+              )
+            ],
+          ),
+        ),
+        AuthButton(
+          hintText: "Sign in with Google",
+          onPressed: _signInWithGoogle,
+          imagePath: "assets/images/google.png",
+          isLoading: _isGoogleLoading,
+          backgroundColor: AppColors.background,
+          radius: 60,
+        ),
+        const SizedBox(height: 24),
+        textWithLink(
+          text: "Don't have an account? ",
+          textLink: "sign up",
+          navigatTo: '/signup',
+          context: context,
+        ),
+        //  const Spacer(),
+        // const SizedBox(height: 32),
+        //   Container(
+        //     width: 100,
+        //     height: 4,
+        //     decoration: BoxDecoration(
+        //       color: Colors.black,
+        //       borderRadius: BorderRadius.circular(2),
+        //     ),
+        //   ),
+      ],
+    ),
+  );
+}
 }
