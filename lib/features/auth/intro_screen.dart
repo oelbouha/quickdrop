@@ -7,6 +7,9 @@ import 'package:quickdrop_app/features/models/user_model.dart';
 import 'package:quickdrop_app/core/utils/imports.dart';
 import 'package:flutter/services.dart'; 
 import 'package:quickdrop_app/core/widgets/auth_button.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+
+
 
 class IntroScreen extends StatefulWidget {
   const IntroScreen({super.key});
@@ -17,109 +20,121 @@ class IntroScreen extends StatefulWidget {
 
 class _IntroScreenState extends State<IntroScreen> {
   bool _isLoginLoading = false;
-  // bool _hasClearedUser = false;
+  bool _isSignUpLoading = false;
 
 
-@override
-Widget build(BuildContext context) {
-  return AnnotatedRegion<SystemUiOverlayStyle>(
-    value: SystemUiOverlayStyle.dark, 
-    child: Scaffold(
-      backgroundColor: AppColors.background,
-      body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              AppColors.backgroundStart,
-              AppColors.backgroundMiddle,
-              AppColors.backgroundEnd,
-            ],
-            stops: [0.0, 0.5, 1.0],
+  @override
+  Widget build(BuildContext context) {
+    return  Scaffold(
+        body: Container(
+          decoration: const BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage('assets/images/background.jpg'),
+              fit: BoxFit.cover,
+            ),
           ),
-        ),
-        padding: const EdgeInsets.all(AppTheme.homeScreenPadding),
-        child: Column(
-          children: [
-            Expanded(
-              child: PageView(
-                children: const [
-                  OnboardingSlide(
-                    title: "Fast Delivery",
-                    description: "Get your packages delivered quickly and safely.",
+          child: Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [
+                  Colors.black.withOpacity(0.4),
+                  Colors.black.withOpacity(0.2),
+                ],
+              ),
+            ),
+          
+          child: SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 24.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  // Header Section
+                  const Column(
+                    children: [
+                      const SizedBox(height: 32),
+                      Text(
+                        'QUICKDROP',
+                        style: TextStyle(
+                          fontSize: 36,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black,
+                        ),
+                      ),
+                      SizedBox(height: 8),
+                      Text(
+                        'Connect. Ship. Deliver.',
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: Color(0xFF374151), // gray-700
+                        ),
+                      ),
+                    ],
                   ),
-                  OnboardingSlide(
-                    title: "Trusted Service",
-                    description: "Our community ensures reliability and trust.",
+                  
+                  const SizedBox(height: 32),
+                  
+                  // Spacer for visual balance
+                  Container(
+                    width: double.infinity,
+                    height: 192,
                   ),
-                  OnboardingSlide(
-                    title: "Track Your Items",
-                    description: "Real-time tracking of all your shipments.",
+                  
+                  // const SizedBox(height: 48),
+                  
+                  // Buttons Section
+                  const Spacer(),
+                  Column(
+                    children: [
+                      // Sign In Button
+                      LoginButton(
+                        hintText: "Sign in",
+                        onPressed: () {
+                          setState(() {
+                            _isLoginLoading = true;
+                          });
+                          context.pushNamed('login');
+                        },
+                        isLoading: _isLoginLoading,
+                        radius: 60,
+                      ),
+                      
+                      const SizedBox(height: 12),
+                      
+                      LoginButton(
+                        hintText: "Sign up",
+                        onPressed: () {
+                          setState(() {
+                            _isSignUpLoading = true;
+                          });
+                          context.pushNamed('signup');
+                        },
+                        backgroundColor: AppColors.appBarIcons,
+                        isLoading: _isSignUpLoading,
+                        radius: 60,
+                      ),
+                    ],
+                  ),
+                  
+                  const SizedBox(height: 32),
+                  
+                  // Bottom Indicator
+                  const Spacer(),
+                  Container(
+                    width: 100,
+                    height: 4,
+                    decoration: BoxDecoration(
+                      color: Colors.black,
+                      borderRadius: BorderRadius.circular(2),
+                    ),
                   ),
                 ],
               ),
             ),
-            const SizedBox(height: 40),
-            LoginButton(
-              hintText: "Sign in",
-              onPressed: () {
-                setState(() {
-                  _isLoginLoading = true;
-                });
-                context.pushNamed('login');
-              },
-              isLoading: _isLoginLoading,
-            ),
-            const SizedBox(height: 10),
-            textWithLink(
-              text: "Don't have an account? ",
-              textLink: "sign up",
-              navigatTo: '/signup',
-              context: context,
-            ),
-            const SizedBox(height: 15),
-          ],
-        ),
-      ),
-    ),
-  );
-}
-
-
-}
-
-class OnboardingSlide extends StatelessWidget {
-  final String title;
-  final String description;
-
-  const OnboardingSlide({
-    super.key,
-    required this.title,
-    required this.description,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        const CustomIcon( iconPath: "assets/icon/car.svg", size: 60, color: AppColors.blue),
-        const SizedBox(height: 20),
-        Text(
-          title,
-          style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-        ),
-        const SizedBox(height: 10),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: Text(
-            description,
-            textAlign: TextAlign.center,
-            style: const TextStyle(fontSize: 16),
           ),
-        ),
-      ],
+        )),
     );
   }
 }

@@ -28,9 +28,7 @@ class LoginButton extends StatelessWidget {
       child: Container(
           padding: const EdgeInsets.all(14),
           decoration: BoxDecoration(
-           gradient: const LinearGradient(
-            colors: [AppColors.blueStart, AppColors.purpleStart],
-          ),
+            color: backgroundColor,
             borderRadius: BorderRadius.circular(radius),
           ),
           child: Center(
@@ -88,7 +86,7 @@ class Button extends StatelessWidget {
               elevation: 0,
               shadowColor: Colors.transparent,
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
+                borderRadius: BorderRadius.circular(radius),
               ),
             ),
           child: Center(
