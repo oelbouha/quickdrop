@@ -102,10 +102,11 @@ class NegotiationCardState extends State<NegotiationCard> {
           children: [
             _buildStatusBanner(),
            _buildHeader(),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-            child: _buildActionButton()),
-          ],)
+          // Padding(
+          //   padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          //   child: _buildActionButton()),
+           ],
+          )
         ));
   }
 

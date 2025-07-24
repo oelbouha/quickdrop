@@ -34,9 +34,9 @@ class _NegotiationScreenState extends State<NegotiationScreen> {
 
 
 Future<(UserData, TransportItem, DeliveryRequest)> fetchData() async {
-  print("fetching data");
-  print("shipment id: ${widget.shipmentId}");
-  print("request id: ${widget.requestId}");
+  // print("fetching data");
+  // print("shipment id: ${widget.shipmentId}");
+  // print("request id: ${widget.requestId}");
   final user = Provider.of<UserProvider>(context, listen: false).getUserById(widget.userId);;
   final transportItem = await Provider.of<ShipmentProvider>(context, listen: false).fetchShipmentById(widget.shipmentId);
   final request = await Provider.of<DeliveryRequestProvider>(context, listen: false).fetchRequestById(widget.requestId);
@@ -54,11 +54,9 @@ Widget build(BuildContext context) {
     future: fetchData(),
     builder: (context, snapshot) {
       if (snapshot.connectionState != ConnectionState.done) {
-        return const Scaffold(
+        return  Scaffold(
           backgroundColor: Colors.white,
-          body: Center(child: CircularProgressIndicator(
-            color: AppColors.blue700,
-          )),
+          body: loadingAnimation(),
         );
       }
 
@@ -270,8 +268,13 @@ class _NegotiationContentState extends State<NegotiationContent> {
         requestProvider.markRequestAsAccepted(widget.request.id!);
           // await Provider.of<DeliveryRequestProvider>(context, listen: false)
             // .deleteRequest(widget.request.id!);
+          try{
+
           final chatId = widget.request.id!;
           await Provider.of<NegotiationProvider>(context, listen: false).deleteNegotiation(chatId);
+          } catch(e) {
+            print("Error deleting negotiation chat: $e");
+          }
 
         if (mounted) {
           AppUtils.showDialog(

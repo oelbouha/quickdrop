@@ -154,6 +154,7 @@ class _VerifyPhoneScreenState extends State<VerifyPhoneScreen> {
                 const SizedBox(height: 20),
                 Button(
                   hintText: "Continue",
+                  radius: 30  ,
                   backgroundColor: AppColors.dark,
                   onPressed: () {
                     if (_formKey.currentState?.validate() ?? false) {
