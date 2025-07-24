@@ -259,53 +259,11 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
   return Scaffold(
     backgroundColor: AppColors.background,
     resizeToAvoidBottomInset: false,
-    body: Stack(
-      children: [
-        // Background image with dark overlay
-        Container(
-          width: double.infinity,
-          height: double.infinity,
-          decoration: const BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage('assets/images/box.jpg'),
-              fit: BoxFit.cover,
-            ),
-          ),
-          // Dark overlay
-          child: Container(
-            color: Colors.black.withOpacity(0.4), // Adjust opacity as needed
-          ),
-        ),
-        // Login content positioned at top 70% of screen
-        Positioned(
-          bottom: 0,
-          left: 0,
-          right: 0,
-          height: MediaQuery.of(context).size.height * 0.75, // 70% of screen height
-          child: Container(
-            decoration: BoxDecoration(
-              color: AppColors.white,
-              borderRadius: const BorderRadius.only(
-                topLeft: Radius.circular(30),
-                topRight: Radius.circular(30),
-              ),
-              boxShadow: [
-                BoxShadow(
-                  color: AppColors.dark.withOpacity(0.1),
-                  blurRadius: 10,
-                  offset: const Offset(0, 5),
-                ),
-              ],
-            ),
-            child: SafeArea(
-              child: SingleChildScrollView(
-                padding: const EdgeInsets.all(16),
-                child: Center(child:_buildLogInScreen()),
-              ),
-            ),
-          ),
-        ),
-      ],
+    body:  SafeArea(
+      child: Center(child:SingleChildScrollView(
+        padding: const EdgeInsets.all(16),
+        child: _buildLogInScreen(),
+      )),  
     ),
   );
 }
@@ -317,12 +275,35 @@ Widget _buildLogInScreen() {
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const SizedBox(height: 40), // Add some top spacing
+        FadeTransition(
+          opacity: _fadeAnimation,
+          child: const Text(
+            'Welcome Back',
+            style: TextStyle(
+              fontSize: 32,
+              fontWeight: FontWeight.bold,
+              color: AppColors.blue700,
+            ),
+          ),
+        ),
+        const SizedBox(height: 16),
+        FadeTransition(
+          opacity: _fadeAnimation,
+          child: const Text(
+            'Please sign in to continue',
+            style: TextStyle(
+              fontSize: 16,
+              color: AppColors.shipmentText,
+            ),
+          ),
+        ),
+        const SizedBox(height: 32),
         IconTextField(
           controller: emailController,
           keyboardType: TextInputType.emailAddress,
           hintText: 'Email',
           obsecureText: false,
+          radius: 30,
           iconPath: "assets/icon/email.svg",
           validator: Validators.email,
         ),
@@ -330,6 +311,7 @@ Widget _buildLogInScreen() {
         PasswordTextfield(
           controller: passwordController,
           validator: Validators.notEmpty,
+          radius: 30,
         ),
         const SizedBox(height: 24), // Add spacing before button
         Button(

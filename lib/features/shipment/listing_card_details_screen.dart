@@ -792,7 +792,7 @@ class _ListingCardDetailsState extends State<ListingCardDetails> {
                     controller: priceController,
                     hintText: "0.00",
                     headerText: "Price (dh)",
-                    validator: Validators.notEmpty,
+                    validator: Validators.isNumber,
                     keyboardType: TextInputType.number,
                   ),
                   const SizedBox(height: 20),

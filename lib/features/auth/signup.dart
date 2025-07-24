@@ -177,16 +177,17 @@ class _SignupState extends State<Signup> {
             body: Container(
                 padding: const EdgeInsets.all(AppTheme.homeScreenPadding),
                 decoration: const BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                    colors: [
-                      AppColors.backgroundStart,
-                      AppColors.backgroundMiddle,
-                      AppColors.backgroundEnd,
-                    ],
-                    stops: [0.0, 0.5, 1.0],
-                  ),
+                  color: AppColors.white,
+                  // gradient: LinearGradient(
+                  //   begin: Alignment.topLeft,
+                  //   end: Alignment.bottomRight,
+                  //   colors: [
+                  //     AppColors.backgroundStart,
+                  //     AppColors.backgroundMiddle,
+                  //     AppColors.backgroundEnd,
+                  //   ],
+                  //   stops: [0.0, 0.5, 1.0],
+                  // ),
                 ),
                 child: Center(
                     child: Column(
@@ -236,6 +237,7 @@ class _SignupState extends State<Signup> {
           hintText: "Continue",
           onPressed: _signupUserWithEmail,
           isLoading: _isEmailLoading,
+          radius: 30,
         ),
         const SizedBox(
           height: 15,
@@ -275,6 +277,7 @@ class _SignupState extends State<Signup> {
           imagePath: "assets/images/google.png",
           isLoading: _isGoogleLoading,
           backgroundColor: AppColors.background,
+          radius: 30,
         ),
         const SizedBox(
           height: 30,

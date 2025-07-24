@@ -11,6 +11,7 @@ class IconTextField extends StatefulWidget {
   final String iconPath;
   final Color backgroundColor;
   final TextInputType keyboardType;
+  final double radius;
   final String? Function(String?)? validator;
   final void Function(String)? onChanged;
 
@@ -18,6 +19,8 @@ class IconTextField extends StatefulWidget {
     super.key,
     required this.controller,
     required this.hintText,
+
+    this.radius = AppTheme.textFeildRadius,
     required this.iconPath,
     required this.obsecureText,
     this.backgroundColor = AppColors.background,
@@ -90,25 +93,25 @@ class _IconTextFieldState extends State<IconTextField> {
         ),
         enabledBorder: OutlineInputBorder(
           borderSide: borderSide,
-          borderRadius: BorderRadius.circular(AppTheme.textFeildRadius),
+          borderRadius: BorderRadius.circular(widget.radius),
         ),
         focusedBorder: OutlineInputBorder(
           borderSide: focusedBorderSide,
-          borderRadius: BorderRadius.circular(AppTheme.cardRadius),
+          borderRadius: BorderRadius.circular(widget.radius),
         ),
         errorBorder: OutlineInputBorder(
           borderSide: const BorderSide(
             color: AppColors.error,
             width: AppTheme.textFieldBorderWidth,
           ),
-          borderRadius: BorderRadius.circular(AppTheme.cardRadius),
+          borderRadius: BorderRadius.circular(widget.radius),
         ),
         focusedErrorBorder: OutlineInputBorder(
           borderSide: const BorderSide(
             color: AppColors.error,
             width: AppTheme.textFieldBorderWidth,
           ),
-          borderRadius: BorderRadius.circular(AppTheme.cardRadius),
+          borderRadius: BorderRadius.circular(widget.radius),
         ),
       ),
     );

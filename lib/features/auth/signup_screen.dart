@@ -149,9 +149,9 @@ class _SingupPageState extends State<SignUpScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: AppColors.cardBackground,
+        backgroundColor: AppColors.white,
         appBar: AppBar(
-          backgroundColor: AppColors.cardBackground,
+          backgroundColor: AppColors.white,
           elevation: 0,
           centerTitle: true,
           iconTheme: const IconThemeData(
@@ -189,7 +189,7 @@ class _SingupPageState extends State<SignUpScreen> {
                   fontWeight: FontWeight.bold),
             ),
             const SizedBox(
-              height: 20,
+              height: 24,
             ),
             TextFieldWithHeader(
               controller: firstNameController,
@@ -308,6 +308,7 @@ class _SingupPageState extends State<SignUpScreen> {
             ),
             Button(
                 hintText: "Continue",
+                radius: 30  ,
                 backgroundColor: AppColors.dark,
                 onPressed: _singUpUserWithEmail,
                 isLoading: _isEmailLoading),

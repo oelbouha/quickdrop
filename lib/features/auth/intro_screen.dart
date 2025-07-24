@@ -29,7 +29,7 @@ class _IntroScreenState extends State<IntroScreen> {
         body: Container(
           decoration: const BoxDecoration(
             image: DecorationImage(
-              image: AssetImage('assets/images/background.jpg'),
+              image: AssetImage('assets/images/back.jpg'),
               fit: BoxFit.cover,
             ),
           ),
@@ -39,8 +39,8 @@ class _IntroScreenState extends State<IntroScreen> {
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
                 colors: [
-                  Colors.black.withOpacity(0.4),
                   Colors.black.withOpacity(0.2),
+                  Colors.black.withOpacity(0.1),
                 ],
               ),
             ),
@@ -60,7 +60,7 @@ class _IntroScreenState extends State<IntroScreen> {
                         style: TextStyle(
                           fontSize: 36,
                           fontWeight: FontWeight.bold,
-                          color: Colors.black,
+                          color: Colors.white,
                         ),
                       ),
                       SizedBox(height: 8),
@@ -68,7 +68,7 @@ class _IntroScreenState extends State<IntroScreen> {
                         'Connect. Ship. Deliver.',
                         style: TextStyle(
                           fontSize: 14,
-                          color: Color(0xFF374151), // gray-700
+                          color: Colors.white, 
                         ),
                       ),
                     ],
@@ -91,11 +91,16 @@ class _IntroScreenState extends State<IntroScreen> {
                       // Sign In Button
                       LoginButton(
                         hintText: "Sign in",
+                        backgroundColor: AppColors.white,
+                        textColor: AppColors.blue700,
                         onPressed: () {
                           setState(() {
                             _isLoginLoading = true;
                           });
                           context.pushNamed('login');
+                          setState(() {
+                            _isLoginLoading = false;
+                          });
                         },
                         isLoading: _isLoginLoading,
                         radius: 60,
@@ -110,6 +115,9 @@ class _IntroScreenState extends State<IntroScreen> {
                             _isSignUpLoading = true;
                           });
                           context.pushNamed('signup');
+                          setState(() {
+                            _isSignUpLoading = false;
+                          });
                         },
                         backgroundColor: AppColors.appBarIcons,
                         isLoading: _isSignUpLoading,

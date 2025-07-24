@@ -10,6 +10,7 @@ class PasswordTextfield extends StatefulWidget {
   final void Function(String)? onChanged;
   final Color backgroundColor ;
   bool showPrefix ;
+  final double radius;
 
   PasswordTextfield({
     super.key,
@@ -18,6 +19,7 @@ class PasswordTextfield extends StatefulWidget {
     this.validator,
     this.onChanged,
     this.showPrefix = true,
+    this.radius = AppTheme.textFeildRadius,
   });
 
   @override
@@ -99,25 +101,25 @@ class _PasswordTextfieldState extends State<PasswordTextfield> {
         fillColor: widget.backgroundColor,
         enabledBorder: OutlineInputBorder(
           borderSide: borderSide,
-          borderRadius: BorderRadius.circular(AppTheme.textFeildRadius),
+          borderRadius: BorderRadius.circular(widget.radius),
         ),
         focusedBorder: OutlineInputBorder(
           borderSide: focusedBorderSide,
-          borderRadius: BorderRadius.circular(AppTheme.cardRadius),
+          borderRadius: BorderRadius.circular(widget.radius),
         ),
         errorBorder: OutlineInputBorder(
           borderSide: const BorderSide(
             color: AppColors.error,
             width: AppTheme.textFieldBorderWidth,
           ),
-          borderRadius: BorderRadius.circular(AppTheme.cardRadius),
+          borderRadius: BorderRadius.circular(widget.radius),
         ),
         focusedErrorBorder: OutlineInputBorder(
           borderSide: const BorderSide(
             color: AppColors.error,
             width: AppTheme.textFieldBorderWidth,
           ),
-          borderRadius: BorderRadius.circular(AppTheme.cardRadius),
+          borderRadius: BorderRadius.circular(widget.radius),
         ),
       ),
     );
