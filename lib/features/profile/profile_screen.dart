@@ -1,8 +1,8 @@
 import 'package:quickdrop_app/core/widgets/profile_image.dart';
 import 'package:quickdrop_app/features/profile/settings_card.dart';
 import 'package:quickdrop_app/core/utils/imports.dart';
-
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
+
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -45,12 +45,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
       iconData: Icons.delete_outline,
     );
 
-    if (!confirmed) return;
+    if (!confirmed) {
+      setState(() {
+        _isSignoutLoading = false;
+      });
+      return;
+    }
     try {
-      await FirebaseAuth.instance.signOut();
       if (mounted) {
-        // Provider.of<UserProvider>(context, listen: false).clearUser();
-        context.go("/login");
+        await Provider.of<UserProvider>(context, listen: false).singOutUser();
+        if (mounted) context.go("/login");
       }
     } on FirebaseException catch (e) {
       AppUtils.showDialog(context, 'Error signing out: $e', AppColors.error);

@@ -29,7 +29,7 @@ class _ChatScreenState extends State<ChatScreen>
     user = Provider.of<UserProvider>(context, listen: false).user;
 
     _tabController = TabController(length: 4, vsync: this);
-    WidgetsBinding.instance.addPostFrameCallback((_) {
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
       Future.microtask(() async {
         try {
           final user = FirebaseAuth.instance.currentUser;
@@ -46,6 +46,14 @@ class _ChatScreenState extends State<ChatScreen>
                 .map((r) => r.senderId)
                 .toSet()
                 .toList();
+
+            final shipsIds = deliveryProvider.requests
+                .map((r) => r.shipmentId)
+                .toSet()
+                .toList();
+            final shipmentProvider =
+                Provider.of<ShipmentProvider>(context, listen: false);
+            await shipmentProvider.fetchShipmentsByIds(shipsIds);
             await Provider.of<UserProvider>(context, listen: false)
                 .fetchUsersData(userIds);
           }
@@ -292,10 +300,10 @@ class _ChatScreenState extends State<ChatScreen>
 
     if (requests.isEmpty) {
       return buildEmptyState(
-              Icons.request_page,
-              "No delivery requests sent",
-              "Requests you've sent to others will appear here"
-          );
+          Icons.request_page,
+          "No delivery requests sent",
+          "Requests you've sent to others will appear here"
+      );
     }
     return Consumer<UserProvider>(builder: (context, userProvider, _) {
       return Container(
@@ -315,7 +323,7 @@ class _ChatScreenState extends State<ChatScreen>
                       Provider.of<ShipmentProvider>(context, listen: false)
                           .getShipment(request.shipmentId);
                 } catch (e) {
-                  // print("Error fetching shipment: $e");
+                  print("Error fetching shipment: $e");
                   return const SizedBox.shrink();
                 }
                 if (userData == null) {

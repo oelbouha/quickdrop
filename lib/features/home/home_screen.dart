@@ -44,8 +44,7 @@ class _HomeScreenState extends State<HomeScreen> {
         await shipmentProvider.fetchShipments();
         await tripProvider.fetchTrips();
 
-        final userIds =
-            shipmentProvider.shipments.map((r) => r.userId).toSet().toList();
+        final userIds = shipmentProvider.shipments.map((r) => r.userId).toSet().toList();
         final tripUserIds =
             tripProvider.trips.map((r) => r.userId).toSet().toList();
         await Provider.of<UserProvider>(context, listen: false)
@@ -67,9 +66,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return AnnotatedRegion<SystemUiOverlayStyle>(
-      value: SystemUiOverlayStyle.dark,
-      child: Scaffold(
+    return Scaffold(
         body: Container(
           decoration: const BoxDecoration(
             color: AppColors.background,
@@ -125,7 +122,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
           ),
         ),
-      ),
+      
     );
   }
 

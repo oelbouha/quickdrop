@@ -54,7 +54,7 @@ class BottomNavScreen extends StatelessWidget {
         fontWeight: FontWeight.w600,
       ),
       unselectedLabelStyle: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
-      backgroundColor: AppColors.navBackground,
+      backgroundColor: AppColors.white,
       unselectedItemColor: AppColors.navTextInactive,
       items: <BottomNavigationBarItem>[
         BottomNavigationBarItem(

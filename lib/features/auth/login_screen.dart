@@ -1,19 +1,11 @@
 import 'package:quickdrop_app/core/widgets/iconTextField.dart';
-import 'package:quickdrop_app/features/auth/signup_screen.dart';
-import 'package:quickdrop_app/features/auth/signup.dart';
 import 'package:quickdrop_app/core/widgets/auth_button.dart';
-import 'package:quickdrop_app/core/widgets/gestureDetector.dart';
 import 'package:quickdrop_app/core/widgets/passwordTextField.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:quickdrop_app/core/utils/imports.dart';
-import 'package:quickdrop_app/features/models/statictics_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:intl/intl.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -51,20 +43,6 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
     _loadSavedCredentials();
   }
 
-  Future<void> _createStatsIfNewUser(String userId) async {
-    bool userExist = await doesUserExist(userId);
-    if (userExist == false) {
-      StatisticsModel stats = StatisticsModel(
-          pendingShipments: 0,
-          ongoingShipments: 0,
-          completedShipments: 0,
-          reviewCount: 0,
-          id: userId,
-          userId: userId);
-      Provider.of<StatisticsProvider>(context, listen: false)
-          .addStatictics(userId, stats);
-    }
-  }
 
   Future<void> saveFcmToken(String userId) async {
     final fcm = FirebaseMessaging.instance;
@@ -86,28 +64,10 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
     });
   }
 
-  Future<void> setUserData(userCredential) async {
-    _createStatsIfNewUser(userCredential.user.uid);
-    UserData user = UserData(
-        uid: userCredential.user.uid,
-        email: userCredential.user!.email,
-        displayName: userCredential.user!.displayName,
-        photoUrl: userCredential.user!.photoURL,
-        createdAt: DateFormat('dd/MM/yyyy').format(DateTime.now()).toString(),
-        fcmToken: null);
 
-    final userProvider = Provider.of<UserProvider>(context, listen: false);
 
-    await userProvider.fetchUser(user.uid);
-  }
 
-  Future<bool> doesUserExist(String uid) async {
-    final userDoc =
-        await FirebaseFirestore.instance.collection('users').doc(uid).get();
-    return userDoc.exists;
-  }
-
-  void _signInWithGoogle() async {
+ void _signInWithGoogle() async {
     if (_isGoogleLoading) return;
     setState(
       () {
@@ -116,52 +76,12 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
     );
 
     try {
-      final GoogleSignIn googleSignIn = GoogleSignIn(
-        scopes: ['email'],
-      );
-
-      await googleSignIn.signOut();
-
-      GoogleSignInAccount? googleUser = await googleSignIn.signIn();
-      if (googleUser == null) {
-        AppUtils.showDialog(context, 'Google Sign-In failed', AppColors.error);
-        return;
-      }
-
-      final GoogleSignInAuthentication googleAuth =
-          await googleUser.authentication;
-
-      final AuthCredential credential = GoogleAuthProvider.credential(
-          accessToken: googleAuth.accessToken, idToken: googleAuth.idToken);
-
-      UserCredential userCredential =
-          await FirebaseAuth.instance.signInWithCredential(credential);
-
-      // await FirebaseService().saveUserToFirestore(userCredential.user!);
-      try {
-        await setUserData(userCredential);
-        // await saveFcmToken(userCredential.user!.uid);
-        if (mounted) {
-          // print("switching to home");
-          context.go('/home');
-        }
-      } catch (e) {
-        if (mounted) {
-          AppUtils.showDialog(
-              context, "failed to log in user $e", AppColors.error);
-          return;
-        }
-      }
-    } on FirebaseAuthException catch (e) {
-      if (mounted) {
-        AppUtils.showDialog(
-            context, 'Google Sign-In failed: ${e.message}', AppColors.error);
-      }
+      await Provider.of<UserProvider>(context, listen: false)
+          .signInWithGoogle(context);
+          
     } catch (e) {
-      if (mounted) {
-        AppUtils.showDialog(
-            context, 'An unexpected error occurred: $e', AppColors.error);
-      }
+      if (mounted) AppUtils.showDialog(context, e.toString(), AppColors.error);
+      
     } finally {
       setState(() {
         _isGoogleLoading = false;
@@ -171,54 +91,17 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
 
   void _signInUserWithEmail() async {
     if (_isEmailLoading) return;
-    // Validate the form
     if (_formKey.currentState!.validate()) {
       setState(() => _isEmailLoading = true);
       try {
-        final email = emailController.text.trim();
-        final password = passwordController.text.trim();
-        UserCredential userCredential =
-            await FirebaseAuth.instance.signInWithEmailAndPassword(
-          email: email,
-          password: password,
+        await Provider.of<UserProvider>(context, listen: false).signInUserWithEmail(
+          emailController.text.trim(),
+          passwordController.text.trim(),
         );
-
-        try {
-          await setUserData(userCredential);
-
-          // Save credentials
-          await saveCredentials(email, password);
-
-          // await saveFcmToken(userCredential.user!.uid);
-          print("switching to home");
+          await saveCredentials(emailController.text.trim(), passwordController.text.trim());
           context.go('/home');
-        } catch (e) {
-          // print("error ::  $e");
-          if (mounted) {
-            AppUtils.showDialog(
-                context, "failed to log in user $e", AppColors.error);
-            return;
-          }
-        }
-      } on FirebaseAuthException catch (e) {
-        String errorMessage;
-        switch (e.code) {
-          case 'user-not-found':
-            errorMessage = AppTheme.loginErrorMessage;
-            break;
-          case 'wrong-password':
-            errorMessage = AppTheme.loginErrorMessage;
-            break;
-          case 'invalid-email':
-            errorMessage = 'Invalid email format.';
-            break;
-          case 'invalid-credential':
-            errorMessage = AppTheme.loginErrorMessage;
-            break;
-          default:
-            errorMessage = e.message ?? 'An error occurred during login.';
-        }
-        AppUtils.showDialog(context, errorMessage, AppColors.error);
+      } catch (e) {
+        AppUtils.showDialog(context, e.toString(), AppColors.error);
       } finally {
         setState(() => _isEmailLoading = false);
       }
