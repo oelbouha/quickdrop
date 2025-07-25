@@ -133,6 +133,23 @@ class ShipmentProvider with ChangeNotifier {
     }
   }
 
+
+
+  Future<void> fetchShipmentsByIds(List<String> ids) async {
+    try {
+      final snapshot = await _firestore
+          .collection('shipments')
+          .where(FieldPath.documentId, whereIn: ids)
+          .get();
+      _shipments = snapshot.docs
+          .map((doc) => Shipment.fromMap(doc.data(), doc.id))
+          .toList();
+      notifyListeners();
+    } catch (e) {
+      rethrow;
+    }
+  }
+    
   Future<void> fetchShipment(String documentId) async {
     try {
       await _firestore.collection('shipments').doc(documentId).get();

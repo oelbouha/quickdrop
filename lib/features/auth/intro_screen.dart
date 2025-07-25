@@ -18,16 +18,7 @@ class _IntroScreenState extends State<IntroScreen> {
     return Scaffold(
       body: Container(
         decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [
-              Color(0xFFBFDBFE), // from-blue-200
-              Color(0xFF93C5FD), // via-blue-300  
-              Color(0xFF60A5FA), // to-blue-400
-            ],
-            stops: [0.0, 0.5, 1.0],
-          ),
+          color: Colors.white,
         ),
         child: SafeArea(
           child: Padding(
@@ -77,8 +68,8 @@ class _IntroScreenState extends State<IntroScreen> {
                     // Sign In Button
                     LoginButton(
                       hintText: "Sign in",
-                      backgroundColor: AppColors.white,
-                      textColor: AppColors.blue700,
+                      backgroundColor: AppColors.blue700,
+                      textColor: AppColors.white,
                       onPressed: () {
                         setState(() {
                           _isLoginLoading = true;

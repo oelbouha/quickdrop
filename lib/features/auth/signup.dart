@@ -112,46 +112,13 @@ class _SignupState extends State<Signup> {
     );
 
     try {
-      final GoogleSignIn googleSignIn = GoogleSignIn(
-        scopes: ['email'],
-      );
-
-      await googleSignIn.signOut();
-
-      GoogleSignInAccount? googleUser = await googleSignIn.signIn();
-      if (googleUser == null) {
-        return;
-      }
-
-      final GoogleSignInAuthentication googleAuth =
-          await googleUser.authentication;
-
-      final AuthCredential credential = GoogleAuthProvider.credential(
-          accessToken: googleAuth.accessToken, idToken: googleAuth.idToken);
-
-      UserCredential userCredential =
-          await FirebaseAuth.instance.signInWithCredential(credential);
-
-      // await FirebaseService().saveUserToFirestore(userCredential.user!);
-
-      try {
-        await setUserData(userCredential);
-
-        if (mounted) {
-          context.go('/home');
-        }
-      } catch (e) {
-        if (mounted) {
-          AppUtils.showDialog(context, "failed to log in user $e", AppColors.error);
-          return;
-        }
-      }
-    } on FirebaseAuthException catch (e) {
-      if (mounted)
-        AppUtils.showDialog(context, 'Google Sign-In failed: ${e.message}', AppColors.error);
+      await Provider.of<UserProvider>(context, listen: false)
+          .signInWithGoogle(context);
+        
     } catch (e) {
-      if (mounted)
-        AppUtils.showDialog(context, 'An unexpected error occurred: $e', AppColors.error);
+      if (mounted) {
+        AppUtils.showDialog(context, e.toString(), AppColors.error);
+      }
     } finally {
       setState(() {
         _isGoogleLoading = false;
