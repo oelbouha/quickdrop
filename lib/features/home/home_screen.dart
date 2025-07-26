@@ -595,6 +595,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         shipment: trip,
                         userData: userData,
                         onPressed: () {
+                          print("Navigating to trip details for ${trip.id}");
                           context.push(
                               '/trip-details?tripId=${trip.id}&userId=${trip.userId}&viewOnly=false');
                         },
