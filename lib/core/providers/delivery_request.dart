@@ -2,6 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:quickdrop_app/features/models/delivery_request_model.dart';
 import 'package:flutter/material.dart';
 import 'package:quickdrop_app/core/utils/delivery_status.dart';
+import 'package:quickdrop_app/features/models/shipment_model.dart';
+import 'package:quickdrop_app/features/models/trip_model.dart';
 
 class DeliveryRequestProvider with ChangeNotifier {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -161,15 +163,46 @@ class DeliveryRequestProvider with ChangeNotifier {
     }
   }
 
-  Future<void> addRequest(DeliveryRequest request) async {
-    if (request.senderId == request.receiverId) {
-      throw Exception("Sender and receiver cannot be the same");
-    }
+
+
+  Future<void> sendRequest(Trip trip, Shipment shipment) async {
     try {
-      final docRef =
-          await _firestore.collection('requests').add(request.toMap());
+      if (trip.userId == shipment.userId) {
+        throw Exception("Trip owner cannot send request for their own shipment");
+      }
+
+      final request = DeliveryRequest(
+        senderId: trip.userId,
+        receiverId: shipment.userId,
+        date: DateTime.now().toIso8601String(),
+        status: DeliveryStatus.active,
+        price: shipment.price,
+        shipmentId: shipment.id!,
+        tripId: trip.id!,
+        id: trip.id! + shipment.id!,
+      );
+
+      // Check if a request already exists for this trip and shipment
+      final doc =  await FirebaseFirestore.instance
+          .collection('requests')
+          .doc(request.id)
+          .get();
+      if (doc.exists) {
+        throw ("You have already sent a request for this shipment. please wait for the owner to accept or reject it.");
+      }
+      await addRequest(request);
+    } catch (e) {
+      rethrow;
+    }
+  }
+  Future<void> addRequest(DeliveryRequest request) async {
+    try {
+          await _firestore.collection('requests').doc(request.id).set(
+            request.toMap(),
+            SetOptions(merge: true) // Use merge to avoid overwriting existing data
+        );
       // Assign Firestore-generated ID
-      final newRequest = request.copyWith(id: docRef.id);
+      final newRequest = request.copyWith(id: request.id);
 
       _requests.add(newRequest);
       notifyListeners();

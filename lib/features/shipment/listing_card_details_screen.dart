@@ -39,7 +39,7 @@ class _ListingShipmentLoaderState extends State<ListingShipmentLoader> {
       future: fetchData(),
       builder: (context, snapshot) {
         if (snapshot.connectionState != ConnectionState.done) {
-          return  Scaffold(
+          return Scaffold(
             backgroundColor: AppColors.background,
             body: loadingAnimation(),
           );
@@ -90,11 +90,13 @@ class _ListingTripLoaderState extends State<ListingTripLoader> {
 
   @override
   Widget build(BuildContext context) {
+    print(
+        "fetching trip data for ${widget.shipmentId} by user ${widget.userId}");
     return FutureBuilder<(UserData, TransportItem)>(
       future: fetchData(),
       builder: (context, snapshot) {
         if (snapshot.connectionState != ConnectionState.done) {
-          return  Scaffold(
+          return Scaffold(
             backgroundColor: AppColors.background,
             body: loadingAnimation(),
           );
@@ -105,7 +107,7 @@ class _ListingTripLoaderState extends State<ListingTripLoader> {
         }
 
         final (userData, shipmentData) = snapshot.data!;
-
+        
         return ListingCardDetails(
           user: userData,
           shipment: shipmentData,
@@ -135,40 +137,38 @@ class _ListingCardDetailsState extends State<ListingCardDetails> {
   final priceController = TextEditingController();
   final noteController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
-  bool _isTrip = false;
+
   bool _isLoading = false;
   Shipment? _selectedShipment;
   Trip? _selectedTrip;
   bool _isMenuOpen = false;
 
   @override
-  void initState()  {
+  void initState() {
     super.initState();
 
-      if (widget.shipment is Shipment) {
-        _selectedShipment = widget.shipment as Shipment?;
-         _precacheImages();
-      }
-      // _isTrip = widget.shipment is Trip;
-      if (widget.shipment is Trip) {
-        _selectedTrip = widget.shipment as Trip?;
-      }
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
-    });
+    if (widget.shipment is Shipment) {
+      _selectedShipment = widget.shipment as Shipment?;
+      _precacheImages();
+    }
+    // _isTrip = widget.shipment is Trip;
+    if (widget.shipment is Trip) {
+      _selectedTrip = widget.shipment as Trip?;
+    }
+    WidgetsBinding.instance.addPostFrameCallback((_) async {});
     // print("is trip ${_isTrip}");
   }
 
   Future<void> _precacheImages() async {
-    
-      try {
-        // if (_selectedShipment != null ) {
-          await DefaultCacheManager().downloadFile(
-            _selectedShipment!.imageUrl!,
-          );
-        // }
-      } catch (e) {
-        print('Failed to precache image: $e');
+    try {
+      if (_selectedShipment != null) {
+        await DefaultCacheManager().downloadFile(
+          _selectedShipment!.imageUrl!,
+        );
       }
+    } catch (e) {
+      print('Failed to precache image: $e');
+    }
   }
 
   @override
@@ -177,7 +177,6 @@ class _ListingCardDetailsState extends State<ListingCardDetails> {
     noteController.dispose();
     super.dispose();
   }
-
 
   Widget _buildSliverApp() {
     return SliverAppBar(
@@ -368,7 +367,8 @@ class _ListingCardDetailsState extends State<ListingCardDetails> {
   }
 
   Widget _buildPriceAndAction() {
-    if (widget.viewOnly) {
+    if (widget.viewOnly || _selectedShipment == null ||
+        _selectedShipment?.userId == FirebaseAuth.instance.currentUser?.uid) {
       return Container();
     }
     return Container(
@@ -458,21 +458,22 @@ class _ListingCardDetailsState extends State<ListingCardDetails> {
           Expanded(
             child: ClipRRect(
                 child: CachedNetworkImage(
-                  imageUrl:  _selectedShipment!.imageUrl ?? AppTheme.defaultProfileImage,
-                  fit: BoxFit.cover,
-                  placeholder: (context, url) => Container(
-                      decoration: BoxDecoration(
-                        color: AppColors.blueStart.withValues(alpha: 0.1),
-                        // borderRadius: BorderRadius.circular(50),
-                      ),
-                      child: const Center(
-                          child: CircularProgressIndicator(
-                              color: AppColors.blue700, strokeWidth: 2))),
-                  errorWidget: (context, url, error) => Container(
-                      decoration: BoxDecoration(
-                        color: AppColors.blueStart.withValues(alpha: 0.1),
-                        // borderRadius: BorderRadius.circular(50),
-                      ),
+              imageUrl:
+                  _selectedShipment!.imageUrl ?? AppTheme.defaultProfileImage,
+              fit: BoxFit.cover,
+              placeholder: (context, url) => Container(
+                  decoration: BoxDecoration(
+                    color: AppColors.blueStart.withValues(alpha: 0.1),
+                    // borderRadius: BorderRadius.circular(50),
+                  ),
+                  child: const Center(
+                      child: CircularProgressIndicator(
+                          color: AppColors.blue700, strokeWidth: 2))),
+              errorWidget: (context, url, error) => Container(
+                  decoration: BoxDecoration(
+                    color: AppColors.blueStart.withValues(alpha: 0.1),
+                    // borderRadius: BorderRadius.circular(50),
+                  ),
                   child: Image.asset(
                     "assets/images/box.jpg",
                     fit: BoxFit.cover,
@@ -657,17 +658,17 @@ class _ListingCardDetailsState extends State<ListingCardDetails> {
         return;
       }
 
-      final DeliveryRequest request = DeliveryRequest(
-          tripId: trip.id!,
-          senderId: user.uid,
-          receiverId: widget.shipment.userId,
-          status: DeliveryStatus.active,
-          date: DateTime.now().toIso8601String(),
-          shipmentId: widget.shipment.id!,
-          price: priceController.text);
+      // final DeliveryRequest request = DeliveryRequest(
+      //     tripId: trip.id!,
+      //     senderId: user.uid,
+      //     receiverId: widget.shipment.userId,
+      //     status: DeliveryStatus.active,
+      //     date: DateTime.now().toIso8601String(),
+      //     shipmentId: widget.shipment.id!,
+      //     price: priceController.text);
 
       await Provider.of<DeliveryRequestProvider>(context, listen: false)
-          .addRequest(request);
+          .sendRequest(trip, widget.shipment as Shipment);
 
       // Stop loading
       updateLoadingState(false);
@@ -683,20 +684,23 @@ class _ListingCardDetailsState extends State<ListingCardDetails> {
         // Show success message
         AppUtils.showDialog(
             context, 'Request sent successfully', AppColors.succes);
+        Navigator.pop(context);
 
         // Close the bottom sheet after a short delay
-        Future.delayed(const Duration(milliseconds: 1000), () {
-          if (mounted) {
-            Navigator.pop(context);
-          }
-        });
+        // Future.delayed(const Duration(milliseconds: 1000), () {
+        //   if (mounted) {
+        //   }
+        // });
       }
     } catch (e) {
       updateLoadingState(false);
       if (mounted) {
-        AppUtils.showDialog(
-            context, 'Failed to send request: $e', AppColors.error);
+        AppUtils.showDialog(context, e.toString(), AppColors.error);
       }
+    } finally {
+      // Ensure loading state is reset even if an error occurs
+      updateLoadingState(false);
+      Navigator.pop(context);
     }
   }
 

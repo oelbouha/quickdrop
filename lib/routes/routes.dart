@@ -205,7 +205,7 @@ class AppRouter {
             const ProfileScreen(),
           ),
         ),
-         GoRoute(
+        GoRoute(
           name: "Register-driver",
           path: "/Register-driver",
           pageBuilder: (context, state) => buildCustomTransitionPage(
@@ -213,7 +213,7 @@ class AppRouter {
             const BecomeDriverScreen(),
           ),
         ),
-         GoRoute(
+        GoRoute(
           name: "profile-security",
           path: "/profile-security",
           pageBuilder: (context, state) => buildCustomTransitionPage(
@@ -227,10 +227,10 @@ class AppRouter {
             pageBuilder: (context, state) {
               final userId = state.uri.queryParameters['userId'];
               return buildCustomTransitionPage(
-                    context,
-                    ProfileStatisticsLoader(
-                      userId: userId!,
-                    ));
+                  context,
+                  ProfileStatisticsLoader(
+                    userId: userId!,
+                  ));
             }),
         GoRoute(
             name: "profile-info",
@@ -320,16 +320,18 @@ class AppRouter {
               final shipmentId = state.uri.queryParameters['shipmentId'];
               final requestId = state.uri.queryParameters['requestId'];
               try {
-
                 return buildCustomTransitionPage(
                     context,
                     NegotiationScreen(
-                      userId: userId!,
-                      requestId: requestId!,
-                      shipmentId: shipmentId!
-                    ));
+                        userId: userId!,
+                        requestId: requestId!,
+                        shipmentId: shipmentId!));
               } catch (e) {
-                return buildCustomTransitionPage(context,  ErrorPage(errorMessage: e.toString(),));
+                return buildCustomTransitionPage(
+                    context,
+                    ErrorPage(
+                      errorMessage: e.toString(),
+                    ));
               }
             }),
         GoRoute(
@@ -338,8 +340,7 @@ class AppRouter {
             // final filters = SearchFilters.fromQueryParameters(
             //   state.uri.queryParameters,
             // );
-            return buildCustomTransitionPage(
-                context, SearchFilterScreen());
+            return buildCustomTransitionPage(context, SearchFilterScreen());
           },
         ),
         GoRoute(
@@ -349,13 +350,13 @@ class AppRouter {
               final shipmentId = state.uri.queryParameters['shipmentId'];
               final userId = state.uri.queryParameters['userId'];
               final viewOnly = state.uri.queryParameters['viewOnly'] == "true";
-                return buildCustomTransitionPage(
-                    context,
-                    ListingShipmentLoader(
-                      viewOnly: viewOnly,
-                      userId: userId!,
-                      shipmentId: shipmentId!,
-                    ));
+              return buildCustomTransitionPage(
+                  context,
+                  ListingShipmentLoader(
+                    viewOnly: viewOnly,
+                    userId: userId!,
+                    shipmentId: shipmentId!,
+                  ));
             }),
         GoRoute(
             name: "trip-details",
@@ -364,15 +365,21 @@ class AppRouter {
               final tripId = state.uri.queryParameters['tripId'];
               final userId = state.uri.queryParameters['userId'];
               final viewOnly = state.uri.queryParameters['viewOnly'] == "true";
-
-                 return buildCustomTransitionPage(
+              if (tripId == null || userId == null) {
+                return buildCustomTransitionPage(
                     context,
-                    ListingTripLoader(
-                      viewOnly: viewOnly,
-                      userId: userId!,
-                      shipmentId: tripId!,
+                    ErrorPage(
+                      errorMessage: "Trip ID or User ID is missing.",
                     ));
-             
+              }
+              print("Fetching trip details for tripId: $tripId, userId: $userId");
+              return buildCustomTransitionPage(
+                  context,
+                  ListingTripLoader(
+                    viewOnly: viewOnly,
+                    userId: userId!,
+                    shipmentId: tripId!,
+                  ));
             }),
       ],
     );
