@@ -20,6 +20,7 @@ export 'package:quickdrop_app/core/widgets/typeSelectorWidget.dart';
 export 'package:quickdrop_app/core/widgets/profile_statistics_skeleton.dart';
 export 'package:quickdrop_app/core/widgets/empty_message.dart';
 export 'package:quickdrop_app/core/widgets/loading.dart';
+export 'package:quickdrop_app/core/widgets/buildPriceContainer.dart';
 
 export 'package:quickdrop_app/core/widgets/register_text_field.dart';
 

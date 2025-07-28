@@ -420,62 +420,38 @@ class OngoingItemCardState extends State<OngoingItemCard> {
   }
 
 
+
   Widget _buildBody() {
     return Padding(
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        children: [
-          // Destination
-          Row(
-            children: [
-              Expanded(
-                child: Destination(
-                  from: widget.item.from,
-                  to: widget.item.to,
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 16),
-          
-          // Details Grid
-          Container(
-            padding: const EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              color: AppColors.cardBackground.withOpacity(0.5),
-              borderRadius: BorderRadius.circular(8),
-              border: Border.all(
-                color: AppColors.cardBackground.withOpacity(0.3),
-                width: 0.5,
-              ),
-            ),
-            child: Column(
-              children: [
-                _buildDetailRow(
-                  icon: "assets/icon/calendar.svg",
-                  label: "Departure",
-                  value: widget.item.date,
-                  iconColor: AppColors.blue600,
-                ),
-                const SizedBox(height: 8),
-                _buildDetailRow(
-                  icon: "assets/icon/weight.svg",
-                  label: "Weight",
-                  value: "${widget.item.weight} kg",
-                  iconColor: AppColors.blue600,
-                ),
-              ],
+        padding: const EdgeInsets.all(16),
+      child:  Column(children: [ 
+      Row(
+      children: [
+        Container(
+          padding: const EdgeInsets.all(12),
+          decoration: BoxDecoration(
+            color: AppColors.primary.withValues(alpha: 0.05),
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(
+              color: AppColors.primary.withValues(alpha: 0.1),
             ),
           ),
-          
-          const SizedBox(height: 16),
-          
-          // Courier Information
-          _buildCourierCard(),
-        ],
+          child: Destination(
+            from: widget.item.from,
+            to: widget.item.to,
+          ),
+        ),
+        const SizedBox(width: 16),
+        Expanded(child: buildPriceCard(price: widget.item.price, label: 'Delivery Price')),
+      ],
+    ),
+     const SizedBox(height: 16),
+      _buildCourierCard(),
+     ],
       ),
     );
   }
+
 
   Widget _buildDetailRow({
     required String icon,
@@ -625,67 +601,33 @@ class OngoingItemCardState extends State<OngoingItemCard> {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: AppColors.cardFooterBackground,
-        borderRadius: const BorderRadius.only(
-          bottomRight: Radius.circular(AppTheme.cardRadius),
-          bottomLeft: Radius.circular(AppTheme.cardRadius),
-        ),
         border: Border(
           top: BorderSide(
-            color: AppColors.cardBackground.withOpacity(0.1),
+            color: Colors.grey.withOpacity(0.1),
             width: 0.5,
           ),
         ),
       ),
       child: Row(
         children: [
-          // Price
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-            // decoration: BoxDecoration(
-            //   color: AppColors.blue.withOpacity(0.1),
-            //   borderRadius: BorderRadius.circular(20),
-            //   border: Border.all(
-            //     color: AppColors.blue.withOpacity(0.2),
-            //     width: 1,
-            //   ),
-            // ),
-            child: Text(
-              '${widget.item.price} DH',
-              style: const TextStyle(
-                color: AppColors.blue,
-                fontSize: 13,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
-          const Spacer(),
-          
-          // Action buttons
-          Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              _buildActionButton(
-                icon: "assets/icon/check-circle.svg",
-                label: "Delivered",
-                color: AppColors.succes,
-                backgroundColor: AppColors.succes.withOpacity(0.1),
-                onTap: _showDeliveryConfirmation,
-                isDestructive: false,
-              ),
-              const SizedBox(width: 8),
-              _buildActionButton(
-                icon: null,
-                label: "Cancel",
-                color: AppColors.error,
-                backgroundColor: AppColors.error.withOpacity(0.1),
-                onTap: _showCancelConfirmation,
-                isDestructive: true,
-                iconWidget: const Icon(Icons.cancel_outlined, size: 14),
-              ),
-            ],
-          ),
+          Expanded(child: _buildActionButton(
+            icon: "assets/icon/check-circle.svg",
+            label: "Delivered",
+            color: AppColors.succes,
+            backgroundColor: AppColors.succes.withOpacity(0.1),
+            onTap: _showDeliveryConfirmation,
+          )),
+          const SizedBox(width: 8),
+          Expanded(child: _buildActionButton(
+            icon: null,
+            label: "Cancel",
+            color: AppColors.error,
+            backgroundColor: AppColors.error.withOpacity(0.1),
+            onTap: _showCancelConfirmation,
+            iconWidget: const Icon(Icons.cancel_outlined, size: 14),
+          )),
         ],
+         
       ),
     );
   }
@@ -697,7 +639,6 @@ class OngoingItemCardState extends State<OngoingItemCard> {
     required Color color,
     required Color backgroundColor,
     required VoidCallback onTap,
-    required bool isDestructive,
   }) {
     return Material(
       color: Colors.transparent,
@@ -714,8 +655,11 @@ class OngoingItemCardState extends State<OngoingItemCard> {
               width: 0.5,
             ),
           ),
-          child: Row(
+          child: Center(child:Row(
             mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            // center the row
+
             children: [
               if (icon != null)
                 CustomIcon(
@@ -738,9 +682,11 @@ class OngoingItemCardState extends State<OngoingItemCard> {
                 ),
               ),
             ],
-          ),
+          )),
         ),
       ),
     );
   }
+
+
 }

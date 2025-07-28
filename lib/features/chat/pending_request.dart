@@ -125,7 +125,7 @@ class DeliveryRequestState extends State<PendingRequest> {
   }
 
   Widget _buildBody() {
-    return Column(
+    return Row(
       children: [
         Container(
           padding: const EdgeInsets.all(12),
@@ -141,85 +141,23 @@ class DeliveryRequestState extends State<PendingRequest> {
             to: widget.shipment.to,
           ),
         ),
-        const SizedBox(height: 16),
-        _buildPriceCard(),
-        const SizedBox(height: 16),
+        const SizedBox(width: 16),
+        Expanded(child: buildPriceCard(price: widget.request.price, label: 'Offered Price')),
       ],
     );
   }
 
-  Widget _buildPriceCard() {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [
-            AppColors.primary.withValues(alpha: 0.08),
-            AppColors.primary.withValues(alpha: 0.03),
-          ],
-        ),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-          color: AppColors.primary.withValues(alpha: 0.2),
-        ),
-      ),
-      child: Row(
-        children: [
-          Container(
-            padding: const EdgeInsets.all(8),
-            decoration: BoxDecoration(
-              color: AppColors.primary.withValues(alpha: 0.1),
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: Icon(
-              Icons.local_offer,
-              color: AppColors.primary,
-              size: 20,
-            ),
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Offered Price',
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: AppColors.shipmentText,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-                const SizedBox(height: 2),
-                Text(
-                  '${widget.request.price} dh',
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    color: AppColors.primary,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
 
   Widget _buildContent() {
     return Padding(
-      padding: const EdgeInsets.all(20),
+      padding: const EdgeInsets.all(16),
       child: Column(
         children: [
           _buildUserSection(),
-          const SizedBox(height: 20),
+          const SizedBox(height: 16),
           // _buildMainContent(),
           _buildBody(),
-          const SizedBox(height: 20),
+          const SizedBox(height: 16),
           _buildActionButton(),
         ],
       ),
