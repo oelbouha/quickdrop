@@ -129,66 +129,33 @@ class ActiveListing extends State<ActiveItemCard> with TickerProviderStateMixin 
     );
   }
 
+
+
   Widget _buildBody() {
     return Padding(
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        children: [
-          // Destination
-          Row(
-            children: [
-              Expanded(
-                child: Destination(
-                  from: widget.item.from,
-                  to: widget.item.to,
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 16),
-          
-          // Details Grid
-          Container(
-            padding: const EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              color: AppColors.cardBackground.withOpacity(0.5),
-              borderRadius: BorderRadius.circular(8),
-              border: Border.all(
-                color: AppColors.cardBackground.withOpacity(0.3),
-                width: 0.5,
-              ),
-            ),
-            child: Column(
-              children: [
-                _buildDetailRow(
-                  icon: "assets/icon/calendar.svg",
-                  label: "Departure",
-                  value: widget.item.date,
-                  iconColor: AppColors.blue600,
-                ),
-                const SizedBox(height: 8),
-                _buildDetailRow(
-                  icon: "assets/icon/weight.svg",
-                  label: "Weight",
-                  value: "${widget.item.weight} kg",
-                  iconColor: AppColors.blue600,
-                ),
-                if (widget.item is Shipment) ...[
-                  const SizedBox(height: 8),
-                  _buildDetailRow(
-                    icon: "assets/icon/package.svg",
-                    label: "Type",
-                    value: (widget.item as Shipment).type,
-                    iconColor: AppColors.shipmentText,
-                  ),
-                ],
-              ],
+        padding: const EdgeInsets.all(16),
+      child:  Row(
+      children: [
+        Container(
+          padding: const EdgeInsets.all(12),
+          decoration: BoxDecoration(
+            color: AppColors.primary.withValues(alpha: 0.05),
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(
+              color: AppColors.primary.withValues(alpha: 0.1),
             ),
           ),
-        ],
-      ),
-    );
+          child: Destination(
+            from: widget.item.from,
+            to: widget.item.to,
+          ),
+        ),
+        const SizedBox(width: 16),
+        Expanded(child: buildPriceCard(price: widget.item.price, label: 'Price')),
+      ],
+    ));
   }
+
 
   Widget _buildDetailRow({
     required String icon,
@@ -236,75 +203,47 @@ class ActiveListing extends State<ActiveItemCard> with TickerProviderStateMixin 
   }
 
   Widget _buildFooter() {
+    return Column(
+      children: [
+        _buildActionButtons(),
+        const SizedBox(height: 8),
+      ],
+    );
+  }
+
+  Widget _buildActionButtons() {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: AppColors.cardFooterBackground,
-        borderRadius: const BorderRadius.only(
-          bottomRight: Radius.circular(AppTheme.cardRadius),
-          bottomLeft: Radius.circular(AppTheme.cardRadius),
-        ),
         border: Border(
           top: BorderSide(
-            color: AppColors.cardBackground.withOpacity(0.1),
+            color: Colors.grey.withOpacity(0.1),
             width: 0.5,
           ),
         ),
       ),
       child: Row(
         children: [
-          // Price
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-            decoration: BoxDecoration(
-              // color: AppColors.blue.withOpacity(0.1),
-              // borderRadius: BorderRadius.circular(20),
-              // border: Border.all(
-              //   color: AppColors.blue.withOpacity(0.2),
-              //   width: 1,
-              // ),
-            ),
-            child: Text(
-              '${widget.item.price} DH',
-              style: const TextStyle(
-                color: AppColors.blue,
-                fontSize: 13,
-                fontWeight: FontWeight.bold,
-              ),
+          Expanded(
+            child: _buildActionButton(
+              label: "Edit",
+              color: AppColors.blue600,
+              backgroundColor: AppColors.blue600.withOpacity(0.1),
+              onTap: widget.onEditPressed,
+
+                iconWidget: const Icon(Icons.edit, size: 14),
             ),
           ),
-          const Spacer(),
-          
-          // Action buttons
-          Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              // _buildActionButton(
-              //   icon: "assets/icon/eye.svg",
-              //   label: "View",
-              //   color: AppColors.blue600,
-              //   backgroundColor: AppColors.blue600.withOpacity(0.1),
-              //   onTap: widget.onViewPressed,
-              // ),
-              // const SizedBox(width: 8),
-              _buildActionButton(
-                icon: "assets/icon/edit.svg",
-                label: "Edit",
-                color: AppColors.blue600,
-                backgroundColor: AppColors.blue600.withOpacity(0.1),
-                onTap: widget.onEditPressed,
-              ),
-              const SizedBox(width: 8),
-              _buildActionButton(
-                icon: "assets/icon/trash-bin.svg",
-                label: "Delete",
-                color: Colors.red.shade600,
-                backgroundColor: Colors.red.shade50,
-                onTap: () => {
-                   widget.onPressed()
-                },
-              ),
-            ],
+          const SizedBox(width: 12),
+          Expanded(
+            child: _buildActionButton(
+              label: "Delete",
+              color: Colors.red.shade600,
+              backgroundColor: Colors.red.shade50,
+              onTap: () => _showDeleteConfirmation(),
+
+                iconWidget: const Icon(Icons.delete_forever, size: 14),
+            ),
           ),
         ],
       ),
@@ -312,7 +251,8 @@ class ActiveListing extends State<ActiveItemCard> with TickerProviderStateMixin 
   }
 
   Widget _buildActionButton({
-    required String icon,
+    String? icon,
+    Widget? iconWidget,
     required String label,
     required Color color,
     required Color backgroundColor,
@@ -329,18 +269,27 @@ class ActiveListing extends State<ActiveItemCard> with TickerProviderStateMixin 
             color: backgroundColor,
             borderRadius: BorderRadius.circular(8),
             border: Border.all(
-              color: color.withOpacity(0.2),
+              color: color.withOpacity(0.3),
               width: 0.5,
             ),
           ),
-          child: Row(
+          child: Center(child:Row(
             mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            // center the row
+
             children: [
-              CustomIcon(
-                iconPath: icon,
-                size: 14,
-                color: color,
-              ),
+              if (icon != null)
+                CustomIcon(
+                  iconPath: icon,
+                  size: 14,
+                  color: color,
+                )
+              else if (iconWidget != null)
+                IconTheme(
+                  data: IconThemeData(color: color),
+                  child: iconWidget,
+                ),
               const SizedBox(width: 4),
               Text(
                 label,
@@ -351,11 +300,13 @@ class ActiveListing extends State<ActiveItemCard> with TickerProviderStateMixin 
                 ),
               ),
             ],
-          ),
+          )),
         ),
       ),
     );
   }
+
+
 
   void _showDeleteConfirmation() {
     showDialog(

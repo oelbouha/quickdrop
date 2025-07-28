@@ -17,7 +17,7 @@ class AppColors {
   
   static const Color succes = Color(0xFF22c55e);
 
-
+  static const Color gray100 = Color(0xFFF0F2F5);
   static const Color gray = Color(0xFFf9fafb);
   static const Color lightGray = Color(0xFF4b5563);
   static const Color courierInfoBackground = gray;
@@ -48,7 +48,7 @@ class AppColors {
   static const Color primary = blue700;
 
    // AppBar
-  static const Color appBarBackground = background;
+  static const Color appBarBackground = white;
   static const Color appBarText = headingText;
   static const Color appBarIcons = headingText;
 

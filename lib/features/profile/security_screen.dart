@@ -42,13 +42,15 @@ class SecurityScreenState extends State<SecurityScreen> {
       await Provider.of<TripProvider>(context, listen: false)
           .deleteTripsByUserId(userId);
       await Provider.of<StatisticsProvider>(context, listen: false).deleteStatistics(userId);
-      // await Provider.of<UserProvider>(context, listen: false)
-      //     .deleteUser(userId);
+      await Provider.of<UserProvider>(context, listen: false)
+          .deleteUser(userId);
+      await FirebaseAuth.instance.currentUser!.delete();
       if (mounted) {
         await showSuccessAnimation(context,
           title: "Account deleted Successfully!",
           message: "Your sccount and data has been deleted Successfully."
         );
+        context.go('/login');
       }
     });
   }

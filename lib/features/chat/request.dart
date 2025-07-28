@@ -155,12 +155,7 @@ class RequestState extends State<Request> with SingleTickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    return AnimatedBuilder(
-      animation: _scaleAnimation,
-      builder: (context, child) {
-        return Transform.scale(
-          scale: _scaleAnimation.value,
-          child: Container(
+    return Container(
             // margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             decoration: BoxDecoration(
               gradient: LinearGradient(
@@ -199,9 +194,6 @@ class RequestState extends State<Request> with SingleTickerProviderStateMixin {
                 _buildFooter(),
               ],
             ),
-          ),
-        );
-      },
     );
   }
 
@@ -258,9 +250,9 @@ Widget _buildHeader() {
         child: UserProfileWithRating(
           user: widget.user,
           header: widget.user.displayName ?? 'Guest',
-          avatarSize: 34,
-          headerFontSize: 10,
-          subHeaderFontSize: 8,
+          avatarSize: 40,
+          headerFontSize: 16,
+          subHeaderFontSize: 12,
           onPressed: () =>
               {context.push('/profile/statistics?userId=${widget.user.uid}')},
         ));
@@ -270,92 +262,27 @@ Widget _buildHeader() {
 
   Widget _buildBody() {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: Column(
-        children: [
-          Container(
-            padding: const EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              color: AppColors.primary.withValues(alpha: 0.05),
-              borderRadius: BorderRadius.circular(12),
-              border: Border.all(
-                color: AppColors.primary.withValues(alpha: 0.1),
-              ),
-            ),
-            child: Destination(
-              from: widget.shipment.from,
-              to: widget.shipment.to,
-            ),
-          ),
-          const SizedBox(height: 16),
-          _buildPriceCard(),
-          const SizedBox(height: 16),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildPriceCard() {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [
-            AppColors.primary.withValues(alpha: 0.08),
-            AppColors.primary.withValues(alpha: 0.03),
-          ],
-        ),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-          color: AppColors.primary.withValues(alpha: 0.2),
-        ),
-      ),
-      child: Row(
-        children: [
-          Container(
-            padding: const EdgeInsets.all(8),
-            decoration: BoxDecoration(
+        padding: const EdgeInsets.all(16),
+      child:  Row(
+      children: [
+        Container(
+          padding: const EdgeInsets.all(12),
+          decoration: BoxDecoration(
+            color: AppColors.primary.withValues(alpha: 0.05),
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(
               color: AppColors.primary.withValues(alpha: 0.1),
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: Icon(
-              Icons.local_offer,
-              color: AppColors.primary,
-              size: 20,
             ),
           ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Offered Price',
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: AppColors.shipmentText,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-                const SizedBox(height: 2),
-                Text(
-                  '${widget.request.price} dh',
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    color: AppColors.primary,
-                  ),
-                ),
-              ],
-            ),
+          child: Destination(
+            from: widget.shipment.from,
+            to: widget.shipment.to,
           ),
-          
-        ],
-      ),
-    );
+        ),
+        const SizedBox(width: 16),
+        Expanded(child: buildPriceCard(price: widget.request.price, label: 'Offered Price')),
+      ],
+    ));
   }
 
   Widget _buildFooter() {
@@ -364,9 +291,9 @@ Widget _buildHeader() {
       child: 
           Row(
             children: [
-              Expanded(child: 
-               SizedBox(
-                width: double.infinity,
+              Expanded(
+                child: Container(
+                width: 200,
                 child: OutlinedButton.icon(
                   onPressed: () {
                     context.push('/negotiation-screen?userId=${widget.user.uid}&shipmentId=${widget.shipment.id}&requestId=${widget.request.id}');
@@ -379,14 +306,13 @@ Widget _buildHeader() {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8),
                     ),
-                    padding: const EdgeInsets.symmetric(vertical: 10),
+                    padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 4),
                   ),
                 ),
               ),
               ),
               const SizedBox(width: 8),
-              Expanded(
-                 child: ElevatedButton(
+              ElevatedButton(
                   onPressed: (_isProcessing && _processingAction == 'accept') ? null : _acceptRequest,
                  style: ElevatedButton.styleFrom(
                   backgroundColor: AppColors.succes,
@@ -407,11 +333,10 @@ Widget _buildHeader() {
                           ),
                         )
                       : const Icon(Icons.done, size: 18),
-                ),
+                
               ),
               const SizedBox(width: 8),
-              Expanded(
-                child: ElevatedButton(
+               ElevatedButton(
                   onPressed: (_isProcessing && _processingAction == 'refuse') ? null : _refuseRequest,
                  style: ElevatedButton.styleFrom(
                   backgroundColor: AppColors.error,
@@ -432,7 +357,7 @@ Widget _buildHeader() {
                           ),
                         )
                       : const Icon(Icons.close, size: 18),
-                ),
+                
               ),
             ],
           ),
