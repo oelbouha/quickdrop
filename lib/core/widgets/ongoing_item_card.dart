@@ -610,19 +610,22 @@ class OngoingItemCardState extends State<OngoingItemCard> {
       ),
       child: Row(
         children: [
-          Expanded(child: _buildActionButton(
-            icon: "assets/icon/check-circle.svg",
+          Expanded(child: buildActionButton(
             label: "Delivered",
             color: AppColors.succes,
             backgroundColor: AppColors.succes.withOpacity(0.1),
+
+              borderColor: AppColors.succes,
             onTap: _showDeliveryConfirmation,
+
+            iconWidget: const Icon(Icons.done_all_rounded, size: 14),
           )),
           const SizedBox(width: 8),
-          Expanded(child: _buildActionButton(
-            icon: null,
+          Expanded(child: buildActionButton(
             label: "Cancel",
-            color: AppColors.error,
-            backgroundColor: AppColors.error.withOpacity(0.1),
+            color: const Color(0xFFb91c1c), // red-700
+              backgroundColor: const Color(0xFFfef2f2), // red-50
+              borderColor: const Color(0xFFfecaca), // red-200
             onTap: _showCancelConfirmation,
             iconWidget: const Icon(Icons.cancel_outlined, size: 14),
           )),

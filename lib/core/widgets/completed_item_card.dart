@@ -273,19 +273,21 @@ class CompletedItemCardState extends State<CompletedItemCard> {
       child:Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Expanded(child:_buildActionButton(
-                icon: "assets/icon/star.svg",
+              Expanded(child:buildActionButton(
+                borderColor: AppColors.rateBackground,
                 label: "Rate trip",
                 color: AppColors.rateBackground,
                 backgroundColor: AppColors.rateBackground.withOpacity(0.1),
                 onTap: _submitReview,
+
+                iconWidget: const Icon(Icons.rate_review, size: 14),
               )),
               const SizedBox(width: 8),
-              Expanded(child:_buildActionButton(
-                icon: "assets/icon/report.svg",
+              Expanded(child:buildActionButton(
                 label: "Report",
-                color: AppColors.error,
-                backgroundColor: AppColors.error.withOpacity(0.1),
+                color: const Color(0xFFb91c1c), // red-700
+              backgroundColor: const Color(0xFFfef2f2), // red-50
+              borderColor: const Color(0xFFfecaca), // red-200
                 onTap: ()  {
                   AppUtils.showDialog(context, "Report feature is not available yet", AppColors.blue700);
                 },
@@ -297,64 +299,56 @@ class CompletedItemCardState extends State<CompletedItemCard> {
   }
 
 
-  Widget _buildActionButton({
-    String? icon,
-    Widget? iconWidget,
+
+}
+
+
+
+  Widget buildActionButton({
     required String label,
     required Color color,
     required Color backgroundColor,
+    required Color borderColor,
     required VoidCallback onTap,
+    required Widget iconWidget,
   }) {
     return Material(
       color: Colors.transparent,
       child: InkWell(
         onTap: onTap,
-        borderRadius: BorderRadius.circular(8),
+        borderRadius: BorderRadius.circular(12),
         child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
           decoration: BoxDecoration(
             color: backgroundColor,
-            borderRadius: BorderRadius.circular(8),
+            borderRadius: BorderRadius.circular(12),
             border: Border.all(
-              color: color.withOpacity(0.3),
-              width: 0.5,
+              color: borderColor,
+              width: 1,
             ),
           ),
-          child: Center(child:Row(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            // center the row
-
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              if (icon != null)
-                CustomIcon(
-                  iconPath: icon,
-                  size: 14,
-                  color: color,
-                )
-              else if (iconWidget != null)
-                IconTheme(
-                  data: IconThemeData(color: color),
-                  child: iconWidget,
-                ),
-              const SizedBox(width: 4),
+              IconTheme(
+                data: IconThemeData(color: color),
+                child: iconWidget,
+              ),
+              const SizedBox(width: 8),
               Text(
                 label,
                 style: TextStyle(
                   color: color,
-                  fontSize: 11,
+                  fontSize: 14,
                   fontWeight: FontWeight.w600,
                 ),
               ),
             ],
-          )),
+          ),
         ),
       ),
     );
   }
 
 
-
  
-
-}
