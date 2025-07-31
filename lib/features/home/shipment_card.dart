@@ -35,11 +35,11 @@ class ShipmentCardState extends State<ShipmentCard>
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-       _precacheImages();
+      _precacheImages();
       final fetchedStats =
           await Provider.of<StatisticsProvider>(context, listen: false)
               .getStatictics(widget.shipment.userId);
-              
+
       // print(stats?.completedTrips);
       if (mounted) {
         setState(() {
@@ -90,22 +90,18 @@ class ShipmentCardState extends State<ShipmentCard>
               ),
             ],
           ),
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(24),
-            child: IntrinsicHeight(
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.stretch, 
-                children: [
-                  _buildImageSection(),
-                  Expanded(
-                    // Wrapped in Expanded to constrain width
-                    child: Padding(
-                      padding: const EdgeInsets.all(16),
-                      child: _buildContentSection(),
-                    ),
-                  ),
-                ],
-              ),
+          child: Container(
+            width: double.infinity,
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Row(
+              children: [
+                _buildImageSection(),
+                const SizedBox(width: 16),
+                _buildContentSection(),
+              ],
             ),
           ),
         ));
@@ -119,55 +115,52 @@ class ShipmentCardState extends State<ShipmentCard>
     if (shipment == null) {
       return const SizedBox.shrink();
     }
-    
     // Fixed: Always maintain consistent container dimensions
-    return Container(
-      height: 215,
-      width: 130,
+    return SizedBox(
+      height: 140,
+      width: 120,
       child: Stack(
         children: [
           // Fixed: Use a consistent placeholder that maintains dimensions
           Container(
-            width: 130,
-            height: 215,
             decoration: BoxDecoration(
               color: AppColors.blueStart.withValues(alpha: 0.1),
+              borderRadius: BorderRadius.circular(12),
             ),
             child: ClipRRect(
+              borderRadius: BorderRadius.circular(12),
               child: CachedNetworkImage(
                 imageUrl: shipment.imageUrl!,
                 fit: BoxFit.cover,
                 width: 130,
                 height: 215,
                 // Fixed: Use memCacheWidth and memCacheHeight for consistent sizing
-                memCacheWidth: (130 * MediaQuery.of(context).devicePixelRatio).round(),
-                memCacheHeight: (215 * MediaQuery.of(context).devicePixelRatio).round(),
+                memCacheWidth:
+                    (130 * MediaQuery.of(context).devicePixelRatio).round(),
+                memCacheHeight:
+                    (215 * MediaQuery.of(context).devicePixelRatio).round(),
                 placeholder: (context, url) => Container(
-                  width: 130,
-                  height: 215,
-                  decoration: BoxDecoration(
-                    color: AppColors.blueStart.withValues(alpha: 0.1),
-                  ),
-                  child: const Center(
-                    child: CircularProgressIndicator(
-                      color: AppColors.blue700, 
-                      strokeWidth: 2
-                    )
-                  )
-                ),
-                errorWidget: (context, url, error) => Container(
-                  width: 130,
-                  height: 215,
-                  decoration: BoxDecoration(
-                    color: AppColors.blueStart.withValues(alpha: 0.1),
-                  ),
-                  child: Image.asset(
-                    "assets/images/box.jpg",
-                    fit: BoxFit.cover,
                     width: 130,
                     height: 215,
-                  )
-                ),
+                    decoration: BoxDecoration(
+                      color: AppColors.blueStart.withValues(alpha: 0.1),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: const Center(
+                        child: CircularProgressIndicator(
+                            color: AppColors.blue700, strokeWidth: 2))),
+                errorWidget: (context, url, error) => Container(
+                    width: 130,
+                    height: 215,
+                    decoration: BoxDecoration(
+                      color: AppColors.blueStart.withValues(alpha: 0.1),
+                    ),
+                    child: Image.asset(
+                      "assets/images/box.jpg",
+                      fit: BoxFit.cover,
+                      width: 130,
+                      height: 215,
+                    )),
                 // Fixed: Add fadeInDuration to reduce visual jump
                 fadeInDuration: const Duration(milliseconds: 200),
                 // Fixed: Add fade out duration for smooth transitions
@@ -180,6 +173,7 @@ class ShipmentCardState extends State<ShipmentCard>
             width: 130,
             height: 215,
             decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(12),
               gradient: LinearGradient(
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
@@ -245,26 +239,52 @@ class ShipmentCardState extends State<ShipmentCard>
   }
 
   Widget _buildContentSection() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      mainAxisSize: MainAxisSize.max,
-      children: [
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            _buildUserProfile(),
-            const SizedBox(height: 12),
-            _buildDestination(),
-            const SizedBox(height: 12),
-            _buildDetailsGrid(),
-          ],
-        ),
-        const SizedBox(height: 8),
-        _buildPriceAndAction(),
-      ],
-    );
+    return SizedBox(
+        height: 140,
+        
+        child: 
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                _buildUserProfile(),
+                const SizedBox(height: 8),
+                Row(children: [
+                  const Icon(
+                  Icons.circle,
+                  size: 12,
+                  color: AppColors.blue700,
+                ),
+                 const SizedBox(width: 4),
+                  Text('${widget.shipment.from} ',
+                 
+                  style: TextStyle(
+                    color: AppColors.headingText,
+                    fontSize: 12,
+                    fontWeight: FontWeight.bold)
+                  ),
+                   const SizedBox(width: 4),
+                  const Icon(
+                  Icons.circle,
+                  size: 12,
+                  color: AppColors.succes,
+                ),
+                 const SizedBox(width: 4),
+                 Text('${widget.shipment.to} ',  style: TextStyle(
+                    color: AppColors.headingText,
+                    fontSize: 12,
+                    fontWeight: FontWeight.bold)
+                ),
+                  ]),
+                const SizedBox(height: 8),
+               
+                _buildDetailsGrid(),
+                const SizedBox(height: 8),
+                _buildPriceAndAction(),
+              ],
+        
+        ));
   }
 
   Widget _buildUserProfile() {
@@ -295,9 +315,9 @@ class ShipmentCardState extends State<ShipmentCard>
             AppColors.blue700,
             true,
           ),
-          Expanded(
-            child: Container(
+           Container(
               height: 2,
+              width: 100,
               margin: const EdgeInsets.symmetric(horizontal: 8),
               decoration: BoxDecoration(
                 gradient: LinearGradient(
@@ -305,7 +325,7 @@ class ShipmentCardState extends State<ShipmentCard>
                 ),
                 borderRadius: BorderRadius.circular(1),
               ),
-            ),
+            
           ),
           _buildLocationPoint(
             widget.shipment.to,
@@ -448,11 +468,6 @@ class ShipmentCardState extends State<ShipmentCard>
 
   Widget _buildPriceAndAction() {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Flexible(
-          // Changed to Flexible to prevent overflow
-          child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -485,11 +500,7 @@ class ShipmentCardState extends State<ShipmentCard>
                 ],
               ),
             ],
-          ),
-        ),
-        // const Spacer(),
-        _buildViewDetailsButton(),
-      ],
+         
     );
   }
 }

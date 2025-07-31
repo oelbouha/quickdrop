@@ -233,6 +233,7 @@ class _ListingCardDetailsState extends State<ListingCardDetails> {
                 const SizedBox(height: 150),
               ],
             ),
+            
           ),
         ],
       ),
