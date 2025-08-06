@@ -77,13 +77,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: AppColors.appBarBackground,
         title: const Text(
           'Profile',
-          style: TextStyle(color: AppColors.dark, fontWeight: FontWeight.w600),
+          style: TextStyle(color: AppColors.appBarText, fontWeight: FontWeight.w600),
         ),
         centerTitle: true,
-        iconTheme: const IconThemeData(color: Colors.black),
+        iconTheme: const IconThemeData(color: AppColors.appBarIcons),
         systemOverlayStyle: SystemUiOverlayStyle.dark,
         elevation: 0,
       ),

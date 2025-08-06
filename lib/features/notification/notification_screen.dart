@@ -23,18 +23,18 @@ class NotificationScreenState extends State<NotificationScreen> {
       appBar: AppBar(
         title: const Text(
           'Notifications',
-          style: TextStyle(color: AppColors.white),
+          style: TextStyle(color: AppColors.appBarText, fontWeight: FontWeight.w600),
         ),
-        backgroundColor: AppColors.barColor,
+        backgroundColor: AppColors.appBarBackground,
         centerTitle: true,
+        iconTheme: const IconThemeData(color: AppColors.appBarIcons),
+        systemOverlayStyle: SystemUiOverlayStyle.dark,
       ),
-      body: const Center(child: Text(
-        "No Notifications",
-        style: TextStyle(
-          fontSize: 20,
-          color: AppColors.headingText,
-        ),
-      ),
-    ));
+      body: Center(child: buildEmptyState(
+          Icons.notification_important_outlined,
+          'No Notifications',
+          'You have no notifications',
+        ))  
+    );
   }
 }

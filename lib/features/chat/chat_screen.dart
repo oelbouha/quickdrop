@@ -27,7 +27,7 @@ class _ChatScreenState extends State<ChatScreen>
     return Scaffold(
         backgroundColor: AppColors.background,
         appBar: AppBar(
-          backgroundColor: AppColors.white,
+          backgroundColor: AppColors.appBarBackground,
           title: PreferredSize(
           preferredSize: const Size.fromHeight(48), child: 
         
@@ -47,7 +47,7 @@ class _ChatScreenState extends State<ChatScreen>
        const Text(
           "Chat",
           style: TextStyle(
-            color: AppColors.dark,
+            color: AppColors.appBarText,
             fontSize: 20,
             fontWeight: FontWeight.w600,
           ),
