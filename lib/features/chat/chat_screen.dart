@@ -1,12 +1,7 @@
 import 'package:quickdrop_app/core/widgets/build_header_icon.dart';
-import 'package:quickdrop_app/features/offers/request.dart';
 import 'package:quickdrop_app/features/chat/chat_conversation_card.dart';
-import 'package:quickdrop_app/features/offers/pending_request.dart';
 import 'package:go_router/go_router.dart';
-import 'package:quickdrop_app/core/widgets/app_header.dart';
 import 'package:quickdrop_app/core/utils/imports.dart';
-import 'package:quickdrop_app/features/offers/negotiation_card.dart';
-import 'package:quickdrop_app/core/providers/negotiation_provider.dart';
 
 
 class ChatScreen extends StatefulWidget {
