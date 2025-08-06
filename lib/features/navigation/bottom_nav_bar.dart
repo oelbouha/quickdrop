@@ -1,19 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:quickdrop_app/features/chat/chat_screen.dart';
-import 'package:quickdrop_app/features/home/home_screen.dart';
-import 'package:quickdrop_app/features/profile/profile_screen.dart';
-import 'package:quickdrop_app/features/shipment/shipment_screen.dart';
-import 'package:quickdrop_app/features/trip/trip_screen.dart';
 import 'package:quickdrop_app/theme/colors.dart';
 import 'package:quickdrop_app/core/widgets/custom_svg.dart';
-import 'package:provider/provider.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 
+
+
 class BottomNavScreen extends StatelessWidget {
- 
   final Widget child;
- const BottomNavScreen({
+  
+  const BottomNavScreen({
     Key? key,
     required this.child,
   }) : super(key: key);
@@ -85,6 +81,13 @@ class BottomNavScreen extends StatelessWidget {
           ),
           label: 'Offers',
         ),
+        BottomNavigationBarItem(
+          icon: _buildIconWithBackground(
+            iconPath: "assets/icon/chat-round.svg",
+            isSelected: _calculateIndex(context) == 4,
+          ),
+          label: 'Chat',
+        ),
       ],
     ),
   ),
@@ -114,7 +117,8 @@ class BottomNavScreen extends StatelessWidget {
     final location = GoRouterState.of(context).uri;
     if (location.path == '/trip')  return 1;
     if (location.path == "/shipment") return 2;
-    if (location.path == '/chat') return 3;
+    if (location.path == '/offers') return 3;
+    if (location.path == '/chat') return 4;
     return 0;
   }
 
@@ -129,8 +133,11 @@ class BottomNavScreen extends StatelessWidget {
       case 2:
         context.go('/shipment');
         break;
-      case 3:
+      case 4:
         context.go('/chat');
+        break;
+      case 3:
+        context.go('/offers');
         break;
     }
   }

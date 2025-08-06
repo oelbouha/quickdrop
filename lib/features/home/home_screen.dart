@@ -1,4 +1,5 @@
 import 'package:quickdrop_app/core/utils/imports.dart';
+import 'package:quickdrop_app/core/widgets/build_header_icon.dart';
 import 'package:quickdrop_app/core/widgets/home_page_skeleton.dart';
 import 'package:quickdrop_app/features/home/search_page.dart';
 
@@ -502,12 +503,12 @@ class _HomeScreenState extends State<HomeScreen> {
         const Spacer(),
         Row(
           children: [
-            _buildHeaderIcon(
+            buildHeaderIcon(
               icon: "assets/icon/help.svg",
               onTap: () => context.push("/help"),
             ),
             const SizedBox(width: 8),
-            _buildHeaderIcon(
+            buildHeaderIcon(
               icon: "assets/icon/notification.svg",
               onTap: () => context.push("/notification"),
               hasNotification: true,
