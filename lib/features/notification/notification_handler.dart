@@ -14,9 +14,12 @@ class NotificationHandler {
     NotificationSettings settings = await messaging.requestPermission();
     print('🔐 Permission: ${settings.authorizationStatus}');
 
-    // Get FCM token
-    String? token = await messaging.getToken();
-    print("📲 FCM Token: $token");
+    try {
+      String? token = await messaging.getToken();
+      print("📲 FCM Token: $token");
+    } catch (e) {
+      print("❌ Error getting FCM token: $e");
+    }
 
     
 
