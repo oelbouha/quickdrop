@@ -23,10 +23,12 @@ class HelpScreenState extends State<HelpScreen> {
       appBar: AppBar(
         title: const Text(
           'Help',
-          style: TextStyle(color: AppColors.white),
+          style: TextStyle(color: AppColors.appBarText, fontWeight: FontWeight.w600),
         ),
-        backgroundColor: AppColors.barColor,
+        backgroundColor: AppColors.appBarBackground,
         centerTitle: true,
+        iconTheme: const IconThemeData(color: AppColors.appBarIcons),
+        systemOverlayStyle: SystemUiOverlayStyle.dark,
       ),
       body: const Center(child: Text(
         "help page ",

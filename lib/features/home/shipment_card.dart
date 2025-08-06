@@ -95,7 +95,10 @@ class ShipmentCardState extends State<ShipmentCard>
                   children: [
                     _buildStatusAndSender(),
                     const SizedBox(height: 16),
-                    _buildPriceButton(),
+                    IntrinsicWidth(
+                      child: _buildPriceButton(),
+                    )
+
                   ],
                 ),
               ),
@@ -184,13 +187,13 @@ class ShipmentCardState extends State<ShipmentCard>
           width: 110,
           height: 120,
           decoration: BoxDecoration(
-            color: Colors.grey[200],
+            color: const Color(0xFFE1AC71).withOpacity(0.8),
             borderRadius: BorderRadius.circular(12),
           ),
           child: const Center(
             child: Icon(
-              Icons.image,
-              color: Colors.grey,
+              Icons.fire_truck,
+              color: Colors.white,
               size: 40,
             ),
           ),
@@ -237,4 +240,7 @@ class ShipmentCardState extends State<ShipmentCard>
       
     );
   }
+
+
+
 }

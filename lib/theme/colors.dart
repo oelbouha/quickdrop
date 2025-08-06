@@ -42,7 +42,7 @@ class AppColors {
   static const Color chatMessageInput = Color(0xFFFAFAFA);
 
 
-  static const Color barColor = blue;
+  static const Color barColor = white;
 
 
   static const Color primary = blue700;
