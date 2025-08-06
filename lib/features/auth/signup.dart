@@ -21,7 +21,7 @@ class _SignupState extends State<Signup> {
   bool _isEmailLoading = false;
   bool _isGoogleLoading = false;
 
-  void _signupUserWithEmail() async {
+  void _signupUserWithPhoneNumber() async {
     if (_isEmailLoading) return;
     setState(() {
       _isEmailLoading = true;
@@ -202,7 +202,7 @@ class _SignupState extends State<Signup> {
         ),
         Button(
           hintText: "Continue",
-          onPressed: _signupUserWithEmail,
+          onPressed: _signupUserWithPhoneNumber,
           isLoading: _isEmailLoading,
           radius: 30,
         ),
