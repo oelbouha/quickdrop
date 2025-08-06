@@ -2,7 +2,6 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:quickdrop_app/features/models/base_transport.dart';
 import 'package:quickdrop_app/core/utils/imports.dart';
 import 'package:quickdrop_app/features/models/statictics_model.dart';
-
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 
 class ShipmentCard extends StatefulWidget {
@@ -40,7 +39,6 @@ class ShipmentCardState extends State<ShipmentCard>
           await Provider.of<StatisticsProvider>(context, listen: false)
               .getStatictics(widget.shipment.userId);
 
-      // print(stats?.completedTrips);
       if (mounted) {
         setState(() {
           stats = fetchedStats;
@@ -71,40 +69,109 @@ class ShipmentCardState extends State<ShipmentCard>
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-        onTap: widget.onPressed,
-        child: Container(
-          width: double.infinity,
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(24),
-            border: Border.all(
-              color: Colors.grey.withOpacity(0.1),
-              width: 1,
+      onTap: widget.onPressed,
+      child: Container(
+        // margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(12),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.05),
+              blurRadius: 4,
+              offset: const Offset(0, 2),
+              spreadRadius: 0,
             ),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.08),
-                blurRadius: 8,
-                offset: const Offset(0, 4),
-                spreadRadius: 0,
+          ],
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(12),
+          child:  Row(
+            children: [
+              Expanded(
+                flex: 2,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _buildStatusAndSender(),
+                    const SizedBox(height: 16),
+                    _buildPriceButton(),
+                  ],
+                ),
+              ),
+              const SizedBox(width: 16),
+              Expanded(
+                flex: 1,
+                child: _buildImageSection(),
               ),
             ],
+        )
+        ),
+      ),
+    );
+  }
+
+  Widget _buildStatusAndSender() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // "New" status text
+        Text(
+          "New",
+          style: TextStyle(
+            color: const Color(0xFF6A7681), 
+            fontSize: 14,
+            fontWeight: FontWeight.w400,
           ),
-          child: Container(
-            width: double.infinity,
-            padding: const EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: Row(
-              children: [
-                _buildImageSection(),
-                const SizedBox(width: 16),
-                _buildContentSection(),
-              ],
+        ),
+        const SizedBox(height: 4),
+        // Sender name
+        Text(
+          "Sender: ${widget.userData.displayName ?? 'Guest'}",
+          style: const TextStyle(
+            color: Color(0xFF121416), 
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        const SizedBox(height: 4),
+        Text(
+          "From: ${widget.shipment.from} To: ${widget.shipment.to}",
+          style: const TextStyle(
+            color: Color(0xFF6A7681), 
+            fontSize: 14,
+            fontWeight: FontWeight.w400,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildPriceButton() {
+    return Container(
+      height: 32, 
+      constraints: const BoxConstraints(
+        minWidth: 84,
+        maxWidth: 480,
+      ),
+      decoration: BoxDecoration(
+        color: const Color(0xFFF1F2F4),
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16),
+        child: Center(
+          child: Text(
+            "${widget.shipment.price} MAD",
+            style: const TextStyle(
+              color: Color(0xFF121416), 
+              fontSize: 14,
+              fontWeight: FontWeight.w500,
             ),
           ),
-        ));
+        ),
+      ),
+    );
   }
 
   Widget _buildImageSection() {
@@ -113,394 +180,61 @@ class ShipmentCardState extends State<ShipmentCard>
       shipment = widget.shipment as Shipment;
     }
     if (shipment == null) {
-      return const SizedBox.shrink();
+      return  Container(
+          width: 110,
+          height: 120,
+          decoration: BoxDecoration(
+            color: Colors.grey[200],
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: const Center(
+            child: Icon(
+              Icons.image,
+              color: Colors.grey,
+              size: 40,
+            ),
+          ),
+        
+      );
     }
-    // Fixed: Always maintain consistent container dimensions
-    return SizedBox(
-      height: 140,
-      width: 120,
-      child: Stack(
-        children: [
-          // Fixed: Use a consistent placeholder that maintains dimensions
-          Container(
-            decoration: BoxDecoration(
-              color: AppColors.blueStart.withValues(alpha: 0.1),
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(12),
-              child: CachedNetworkImage(
-                imageUrl: shipment.imageUrl!,
-                fit: BoxFit.cover,
-                width: 130,
-                height: 215,
-                // Fixed: Use memCacheWidth and memCacheHeight for consistent sizing
-                memCacheWidth:
-                    (130 * MediaQuery.of(context).devicePixelRatio).round(),
-                memCacheHeight:
-                    (215 * MediaQuery.of(context).devicePixelRatio).round(),
-                placeholder: (context, url) => Container(
-                    width: 130,
-                    height: 215,
-                    decoration: BoxDecoration(
-                      color: AppColors.blueStart.withValues(alpha: 0.1),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: const Center(
-                        child: CircularProgressIndicator(
-                            color: AppColors.blue700, strokeWidth: 2))),
-                errorWidget: (context, url, error) => Container(
-                    width: 130,
-                    height: 215,
-                    decoration: BoxDecoration(
-                      color: AppColors.blueStart.withValues(alpha: 0.1),
-                    ),
-                    child: Image.asset(
-                      "assets/images/box.jpg",
-                      fit: BoxFit.cover,
-                      width: 130,
-                      height: 215,
-                    )),
-                // Fixed: Add fadeInDuration to reduce visual jump
-                fadeInDuration: const Duration(milliseconds: 200),
-                // Fixed: Add fade out duration for smooth transitions
-                fadeOutDuration: const Duration(milliseconds: 200),
-              ),
-            ),
-          ),
-          // Gradient overlay
-          Container(
-            width: 130,
-            height: 215,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(12),
-              gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: [
-                  Colors.transparent,
-                  Colors.transparent,
-                  Colors.black.withOpacity(0.6),
-                ],
-                stops: const [0.0, 0.5, 1.0],
-              ),
-            ),
-          ),
-          // Status badge
-          Positioned(
-            top: 16,
-            left: 16,
-            right: 16,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Row(
-                  children: [
-                    _buildStatusBadge(
-                      shipment.type,
-                      Colors.white.withOpacity(0.6),
-                      Colors.grey[700]!,
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
 
-  Widget _buildStatusBadge(
-      String text, Color backgroundColor, Color textColor) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-      decoration: BoxDecoration(
-        color: Colors.grey[50],
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.grey.withOpacity(0.1)),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.1),
-            blurRadius: 4,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      child: Text(
-        text,
-        style: TextStyle(
-          color: textColor,
-          fontSize: 10,
-          fontWeight: FontWeight.w600,
+        width: 110,
+        height: 120,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(12),
         ),
-      ),
-    );
-  }
-
-  Widget _buildContentSection() {
-    return SizedBox(
-        height: 140,
-        
-        child: 
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.center,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                _buildUserProfile(),
-                const SizedBox(height: 8),
-                Row(children: [
-                  const Icon(
-                  Icons.circle,
-                  size: 12,
-                  color: AppColors.blue700,
-                ),
-                 const SizedBox(width: 4),
-                  Text('${widget.shipment.from} ',
-                 
-                  style: TextStyle(
-                    color: AppColors.headingText,
-                    fontSize: 12,
-                    fontWeight: FontWeight.bold)
-                  ),
-                   const SizedBox(width: 4),
-                  const Icon(
-                  Icons.circle,
-                  size: 12,
-                  color: AppColors.succes,
-                ),
-                 const SizedBox(width: 4),
-                 Text('${widget.shipment.to} ',  style: TextStyle(
-                    color: AppColors.headingText,
-                    fontSize: 12,
-                    fontWeight: FontWeight.bold)
-                ),
-                  ]),
-                const SizedBox(height: 8),
-               
-                _buildDetailsGrid(),
-                const SizedBox(height: 8),
-                _buildPriceAndAction(),
-              ],
-        
-        ));
-  }
-
-  Widget _buildUserProfile() {
-    return UserProfileWithRating(
-      user: widget.userData,
-      header: widget.userData.displayName ?? 'Guest',
-      avatarSize: 34,
-      headerFontSize: 10,
-      subHeaderFontSize: 8,
-      onPressed: () =>
-          {context.push('/profile/statistics?userId=${widget.userData.uid}')},
-    );
-  }
-
-  Widget _buildDestination() {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(8),
-      decoration: BoxDecoration(
-        color: Colors.grey[50],
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.grey.withOpacity(0.1)),
-      ),
-      child: Row(
-        children: [
-          _buildLocationPoint(
-            widget.shipment.from,
-            AppColors.blue700,
-            true,
-          ),
-           Container(
-              height: 2,
-              width: 100,
-              margin: const EdgeInsets.symmetric(horizontal: 8),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(12),
+          child: CachedNetworkImage(
+            imageUrl: shipment.imageUrl!,
+            fit: BoxFit.cover,
+            placeholder: (context, url) => Container(
               decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [AppColors.blue700, AppColors.purple700],
-                ),
-                borderRadius: BorderRadius.circular(1),
+                color: Colors.grey[200],
+                borderRadius: BorderRadius.circular(12),
               ),
-            
-          ),
-          _buildLocationPoint(
-            widget.shipment.to,
-            AppColors.purple700,
-            false,
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildLocationPoint(String location, Color color, bool isFrom) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Container(
-          width: 12,
-          height: 12,
-          decoration: BoxDecoration(
-            color: color,
-            borderRadius: BorderRadius.circular(6),
-            border: Border.all(color: Colors.white, width: 2),
-            boxShadow: [
-              BoxShadow(
-                color: color.withOpacity(0.3),
-                blurRadius: 4,
-                offset: const Offset(0, 2),
-              ),
-            ],
-          ),
-        ),
-        const SizedBox(height: 4),
-        Text(
-          truncateText(location, maxLength: 8),
-          style: TextStyle(
-            color: color,
-            fontSize: 10,
-            fontWeight: FontWeight.w700,
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildDetailsGrid() {
-    Shipment? shipment;
-    Trip? trip;
-    if (widget.shipment is Shipment) {
-      shipment = widget.shipment as Shipment;
-    } else if (widget.shipment is Trip) {
-      trip = widget.shipment as Trip;
-    }
-
-    return Wrap(
-      spacing: 12,
-      runSpacing: 8,
-      children: [
-        _buildDetailChip(
-          Icons.schedule,
-          widget.shipment.date,
-          AppColors.blue,
-        ),
-        if (trip != null)
-          _buildDetailChip(
-            Icons.inventory,
-            "${trip.weight} kg available",
-            Colors.purple,
-          ),
-        if (shipment != null)
-          _buildDetailChip(
-            Icons.scale,
-            "${shipment.weight} kg",
-            Colors.purple,
-          ),
-      ],
-    );
-  }
-
-  Widget _buildViewDetailsButton() {
-    return GestureDetector(
-        onTap: widget.onPressed,
-        child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-          decoration: BoxDecoration(
-            color: AppColors.blue700.withOpacity(0.1),
-            borderRadius: BorderRadius.circular(8),
-            border: Border.all(color: AppColors.blue700.withOpacity(0.2)),
-          ),
-          child: const Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                "Request",
-                style: TextStyle(
-                  fontSize: 10,
-                  fontWeight: FontWeight.w600,
-                  color: AppColors.dark,
+              child: const Center(
+                child: CircularProgressIndicator(
+                  strokeWidth: 2,
                 ),
               ),
-              SizedBox(width: 4),
-              Icon(
-                Icons.arrow_forward_ios,
-                size: 12,
-                color: AppColors.blue700,
-              ),
-            ],
-          ),
-        ));
-  }
-
-  Widget _buildDetailChip(IconData icon, String text, Color color) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-      decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
-        borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: color.withOpacity(0.2)),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(
-            icon,
-            size: 12,
-            color: color,
-          ),
-          const SizedBox(width: 4),
-          Text(
-            text,
-            style: TextStyle(
-              fontSize: 10,
-              fontWeight: FontWeight.w600,
-              color: color,
             ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildPriceAndAction() {
-    return Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.baseline,
-                textBaseline: TextBaseline.alphabetic,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Flexible(
-                    // Added Flexible for price text
-                    child: Text(
-                      widget.shipment.price,
-                      style: const TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
-                        color: AppColors.blue700,
-                      ),
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ),
-                  const SizedBox(width: 4),
-                  Text(
-                    "dh",
-                    style: TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.grey[400],
-                    ),
-                  ),
-                ],
+            errorWidget: (context, url, error) => Container(
+              decoration: BoxDecoration(
+                color: Colors.grey[200],
+                borderRadius: BorderRadius.circular(12),
               ),
-            ],
-         
+              child: Image.asset(
+                "assets/images/box.jpg",
+                fit: BoxFit.cover,
+              ),
+            ),
+            fadeInDuration: const Duration(milliseconds: 200),
+            fadeOutDuration: const Duration(milliseconds: 200),
+          ),
+        ),
+      
     );
   }
 }
