@@ -33,6 +33,7 @@ class BecomeDriverScreenState extends State<BecomeDriverScreen>
   File? _selectedImage;
   String? imagePath;
   bool _isImageLoading = false;
+  bool _showRegistrationForm = false;
 
   UserData? user;
 
@@ -45,6 +46,7 @@ class BecomeDriverScreenState extends State<BecomeDriverScreen>
           .doesUserRequestDriverMode(user!.uid);
       setState(() {
         _isLoadingData = false;
+        _showRegistrationForm = !_isUserRequestedDriver;
       });
     });
     
@@ -192,24 +194,47 @@ Future<void> _pickImage() async {
         children: [
           _buildHeaderSection(),
            const SizedBox(height: 24),
-           if (_isUserRequestedDriver) buildInfoCard(
+           if (_isUserRequestedDriver) ...[buildInfoCard(
               icon: Icons.info_outline,
               title: "Request Driver Mode",
               message:
                   "You have been requested to become a driver. please wait for the admin to review your request. You will be notified once your request is approved.",
               color: AppColors.succes,
             ),
-          const SizedBox(height: 32),
-          _buildImageInfoSection(),
-          const SizedBox(height: 24),
-          _buildPersonalInfoSection(),
-          const SizedBox(height: 24),
-          _buildContactInfoSection(),
-           const SizedBox(height: 24),
-           _buildCarInfoSection(),
-          const SizedBox(height: 32),
-          _buildSaveButton(),
-          const SizedBox(height: 20),
+          if (!_showRegistrationForm) ...[
+            const SizedBox(height: 24),
+            ElevatedButton(
+                onPressed: ()  {
+                  setState(() {
+                    _showRegistrationForm = true;
+                  });
+                },
+                style: ElevatedButton.styleFrom(
+                  // color: AppColors.blue,
+                  elevation: 0,
+                    backgroundColor: AppColors.blue700.withOpacity(0.8),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
+                child: const Text(
+                  'Resend Request',
+                  style: TextStyle(color: Colors.white),
+                ),
+              ),],],
+          if (_showRegistrationForm) ...[
+            const SizedBox(height: 32),
+            _buildImageInfoSection(),
+            const SizedBox(height: 24),
+            _buildPersonalInfoSection(),
+            const SizedBox(height: 24),
+            _buildContactInfoSection(),
+            const SizedBox(height: 24),
+            _buildCarInfoSection(),
+            const SizedBox(height: 32),
+            _buildSaveButton(),
+            const SizedBox(height: 20),
+          ]
         ],
       ),
     );

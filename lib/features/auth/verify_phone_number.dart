@@ -1,16 +1,10 @@
-import 'package:quickdrop_app/features/models/statictics_model.dart';
-import 'package:quickdrop_app/core/widgets/auth_button.dart';
+import 'dart:async';
+
 import 'package:quickdrop_app/core/widgets/gestureDetector.dart';
-import 'package:quickdrop_app/core/widgets/iconTextField.dart';
-import 'package:google_sign_in/google_sign_in.dart';
-import 'package:provider/provider.dart';
 import 'package:quickdrop_app/core/utils/imports.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:intl/intl.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:flutter/services.dart';
-import 'package:flutter/gestures.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 
 class VerifyPhoneScreen extends StatefulWidget {
@@ -34,11 +28,42 @@ class _VerifyPhoneScreenState extends State<VerifyPhoneScreen> {
   bool isLoading = false;
 
   int maxCodeSend = 0;
+  int _timeLeft = 60;
+  bool _canSendCode = false;
+
+  late Timer _timer;
 
   @override
   void initState() {
     super.initState();
     _currentVerificationId = widget.verificationId;
+    startTimer();
+  }
+
+  void startTimer() {
+    setState(() {
+      _timeLeft = 60;
+      _canSendCode = false;
+    });
+
+    _timer = Timer.periodic(const Duration(seconds: 1), (timer){
+        if (_timeLeft == 0) {
+          setState(() {
+            _canSendCode = true;
+          });
+          timer.cancel();
+        } else {
+          setState(() {
+            _timeLeft--;
+          });
+        }
+    });
+  }
+  
+  @override
+  void dispose() {
+    _timer.cancel();
+    super.dispose();
   }
 
   void verifyCode(String smsCode) async {
@@ -67,6 +92,10 @@ class _VerifyPhoneScreenState extends State<VerifyPhoneScreen> {
   }
 
   void resendCode() async {
+    if (_canSendCode == false) {
+      AppUtils.showDialog(context, "Please wait", AppColors.error);
+      return;
+    }
     if (maxCodeSend >= 3) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("you reached max tries try again later.")),
@@ -177,20 +206,22 @@ class _VerifyPhoneScreenState extends State<VerifyPhoneScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Text(
-                      "Didn't receive the code? ",
-                      style: TextStyle(
+                     Text(
+                      _canSendCode ? "Resend code in $_timeLeft seconds" : "Didn't receive the code? ",
+                      style: const TextStyle(
                         color: AppColors.shipmentText,
                         fontSize: 14,
                       ),
                     ),
-                    GestureDetectorWidget(
-                      onPressed: resendCode,
-                      hintText: "Resend code",
-                      color: AppColors.dark,
-                    ),
+                    if (_canSendCode)
+                      GestureDetectorWidget(
+                        onPressed: resendCode,
+                        hintText: "Resend code",
+                        color: AppColors.dark,
+                      ),
                   ],
                 ),
+                
               ],
             ),
           ),

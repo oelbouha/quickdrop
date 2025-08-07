@@ -63,7 +63,7 @@ class AppRouter {
         // print("currentPath: $currentPath");
         // print("user: $user");
         // print("isEmailVerified: $isEmailVerified");
-        // return '/verify-email';
+        // return '/verify-number';
         if (user != null && currentPath == '/create-account' ||
             currentPath == "/verify-number") {
           return null;
