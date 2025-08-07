@@ -29,13 +29,15 @@ class _SignupState extends State<Signup> {
 
     final phone = phoneNumberController.text.trim();
     if (phone.isEmpty) {
-      AppUtils.showDialog(context, "Please enter your phone number", AppColors.error);
+      AppUtils.showDialog(
+          context, "Please enter your phone number", AppColors.error);
       setState(() {
         _isEmailLoading = false;
       });
       return;
     }
 
+    print("phone number :: $phone");
     await FirebaseAuth.instance.verifyPhoneNumber(
       phoneNumber: phone,
       verificationCompleted: (PhoneAuthCredential credential) async {
@@ -44,7 +46,38 @@ class _SignupState extends State<Signup> {
       },
       verificationFailed: (FirebaseAuthException e) {
         setState(() => _isEmailLoading = false);
-        AppUtils.showDialog(context, 'Phone verification failed: ${e.message}', AppColors.error);
+
+        String errorMessage;
+        switch (e.code) {
+          case 'invalid-phone-number':
+            errorMessage =
+                'The phone number format is invalid. Please include country code.';
+            break;
+          case 'too-many-requests':
+            errorMessage = 'Too many requests. Please try again later.';
+            break;
+          case 'quota-exceeded':
+            errorMessage =
+                'SMS quota exceeded for today. Please try again tomorrow or contact support.';
+            break;
+          case 'app-not-authorized':
+            errorMessage =
+                'App not authorized. Please check Firebase configuration.';
+            break;
+          case 'missing-phone-number':
+            errorMessage = 'Phone number is required.';
+            break;
+          case 'invalid-app-credential':
+            errorMessage =
+                'Invalid app credentials. Check your Firebase setup.';
+            break;
+          default:
+            
+              errorMessage = 'Phone verification failed: ${e.message}';
+            
+        }
+
+        AppUtils.showDialog(context, errorMessage, AppColors.error);
       },
       codeSent: (String verificationId, int? resendToken) {
         setState(() => _isEmailLoading = false);
@@ -62,47 +95,6 @@ class _SignupState extends State<Signup> {
     );
   }
 
-  Future<void> _createStatsIfNewUser(String userId) async {
-    bool userExist = await doesUserExist(userId);
-    if (userExist == false) {
-      StatisticsModel stats = StatisticsModel(
-          pendingShipments: 0,
-          ongoingShipments: 0,
-          completedShipments: 0,
-          reviewCount: 0,
-          id: userId,
-          userId: userId);
-      Provider.of<StatisticsProvider>(context, listen: false)
-          .addStatictics(userId, stats);
-    }
-  }
-
-  Future<void> setUserData(userCredential) async {
-    _createStatsIfNewUser(userCredential.user.uid);
-    UserData user = UserData(
-      uid: userCredential.user.uid,
-      email: userCredential.user!.email,
-      displayName: userCredential.user!.displayName,
-      photoUrl: userCredential.user!.photoURL,
-      createdAt: DateFormat('dd/MM/yyyy').format(DateTime.now()).toString(),
-    );
-
-    bool userExist = await doesUserExist(user.uid);
-    final userProvider = Provider.of<UserProvider>(context, listen: false);
-    if (userExist == false) {
-      userProvider.setUser(user);
-      userProvider.saveUserToFirestore(user);
-    } else {
-      await userProvider.fetchUser(user.uid);
-    }
-  }
-
-  Future<bool> doesUserExist(String uid) async {
-    final userDoc =
-        await FirebaseFirestore.instance.collection('users').doc(uid).get();
-    return userDoc.exists;
-  }
-
   void _signInWithGoogle() async {
     if (_isGoogleLoading) return;
     setState(
@@ -114,7 +106,6 @@ class _SignupState extends State<Signup> {
     try {
       await Provider.of<UserProvider>(context, listen: false)
           .signInWithGoogle(context);
-        
     } catch (e) {
       if (mounted) {
         AppUtils.showDialog(context, e.toString(), AppColors.error);
