@@ -33,6 +33,8 @@ class _VerifyPhoneScreenState extends State<VerifyPhoneScreen> {
   late String _currentVerificationId;
   bool isLoading = false;
 
+  int maxCodeSend = 0;
+
   @override
   void initState() {
     super.initState();
@@ -49,7 +51,8 @@ class _VerifyPhoneScreenState extends State<VerifyPhoneScreen> {
 
       await FirebaseAuth.instance.signInWithCredential(credential);
 
-      AppUtils.showDialog(context, widget.phoneNumber!, AppColors.error); // Can rename later
+      AppUtils.showDialog(
+          context, widget.phoneNumber!, AppColors.error); // Can rename later
       context.pushNamed(
         'create-account',
         queryParameters: {'phoneNumber': widget.phoneNumber},
@@ -64,6 +67,13 @@ class _VerifyPhoneScreenState extends State<VerifyPhoneScreen> {
   }
 
   void resendCode() async {
+    if (maxCodeSend >= 3) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("you reached max tries try again later.")),
+      );
+      return;
+    }
+    ++maxCodeSend;
     await FirebaseAuth.instance.verifyPhoneNumber(
       phoneNumber: widget.phoneNumber!,
       verificationCompleted: (PhoneAuthCredential credential) {},
@@ -154,7 +164,7 @@ class _VerifyPhoneScreenState extends State<VerifyPhoneScreen> {
                 const SizedBox(height: 20),
                 Button(
                   hintText: "Continue",
-                  radius: 30  ,
+                  radius: 30,
                   backgroundColor: AppColors.dark,
                   onPressed: () {
                     if (_formKey.currentState?.validate() ?? false) {
