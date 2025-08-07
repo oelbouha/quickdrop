@@ -5,7 +5,7 @@ const admin = require("firebase-admin");
 admin.initializeApp();
 
 exports.sendNewMessageNotification = onDocumentCreated({
-  document: "messages/{messageId}",
+  document: "chats/{chatId}/messages/{messageId}",
   region: "us-central1"
 }, async (event) => {
   try {
@@ -17,10 +17,11 @@ exports.sendNewMessageNotification = onDocumentCreated({
 
     const messageData = snap.data();
     const senderId = messageData.senderId;
-    const recipientId = messageData.recipientId;
+    const recipientId = messageData.receiverId;
     const text = messageData.text;
 
     console.log(`📨 Processing message from ${senderId} to ${recipientId}`);
+    console.log(`📝 Message text: "${text}"`);
 
     if (!recipientId || !text) {
       console.log("❌ Missing recipientId or text");
@@ -28,6 +29,7 @@ exports.sendNewMessageNotification = onDocumentCreated({
     }
 
     // Get recipient's FCM token
+    console.log(`🔍 Looking up user document for recipient: ${recipientId}`);
     const userDoc = await admin.firestore().collection("users").doc(recipientId).get();
 
     if (!userDoc.exists) {
@@ -36,66 +38,161 @@ exports.sendNewMessageNotification = onDocumentCreated({
     }
 
     const userData = userDoc.data();
+    console.log(`👤 User data found, checking for FCM token...`);
+    
     if (!userData.fcmToken) {
       console.log(`❌ No FCM token for recipient ${recipientId}`);
+      console.log(`📄 Available user fields: ${Object.keys(userData)}`);
       return null;
     }
 
     const token = userData.fcmToken;
-    const payload = {
+    console.log(`🔑 FCM token found: ${token.substring(0, 20)}...`);
+    
+    // Updated payload format for the modern API
+    const message = {
+      token: token,
       notification: {
         title: "New Message",
         body: text.length > 100 ? text.slice(0, 100) + "..." : text,
-        sound: "default",
       },
       data: {
         senderId: senderId,
         recipientId: recipientId,
         click_action: "FLUTTER_NOTIFICATION_CLICK",
       },
+      // Optional: Android specific settings
+      android: {
+        notification: {
+          sound: "default",
+        }
+      },
+      // Optional: iOS specific settings
+      apns: {
+        payload: {
+          aps: {
+            sound: "default"
+          }
+        }
+      }
     };
 
-    // Send the notification
-    const response = await admin.messaging().sendToDevice(token, payload);
+    console.log(`📤 Sending notification with payload:`, JSON.stringify(message, null, 2));
+
+    // Send the notification using the modern API
+    const response = await admin.messaging().send(message);
     
-    if (response.successCount > 0) {
-      console.log(`✅ Notification sent successfully to ${recipientId}`);
-    } else {
-      console.log(`⚠️ Failed to send notification: ${JSON.stringify(response.results)}`);
-    }
+    console.log(`✅ Notification sent successfully to ${recipientId}. Message ID: ${response}`);
 
     return null;
   } catch (error) {
     console.error("❌ Error in sendNewMessageNotification:", error);
+    
+    // More detailed error logging
+    if (error.code) {
+      console.error(`🚨 Error code: ${error.code}`);
+    }
+    if (error.message) {
+      console.error(`💬 Error message: ${error.message}`);
+    }
+    if (error.details) {
+      console.error(`📋 Error details:`, JSON.stringify(error.details, null, 2));
+    }
+    
     return null;
   }
 });
 
 
-// # Create a message document using gcloud
-// gcloud firestore documents create \
-//   --project=quickdrop-38749 \
-//   --collection-group=messages \
-//   --data='{
-//     "senderId": {"stringValue": "T0BMzJj4bhgh91P5PKXZAI8Kvg82"},
-//     "recipientId": {"stringValue": "wdrVujnB6dgglhbj6M7h0PsZ9ow1"},
-//     "text": {"stringValue": "gcloud test message"},
-//     "timestamp": {"timestampValue": "'$(date -u +%Y-%m-%dT%H:%M:%SZ)'"},
-//     "type": {"stringValue": "text"}
-//   }'
+exports.packageRequestNotification = onDocumentCreated({
+  document: "/requests/{requestsId}",
+  region: "us-central1"
+}, async (event) => {
+  try {
+    const snap = event.data;
+    if (!snap) {
+      console.log("No data associated with the event");
+      return null;
+    }
 
-//   # Get your Firebase project's REST API endpoint
-// # Replace PROJECT_ID with quickdrop-38749
-// curl -X POST \
-// 'https://firestore.googleapis.com/v1/projects/quickdrop-38749/messages:send' \
-// -H 'Authorization: Bearer '$(gcloud auth print-access-token) \
-// -H 'Content-Type: application/json' \
-// -d '{
-//   "message": {
-//       "token": "fGUOLfMWR7mEnR1V1InPXw:APA91bFPyZpxTM7QyzbgtmhAVZH3T4k8eo7SqEmDlfrpoALKLeFghyihOux8ikFrOgc3havfaFNf49_RWbt8Dma_p4Jeckxoq60RyAojW5S-O9_bHFyBsro",
-//       "notification": {
-//         "title": "Hello",
-//         "body": "This is a test notification"
-//       }
-//     }
-// }'
+    const messageData = snap.data();
+    const senderId = messageData.senderId;
+    const recipientId = messageData.receiverId;
+   
+
+    // console.log(`📨 Processing message from ${senderId} to ${recipientId}`);
+    // console.log(`📝 Message text: "${text}"`);
+
+    if (!recipientId ) {
+      console.log("❌ Missing recipientId ");
+      return null;
+    }
+
+    // Get recipient's FCM token
+    console.log(`🔍 Looking up user document for recipient: ${recipientId}`);
+    const userDoc = await admin.firestore().collection("users").doc(recipientId).get();
+
+    if (!userDoc.exists) {
+      console.log(`❌ User ${recipientId} does not exist`);
+      return null;
+    }
+
+    const userData = userDoc.data();
+    const userName = userData.displayName;
+    const text = "New package request from " + userName;
+
+    console.log(`👤 User data found, checking for FCM token...`);
+    
+    if (!userData.fcmToken) {
+      console.log(`❌ No FCM token for recipient ${recipientId}`);
+      console.log(`📄 Available user fields: ${Object.keys(userData)}`);
+      return null;
+    }
+
+    const token = userData.fcmToken;
+    // console.log(`🔑 FCM token found: ${token.substring(0, 20)}...`);
+    
+    // Updated payload format for the modern API
+    const message = {
+      token: token,
+      notification: {
+        title: "New Request",
+        body: text.length > 100 ? text.slice(0, 100) + "..." : text,
+      },
+      data: {
+        senderId: senderId,
+        recipientId: recipientId,
+        click_action: "FLUTTER_NOTIFICATION_CLICK",
+      },
+      // Optional: Android specific settings
+      android: {
+        notification: {
+          sound: "default",
+        }
+      },
+      // Optional: iOS specific settings
+      apns: {
+        payload: {
+          aps: {
+            sound: "default"
+          }
+        }
+      }
+    };
+
+    // console.log(`📤 Sending notification with payload:`, JSON.stringify(message, null, 2));
+
+    // Send the notification using the modern API
+    const response = await admin.messaging().send(message);
+    
+    console.log(`✅ Notification sent successfully to ${recipientId}. Message ID: ${response}`);
+
+    return null;
+  } catch (error) {
+    console.error("❌ Error in packageRequestNotification:", error);
+    
+    return null;
+  }
+});
+
+
