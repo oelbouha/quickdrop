@@ -163,7 +163,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     overflow: TextOverflow.ellipsis,
                   ),
                    Text(
-                    'Show profile',
+                    'Member since 2025',
                     style:  TextStyle(
                       fontSize: 14,
                       color: Colors.grey[600],
@@ -217,11 +217,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
       child: Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: color.withValues(alpha: 0.1),
+          color: AppColors.white,
           borderRadius: BorderRadius.circular(12),
           boxShadow: [
             BoxShadow(
-              color: color.withValues(alpha: 0.05),
+              color: AppColors.dark.withValues(alpha: 0.1),
               blurRadius: 4,
               offset: const Offset(0, 2),
             ),
