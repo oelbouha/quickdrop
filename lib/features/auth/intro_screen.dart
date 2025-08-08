@@ -27,25 +27,30 @@ class _IntroScreenState extends State<IntroScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 // Header Section
-                const Column(
+                 Column(
                   children: [
-                    SizedBox(height: 32),
-                    Text(
-                      'QUICKDROP',
-                      style: TextStyle(
-                        fontSize: 36,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black,
-                      ),
+                    const SizedBox(height: 32),
+                    Image.asset(
+                      "assets/images/logo.png",
+                      height: 80,
                     ),
-                    SizedBox(height: 8),
-                    Text(
-                      'Connect. Ship. Deliver.',
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: Colors.black, 
-                      ),
-                    ),
+                    
+                    // Text(
+                    //   'QUICKDROP',
+                    //   style: TextStyle(
+                    //     fontSize: 36,
+                    //     fontWeight: FontWeight.bold,
+                    //     color: Colors.black,
+                    //   ),
+                    // ),
+                    // SizedBox(height: 8),
+                    // Text(
+                    //   'Connect. Ship. Deliver.',
+                    //   style: TextStyle(
+                    //     fontSize: 14,
+                    //     color: Colors.black, 
+                    //   ),
+                    // ),
                   ],
                 ),
                 

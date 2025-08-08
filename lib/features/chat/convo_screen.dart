@@ -2,6 +2,7 @@ import 'package:quickdrop_app/core/utils/imports.dart';
 import 'package:quickdrop_app/features/models/chat_model.dart';
 
 
+
 class ConversationScreen extends StatefulWidget {
   final Map<String, dynamic> user;
 
@@ -48,8 +49,9 @@ class _ConversationScreenState extends State<ConversationScreen> {
       messageController.clear();
     } catch (e) {
       // print("Error sending message: $e");
-      if (mounted)
+      if (mounted) {
         AppUtils.showDialog(context, "Failed to send message ${e.toString()}", AppColors.error);
+      }
     }
   }
 
@@ -87,7 +89,8 @@ class _ConversationScreenState extends State<ConversationScreen> {
             ),
           ),
         ),
-        body: Column(children: [
+        body: Column(
+          children: [
           Expanded(
               child: Padding(
                   padding: const EdgeInsets.only(
@@ -99,15 +102,19 @@ class _ConversationScreenState extends State<ConversationScreen> {
                     stream: chatProvider.getMessages(chatId),
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
-                        // return const Center(child: CircularProgressIndicator());
+                        return  Center(child: loadingAnimation());
                       }
                       if (snapshot.hasError) {
-                        return const Center(
-                            child: Text("Error loading messages"));
+                        return  Center(
+                            child: buildEmptyState(
+                              Icons.error, 
+                              "Error loading messages", 
+                              "Failed to load messages. Please try again later."
+                        ));
                       }
-                      if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                        return const Center(child: Text("No messages yet"));
-                      }
+                      // if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                      //   return const Center(child: Text("No messages yet"));
+                      // }
                       final messages = snapshot.data ?? [];
                       return ListView.builder(
                         reverse: true,
