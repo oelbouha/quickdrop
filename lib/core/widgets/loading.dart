@@ -11,8 +11,6 @@ Widget loadingAnimation({
   return (
   Center(
       child: LoadingAnimationWidget.staggeredDotsWave(
-        // leftDotColor: AppColors.blue700,
-        // rightDotColor: AppColors.dark,
         color: color,
         size: size,
       ),
