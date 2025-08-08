@@ -27,9 +27,10 @@ class _VerifyPhoneScreenState extends State<VerifyPhoneScreen> {
   late String _currentVerificationId;
   bool isLoading = false;
 
-  int maxCodeSend = 0;
+  int maxCodeSend = 1;
   int _timeLeft = 60;
   bool _canSendCode = false;
+  bool maxRetryTimeOutEnd = false;
 
   late Timer _timer;
 
@@ -46,20 +47,20 @@ class _VerifyPhoneScreenState extends State<VerifyPhoneScreen> {
       _canSendCode = false;
     });
 
-    _timer = Timer.periodic(const Duration(seconds: 1), (timer){
-        if (_timeLeft == 0) {
-          setState(() {
-            _canSendCode = true;
-          });
-          timer.cancel();
-        } else {
-          setState(() {
-            _timeLeft--;
-          });
-        }
+    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      if (_timeLeft == 0) {
+        setState(() {
+          _canSendCode = true;
+        });
+        timer.cancel();
+      } else {
+        setState(() {
+          _timeLeft--;
+        });
+      }
     });
   }
-  
+
   @override
   void dispose() {
     _timer.cancel();
@@ -83,9 +84,8 @@ class _VerifyPhoneScreenState extends State<VerifyPhoneScreen> {
         queryParameters: {'phoneNumber': widget.phoneNumber},
       );
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Invalid code. Please try again.")),
-      );
+      AppUtils.showDialog(
+          context, "Invalid code. Please try again.", AppColors.error);
     } finally {
       setState(() => isLoading = false);
     }
@@ -96,13 +96,20 @@ class _VerifyPhoneScreenState extends State<VerifyPhoneScreen> {
       AppUtils.showDialog(context, "Please wait", AppColors.error);
       return;
     }
-    if (maxCodeSend >= 3) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("you reached max tries try again later.")),
-      );
+    if (maxCodeSend == 3) {
+      AppUtils.showDialog(
+          context, "you reached max tries try again later.", AppColors.error);
+      if (maxRetryTimeOutEnd) return;
+      maxRetryTimeOutEnd = true;
+      Future.delayed(const Duration(seconds: 10000), () {
+        maxCodeSend = 1;
+        maxRetryTimeOutEnd = false;
+      });
       return;
     }
     ++maxCodeSend;
+    startTimer();
+    return;
     await FirebaseAuth.instance.verifyPhoneNumber(
       phoneNumber: widget.phoneNumber!,
       verificationCompleted: (PhoneAuthCredential credential) {},
@@ -115,9 +122,9 @@ class _VerifyPhoneScreenState extends State<VerifyPhoneScreen> {
         setState(() {
           _currentVerificationId = newVerificationId;
         });
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("Code resent.")),
-        );
+
+        AppUtils.showDialog(
+            context, "code was sent , check your inbox.", AppColors.blue700);
       },
       codeAutoRetrievalTimeout: (String verificationId) {},
     );
@@ -206,8 +213,10 @@ class _VerifyPhoneScreenState extends State<VerifyPhoneScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                     Text(
-                      _canSendCode ? "Resend code in $_timeLeft seconds" : "Didn't receive the code? ",
+                    Text(
+                      _canSendCode
+                          ? "Didn't receive the code? "
+                          : "Resend code in $_timeLeft seconds",
                       style: const TextStyle(
                         color: AppColors.shipmentText,
                         fontSize: 14,
@@ -221,7 +230,6 @@ class _VerifyPhoneScreenState extends State<VerifyPhoneScreen> {
                       ),
                   ],
                 ),
-                
               ],
             ),
           ),
