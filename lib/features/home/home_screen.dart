@@ -48,10 +48,14 @@ class _HomeScreenState extends State<HomeScreen> {
         final userIds = shipmentProvider.shipments.map((r) => r.userId).toSet().toList();
         final tripUserIds =
             tripProvider.trips.map((r) => r.userId).toSet().toList();
+
+
         await Provider.of<UserProvider>(context, listen: false)
             .fetchUsersData(userIds);
         await Provider.of<UserProvider>(context, listen: false)
             .fetchUsersData(tripUserIds);
+
+
       } catch (e) {
         if (mounted) {
           AppUtils.showDialog(
@@ -97,7 +101,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               // const SizedBox(height: 32),
                               // _buildOurServices(),
                               const SizedBox(height: 24),
-                              _buildListingsHeader(),
+                              _buildButtons(),
                               const SizedBox(height: 16),
                               Consumer3<ShipmentProvider, TripProvider,
                                       UserProvider>(
@@ -106,6 +110,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                 return IndexedStack(
                                   index: selectedIndex,
                                   children: [
+                                    _buildAllListings(
+                                        shipmentProvider.activeShipments,
+                                        tripProvider.activeTrips),
                                     _buildShipmentListings(
                                         shipmentProvider.activeShipments),
                                     _buildTripListings(
@@ -384,22 +391,64 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _buildListingsHeader() {
+  Widget _buildButtons() {
     return Row(
       children: [
-        Text(
-          "Recent ${selectedIndex == 0 ? 'Shipments' : 'Trips'}",
-          style: const TextStyle(
-            color: AppColors.textPrimary,
+        _buildButton("All", 0),
+        const SizedBox(width: 16),
+        _buildButton("Trips", 2),
+        const SizedBox(width: 16),
+        _buildButton("Shipments", 1),
+      ],
+    );
+  }
+
+  Widget _buildButton(String title, int index) {
+    return GestureDetector(
+      onTap: () => setState(() => selectedIndex = index),
+      child: Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: selectedIndex == index
+              ? AppColors.blue700
+              : AppColors.cardBackground,
+          borderRadius: BorderRadius.circular(30),
+          border: Border.all(
+            color: selectedIndex == index
+                ? AppColors.cardBorder
+                : Colors.transparent,
+          ),
+        ),
+        child: Text(
+          title,
+          style: TextStyle(
+            color: selectedIndex == index
+                ? AppColors.white
+                : AppColors.textSecondary,
             fontSize: 14,
             fontWeight: FontWeight.bold,
           ),
         ),
-        const Spacer(),
-        _showPopUpMenu(),
-      ],
-    );
+      ));
   }
+
+
+  // Widget _buildButtons() {
+  //   return Row(
+  //     children: [
+  //       Text(
+  //         "Recent ${selectedIndex == 0 ? 'Shipments' : 'Trips'}",
+  //         style: const TextStyle(
+  //           color: AppColors.textPrimary,
+  //           fontSize: 14,
+  //           fontWeight: FontWeight.bold,
+  //         ),
+  //       ),
+  //       const Spacer(),
+  //       _showPopUpMenu(),
+  //     ],
+  //   );
+  // }
 
   Widget _showPopUpMenu() {
     return Theme(
@@ -565,12 +614,6 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
 
-
-
-
-
-
-
   Widget _buildTripListings(List<Trip> activeTrips) {
     return Consumer2<TripProvider, UserProvider>(
       builder: (context, tripProvider, userProvider, child) {
@@ -592,15 +635,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   }
                   return Column(
                     children: [
-                      ShipmentCard(
-                        shipment: trip,
-                        userData: userData,
-                        onPressed: () {
-                          print("Navigating to trip details for ${trip.id}");
-                          context.push(
-                              '/trip-details?tripId=${trip.id}&userId=${trip.userId}&viewOnly=false');
-                        },
-                      ),
+                      _buildTripcard(trip, userData),
                       const SizedBox(height: 16),
                     ],
                   );
@@ -609,6 +644,29 @@ class _HomeScreenState extends State<HomeScreen> {
       },
     );
   }
+
+  Widget _buildShipmentCard(Shipment shipment, UserData userData) {
+    return  ShipmentCard(
+        shipment: shipment,
+        userData: userData,
+        onPressed: () {
+          context.push(
+              '/shipment-details?shipmentId=${shipment.id}&userId=${shipment.userId}&viewOnly=false');
+        },
+      );
+  }
+
+  Widget _buildTripcard(Trip trip, UserData userData) {
+    return  ShipmentCard(
+        shipment: trip,
+        userData: userData,
+        onPressed: () {
+          context.push(
+              '/trip-details?tripId=${trip.id}&userId=${trip.userId}&viewOnly=false');
+        },
+      );
+  }
+
 
   Widget _buildShipmentListings(List<Shipment> activeShipments) {
     return Consumer2<ShipmentProvider, UserProvider>(
@@ -631,14 +689,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   }
                   return Column(
                     children: [
-                      ShipmentCard(
-                        shipment: shipment,
-                        userData: userData,
-                        onPressed: () {
-                          context.push(
-                              '/shipment-details?shipmentId=${shipment.id}&userId=${shipment.userId}&viewOnly=false');
-                        },
-                      ),
+                      _buildShipmentCard(shipment, userData),
                       const SizedBox(height: 16),
                     ],
                   );
@@ -648,7 +699,40 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  Widget _buildAllListings(List<TransportItem> activeShipments, List<TransportItem> activeTrips) {
+    List<TransportItem> items = [...activeShipments, ...activeTrips];
+    // items.sort((a, b) => b.createdAt.compareTo(a.createdAt));
 
+    return Consumer2<ShipmentProvider, UserProvider>(
+      builder: (context, shipmentProvider, userProvider, child) {
+        return items.isEmpty
+            ? buildEmptyState(
+                Icons.inventory_2,
+                "No active shipments",
+                "Be the first to post a shipment request!",
+              )
+            : ListView.builder(
+                physics: const NeverScrollableScrollPhysics(),
+                shrinkWrap: true,
+                itemCount: items.length,
+                itemBuilder: (context, index) {
+                  final shipment = items[index];
+                  final userData = userProvider.getUserById(shipment.userId);
+                  if (userData == null) {
+                    return const SizedBox.shrink();
+                  }
+                  return Column(
+                    children: [
+                      if (shipment is Shipment) _buildShipmentCard(shipment, userData),
+                      if (shipment is Trip) _buildTripcard(shipment, userData),
+                      const SizedBox(height: 16),
+                    ],
+                  );
+                },
+              );
+      },
+    );
+  }
 
 
 }
