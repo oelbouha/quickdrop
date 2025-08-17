@@ -110,9 +110,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                 return IndexedStack(
                                   index: selectedIndex,
                                   children: [
-                                    _buildAllListings(
-                                        shipmentProvider.activeShipments,
-                                        tripProvider.activeTrips),
+                                    // _buildAllListings(
+                                    //     shipmentProvider.activeShipments,
+                                        // tripProvider.activeTrips),
                                     _buildShipmentListings(
                                         shipmentProvider.activeShipments),
                                     _buildTripListings(
@@ -391,17 +391,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _buildButtons() {
-    return Row(
-      children: [
-        _buildButton("All", 0),
-        const SizedBox(width: 16),
-        _buildButton("Trips", 2),
-        const SizedBox(width: 16),
-        _buildButton("Shipments", 1),
-      ],
-    );
-  }
+
 
   Widget _buildButton(String title, int index) {
     return GestureDetector(
@@ -433,22 +423,22 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
 
-  // Widget _buildButtons() {
-  //   return Row(
-  //     children: [
-  //       Text(
-  //         "Recent ${selectedIndex == 0 ? 'Shipments' : 'Trips'}",
-  //         style: const TextStyle(
-  //           color: AppColors.textPrimary,
-  //           fontSize: 14,
-  //           fontWeight: FontWeight.bold,
-  //         ),
-  //       ),
-  //       const Spacer(),
-  //       _showPopUpMenu(),
-  //     ],
-  //   );
-  // }
+  Widget _buildButtons() {
+    return Row(
+      children: [
+        Text(
+          "Recent ${selectedIndex == 0 ? 'Shipments' : 'Trips'}",
+          style: const TextStyle(
+            color: AppColors.textPrimary,
+            fontSize: 14,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        const Spacer(),
+        _showPopUpMenu(),
+      ],
+    );
+  }
 
   Widget _showPopUpMenu() {
     return Theme(

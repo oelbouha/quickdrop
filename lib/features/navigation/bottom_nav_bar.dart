@@ -28,7 +28,7 @@ class BottomNavScreen extends StatelessWidget {
   decoration: const BoxDecoration(
     border: Border(
       top:  BorderSide(
-        color: AppColors.lessImportant, // Color of the top border
+        color: AppColors.white, // Color of the top border
         width: 0.4, // Thickness of the border
       ),
     ),

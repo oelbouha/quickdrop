@@ -102,8 +102,13 @@ class _ConversationScreenState extends State<ConversationScreen> {
                     stream: chatProvider.getMessages(chatId),
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
-                        return  Center(child: loadingAnimation());
+                        // return  Center(child: loadingAnimation());
                       }
+                      if (!snapshot.hasData) {
+                        // First time loading only
+                        return Center(child: loadingAnimation());
+                      }
+
                       if (snapshot.hasError) {
                         return  Center(
                             child: buildEmptyState(
