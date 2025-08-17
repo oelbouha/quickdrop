@@ -6,7 +6,7 @@ class NotificationModel {
   final String receiverId;
   final String message;
   final DateTime date;
-  final bool read;
+   bool read;
 
   NotificationModel({
     required this.id,
