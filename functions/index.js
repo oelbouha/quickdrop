@@ -142,6 +142,14 @@ exports.packageRequestNotification = onDocumentCreated({
     const text = "New package request from " + userName;
 
     console.log(`👤 User data found, checking for FCM token...`);
+
+    const notificationRef = await admin.firestore().collection("notifications").add({
+      senderId: senderId,
+      receiverId: recipientId,
+      message: text,
+      date: admin.firestore.FieldValue.serverTimestamp(),
+      read: false, 
+    });
     
     if (!userData.fcmToken) {
       console.log(`❌ No FCM token for recipient ${recipientId}`);
