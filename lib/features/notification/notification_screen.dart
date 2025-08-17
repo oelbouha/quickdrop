@@ -11,7 +11,6 @@ class NotificationScreen extends StatefulWidget {
 
 class NotificationScreenState extends State<NotificationScreen> {
   bool _isLoading = true;
-  // List<NotificationModel> notifications = [];
 
   @override
   void initState() {
@@ -19,9 +18,9 @@ class NotificationScreenState extends State<NotificationScreen> {
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       final user = FirebaseAuth.instance.currentUser;
-      print("user Id $user.uid");
       await Provider.of<NotificationProvider>(context, listen: false)
           .fetchNotifications(user!.uid);
+      setState(() => _isLoading = false);
     });
   }
 
@@ -40,48 +39,44 @@ class NotificationScreenState extends State<NotificationScreen> {
           iconTheme: const IconThemeData(color: AppColors.appBarIcons),
           systemOverlayStyle: SystemUiOverlayStyle.dark,
         ),
-        body: Consumer<NotificationProvider>(
-          builder: (context, notifProvider, child) {
-            final notifs = notifProvider.notifications;
-            if (notifs.isEmpty) {
-              return Center(child: Text("No notifications yet"));
-            }
-            return ListView.builder(
-  itemCount: notifs.length,
-  itemBuilder: (context, index) {
-    final notif = notifs[index];
+        body: _isLoading
+            ? loadingAnimation()
+            : Consumer<NotificationProvider>(
+                builder: (context, notifProvider, child) {
+                  final notifs = notifProvider.notifications;
+                  if (notifs.isEmpty) {
+                    return Center(
+                        child: buildEmptyState(
+                            Icons.notifications, "No Notifications yet", ""));
+                  }
+                  return ListView.builder(
+                    itemCount: notifs.length,
+                    itemBuilder: (context, index) {
+                      final notif = notifs[index];
 
-    return Card(
-      color: notif.read ? Colors.grey[200] : Colors.blue[50], 
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: ListTile(
-        title: Text(notif.message),
-        subtitle: Text(
-          notif.date.toString(),
-          style: TextStyle(fontSize: 12, color: Colors.grey[600]),
-        ),
-        trailing: notif.read
-            ? Icon(Icons.check, color: Colors.green)
-            : Icon(Icons.circle, color: Colors.red, size: 12),
-
-
-        onTap: () {
-          print("Notification tapped: ${notif.id}");
-
-
-          // FirebaseFirestore.instance
-          //     .collection("notifications")
-          //     .doc(notif.id)
-          //     .update({"read": true});
-        },
-      ),
-    );
-  },
-);
-
-          },
+                      return Container(
+                        width: double.infinity,
+                        color: notif.read ? Colors.grey[200] : Colors.blue[50],
+                        child: ListTile(
+                          title: Text(notif.message),
+                          subtitle: Text(
+                            notif.date.toString(),
+                            style: TextStyle(
+                                fontSize: 12, color: Colors.grey[600]),
+                          ),
+                          trailing: notif.read
+                              ? null
+                              : Icon(Icons.circle, color: Colors.red, size: 12),
+                          onTap: () {
+                            context.pop();
+                            context.go("/offers");
+                            notifProvider.markAsRead(notif.id);
+                          },
+                        ),
+                      );
+                    },
+                  );
+                },
         ));
   }
 }

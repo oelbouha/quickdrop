@@ -547,61 +547,18 @@ class _HomeScreenState extends State<HomeScreen> {
               onTap: () => context.push("/help"),
             ),
             const SizedBox(width: 8),
-            buildHeaderIcon(
-              icon: "assets/icon/notification.svg",
-              onTap: () => context.push("/notification"),
-              hasNotification: true,
-            ),
+            const NotificationIcon(),
+            // buildHeaderIcon(
+            //   icon: "assets/icon/notification.svg",
+            //   onTap: () => context.push("/notification"),
+            //   hasNotification: true,
+            // ),
           ],
         ),
       ],
     );
   }
 
-  Widget _buildHeaderIcon({
-    required String icon,
-    required VoidCallback onTap,
-    bool hasNotification = false,
-  }) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        padding: const EdgeInsets.all(6),
-        decoration: BoxDecoration(
-          // color: AppColors.white.withValues(alpha: 0.4),
-          // borderRadius: BorderRadius.circular(30),
-          // border: Border.all(
-          //   color: AppColors.borderGray200,
-          //   width: 1,
-          //   strokeAlign: BorderSide.strokeAlignInside,
-          // ),
-
-        ),
-        child: Stack(
-          children: [
-            CustomIcon(
-              iconPath: icon,
-              color: AppColors.textSecondary,
-              size: 24,
-            ),
-            if (hasNotification)
-              Positioned(
-                right: 0,
-                top: 0,
-                child: Container(
-                  width: 8,
-                  height: 8,
-                  decoration: const BoxDecoration(
-                    color: AppColors.red500,
-                    shape: BoxShape.circle,
-                  ),
-                ),
-              ),
-          ],
-        ),
-      ),
-    );
-  }
 
 
   Widget _buildTripListings(List<Trip> activeTrips) {

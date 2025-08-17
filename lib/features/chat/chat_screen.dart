@@ -42,7 +42,7 @@ class _ChatScreenState extends State<ChatScreen>
 
 
   Widget _buildAppBar() {
-    return Row(
+    return const Row(
       children: [
        const Text(
           "Chat",
@@ -53,18 +53,14 @@ class _ChatScreenState extends State<ChatScreen>
           ),
         ),
         const Spacer(),
-        Row(
+        const Row(
           children: [
             // buildHeaderIcon(
             //   icon: "assets/icon/help.svg",
             //   onTap: () => context.push("/help"),
             // ),
             // const SizedBox(width: 8),
-            buildHeaderIcon(
-              icon: "assets/icon/notification.svg",
-              onTap: () => context.push("/notification"),
-              hasNotification: true,
-            ),
+           const NotificationIcon(),
           ],
         ),
       ],

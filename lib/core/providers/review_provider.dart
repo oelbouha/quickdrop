@@ -26,7 +26,7 @@ class ReviewProvider with ChangeNotifier {
 
       return totalRating / querySnapshot.docs.length;
     } catch (e) {
-      print('Error fetching user rating: $e');
+      
       return 0.0;
     }
   }

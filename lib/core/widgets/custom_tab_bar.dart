@@ -39,18 +39,14 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                 ),
               ),
              
-              Row(
+             const  Row(
           children: [
             // buildHeaderIcon(
             //   icon: "assets/icon/help.svg",
             //   onTap: () => context.push("/help"),
             // ),
             // const SizedBox(width: 8),
-            buildHeaderIcon(
-              icon: "assets/icon/notification.svg",
-              onTap: () => context.push("/notification"),
-              hasNotification: true,
-            ),
+            NotificationIcon(),
           ],
         ),
             ],
