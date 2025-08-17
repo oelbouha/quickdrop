@@ -1,7 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:quickdrop_app/core/providers/notification_provider.dart';
 import 'package:quickdrop_app/core/utils/imports.dart';
 import 'package:quickdrop_app/core/widgets/destination.dart';
 
+import 'package:quickdrop_app/features/models/notification_model.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 
 class ListingShipmentLoader extends StatefulWidget {
@@ -658,15 +660,6 @@ class _ListingCardDetailsState extends State<ListingCardDetails> {
             context, 'Please log in to list a shipment', AppColors.error);
         return;
       }
-
-      // final DeliveryRequest request = DeliveryRequest(
-      //     tripId: trip.id!,
-      //     senderId: user.uid,
-      //     receiverId: widget.shipment.userId,
-      //     status: DeliveryStatus.active,
-      //     date: DateTime.now().toIso8601String(),
-      //     shipmentId: widget.shipment.id!,
-      //     price: priceController.text);
 
       await Provider.of<DeliveryRequestProvider>(context, listen: false)
           .sendRequest(trip, widget.shipment as Shipment);

@@ -130,7 +130,7 @@ class ShipmentCardState extends State<ShipmentCard>
         const SizedBox(height: 4),
         // Sender name
         Text(
-          "Sender: ${widget.userData.displayName ?? 'Guest'}",
+          "${widget.userData.displayName ?? 'Guest'}",
           style: const TextStyle(
             color: Color(0xFF121416), 
             fontSize: 16,
@@ -184,7 +184,7 @@ class ShipmentCardState extends State<ShipmentCard>
     }
     if (shipment == null) {
       return  Container(
-          width: 110,
+          width: 120,
           height: 120,
           decoration: BoxDecoration(
             color: const Color(0xFFE1AC71).withOpacity(0.8),

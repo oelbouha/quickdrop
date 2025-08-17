@@ -9,9 +9,10 @@ class HomePageSkeleton extends StatefulWidget {
 
 class _HomePageSkeletonState extends State<HomePageSkeleton>
     with TickerProviderStateMixin {
-  late AnimationController _entranceController;
-  late List<Animation<Offset>> _slideAnimations;
-  late List<Animation<double>> _fadeAnimations;
+    
+    late AnimationController _entranceController;
+    late List<Animation<Offset>> _slideAnimations;
+    late List<Animation<double>> _fadeAnimations;
 
   @override
   void initState() {

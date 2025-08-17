@@ -1,4 +1,5 @@
 import 'package:quickdrop_app/core/providers/negotiation_provider.dart';
+import 'package:quickdrop_app/core/providers/notification_provider.dart';
 import 'package:quickdrop_app/features/notification/notification_handler.dart';
 import 'firebase_options.dart';
 import 'package:quickdrop_app/core/utils/imports.dart';
@@ -108,6 +109,7 @@ void main() async {
         ChangeNotifierProvider(create: (context) => DeliveryRequestProvider()),
         ChangeNotifierProvider(create: (context) => ChatProvider()),
         ChangeNotifierProvider(create: (context) => NegotiationProvider()),
+        ChangeNotifierProvider(create: (context) => NotificationProvider()),
       ],
       child: const MyApp(),
     ),
@@ -120,14 +122,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final router = AppRouter.createRouter(context);
-    return SkeletonizerConfig(
-        data: const SkeletonizerConfigData(
-          effect: ShimmerEffect(
-            baseColor: Color.fromARGB(255, 151, 143, 143),
-            highlightColor: Color.fromARGB(255, 95, 94, 94),
-          ),
-        ),
-        child: MaterialApp.router(
+    return  MaterialApp.router(
           debugShowCheckedModeBanner: false,
           theme: ThemeData(
             fontFamily: 'MonaSans',
@@ -136,6 +131,6 @@ class MyApp extends StatelessWidget {
             ),
           ),
           routerConfig: router,
-        ));
+        );
   }
 }

@@ -74,7 +74,6 @@ export 'package:quickdrop_app/core/widgets/show_succes.dart';
 
 export 'package:quickdrop_app/core/widgets/item_details.dart';
 
-export 'package:skeletonizer/skeletonizer.dart';
 
 export 'package:quickdrop_app/routes/routes.dart';
 

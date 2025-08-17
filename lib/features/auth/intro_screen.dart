@@ -32,7 +32,7 @@ class _IntroScreenState extends State<IntroScreen> {
                     const SizedBox(height: 32),
                     Image.asset(
                       "assets/images/logo.png",
-                      height: 80,
+                      height: 40,
                     ),
                     
                     // Text(
@@ -57,14 +57,14 @@ class _IntroScreenState extends State<IntroScreen> {
                 const SizedBox(height: 32),
                 
                 // Spacer for visual balance
-                Container(
-                  width: double.infinity,
-                  height: 200,
-                  decoration: const BoxDecoration(),
-                  child: Image.asset('assets/images/ani.png', 
-                    fit: BoxFit.cover,
-                  ),
-                ),
+                // Container(
+                //   width: double.infinity,
+                //   height: 200,
+                //   decoration: const BoxDecoration(),
+                //   child: Image.asset('assets/images/ani.png', 
+                //     fit: BoxFit.cover,
+                //   ),
+                // ),
                 
                 // Buttons Section
                 const Spacer(),
@@ -111,7 +111,7 @@ class _IntroScreenState extends State<IntroScreen> {
                 const SizedBox(height: 32),
                 
                 // Bottom Indicator
-                const Spacer(),
+                // const Spacer(),
                 Container(
                   width: 100,
                   height: 4,
