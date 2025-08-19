@@ -1,5 +1,5 @@
 export 'package:flutter/material.dart';
-
+import 'package:intl/intl.dart';
 export 'package:flutter/services.dart'; 
 
 export 'package:quickdrop_app/theme/colors.dart';

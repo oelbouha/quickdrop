@@ -1,6 +1,14 @@
 import 'package:quickdrop_app/core/utils/imports.dart';
 import 'package:quickdrop_app/core/providers/notification_provider.dart';
 import 'package:quickdrop_app/features/models/notification_model.dart';
+import 'package:intl/intl.dart';
+
+String formatDate(String rawDate) {
+  DateTime dateTime = DateTime.parse(rawDate);
+  String formatted = DateFormat('dd MMM yyyy, HH:mm').format(dateTime);
+  return formatted;
+}
+
 
 class NotificationScreen extends StatefulWidget {
   const NotificationScreen({Key? key}) : super(key: key);
@@ -60,13 +68,14 @@ class NotificationScreenState extends State<NotificationScreen> {
                         child: ListTile(
                           title: Text(notif.message),
                           subtitle: Text(
-                            notif.date.toString(),
+                            formatDate(notif.date.toString()),
                             style: TextStyle(
                                 fontSize: 12, color: Colors.grey[600]),
                           ),
                           trailing: notif.read
                               ? null
-                              : Icon(Icons.circle, color: Colors.red, size: 12),
+                              : const Icon(Icons.circle,
+                                  color: Colors.red, size: 12),
                           onTap: () {
                             context.pop();
                             context.go("/offers");
@@ -77,6 +86,6 @@ class NotificationScreenState extends State<NotificationScreen> {
                     },
                   );
                 },
-        ));
+              ));
   }
 }
