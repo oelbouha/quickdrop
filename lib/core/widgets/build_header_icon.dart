@@ -62,7 +62,7 @@ class NotificationIcon extends StatelessWidget {
       builder: (context, snapshot) {
         final hasNotification =
             snapshot.hasData && snapshot.data!.docs.isNotEmpty;
-        final count = snapshot.data!.docs.length;
+        // final count = snapshot.data!.docs.length;
         return GestureDetector(
             onTap: () => context.push("/notification"),
             child: Stack(
@@ -77,8 +77,8 @@ class NotificationIcon extends StatelessWidget {
                     right: 0,
                     top: 0,
                     child: Container(
-                      width: 9,
-                      height: 9,
+                      width: 8,
+                      height: 8,
                       decoration: const BoxDecoration(
                         color: AppColors.red500,
                         shape: BoxShape.circle,

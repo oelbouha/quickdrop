@@ -4,6 +4,12 @@ import 'package:quickdrop_app/features/profile/review_card.dart';
 import 'package:quickdrop_app/features/models/review_model.dart';
 import 'package:quickdrop_app/core/widgets/profile_image.dart';
 
+import 'package:intl/intl.dart';
+
+
+
+
+
 
 class ProfileStatisticsLoader extends StatefulWidget {
   final String userId;
@@ -44,6 +50,8 @@ Future<(UserData, StatisticsModel)> fetchData() async {
     return Future.error("Error fetching user data: $e");
   }
 }
+
+
 
 
 @override
@@ -100,6 +108,36 @@ class ProfileStatistics extends StatefulWidget {
 }
 
 class ProfileStatisticsState extends State<ProfileStatistics> {
+
+
+String  calculateTime(String rawDate) {
+  DateTime pastDate = DateFormat("dd/MM/yyyy").parse(rawDate);
+
+  // Get the difference between now and that date
+  Duration diff = DateTime.now().difference(pastDate);
+
+  String timeAgo = formatTimeAgo(diff);
+
+  return timeAgo;
+}
+
+String formatTimeAgo(Duration diff) {
+  if (diff.inDays > 365) {
+    int years = (diff.inDays / 365).floor();
+    return "$years year${years > 1 ? 's' : ''} ago";
+  } else if (diff.inDays > 30) {
+    int months = (diff.inDays / 30).floor();
+    return "$months month${months > 1 ? 's' : ''} ago";
+  } else if (diff.inDays > 0) {
+    return "${diff.inDays} day${diff.inDays > 1 ? 's' : ''} ago";
+  } else if (diff.inHours > 0) {
+    return "${diff.inHours} hour${diff.inHours > 1 ? 's' : ''} ago";
+  } else if (diff.inMinutes > 0) {
+    return "${diff.inMinutes} minute${diff.inMinutes > 1 ? 's' : ''} ago";
+  } else {
+    return "just now";
+  }
+}
 
 
   @override
@@ -491,21 +529,22 @@ Widget _buildUserStats() {
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 Text(
-                  '1',
+                  'Joined',
+                  style: TextStyle(
+                    fontSize: 18,
+                    color: AppColors.dark,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                Text(
+                  calculateTime(widget.user.createdAt!),
                   style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.w600,
                     color: AppColors.dark,
                   ),
                 ),
-                Text(
-                  'Month on quickdrop',
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: AppColors.dark,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
+                
               ],
             ),
           ],

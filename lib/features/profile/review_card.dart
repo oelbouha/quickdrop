@@ -4,6 +4,15 @@ import 'package:quickdrop_app/core/utils/imports.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
 
+import 'package:intl/intl.dart';
+
+
+String formatDate(String rawDate) {
+  DateTime dateTime = DateFormat("dd/MM/yyyy").parse(rawDate);
+  String formatted = DateFormat("dd MMM yyyy").format(dateTime); 
+  return formatted;
+}
+
 class ReviewCard extends StatelessWidget {
   final UserData user;
   final ReviewModel review;
@@ -49,7 +58,7 @@ class ReviewCard extends StatelessWidget {
             UserProfileCard(
               header: user.displayName ?? "Unknown user",
               onPressed: () => print("user profile  Clicked"),
-              subHeader: review.date,
+              subHeader: formatDate(review.date),
               photoUrl: user.photoUrl ?? AppTheme.defaultProfileImage,
               headerFontSize: 14,
               subHeaderFontSize: 10,

@@ -2,7 +2,13 @@ import 'package:quickdrop_app/core/widgets/profile_image.dart';
 import 'package:quickdrop_app/features/profile/settings_card.dart';
 import 'package:quickdrop_app/core/utils/imports.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
+import 'package:intl/intl.dart';
 
+String formatDate(String rawDate) {
+  DateTime dateTime = DateFormat("dd/MM/yyyy").parse(rawDate);
+  String formatted = DateFormat("dd MMM yyyy").format(dateTime); 
+  return formatted;
+}
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -24,16 +30,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
     try {
       String? image =
           Provider.of<UserProvider>(context, listen: false).user!.photoUrl!;
-      
+
       await DefaultCacheManager().downloadFile(image);
-      
     } catch (e) {
       print('Failed to precache image: $e');
     }
   }
 
   void _singOutUser() async {
-    if (_isSignoutLoading) return ;
+    if (_isSignoutLoading) return;
     setState(() {
       _isSignoutLoading = true;
     });
@@ -80,7 +85,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
         backgroundColor: AppColors.appBarBackground,
         title: const Text(
           'Profile',
-          style: TextStyle(color: AppColors.appBarText, fontWeight: FontWeight.w600),
+          style: TextStyle(
+              color: AppColors.appBarText, fontWeight: FontWeight.w600),
         ),
         centerTitle: true,
         iconTheme: const IconThemeData(color: AppColors.appBarIcons),
@@ -88,30 +94,30 @@ class _ProfileScreenState extends State<ProfileScreen> {
         elevation: 0,
       ),
       backgroundColor: AppColors.background,
-      body: _isSignoutLoading ?
-          loadingAnimation()
+      body: _isSignoutLoading
+          ? loadingAnimation()
           : SingleChildScrollView(
-            padding: const EdgeInsets.all(AppTheme.homeScreenPadding),
-            physics: const BouncingScrollPhysics(),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                _buildUserStats(),
-                const SizedBox(height: 32),
-                _buildQuickActions(),
-                const SizedBox(height: 32),
-                _buildSettingsSection(),
-                const SizedBox(height: 32),
-                _buildSupportSection(),
-                const SizedBox(height: 32),
-                _buildLegalSection(),
-                const SizedBox(height: 24),
-                _buildLogoutSection(),
-                const SizedBox(height: 40),
-                _buildVersionInfo(),
-              ],
+              padding: const EdgeInsets.all(AppTheme.homeScreenPadding),
+              physics: const BouncingScrollPhysics(),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _buildUserStats(),
+                  const SizedBox(height: 32),
+                  _buildQuickActions(),
+                  const SizedBox(height: 32),
+                  _buildSettingsSection(),
+                  const SizedBox(height: 32),
+                  _buildSupportSection(),
+                  const SizedBox(height: 32),
+                  _buildLegalSection(),
+                  const SizedBox(height: 24),
+                  _buildLogoutSection(),
+                  const SizedBox(height: 40),
+                  _buildVersionInfo(),
+                ],
+              ),
             ),
-      ),
     );
   }
 
@@ -126,62 +132,61 @@ class _ProfileScreenState extends State<ProfileScreen> {
         ),
       );
     }
-    return GestureDetector (
-      onTap: () {
-       context.push('/profile/statistics?userId=${user.uid}'); // Navigate to user statistics screen
-      },
-      child: Container(
-      padding: const EdgeInsets.all(16),
-      width: double.infinity,
-      decoration: BoxDecoration(
-        color: AppColors.white,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.05),
-            blurRadius: 10,
-            offset: const Offset(0, 2),
+    return GestureDetector(
+        onTap: () {
+          context.push(
+              '/profile/statistics?userId=${user.uid}'); // Navigate to user statistics screen
+        },
+        child: Container(
+          padding: const EdgeInsets.all(16),
+          width: double.infinity,
+          decoration: BoxDecoration(
+            color: AppColors.white,
+            borderRadius: BorderRadius.circular(16),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: 0.05),
+                blurRadius: 10,
+                offset: const Offset(0, 2),
+              ),
+            ],
           ),
-        ],
-      ),
-      child: Row(
-        children: [
-           buildProfileImage(user: user, size: 60),
+          child: Row(
+            children: [
+              buildProfileImage(user: user, size: 60),
               const SizedBox(width: 16),
               Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [ 
-                  Text(
-                    user.displayName ?? 'Guest User',
-                    style: const TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.black87,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      user.displayName ?? 'Guest User',
+                      style: const TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.black87,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                     ),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                   Text(
-                    'Member since 2025',
-                    style:  TextStyle(
-                      fontSize: 14,
-                      color: Colors.grey[600],
+                    Text(
+                      'Member since ${formatDate(user.createdAt!)}',
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: Colors.grey[600],
+                      ),
                     ),
-                  ),
-                ]),
-            const Spacer(),
-            const CustomIcon(
-              iconPath: "assets/icon/alt-arrow-right.svg",
-              color: Colors.black,
-              size: 20,
-            ),
-        ],
-      ),
-    ));
+                  ]),
+              const Spacer(),
+              const CustomIcon(
+                iconPath: "assets/icon/alt-arrow-right.svg",
+                color: Colors.black,
+                size: 20,
+              ),
+            ],
+          ),
+        ));
   }
-
-
 
   Widget _buildQuickActions() {
     return Column(
@@ -450,6 +455,4 @@ class _ProfileScreenState extends State<ProfileScreen> {
       ),
     );
   }
-
-
 }
