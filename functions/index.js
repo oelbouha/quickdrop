@@ -131,13 +131,14 @@ exports.packageRequestNotification = onDocumentCreated({
     // Get recipient's FCM token
     console.log(`🔍 Looking up user document for recipient: ${recipientId}`);
     const userDoc = await admin.firestore().collection("users").doc(recipientId).get();
+    const senderDoc = await admin.firestore().collection("users").doc(senderId).get();
 
     if (!userDoc.exists) {
       console.log(`❌ User ${recipientId} does not exist`);
       return null;
     }
 
-    const userData = userDoc.data();
+    const userData = senderDoc.data();
     const userName = userData.displayName;
     const text = "New package request from " + userName;
 
