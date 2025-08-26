@@ -77,8 +77,6 @@ class _VerifyPhoneScreenState extends State<VerifyPhoneScreen> {
 
       await FirebaseAuth.instance.signInWithCredential(credential);
 
-      AppUtils.showDialog(
-          context, widget.phoneNumber!, AppColors.error); // Can rename later
       context.pushNamed(
         'create-account',
         queryParameters: {'phoneNumber': widget.phoneNumber},
@@ -109,7 +107,7 @@ class _VerifyPhoneScreenState extends State<VerifyPhoneScreen> {
     }
     ++maxCodeSend;
     startTimer();
-    return;
+    // return;
     await FirebaseAuth.instance.verifyPhoneNumber(
       phoneNumber: widget.phoneNumber!,
       verificationCompleted: (PhoneAuthCredential credential) {},

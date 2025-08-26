@@ -210,10 +210,10 @@ class ActiveListing extends State<ActiveItemCard>
           Expanded(
             child: _buildActionButton(
               label: "Delete",
-              color: const Color(0xFFb91c1c), // red-700
-              backgroundColor: const Color(0xFFfef2f2), // red-50
-              borderColor: const Color(0xFFfecaca), // red-200
-              onTap: () => _showDeleteConfirmation(),
+              color: const Color(0xFFb91c1c), 
+              backgroundColor: const Color(0xFFfef2f2), 
+              borderColor: const Color(0xFFfecaca), 
+              onTap: () => widget.onPressed(),
               iconWidget: const Icon(Icons.delete_forever, size: 16),
             ),
           ),

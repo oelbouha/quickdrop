@@ -83,12 +83,13 @@ class _AddShipmentScreenState extends State<AddShipmentScreen>
           widget.existingShipment?.packageQuantity ?? "";
       typeController.text = widget.existingShipment?.type ?? "";
       priceController.text = widget.existingShipment?.price ?? "";
+      
     } else {
       packageQuantityController.text = "1";
       weightController.text = "1";
       typeController.text = "water";
-      fromController.text = "cassa";
-      toController.text = "martil";
+      // fromController.text = "cassa";
+      // toController.text = "martil";
       typeController.text = "Box";
     }
   }
