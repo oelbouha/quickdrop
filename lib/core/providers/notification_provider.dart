@@ -12,7 +12,7 @@ class NotificationProvider with ChangeNotifier {
     try {
       final snapshot = await _firestore
           .collection('notifications')
-          // .where('receiverId', isEqualTo: userId)
+          .where('receiverId', isEqualTo: userId)
           .get();
       _notifications = snapshot.docs
           .map((doc) => NotificationModel.fromMap(doc.data(), doc.id))

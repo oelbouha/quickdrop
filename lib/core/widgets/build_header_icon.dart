@@ -57,7 +57,7 @@ class NotificationIcon extends StatelessWidget {
       stream: firestore
           .collection('notifications')
           .where('receiverId', isEqualTo: userId)
-          .where('read', isEqualTo: true)
+          .where('read', isEqualTo: false)
           .snapshots(),
       builder: (context, snapshot) {
         final hasNotification =

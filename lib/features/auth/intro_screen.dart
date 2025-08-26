@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:quickdrop_app/core/utils/imports.dart';
-import 'package:flutter/services.dart'; 
+import 'package:flutter/services.dart';
 
 class IntroScreen extends StatefulWidget {
   const IntroScreen({super.key});
@@ -18,7 +18,10 @@ class _IntroScreenState extends State<IntroScreen> {
     return Scaffold(
       body: Container(
         decoration: const BoxDecoration(
-          color: Colors.white,
+          // image: DecorationImage(
+          //   image: AssetImage("assets/images/intro.jpg"), 
+          //   fit: BoxFit.cover, 
+          // ),
         ),
         child: SafeArea(
           child: Padding(
@@ -26,51 +29,21 @@ class _IntroScreenState extends State<IntroScreen> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                // Header Section
-                 Column(
+                
+                Column(
                   children: [
                     const SizedBox(height: 32),
                     Image.asset(
                       "assets/images/logo.png",
                       height: 40,
                     ),
-                    
-                    // Text(
-                    //   'QUICKDROP',
-                    //   style: TextStyle(
-                    //     fontSize: 36,
-                    //     fontWeight: FontWeight.bold,
-                    //     color: Colors.black,
-                    //   ),
-                    // ),
-                    // SizedBox(height: 8),
-                    // Text(
-                    //   'Connect. Ship. Deliver.',
-                    //   style: TextStyle(
-                    //     fontSize: 14,
-                    //     color: Colors.black, 
-                    //   ),
-                    // ),
                   ],
                 ),
-                
                 const SizedBox(height: 32),
                 
-                // Spacer for visual balance
-                // Container(
-                //   width: double.infinity,
-                //   height: 200,
-                //   decoration: const BoxDecoration(),
-                //   child: Image.asset('assets/images/ani.png', 
-                //     fit: BoxFit.cover,
-                //   ),
-                // ),
-                
-                // Buttons Section
                 const Spacer(),
                 Column(
                   children: [
-                    // Sign In Button
                     LoginButton(
                       hintText: "Sign in",
                       backgroundColor: AppColors.blue700,
@@ -109,9 +82,6 @@ class _IntroScreenState extends State<IntroScreen> {
                 ),
                 
                 const SizedBox(height: 32),
-                
-                // Bottom Indicator
-                // const Spacer(),
                 Container(
                   width: 100,
                   height: 4,
