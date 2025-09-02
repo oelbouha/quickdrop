@@ -102,8 +102,8 @@ Widget buildUserProfileImage(String photoUrl, Color borderColor, double avatarSi
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(24),
             border: Border.all(
-              color: borderColor.withOpacity(0.3),
-              width: 3,
+              color: borderColor.withOpacity(0.8),
+              width: 0,
             ),
           ),
           child: ClipRRect(

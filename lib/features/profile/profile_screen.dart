@@ -153,7 +153,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ),
           child: Row(
             children: [
-              buildProfileImage(user: user, size: 60),
+              buildProfileImage(user: user, size: 56),
               const SizedBox(width: 16),
               Column(
                   mainAxisAlignment: MainAxisAlignment.start,
@@ -162,7 +162,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     Text(
                       user.displayName ?? 'Guest User',
                       style: const TextStyle(
-                        fontSize: 18,
+                        fontSize: 16,
                         fontWeight: FontWeight.w600,
                         color: Colors.black87,
                       ),
@@ -172,7 +172,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     Text(
                       'Member since ${formatDate(user.createdAt!)}',
                       style: TextStyle(
-                        fontSize: 14,
+                        fontSize: 12,
                         color: Colors.grey[600],
                       ),
                     ),
@@ -220,7 +220,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.only(
+           left: 16,
+            right: 16,
+            top: 12,
+            bottom: 12,
+        ),
         decoration: BoxDecoration(
           color: AppColors.white,
           borderRadius: BorderRadius.circular(12),
@@ -244,7 +249,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               child: Icon(
                 icon,
                 color: Colors.white,
-                size: 20,
+                size: 18,
               ),
             ),
             const SizedBox(width: 16),
@@ -255,7 +260,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   Text(
                     title,
                     style: const TextStyle(
-                      fontSize: 15,
+                      fontSize: 14,
                       fontWeight: FontWeight.w600,
                       color: Colors.black87,
                     ),
@@ -271,11 +276,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ],
               ),
             ),
-            Icon(
-              Icons.arrow_forward_ios,
-              size: 14,
-              color: Colors.black,
-            ),
+            // Icon(
+            //   Icons.arrow_forward_ios,
+            //   size: 14,
+            //   color: Colors.black,
+            // ),
           ],
         ),
       ),
@@ -406,7 +411,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
           onTap: _singOutUser,
           borderRadius: BorderRadius.circular(16),
           child: Padding(
-            padding: const EdgeInsets.all(12),
+            padding: const EdgeInsets.only(
+                left: 16,
+                right: 16,
+                top: 12,
+                bottom: 12,
+            ),
             child: Row(
               children: [
                 Container(
@@ -429,7 +439,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   child: Text(
                     "Log out",
                     style: TextStyle(
-                      fontSize: 16,
+                      fontSize: 14,
                       fontWeight: FontWeight.w500,
                       color: Colors.white,
                     ),

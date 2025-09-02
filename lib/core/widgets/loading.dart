@@ -10,9 +10,9 @@ Widget loadingAnimation({
 }) {
   return (
   Center(
-      child: LoadingAnimationWidget.staggeredDotsWave(
-        color: color,
-        size: size,
-      ),
+      child:CircularProgressIndicator(
+          strokeWidth: 3,
+          color: color,
+      )
   ));
 }

@@ -16,7 +16,12 @@ import 'package:quickdrop_app/core/widgets/custom_svg.dart';
         onTap: onTap,
         borderRadius: BorderRadius.circular(16),
         child: Padding(
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.only(
+            left: 16,
+            right: 16,
+            top: 12,
+            bottom: 12,
+          ),
           child: Row(
             children: [
               Container(
@@ -29,7 +34,7 @@ import 'package:quickdrop_app/core/widgets/custom_svg.dart';
                 child: Center(
                   child: CustomIcon(
                     iconPath: iconPath,
-                    size: 20,
+                    size: 18,
                     color: Colors.grey[600]!,
                   ),
                 ),
@@ -42,7 +47,7 @@ import 'package:quickdrop_app/core/widgets/custom_svg.dart';
                     Text(
                       title,
                       style: const TextStyle(
-                        fontSize: 15,
+                        fontSize: 14,
                         fontWeight: FontWeight.w500,
                         color: Colors.black87,
                       ),
@@ -58,11 +63,11 @@ import 'package:quickdrop_app/core/widgets/custom_svg.dart';
                   ],
                 ),
               ),
-              Icon(
-                Icons.arrow_forward_ios,
-                size: 12,
-                color: Colors.black,
-              ),
+              // Icon(
+              //   Icons.arrow_forward_ios,
+              //   size: 12,
+              //   color: Colors.black,
+              // ),
             ],
           ),
         ),

@@ -207,25 +207,25 @@ class _TripScreenState extends State<TripScreen>
               ),
               borderRadius: BorderRadius.circular(12),
             ),
-            child: ElevatedButton(
-              onPressed: () => {context.push("/add-trip")},
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.transparent,
-                shadowColor: Colors.transparent,
-                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-              ),
-              child: Text(
-                buttonText,
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-            ),
+            // child: ElevatedButton(
+            //   onPressed: () => {context.push("/add-trip")},
+            //   style: ElevatedButton.styleFrom(
+            //     backgroundColor: Colors.transparent,
+            //     shadowColor: Colors.transparent,
+            //     padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+            //     shape: RoundedRectangleBorder(
+            //       borderRadius: BorderRadius.circular(12),
+            //     ),
+            //   ),
+            //   child: Text(
+            //     buttonText,
+            //     style: const TextStyle(
+            //       color: Colors.white,
+            //       fontSize: 16,
+            //       fontWeight: FontWeight.w600,
+            //     ),
+            //   ),
+            // ),
           ),
         ],
       ),))
