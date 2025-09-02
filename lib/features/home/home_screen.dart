@@ -96,11 +96,11 @@ class _HomeScreenState extends State<HomeScreen> {
                             children: [
                               const SizedBox(height: 24),
                               _buildHeroSection(),
-                              const SizedBox(height: 32),
-                              _buildValuePropsRow(),
+                              // const SizedBox(height: 32),
+                              // _buildValuePropsRow(),
                               // const SizedBox(height: 32),
                               // _buildOurServices(),
-                              const SizedBox(height: 24),
+                              const SizedBox(height: 32),
                               _buildButtons(),
                               const SizedBox(height: 16),
                               Consumer3<ShipmentProvider, TripProvider,
@@ -138,19 +138,16 @@ class _HomeScreenState extends State<HomeScreen> {
     return Column(
       children: [
         // Hero Title
-        ShaderMask(
-          shaderCallback: (bounds) => const LinearGradient(
-            colors: [AppColors.blueStart, AppColors.purpleStart],
-          ).createShader(bounds),
-          child: const Text(
-            "Ship Anywhere, Anytime",
+        const Text(
+            "SHIP ANYWHERE, ANYTIME",
             style: TextStyle(
               fontSize: 32,
               fontWeight: FontWeight.w800,
-              color: Colors.white,
+              color: Colors.black,
+              
             ),
             textAlign: TextAlign.center,
-          ),
+          
         ),
         const SizedBox(height: 16),
         // Subtitle
@@ -169,51 +166,113 @@ class _HomeScreenState extends State<HomeScreen> {
       ],
     );
   }
-
-  Widget _buildSearchSection() {
-    return GestureDetector(
-      onTap: () => context.push("/search"),
-      child: Container(
-        width: double.infinity,
-        padding: const EdgeInsets.all(20),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(16),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.1),
-              blurRadius: 20,
-              offset: const Offset(0, 4),
-            ),
-          ],
-          border: Border.all(
-            color: AppColors.borderGray200,
-            width: 2,
-            strokeAlign: BorderSide.strokeAlignInside,
-          ),
-        ),
-        child: const Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            CustomIcon(
-              iconPath: "assets/icon/magnifer.svg",
-              color: AppColors.textMuted,
-              size: 24,
-            ),
-            SizedBox(width: 12),
-            Text(
-              "Search packages & trips...",
-              style: TextStyle(
-                color: AppColors.textMuted,
-                fontSize: 16,
-                fontWeight: FontWeight.w500,
+Widget _buildSearchSection() {
+  return Padding(
+    padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
+    child: Row(
+      children: [
+        // Main search container
+        Expanded(
+          child: GestureDetector(
+            onTap: () => context.push("/search"),
+            child: Container(
+              padding: const EdgeInsets.all(4),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(25),
+                border: Border.all(
+                  color: Colors.blue.shade400,
+                  width: 1,
+                ),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.05),
+                    blurRadius: 8,
+                    offset: const Offset(0, 2),
+                  ),
+                ],
+              ),
+              child: Row(
+                children: [
+                  // Search icon with black background
+                  Container(
+                    padding: const EdgeInsets.all(12),
+                    decoration: const BoxDecoration(
+                      color: Colors.black,
+                      shape: BoxShape.circle,
+                    ),
+                    child: const Icon(
+                      Icons.search,
+                      color: Colors.white,
+                      size: 20,
+                    ),
+                  ),
+                  // Search terms
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Text(
+                            "Anywhere",
+                            style: TextStyle(
+                              color: Colors.black87,
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                          Container(
+                            width: 1,
+                            height: 24,
+                            color: Colors.grey.shade300,
+                          ),
+                          const Text(
+                            "Anytime",
+                            style: TextStyle(
+                              color: Colors.black87,
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
-          ],
+          ),
         ),
-      ),
-    );
-  }
+        const SizedBox(width: 12),
+        // Filter button
+        GestureDetector(
+            onTap: () => context.push("/search"),
+        child: Container(
+          padding: const EdgeInsets.all(12),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(25),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.05),
+                blurRadius: 8,
+                offset: const Offset(0, 2),
+              ),
+            ],
+          ),
+          child: Icon(
+            Icons.tune,
+            color: Colors.grey.shade700,
+            size: 24,
+          ),
+        ),)
+      ],
+    ),
+  );
+}
+
+
 
   Widget _buildValuePropsRow() {
     return Row(
@@ -534,6 +593,7 @@ class _HomeScreenState extends State<HomeScreen> {
       children: [
         UserProfileWithRating(
           user: user,
+          borderColor: AppColors.blue,
           header: 'Welcome, ${user?.firstName ?? 'Guest'}',
           avatarSize: 42,
           headerFontSize: 14,
@@ -558,7 +618,6 @@ class _HomeScreenState extends State<HomeScreen> {
       ],
     );
   }
-
 
 
   Widget _buildTripListings(List<Trip> activeTrips) {
@@ -680,7 +739,6 @@ class _HomeScreenState extends State<HomeScreen> {
       },
     );
   }
-
 
 }
 

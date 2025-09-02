@@ -71,158 +71,105 @@ class ShipmentCardState extends State<ShipmentCard>
     return GestureDetector(
       onTap: widget.onPressed,
       child: Container(
+        // margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(32),
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(12),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.1),
-              blurRadius: 20,
-              offset: const Offset(0, 8),
+              color: Colors.black.withOpacity(0.05),
+              blurRadius: 4,
+              offset: const Offset(0, 2),
               spreadRadius: 0,
             ),
           ],
         ),
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(32),
-          child: Container(
-            height: 280,
-            child: Stack(
-              children: [
-                // Background Image
-                Positioned.fill(
-                  child: _buildBackgroundImage(),
-                ),
-                
-                // Gradient Overlay
-                Positioned.fill(
-                  child: Container(
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        begin: Alignment.topCenter,
-                        end: Alignment.bottomCenter,
-                        colors: [
-                          Colors.transparent,
-                          Colors.transparent,
-                          Colors.black.withOpacity(0.3),
-                          Colors.black.withOpacity(0.8),
-                        ],
-                        stops: const [0.0, 0.4, 0.7, 1.0],
-                      ),
-                    ),
-                  ),
-                ),
-                
-                // Top Row - Status Badge and Bookmark
-                Positioned(
-                  top: 16,
-                  left: 16,
-                  right: 16,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      _buildStatusBadge(),
-                      if (widget.onSave != null)
-                        GestureDetector(
-                          onTap: widget.onSave,
-                          child: Container(
-                            padding: const EdgeInsets.all(8),
-                            decoration: BoxDecoration(
-                              color: Colors.black.withOpacity(0.3),
-                              borderRadius: BorderRadius.circular(20),
-                            ),
-                            child: const Icon(
-                              Icons.bookmark_outline,
-                              color: Colors.white,
-                              size: 20,
-                            ),
-                          ),
-                        ),
-                    ],
-                  ),
-                ),
-                
-               
-                
-                // Bottom Content
-                Positioned(
-                  bottom: 8,
-                  left: 8,
-                  right: 8,
-                  child: Container(
-                    padding: const EdgeInsets.all(16),
-                    decoration: BoxDecoration(
-                      color: Colors.black.withOpacity(0.3),
-                      borderRadius: BorderRadius.circular(24),
+        child: Padding(
+          padding: const EdgeInsets.all(12),
+          child:  Row(
+            children: [
+              Expanded(
+                flex: 2,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _buildStatusAndSender(),
+                    const SizedBox(height: 16),
+                    IntrinsicWidth(
+                      child: _buildPriceButton(),
+                    )
 
-                    ),
-                    child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // Location
-                     
-                      
-                      // Bottom Row
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          // Price
-                          Text(
-                            "${widget.shipment.price} MAD",
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 16,
-                              fontWeight: FontWeight.w400,
-                            ),
-                          ),
-                          
-                          // Date
-                          const Text(
-                            "Aug 22-27", 
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 16,
-                              fontWeight: FontWeight.w400,
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 4),
-                      
-                      // Initiated by row
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                           Text(
-                              "${widget.shipment.from} → ${widget.shipment.to}",
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontSize: 24,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                            const SizedBox(height: 8),
-                          Row(
-                            children: [
-                              Text(
-                                widget.userData.firstName ?? 'Unknown',
-                                style: const TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w400,
-                                ),
-                              ),
-                              const SizedBox(width: 8),
-                              _buildUserAvatar(),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                  )
+                  ],
                 ),
-              ],
+              ),
+              const SizedBox(width: 16),
+              Expanded(
+                flex: 1,
+                child: _buildImageSection(),
+              ),
+            ],
+        )
+        ),
+      ),
+    );
+  }
+
+  Widget _buildStatusAndSender() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // "New" status text
+        // Text(
+        //   "New",
+        //   style: TextStyle(
+        //     color: const Color(0xFF6A7681), 
+        //     fontSize: 14,
+        //     fontWeight: FontWeight.w400,
+        //   ),
+        // ),
+        const SizedBox(height: 4),
+        // Sender name
+        UserProfileWithRating(
+            user: widget.userData,
+            header: widget.userData.displayName ?? 'Guest',
+            avatarSize: 32,
+            headerFontSize: 12,
+            onPressed: () => {}
+                // {context.push('/profile/statistics?userId=${widget.user.uid}')},
+          ),
+        const SizedBox(height: 4),
+        Text(
+          "From: ${widget.shipment.from} To: ${widget.shipment.to}",
+          style: const TextStyle(
+            color: Color(0xFF6A7681), 
+            fontSize: 14,
+            fontWeight: FontWeight.w400,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildPriceButton() {
+    return Container(
+      height: 32, 
+      constraints: const BoxConstraints(
+        minWidth: 84,
+        maxWidth: 480,
+      ),
+      decoration: BoxDecoration(
+        color: const Color(0xFFF1F2F4),
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16),
+        child: Center(
+          child: Text(
+            "${widget.shipment.price} MAD",
+            style: const TextStyle(
+              color: Color(0xFF121416), 
+              fontSize: 14,
+              fontWeight: FontWeight.w500,
             ),
           ),
         ),
@@ -230,132 +177,70 @@ class ShipmentCardState extends State<ShipmentCard>
     );
   }
 
-  Widget _buildBackgroundImage() {
+  Widget _buildImageSection() {
     Shipment? shipment;
     if (widget.shipment is Shipment) {
       shipment = widget.shipment as Shipment;
     }
+    if (shipment == null) {
+      return  Container(
+          width: 110,
+          height: 120,
+          decoration: BoxDecoration(
+            color: const Color(0xFFE1AC71).withOpacity(0.8),
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: const Center(
+            child: Icon(
+              Icons.fire_truck,
+              color: Colors.white,
+              size: 40,
+            ),
+          ),
+        
+      );
+    }
 
-    return shipment?.imageUrl != null
-        ? CachedNetworkImage(
-            imageUrl: shipment!.imageUrl!,
+    return Container(
+        width: 110,
+        height: 120,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(12),
+          child: CachedNetworkImage(
+            imageUrl: shipment.imageUrl!,
             fit: BoxFit.cover,
             placeholder: (context, url) => Container(
-              color: const Color(0xFF87CEEB),
+              decoration: BoxDecoration(
+                color: Colors.grey[200],
+                borderRadius: BorderRadius.circular(12),
+              ),
               child: const Center(
                 child: CircularProgressIndicator(
-                  color: Colors.white,
                   strokeWidth: 2,
                 ),
               ),
             ),
             errorWidget: (context, url, error) => Container(
-              decoration: const BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [
-                    Color(0xFF87CEEB),
-                    Color(0xFF4682B4),
-                  ],
-                ),
+              decoration: BoxDecoration(
+                color: Colors.grey[200],
+                borderRadius: BorderRadius.circular(12),
               ),
-              child: const Center(
-                child: Icon(
-                  Icons.local_shipping,
-                  color: Colors.white,
-                  size: 48,
-                ),
+              child: Image.asset(
+                "assets/images/box.jpg",
+                fit: BoxFit.cover,
               ),
             ),
-          )
-        : Container(
-            decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: [
-                  Color(0xFF87CEEB),
-                  Color(0xFF4682B4),
-                ],
-              ),
-            ),
-            child: const Center(
-              child: Icon(
-                Icons.local_shipping,
-                color: Colors.white,
-                size: 48,
-              ),
-            ),
-          );
-  }
-
-  Widget _buildStatusBadge() {
-    String shipmentType = "Express"; // Replace with widget.shipment.type
-    
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-      decoration: BoxDecoration(
-        color: Colors.black.withOpacity(0.5),
-        borderRadius: BorderRadius.circular(20),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          const Icon(
-            Icons.public,
-            color: Colors.white,
-            size: 16,
-          ),
-          const SizedBox(width: 6),
-          Text(
-            "Public",
-            style: const TextStyle(
-              color: Colors.white,
-              fontSize: 14,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildCarouselDot(bool isActive) {
-    return Container(
-      width: isActive ? 8 : 6,
-      height: isActive ? 8 : 6,
-      decoration: BoxDecoration(
-        color: isActive ? Colors.white : Colors.white.withOpacity(0.5),
-        shape: BoxShape.circle,
-      ),
-    );
-  }
-
-  Widget _buildUserAvatar() {
-    return Container(
-      width: 24,
-      height: 24,
-      decoration: BoxDecoration(
-        color: Colors.orange.shade400,
-        shape: BoxShape.circle,
-        border: Border.all(
-          color: Colors.white,
-          width: 1,
-        ),
-      ),
-      child: Center(
-        child: Text(
-          (widget.userData.displayName?.isNotEmpty == true)
-              ? widget.userData.displayName![0].toUpperCase()
-              : 'U',
-          style: const TextStyle(
-            color: Colors.white,
-            fontSize: 10,
-            fontWeight: FontWeight.w600,
+            fadeInDuration: const Duration(milliseconds: 200),
+            fadeOutDuration: const Duration(milliseconds: 200),
           ),
         ),
-      ),
+      
     );
   }
+
+
+
 }
