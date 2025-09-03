@@ -1,5 +1,6 @@
 import 'package:quickdrop_app/core/widgets/destination.dart';
 import 'package:quickdrop_app/core/utils/imports.dart';
+import 'package:quickdrop_app/core/widgets/review.dart';
 import 'package:quickdrop_app/features/models/base_transport.dart';
 export 'package:quickdrop_app/core/widgets/user_profile.dart';
 import 'package:quickdrop_app/features/chat/convo_screen.dart';
@@ -610,22 +611,22 @@ class OngoingItemCardState extends State<OngoingItemCard> {
       ),
       child: Row(
         children: [
-          Expanded(child: buildActionButton(
+          Expanded(child: _buildActionButton(
             label: "Delivered",
             color: AppColors.succes,
             backgroundColor: AppColors.succes.withOpacity(0.1),
 
-              borderColor: AppColors.succes,
+              // borderColor: AppColors.succes,
             onTap: _showDeliveryConfirmation,
 
             iconWidget: const Icon(Icons.done_all_rounded, size: 14),
           )),
           const SizedBox(width: 8),
-          Expanded(child: buildActionButton(
+          Expanded(child: _buildActionButton(
             label: "Cancel",
             color: const Color(0xFFb91c1c), // red-700
               backgroundColor: const Color(0xFFfef2f2), // red-50
-              borderColor: const Color(0xFFfecaca), // red-200
+              // borderColor: const Color(0xFFfecaca), // red-200
             onTap: _showCancelConfirmation,
             iconWidget: const Icon(Icons.cancel_outlined, size: 14),
           )),
@@ -693,3 +694,4 @@ class OngoingItemCardState extends State<OngoingItemCard> {
 
 
 }
+
