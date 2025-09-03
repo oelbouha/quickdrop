@@ -1,9 +1,9 @@
+import 'package:quickdrop_app/core/widgets/actionButton.dart';
 import 'package:quickdrop_app/core/widgets/destination.dart';
 import 'package:quickdrop_app/core/utils/imports.dart';
 import 'package:quickdrop_app/core/widgets/review.dart';
 import 'package:quickdrop_app/features/models/base_transport.dart';
 export 'package:quickdrop_app/core/widgets/user_profile.dart';
-import 'package:quickdrop_app/features/chat/convo_screen.dart';
 
 class OngoingItemCard extends StatefulWidget {
   final TransportItem item;
@@ -105,7 +105,7 @@ class OngoingItemCardState extends State<OngoingItemCard> {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
+             const Text(
                 'Are you sure this item has been delivered successfully?',
                 style: TextStyle(
                   fontSize: 14,
@@ -136,7 +136,7 @@ class OngoingItemCardState extends State<OngoingItemCard> {
                     const SizedBox(height: 4),
                     Text(
                       'Courier: ${widget.user.displayName ?? "Unknown"}',
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 11,
                         color: AppColors.textSecondary,
                       ),
@@ -144,7 +144,7 @@ class OngoingItemCardState extends State<OngoingItemCard> {
                     const SizedBox(height: 2),
                     Text(
                       'Price: ${widget.item.price} DH',
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 11,
                         color: AppColors.textSecondary,
                       ),
@@ -153,7 +153,7 @@ class OngoingItemCardState extends State<OngoingItemCard> {
                 ),
               ),
               const SizedBox(height: 12),
-              Text(
+              const Text(
                 'This will complete the delivery and you\'ll be asked to rate the courier.',
                 style: TextStyle(
                   fontSize: 12,
@@ -236,7 +236,7 @@ class OngoingItemCardState extends State<OngoingItemCard> {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
+             const Text(
                 'Are you sure you want to cancel this ongoing delivery?',
                 style: TextStyle(
                   fontSize: 14,
@@ -267,7 +267,7 @@ class OngoingItemCardState extends State<OngoingItemCard> {
                     const SizedBox(height: 4),
                     Text(
                       'Courier: ${widget.user.displayName ?? "Unknown"}',
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 11,
                         color: AppColors.textSecondary,
                       ),
@@ -276,7 +276,7 @@ class OngoingItemCardState extends State<OngoingItemCard> {
                 ),
               ),
               const SizedBox(height: 12),
-              Text(
+             const Text(
                 'Please contact the courier before canceling to avoid any issues.',
                 style: TextStyle(
                   fontSize: 12,
@@ -352,8 +352,14 @@ class OngoingItemCardState extends State<OngoingItemCard> {
         ),
         child: Column(
           children: [
-            _buildHeader(),
-            _buildBody(),
+            Padding(
+              padding: const EdgeInsets.all(16),
+              child: Column( 
+                children: [
+                  _buildHeader(),
+                  const SizedBox(height: 16),
+                  _buildBody(),
+              ])),
             _buildFooter(),
           ],
         ),
@@ -361,143 +367,72 @@ class OngoingItemCardState extends State<OngoingItemCard> {
     );
   }
 
-  Widget _buildHeader() {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-      decoration: BoxDecoration(
-        color: AppColors.ongoingstatusBackground.withOpacity(0.3),
-        borderRadius: const BorderRadius.only(
-          topLeft: Radius.circular(AppTheme.cardRadius),
-          topRight: Radius.circular(AppTheme.cardRadius),
-        ),
-      ),
-      child: Row(
-        children: [
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-            decoration: BoxDecoration(
-              color: AppColors.ongoingstatusBackground,
-              borderRadius: BorderRadius.circular(20),
-              border: Border.all(
-                color: AppColors.ongoingStatusText.withOpacity(0.3),
-                width: 1,
+   Widget _buildHeader() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'ID: ${widget.item.id ?? 'N/A'}',
+              style: const TextStyle(
+                fontSize: 12,
+                color: Color(0xFF6B7280), // gray-500
+                fontWeight: FontWeight.w400,
               ),
             ),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Container(
-                  width: 6,
-                  height: 6,
-                  decoration: const BoxDecoration(
-                    color: AppColors.ongoingStatusText,
-                    shape: BoxShape.circle,
-                  ),
-                ),
-                const SizedBox(width: 6),
-                const Text(
-                  "In Progress",
-                  style: TextStyle(
-                    fontSize: 10,
-                    color: AppColors.ongoingStatusText,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ],
+            const SizedBox(height: 4),
+            Text(
+              '${widget.item.from} → ${widget.item.to}',
+              style: const TextStyle(
+                fontSize: 18,
+                color: Color(0xFF111827), // gray-900
+                fontWeight: FontWeight.w700,
+              ),
             ),
+          ],
+        ),
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+          decoration: BoxDecoration(
+            color: AppColors.blue600.withValues(alpha: 0.1), // blue-100
+            borderRadius: BorderRadius.circular(20),
           ),
-          const Spacer(),
-          Text(
-            'ID: #${widget.item.id ?? 'N/A'}',
+          child: const Text(
+            'In Transit',
             style: TextStyle(
-              fontSize: 10,
-              color: AppColors.textSecondary,
-              fontWeight: FontWeight.w500,
+              fontSize: 12,
+              color: AppColors.blue700, // success color
+              fontWeight: FontWeight.w600,
             ),
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 
 
 
   Widget _buildBody() {
-    return Padding(
-        padding: const EdgeInsets.all(16),
-      child:  Column(children: [ 
-      Row(
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Container(
-          padding: const EdgeInsets.all(12),
-          decoration: BoxDecoration(
-            color: AppColors.primary.withValues(alpha: 0.05),
-            borderRadius: BorderRadius.circular(12),
-            border: Border.all(
-              color: AppColors.primary.withValues(alpha: 0.1),
-            ),
-          ),
-          child: Destination(
-            from: widget.item.from,
-            to: widget.item.to,
-          ),
-        ),
-        const SizedBox(width: 16),
-        Expanded(child: buildPriceCard(price: widget.item.price, label: 'Delivery Price')),
-      ],
-    ),
-     const SizedBox(height: 16),
-      _buildCourierCard(),
-     ],
-      ),
-    );
-  }
-
-
-  Widget _buildDetailRow({
-    required String icon,
-    required String label,
-    required String value,
-    required Color iconColor,
-  }) {
-    return Row(
-      children: [
-        Container(
-          padding: const EdgeInsets.all(4),
-          decoration: BoxDecoration(
-            color: iconColor.withOpacity(0.1),
-            borderRadius: BorderRadius.circular(4),
-          ),
-          child: CustomIcon(
-            iconPath: icon,
-            size: 12,
-            color: iconColor,
-          ),
-        ),
-        const SizedBox(width: 8),
         Text(
-          label,
-          style: TextStyle(
-            fontSize: 11,
-            color: AppColors.textSecondary,
-            fontWeight: FontWeight.w500,
+          'In Transit: ${widget.item.date}',
+          style: const TextStyle(
+            fontSize: 14,
+            color: Color(0xFF6B7280), // gray-500
+            fontWeight: FontWeight.w400,
           ),
         ),
-        const SizedBox(width: 8),
-        Expanded(
-          child: Text(
-            value,
-            style: const TextStyle(
-              fontSize: 11,
-              color: AppColors.textPrimary,
-              fontWeight: FontWeight.w600,
-            ),
-            textAlign: TextAlign.end,
-          ),
-        ),
+        const SizedBox(height: 16),
+        _buildCourierCard(),
       ],
     );
   }
+
 
   Widget _buildCourierCard() {
     return Container(
@@ -598,98 +533,43 @@ class OngoingItemCardState extends State<OngoingItemCard> {
     );
   }
 
+
   Widget _buildFooter() {
     return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
         border: Border(
           top: BorderSide(
-            color: Colors.grey.withOpacity(0.1),
-            width: 0.5,
+            color: Color(0xFFE5E7EB), // gray-200
+            width: 1,
           ),
         ),
       ),
       child: Row(
         children: [
-          Expanded(child: _buildActionButton(
-            label: "Delivered",
-            color: AppColors.succes,
-            backgroundColor: AppColors.succes.withOpacity(0.1),
-
-              // borderColor: AppColors.succes,
-            onTap: _showDeliveryConfirmation,
-
-            iconWidget: const Icon(Icons.done_all_rounded, size: 14),
-          )),
-          const SizedBox(width: 8),
-          Expanded(child: _buildActionButton(
-            label: "Cancel",
-            color: const Color(0xFFb91c1c), // red-700
-              backgroundColor: const Color(0xFFfef2f2), // red-50
-              // borderColor: const Color(0xFFfecaca), // red-200
-            onTap: _showCancelConfirmation,
-            iconWidget: const Icon(Icons.cancel_outlined, size: 14),
-          )),
-        ],
-         
-      ),
-    );
-  }
-
-  Widget _buildActionButton({
-    String? icon,
-    Widget? iconWidget,
-    required String label,
-    required Color color,
-    required Color backgroundColor,
-    required VoidCallback onTap,
-  }) {
-    return Material(
-      color: Colors.transparent,
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(8),
-        child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-          decoration: BoxDecoration(
-            color: backgroundColor,
-            borderRadius: BorderRadius.circular(8),
-            border: Border.all(
-              color: color.withOpacity(0.3),
-              width: 0.5,
+          Expanded(
+            child: buildActionButton(
+              label: 'Delivered',
+              onPressed: _showDeliveryConfirmation,
+              isLeft: true,
             ),
           ),
-          child: Center(child:Row(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            // center the row
-
-            children: [
-              if (icon != null)
-                CustomIcon(
-                  iconPath: icon,
-                  size: 14,
-                  color: color,
-                )
-              else if (iconWidget != null)
-                IconTheme(
-                  data: IconThemeData(color: color),
-                  child: iconWidget,
-                ),
-              const SizedBox(width: 4),
-              Text(
-                label,
-                style: TextStyle(
-                  color: color,
-                  fontSize: 11,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-            ],
-          )),
-        ),
+          Container(
+            width: 1,
+            height: 48,
+            color: const Color(0xFFE5E7EB), // gray-200
+          ),
+          Expanded(
+            child: buildActionButton(
+              label: 'Report Issue',
+              onPressed: () => {},
+              isLeft: false,
+            ),
+          ),
+        ],
       ),
     );
+
+   
   }
 
 
