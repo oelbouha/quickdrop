@@ -18,10 +18,10 @@ class _IntroScreenState extends State<IntroScreen> {
     return Scaffold(
       body: Container(
         decoration: const BoxDecoration(
-          // image: DecorationImage(
-          //   image: AssetImage("assets/images/intro.jpg"), 
-          //   fit: BoxFit.cover, 
-          // ),
+          image: DecorationImage(
+            image: AssetImage("assets/images/intro.png"), 
+            fit: BoxFit.cover, 
+          ),
         ),
         child: SafeArea(
           child: Padding(
@@ -29,7 +29,6 @@ class _IntroScreenState extends State<IntroScreen> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                
                 Column(
                   children: [
                     const SizedBox(height: 32),
