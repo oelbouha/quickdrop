@@ -318,6 +318,7 @@ class AppRouter {
                     user: user,
                   ));
             }),
+
         GoRoute(
             name: "negotiation-screen",
             path: "/negotiation-screen",
@@ -340,15 +341,22 @@ class AppRouter {
                     ));
               }
             }),
+        // Route: read extra and build the results screen
         GoRoute(
+          // name: 'searchResults', // optional if you prefer pushNamed
           path: '/search',
           pageBuilder: (context, state) {
-            // final filters = SearchFilters.fromQueryParameters(
-            //   state.uri.queryParameters,
-            // );
-            return buildCustomTransitionPage(context, SearchFilterScreen());
+            final filters = (state.extra is SearchFilters)
+                ? state.extra as SearchFilters
+                : const SearchFilters();
+            print(filters);
+            return buildCustomTransitionPage(
+                context,
+                SearchResultsScreen(filters: filters)
+            );  
           },
         ),
+
         GoRoute(
             name: "shipment-details",
             path: "/shipment-details",
@@ -378,7 +386,8 @@ class AppRouter {
                       errorMessage: "Trip ID or User ID is missing.",
                     ));
               }
-              print("Fetching trip details for tripId: $tripId, userId: $userId");
+              print(
+                  "Fetching trip details for tripId: $tripId, userId: $userId");
               return buildCustomTransitionPage(
                   context,
                   ListingTripLoader(

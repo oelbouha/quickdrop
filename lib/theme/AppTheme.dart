@@ -20,6 +20,7 @@ class AppTheme {
   static const double cardButtonRadius = 8;
   static const double inputTextHeight = 50;
   static const double chatInputRadius = 50;
+  static const String iconsFolder = "assets/icon/";
   static const String defaultProfileImage = "assets/images/profile.png";
   static const String deleteShipmentText = 'Are you sure you want to delete this shipment? This action cannot be undone.';
   static const String deleteTripText = 'Are you sure you want to delete this Trip? This action cannot be undone.';

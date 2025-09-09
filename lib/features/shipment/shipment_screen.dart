@@ -187,6 +187,7 @@ class _ShipmentScreenState extends State<ShipmentScreen>
           "Completed",
         ],
         title: "Shipments",
+
       ),
       body: _isLoading
           ? loadingAnimation()
