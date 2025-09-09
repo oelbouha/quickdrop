@@ -20,72 +20,22 @@ class FloatButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onTap,
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 350),
-        curve: Curves.easeInOutCubic,
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      child: Container(
+        // width: 50,
+        // height: 50,
+        padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
           color: AppColors.blue700,
-          // gradient: const LinearGradient(
-          //   colors: [AppColors.blueStart, AppColors.purpleStart],
-          // ),
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(50),
           boxShadow: [
             BoxShadow(
               color: AppColors.blueStart.withOpacity(0.4),
-              blurRadius: 20,
+              blurRadius: 24,
               offset: const Offset(0, 8),
             ),
           ],
         ),
-        child: AnimatedSize(
-          duration: const Duration(milliseconds: 350),
-          curve: Curves.easeInOut,
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              AnimatedScale(
-                duration: const Duration(milliseconds: 200),
-                  scale: expanded ? 1.0 : 0.9,
-                  child: const Icon(Icons.add, color: Colors.white, size: 28),
-                ),
-                AnimatedContainer(
-                  duration: const Duration(microseconds: 350),
-                  curve: Curves.easeInOutCubic,
-                  width: expanded? null : 0,
-                  child: AnimatedOpacity(
-                  duration: const Duration(milliseconds: 250),
-                  opacity: expanded ? 1.0 : 0.0,
-                  child: expanded
-                      ? Padding(
-                          padding: const EdgeInsets.only(left: 8),
-                          child: Text(
-                            hintText,
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 16,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                        )
-                      : const SizedBox.shrink(),
-                ),
-
-                ),
-              // if (expanded) ...[
-              //   const SizedBox(width: 8),
-              //   Text(
-              //     hintText,
-              //     style: const  TextStyle(
-              //       color: Colors.white,
-              //       fontSize: 16,
-              //       fontWeight: FontWeight.w500,
-              //     ),
-              //   ),
-              // ],
-            ],
-          ),
-        ),
+        child: const Icon(Icons.add, color: Colors.white, size: 28)
       ),
     );
   }
