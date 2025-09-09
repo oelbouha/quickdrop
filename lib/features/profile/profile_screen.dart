@@ -395,15 +395,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
-        color: AppColors.error,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.05),
-            blurRadius: 10,
-            offset: const Offset(0, 2),
-          ),
-        ],
+        // color: AppColors.error,
+        // borderRadius: BorderRadius.circular(16),
+        // boxShadow: [
+        //   BoxShadow(
+        //     color: Colors.black.withValues(alpha: 0.05),
+        //     blurRadius: 10,
+        //     offset: const Offset(0, 2),
+        //   ),
+        // ],
       ),
       child: Material(
         color: Colors.transparent,
@@ -423,7 +423,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   width: 40,
                   height: 40,
                   decoration: BoxDecoration(
-                    color: Colors.red[50],
+                    // color: Colors.red[50],++
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: const Center(
@@ -441,7 +441,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     style: TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w500,
-                      color: Colors.white,
+                      color: AppColors.error,
                     ),
                   ),
                 ),
