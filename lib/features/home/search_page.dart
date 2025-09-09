@@ -385,6 +385,7 @@ class SearchResultsScreenState extends State<SearchResultsScreen>
   List<Shipment> _filterShipments(List<Shipment> shipments) {
     return shipments.where((shipment) {
       // Filter by 'from' location
+      print("from ${shipment.from}");
       if (widget.filters.from != null && widget.filters.from!.isNotEmpty) {
         if (!shipment.from
             .toLowerCase()
@@ -478,11 +479,21 @@ class SearchResultsScreenState extends State<SearchResultsScreen>
     });
 
     // Simulate network delay
-    await Future.delayed(const Duration(milliseconds: 800));
+    await Future.delayed(const Duration(milliseconds: 400));
 
-    final shipmentProvider =
-        Provider.of<ShipmentProvider>(context, listen: false);
+    final shipmentProvider = Provider.of<ShipmentProvider>(context, listen: false);
     final tripProvider = Provider.of<TripProvider>(context, listen: false);
+
+    await shipmentProvider.fetchShipments();
+    await tripProvider.fetchTrips();
+
+    final userIds = shipmentProvider.shipments.map((r) => r.userId).toSet().toList();
+    final tripUserIds = tripProvider.trips.map((r) => r.userId).toSet().toList();
+
+    await Provider.of<UserProvider>(context, listen: false)
+        .fetchUsersData(userIds);
+    await Provider.of<UserProvider>(context, listen: false)
+        .fetchUsersData(tripUserIds);
 
     List<Shipment> filteredShipments = [];
     List<Trip> filteredTrips = [];
@@ -674,23 +685,26 @@ class SearchResultsScreenState extends State<SearchResultsScreen>
   }
 
   Widget _buildResultsContent() {
-  final screenHeight = MediaQuery.of(context).size.height;
+    final screenHeight = MediaQuery.of(context).size.height;
     if (_isLoading) {
       return Container(
-      height: screenHeight * 0.7, 
-      alignment: Alignment.center,
-      child: loadingAnimation(),
-    );
+        height: screenHeight * 0.7,
+        alignment: Alignment.center,
+        child: loadingAnimation(),
+      );
     }
 
     bool hasResults = activeShipments.isNotEmpty || activeTrips.isNotEmpty;
 
     if (!hasResults) {
-      return buildEmptyState(
-        Icons.add_box,
-        "No results",
-        "No results found for your search criteria",
-      );
+      return Container(
+          height: screenHeight * 0.7,
+          alignment: Alignment.center,
+          child: buildEmptyState(
+            Icons.add_box,
+            "No results",
+            "No results found for your search criteria",
+          ));
     }
 
     return Column(
@@ -764,6 +778,7 @@ class SearchFilters {
   final String? price;
   final String? weight;
   final String? to;
+  final String? date;
   final String? type; // 'Shipment' or 'Trip'
 
   const SearchFilters({
@@ -771,6 +786,7 @@ class SearchFilters {
     this.price,
     this.weight,
     this.to,
+    this.date,
     this.type,
   });
 
@@ -780,6 +796,7 @@ class SearchFilters {
     String? price,
     String? weight,
     String? to,
+    String? date,
     String? type,
   }) {
     return SearchFilters(
@@ -787,6 +804,7 @@ class SearchFilters {
       price: price ?? this.price,
       weight: weight ?? this.weight,
       to: to ?? this.to,
+      date: date ?? this.date,
       type: type ?? this.type,
     );
   }
@@ -797,6 +815,7 @@ class SearchFilters {
         (price == null || price!.isEmpty) &&
         (weight == null || weight!.isEmpty) &&
         (to == null || to!.isEmpty) &&
+        (date == null || date!.isEmpty) &&
         (type == null || type!.isEmpty);
   }
 
@@ -808,11 +827,12 @@ class SearchFilters {
       'weight': weight,
       'to': to,
       'type': type,
+      'date': date
     };
   }
 
   @override
   String toString() {
-    return 'SearchFilters(from: $from, to: $to, price: $price, weight: $weight, type: $type)';
+    return 'SearchFilters(from: $from, to: $to, price: $price, weight: $weight, type: $type, date: $date)';
   }
 }

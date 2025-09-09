@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:quickdrop_app/core/utils/imports.dart';
 import 'package:quickdrop_app/core/widgets/build_header_icon.dart';
 import 'package:quickdrop_app/core/widgets/home_page_skeleton.dart';
@@ -14,17 +15,56 @@ class _HomeScreenState extends State<HomeScreen> {
   int selectedIndex = 0;
   bool _isLoading = true;
   UserData? user;
+  String selectedFilter = "Trip";
+  int? expandedFaqIndex;
 
   final fromController = TextEditingController();
   final toController = TextEditingController();
   final weightController = TextEditingController();
   final priceController = TextEditingController();
   final typeController = TextEditingController();
+  final dateController = TextEditingController();
+
+  final List<String> filterOptions = [
+    "All",
+    "Documents",
+    "Electronics",
+    "Apparel",
+    "Other"
+  ];
+
+  final List<String> serviceTypes = [
+    "Trip",
+    "Shipment",
+  ];
+
+  final List<Map<String, String>> faqs = [
+    {
+      "question": "How does QuickDrop ensure package safety?",
+      "answer": "All couriers are verified through ID checks and background screening. Every package is insured, tracked in real-time, and handled with care by trusted travelers."
+    },
+    {
+      "question": "What can I ship with QuickDrop?",
+      "answer": "You can ship documents, electronics, clothing, gifts, and most personal items. Prohibited items include hazardous materials, illegal substances, and fragile items without proper packaging."
+    },
+    {
+      "question": "How much can I save compared to traditional shipping?",
+      "answer": "Users typically save 50-70% compared to major carriers like FedEx or UPS, especially for international shipments. Prices vary based on size, weight, and destination."
+    },
+    {
+      "question": "How do I become a courier?",
+      "answer": "Simply sign up, verify your identity, and start accepting delivery requests on routes you're already traveling. You set your own prices and schedule."
+    },
+    {
+      "question": "What if something goes wrong with my shipment?",
+      "answer": "We provide 24/7 customer support and full insurance coverage. If there's any issue, our team will resolve it quickly and ensure you're compensated."
+    }
+  ];
 
   @override
   void initState() {
     super.initState();
-    typeController.text = "Shipment"; 
+    typeController.text = "Shipment";
     user = Provider.of<UserProvider>(context, listen: false).user;
     if (user == null) {
       // If user is null, redirect to login
@@ -35,27 +75,24 @@ class _HomeScreenState extends State<HomeScreen> {
       });
       return;
     }
-   
+    dateController.text = _getCurrentDate();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       try {
-        final shipmentProvider =
-            Provider.of<ShipmentProvider>(context, listen: false);
-        final tripProvider = Provider.of<TripProvider>(context, listen: false);
+        // final shipmentProvider =
+        //     Provider.of<ShipmentProvider>(context, listen: false);
+        // final tripProvider = Provider.of<TripProvider>(context, listen: false);
 
-        await shipmentProvider.fetchShipments();
-        await tripProvider.fetchTrips();
+        // await shipmentProvider.fetchShipments();
+        // await tripProvider.fetchTrips();
 
-        final userIds = shipmentProvider.shipments.map((r) => r.userId).toSet().toList();
-        final tripUserIds =
-            tripProvider.trips.map((r) => r.userId).toSet().toList();
+        // final userIds = shipmentProvider.shipments.map((r) => r.userId).toSet().toList();
+        // final tripUserIds =
+        //     tripProvider.trips.map((r) => r.userId).toSet().toList();
 
-
-        await Provider.of<UserProvider>(context, listen: false)
-            .fetchUsersData(userIds);
-        await Provider.of<UserProvider>(context, listen: false)
-            .fetchUsersData(tripUserIds);
-
-
+        // await Provider.of<UserProvider>(context, listen: false)
+        //     .fetchUsersData(userIds);
+        // await Provider.of<UserProvider>(context, listen: false)
+        //     .fetchUsersData(tripUserIds);
       } catch (e) {
         if (mounted) {
           AppUtils.showDialog(
@@ -72,350 +109,406 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Container(
-          decoration: const BoxDecoration(
-            color: AppColors.background,
-          ),
-          child: SafeArea(
-            child: _isLoading
-                ? const HomePageSkeleton()
-                : Column(
-                    children: [
-                      // App Bar
-                      Container(
-                        // color: Colors.white.withOpacity(0.8),
-                         padding: const EdgeInsets.all(16.0),
-                        child:  _buildAppBar(),
-                      ),
-                      Expanded(
-                        child: SingleChildScrollView(
-                          physics: const BouncingScrollPhysics(),
-                          padding: const EdgeInsets.symmetric(horizontal: 20),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              const SizedBox(height: 24),
-                              _buildHeroSection(),
-                              // const SizedBox(height: 32),
-                              // _buildValuePropsRow(),
-                              // const SizedBox(height: 32),
-                              // _buildOurServices(),
-                              const SizedBox(height: 32),
-                              _buildButtons(),
-                              const SizedBox(height: 16),
-                              Consumer3<ShipmentProvider, TripProvider,
-                                      UserProvider>(
-                                  builder: (context, shipmentProvider,
-                                      tripProvider, userProvider, child) {
-                                return IndexedStack(
-                                  index: selectedIndex,
-                                  children: [
-                                    // _buildAllListings(
-                                    //     shipmentProvider.activeShipments,
-                                        // tripProvider.activeTrips),
-                                    _buildShipmentListings(
-                                        shipmentProvider.activeShipments),
-                                    _buildTripListings(
-                                        tripProvider.activeTrips),
-                                  ],
-                                );
-                              }),
-                              const SizedBox(
-                                  height: 100), // Extra space for FAB
-                            ],
-                          ),
+      backgroundColor: const Color(0xFFF8FAFC),
+      body: Container(
+        decoration: const BoxDecoration(
+          color: Color(0xFFF8FAFC),
+        ),
+        child: SafeArea(
+          child: Column(
+                  children: [
+                    // App Bar
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                      child: _buildAppBar(),
+                    ),
+                    Expanded(
+                      child: SingleChildScrollView(
+                        physics: const BouncingScrollPhysics(),
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            const SizedBox(height: 24),
+                            _buildHeroSection(),
+                            const SizedBox(height: 32),
+                            _buildOurServices(),
+                            const SizedBox(height: 32),
+                            _buildFAQSection(),
+                            const SizedBox(height: 32),
+                          ],
                         ),
                       ),
-                    ],
-                  ),
-          ),
+                    ),
+                  ],
+                ),
         ),
-      
+      ),
     );
   }
 
   Widget _buildHeroSection() {
     return Column(
       children: [
-        // Hero Title
         const Text(
-            "SHIP ANYWHERE, ANYTIME",
-            style: TextStyle(
-              fontSize: 32,
-              fontWeight: FontWeight.w800,
-              color: Colors.black,
-              
-            ),
-            textAlign: TextAlign.center,
-          
-        ),
-        const SizedBox(height: 16),
-        // Subtitle
-        const Text(
-          "Connect with travelers going your way or send packages with trusted community members",
+          "Ship anywhere, anytime",
           style: TextStyle(
-            color: AppColors.textSecondary,
-            fontSize: 18,
-            fontWeight: FontWeight.w500,
+            fontSize: 32,
+            fontWeight: FontWeight.bold,
+            color: Color(0xFF1F2937),
+          ),
+          textAlign: TextAlign.center,
+        ),
+        const SizedBox(height: 8),
+        const Text(
+          "Connect with trusted travelers and ship your packages for up to 70% less than traditional carriers.",
+          style: TextStyle(
+            color: Color(0xFF6B7280),
+            fontSize: 16,
+            fontWeight: FontWeight.w400,
           ),
           textAlign: TextAlign.center,
         ),
         const SizedBox(height: 32),
-        // Search Section
         _buildSearchSection(),
       ],
     );
   }
-Widget _buildSearchSection() {
-  return Padding(
-    padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
-    child: Row(
-      children: [
-        // Main search container
-        Expanded(
-          child: GestureDetector(
-            onTap: () => context.push("/search"),
-            child: Container(
-              padding: const EdgeInsets.all(4),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(25),
-                border: Border.all(
-                  color: Colors.blue.shade400,
-                  width: 1,
-                ),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.05),
-                    blurRadius: 8,
-                    offset: const Offset(0, 2),
-                  ),
-                ],
-              ),
-              child: Row(
-                children: [
-                  // Search icon with black background
-                  Container(
-                    padding: const EdgeInsets.all(12),
-                    decoration: const BoxDecoration(
-                      color: Colors.black,
-                      shape: BoxShape.circle,
-                    ),
-                    child: const Icon(
-                      Icons.search,
-                      color: Colors.white,
-                      size: 20,
-                    ),
-                  ),
-                  // Search terms
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          const Text(
-                            "Anywhere",
-                            style: TextStyle(
-                              color: Colors.black87,
-                              fontSize: 14,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                          Container(
-                            width: 1,
-                            height: 24,
-                            color: Colors.grey.shade300,
-                          ),
-                          const Text(
-                            "Anytime",
-                            style: TextStyle(
-                              color: Colors.black87,
-                              fontSize: 14,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ),
-        const SizedBox(width: 12),
-        // Filter button
-        GestureDetector(
-            onTap: () => context.push("/search"),
-        child: Container(
-          padding: const EdgeInsets.all(12),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(25),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.05),
-                blurRadius: 8,
-                offset: const Offset(0, 2),
-              ),
-            ],
-          ),
-          child: Icon(
-            Icons.tune,
-            color: Colors.grey.shade700,
-            size: 24,
-          ),
-        ),)
-      ],
-    ),
+
+
+  void perfumeSearch() async {
+     SearchFilters filters = SearchFilters(
+      from: fromController.text.isEmpty ? null : fromController.text,
+      to: toController.text.isEmpty ? null : toController.text,
+      price: priceController.text.isEmpty ? null : priceController.text,
+      weight: weightController.text.isEmpty ? null : weightController.text,
+      type: selectedFilter
+    );
+
+    context.push(
+    '/search',
+    extra: filters,
   );
-}
-
-
-
-  Widget _buildValuePropsRow() {
-    return Row(
-      children: [
-        Expanded(
-          child: Container(
-            padding: const EdgeInsets.all(10),
-            decoration: BoxDecoration(
-              color: AppColors.cardBackgroundBlur,
-              borderRadius: BorderRadius.circular(16),
-              border: Border.all(color: AppColors.cardBorder),
+  }
+  Widget _buildSearchSection() {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.2),
+            blurRadius: 10,
+            offset: const Offset(0, 5),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        spacing: 16,
+        children: [
+          // Origin field
+          TextFieldWithHeader(
+              controller: fromController,
+              displayHeader: false,
+              hintText: "From",
+              headerText: "To",
+              isRequired: false,
+              validator: Validators.notEmpty,
+              iconPath: "assets/icon/map-point.svg"
             ),
-            child: const Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                CustomIcon(
-                  iconPath: "assets/icon/verified.svg",
-                  color: AppColors.blue600,
-                  size: 32,
+          // Destination field
+          TextFieldWithHeader(
+              controller: toController,
+              displayHeader: false,
+               isRequired: false,
+              hintText: "To",
+              headerText: "To",
+              validator: Validators.notEmpty,
+              iconPath: "assets/icon/map-point.svg"
+            ),
+          // Filter chips
+          _buildServiceTypes(),
+          // Date field
+          DateTextField(
+            controller: dateController,
+            backgroundColor: AppColors.cardBackground,
+            onTap: () => _selectDate(context),
+            hintText: "Select pickup date",
+            validator: Validators.notEmpty,
+          ),
+
+          // Search button
+          SizedBox(
+            width: double.infinity,
+            child: ElevatedButton(
+              onPressed: () => perfumeSearch(),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFF2563EB),
+                foregroundColor: Colors.white,
+                padding: const EdgeInsets.symmetric(vertical: 12),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
                 ),
-                SizedBox(height: 12),
-                Text(
-                  "Safe & Secure",
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.bold,
-                    color: AppColors.textPrimary,
-                  ),
-                  textAlign: TextAlign.center,
+                elevation: 0,
+              ),
+              child: const Text(
+                "Find Couriers",
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
                 ),
-                SizedBox(height: 4),
-                Text(
-                  "Verified travelers only",
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: AppColors.textSecondary,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-              ],
+              ),
             ),
           ),
-        ),
-        const SizedBox(width: 16),
-        Expanded(
-          child: Container(
-            padding: const EdgeInsets.all(10),
-            decoration: BoxDecoration(
-              color: AppColors.cardBackgroundBlur,
-              borderRadius: BorderRadius.circular(16),
-              border: Border.all(color: AppColors.cardBorder),
-            ),
-            child: const Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                CustomIcon(
-                  iconPath: "assets/icon/users.svg",
-                  color: AppColors.purple600,
-                  size: 32,
-                ),
-                SizedBox(height: 12),
-                Text(
-                  "Growing Network",
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.bold,
-                    color: AppColors.textPrimary,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-                SizedBox(height: 4),
-                Text(
-                  "Join early adopters",
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: AppColors.textSecondary,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-              ],
-            ),
-          ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 
+  Widget _buildSearchField({
+    required TextEditingController controller,
+    required String hintText,
+    required String icon,
+  }) {
+    return Container(
+      decoration: BoxDecoration(
+        border: Border.all(color: Colors.grey),
+
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: TextField(
+        controller: controller,
+        decoration: InputDecoration(
+          hintText: hintText,
+          hintStyle: const TextStyle(
+            color: Colors.grey,
+            fontSize: 16,
+          ),
+          prefixIcon: CustomIcon(
+            iconPath: "assets/icon/car.svg",
+            color: const Color(0xFF9CA3AF),
+            size: 20,
+          ),
+          border: InputBorder.none,
+          contentPadding: const EdgeInsets.symmetric(
+            horizontal: 12,
+            vertical: 12,
+          ),
+        ),
+        style: const TextStyle(
+          fontSize: 16,
+          color: Color(0xFF1F2937),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildServiceTypes() {
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: Row(
+        children: serviceTypes.map((filter) {
+          final isSelected = selectedFilter == filter;
+          return Padding(
+            padding: const EdgeInsets.only(right: 8),
+            child: FilterChip(
+              label: Text(
+                filter,
+                style: TextStyle(
+                  color: isSelected ? Colors.white : const Color(0xFF6B7280),
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              selected: isSelected,
+              onSelected: (selected) {
+                setState(() {
+                  selectedFilter = filter;
+                });
+              },
+              backgroundColor: const Color(0xFFF3F4F6),
+              selectedColor: const Color(0xFF2563EB),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20),
+                side: BorderSide.none,
+              ),
+              showCheckmark: false,
+            ),
+          );
+        }).toList(),
+      ),
+    );
+  }
+
+  String _getCurrentDate() {
+    final date = DateTime.now();
+    return "${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}";
+  }
+
+  Future<void> _selectDate(BuildContext context) async {
+    DateTime? pickedDate = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime.now(),
+      lastDate: DateTime.now().add(const Duration(days: 365)),
+      builder: (context, child) {
+        return Theme(
+          data: Theme.of(context).copyWith(
+            colorScheme: ColorScheme.light(
+              primary: AppColors.blue700,
+              onPrimary: Colors.white,
+              surface: Colors.white,
+              onSurface: Colors.black,
+            ),
+          ),
+          child: child!,
+        );
+      },
+    );
+
+    if (pickedDate != null) {
+      setState(() {
+        dateController.text = "${pickedDate.toLocal()}".split(' ')[0];
+      });
+    }
+  }
+
   Widget _buildOurServiceCard(String title, String description, String iconPath,
-      List<Color> gradientColors) {
+      String backgroundImageUrl) {
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.only(left: 12, right: 12, top: 20, bottom: 20),
+      height: 400,
       decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: gradientColors,
-        ),
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: gradientColors[0].withOpacity(0.3),
+            color: Colors.black.withValues(alpha: 0.15),
             blurRadius: 20,
             offset: const Offset(0, 8),
           ),
         ],
       ),
-      child: Column(
-        children: [
-          Container(
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.2),
-              borderRadius: BorderRadius.circular(12),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(16),
+        child: Stack(
+          children: [
+            // Background Image
+            Positioned.fill(
+              child: Image.asset(
+                backgroundImageUrl,
+                fit: BoxFit.cover,
+                errorBuilder: (context, error, stackTrace) {
+                  return Container(
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        colors: [AppColors.blue600, AppColors.blue700],
+                      ),
+                    ),
+                  );
+                },
+              ),
             ),
-            child: CustomIcon(
-              iconPath: iconPath,
-              size: 32,
-              color: Colors.white,
+            // Blue overlay
+            Positioned.fill(
+              child: Container(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [
+                      AppColors.dark.withValues(alpha: 0.3),
+                      AppColors.dark.withValues(alpha: 0.3),
+                    ],
+                  ),
+                ),
+              ),
             ),
-          ),
-          const SizedBox(height: 16),
-          Text(
-            title,
-            style: const TextStyle(
-              color: Colors.white,
-              fontSize: 14,
-              fontWeight: FontWeight.bold,
+            // Content
+            Positioned.fill(
+              child: Padding(
+                padding: const EdgeInsets.all(20),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Icon and title
+                    Row(
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                            color: Colors.white.withValues(alpha: 0.3),
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: CustomIcon(
+                            iconPath: iconPath,
+                            size: 20,
+                            color: Colors.white,
+                          ),
+                        ),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: Text(
+                            title,
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 20),
+                    // Description
+                    Expanded(
+                      child: Text(
+                        description,
+                        style: TextStyle(
+                          color: Colors.white.withValues(alpha: 0.9),
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
+                          height: 1.5,
+                        ),
+                      ),
+                    ),
+                    // Features
+                    Wrap(
+                      spacing: 8,
+                      runSpacing: 8,
+                      children: [
+                        _buildFeatureTag("Instant quotes"),
+                        _buildFeatureTag("Real-time tracking"),
+                        _buildFeatureTag("Insurance included"),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
             ),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            description,
-            style: TextStyle(
-              color: Colors.white.withOpacity(0.8),
-              fontSize: 12,
-              fontWeight: FontWeight.w500,
-            ),
-            textAlign: TextAlign.center,
-          ),
-        ],
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildFeatureTag(String text) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+      decoration: BoxDecoration(
+        color: Colors.white.withValues(alpha: 0.2),
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Text(
+        text,
+        style: const TextStyle(
+          color: Colors.white,
+          fontSize: 12,
+          fontWeight: FontWeight.w500,
+        ),
       ),
     );
   }
@@ -424,180 +517,167 @@ Widget _buildSearchSection() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          "Our Services",
-          style: TextStyle(
-            color: AppColors.textPrimary,
-            fontSize: 14,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        const SizedBox(height: 16),
+        // const Text(
+        //   "How it works",
+        //   style: TextStyle(
+        //     color: AppColors.textPrimary,
+        //     fontSize: 24,
+        //     fontWeight: FontWeight.bold,
+        //   ),
+        // ),
+        // const SizedBox(height: 20),
         _buildOurServiceCard(
           "Send Packages",
-          "Connect with travelers heading to your destination",
+          "Connect with verified travelers heading to your destination. Save up to 70% on shipping costs with our trusted courier network.",
           "assets/icon/package.svg",
-          [AppColors.blueStart, AppColors.blueEnd],
+          "assets/images/back1.png",
         ),
-        const SizedBox(height: 16),
+        const SizedBox(height: 20),
         _buildOurServiceCard(
-          "Offer Rides",
-          "Make money by carrying packages on your trips",
+          "Become a Courier",
+          "Turn your trips into earnings. Carry packages and make money on routes you're already taking. Set your own prices and schedule.",
           "assets/icon/car.svg",
-          [AppColors.purpleStart, AppColors.purpleEnd],
+          "assets/images/back2.png",
         ),
       ],
     );
   }
 
-
-
-  Widget _buildButton(String title, int index) {
-    return GestureDetector(
-      onTap: () => setState(() => selectedIndex = index),
-      child: Container(
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: selectedIndex == index
-              ? AppColors.blue700
-              : AppColors.cardBackground,
-          borderRadius: BorderRadius.circular(30),
-          border: Border.all(
-            color: selectedIndex == index
-                ? AppColors.cardBorder
-                : Colors.transparent,
-          ),
-        ),
-        child: Text(
-          title,
+  Widget _buildFAQSection() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text(
+          "Frequently Asked Questions",
           style: TextStyle(
-            color: selectedIndex == index
-                ? AppColors.white
-                : AppColors.textSecondary,
-            fontSize: 14,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-      ));
-  }
-
-
-  Widget _buildButtons() {
-    return Row(
-      children: [
-        Text(
-          "Recent ${selectedIndex == 0 ? 'Shipments' : 'Trips'}",
-          style: const TextStyle(
             color: AppColors.textPrimary,
-            fontSize: 14,
+            fontSize: 24,
             fontWeight: FontWeight.bold,
           ),
+          textAlign: TextAlign.center,
         ),
-        const Spacer(),
-        _showPopUpMenu(),
+        const SizedBox(height: 20),
+        ListView.separated(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          itemCount: faqs.length,
+          separatorBuilder: (context, index) => const SizedBox(height: 12),
+          itemBuilder: (context, index) {
+            final faq = faqs[index];
+            final isExpanded = expandedFaqIndex == index;
+            
+            return Container(
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(
+                  color: const Color(0xFFE5E7EB),
+                  width: 1,
+                ),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.05),
+                    blurRadius: 8,
+                    offset: const Offset(0, 2),
+                  ),
+                ],
+              ),
+              child: Column(
+                children: [
+                  InkWell(
+                    onTap: () {
+                      setState(() {
+                        expandedFaqIndex = isExpanded ? null : index;
+                      });
+                    },
+                    borderRadius: BorderRadius.circular(12),
+                    child: Padding(
+                      padding: const EdgeInsets.all(16),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: Text(
+                              faq["question"]!,
+                              style: const TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
+                                color: AppColors.textPrimary,
+                              ),
+                            ),
+                          ),
+                          Icon(
+                            isExpanded
+                                ? Icons.keyboard_arrow_up
+                                : Icons.keyboard_arrow_down,
+                            color: const Color(0xFF6B7280),
+                            size: 24,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  if (isExpanded)
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+                      child: Text(
+                        faq["answer"]!,
+                        style: const TextStyle(
+                          fontSize: 14,
+                          color: Color(0xFF6B7280),
+                          height: 1.5,
+                        ),
+                      ),
+                    ),
+                ],
+              ),
+            );
+          },
+        ),
       ],
     );
   }
-
-  Widget _showPopUpMenu() {
-    return Theme(
-        data: Theme.of(context).copyWith(
-          popupMenuTheme: PopupMenuThemeData(
-            color: AppColors.white,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12),
-            ),
-          ),
-        ),
-        child: PopupMenuButton<int>(
-          onSelected: (value) {
-            setState(() {
-              selectedIndex = value;
-            });
-          },
-          itemBuilder: (BuildContext context) => <PopupMenuEntry<int>>[
-            const PopupMenuItem<int>(
-              value: 0,
-              child: Row(
-                children: [
-                  CustomIcon(
-                    iconPath: "assets/icon/package.svg",
-                    size: 20,
-                    color: AppColors.blue600,
-                  ),
-                  SizedBox(width: 8),
-                  Text(
-                    'Shipments',
-                    style: TextStyle(
-                      color: AppColors.textPrimary,
-                      fontSize: 14,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            const PopupMenuItem<int>(
-              value: 1,
-              child: Row(
-                children: [
-                  CustomIcon(
-                    iconPath: "assets/icon/car.svg",
-                    size: 20,
-                    color: AppColors.blue600,
-                  ),
-                  SizedBox(width: 8),
-                  Text(
-                    'Trips',
-                    style: TextStyle(
-                      color: AppColors.textPrimary,
-                      fontSize: 14,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-            decoration: BoxDecoration(
-              color: AppColors.hoverBlue50,
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: const Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Icon(
-                  Icons.tune,
-                  color: AppColors.blue600,
-                  size: 16,
-                ),
-                SizedBox(width: 4),
-                Text(
-                  "Filter",
-                  style: TextStyle(
-                    color: AppColors.blue600,
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ));
-  }
-
-  Widget _buildAppBar() {
+ 
+ 
+ 
+ Widget _buildAppBar() {
     return Row(
       children: [
-        UserProfileWithRating(
-          user: user,
-          borderColor: AppColors.blue,
-          header: 'Welcome, ${user?.firstName ?? 'Guest'}',
-          avatarSize: 42,
-          headerFontSize: 14,
-          onPressed: () => context.push("/profile"),
+        GestureDetector(
+          onTap: () => context.push("/profile"),
+          child: Container(
+            width: 40,
+            height: 40,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              border: Border.all(color: AppColors.blue, width: 2),
+            ),
+            child: ClipRRect(
+             borderRadius: BorderRadius.circular(21),
+            child: CachedNetworkImage(
+            imageUrl:  user!.photoUrl!,
+            fit: BoxFit.cover,
+            placeholder: (context, url) => Container(
+                decoration: BoxDecoration(
+                  color: AppColors.blueStart.withValues(alpha: 0.1),
+                ),
+                child: const Center(
+                    child: CircularProgressIndicator(color: AppColors.blue700, strokeWidth: 2))),
+            errorWidget: (context, error, stackTrace) {
+                  return Container(
+                    decoration: BoxDecoration(
+                      color: AppColors.blueStart.withValues(alpha: 0.1),
+                      borderRadius: BorderRadius.circular(50),
+                    ),
+                    child: const Icon(
+                      Icons.person,
+                      color: AppColors.blueStart,
+                      size: 26,
+                    ),
+                  );
+                },
+          )
+            ),
+          ),
         ),
         const Spacer(),
         Row(
@@ -606,140 +686,38 @@ Widget _buildSearchSection() {
               icon: "assets/icon/help.svg",
               onTap: () => context.push("/help"),
             ),
-            const SizedBox(width: 8),
+            const SizedBox(width: 12),
             const NotificationIcon(),
-            // buildHeaderIcon(
-            //   icon: "assets/icon/notification.svg",
-            //   onTap: () => context.push("/notification"),
-            //   hasNotification: true,
-            // ),
           ],
         ),
+        // const Spacer(),
+        
       ],
     );
   }
 
 
-  Widget _buildTripListings(List<Trip> activeTrips) {
-    return Consumer2<TripProvider, UserProvider>(
-      builder: (context, tripProvider, userProvider, child) {
-        return activeTrips.isEmpty
-            ? buildEmptyState(
-                Icons.directions_car,
-                "No active trips",
-                 "Start earning by offering trip capacity!",
-              )
-            : ListView.builder(
-                physics: const NeverScrollableScrollPhysics(),
-                shrinkWrap: true,
-                itemCount: activeTrips.length,
-                itemBuilder: (context, index) {
-                  final trip = activeTrips[index];
-                  final userData = userProvider.getUserById(trip.userId);
-                  if (userData == null) {
-                    return const SizedBox.shrink();
-                  }
-                  return Column(
-                    children: [
-                      _buildTripcard(trip, userData),
-                      const SizedBox(height: 16),
-                    ],
-                  );
-                },
-              );
+  Widget _buildShipmentCard(Shipment shipment, UserData userData) {
+    return ShipmentCard(
+      shipment: shipment,
+      userData: userData,
+      onPressed: () {
+        context.push(
+            '/shipment-details?shipmentId=${shipment.id}&userId=${shipment.userId}&viewOnly=false');
       },
     );
-  }
-
-  Widget _buildShipmentCard(Shipment shipment, UserData userData) {
-    return  ShipmentCard(
-        shipment: shipment,
-        userData: userData,
-        onPressed: () {
-          context.push(
-              '/shipment-details?shipmentId=${shipment.id}&userId=${shipment.userId}&viewOnly=false');
-        },
-      );
   }
 
   Widget _buildTripcard(Trip trip, UserData userData) {
-    return  ShipmentCard(
-        shipment: trip,
-        userData: userData,
-        onPressed: () {
-          context.push(
-              '/trip-details?tripId=${trip.id}&userId=${trip.userId}&viewOnly=false');
-        },
-      );
-  }
-
-
-  Widget _buildShipmentListings(List<Shipment> activeShipments) {
-    return Consumer2<ShipmentProvider, UserProvider>(
-      builder: (context, shipmentProvider, userProvider, child) {
-        return activeShipments.isEmpty
-            ? buildEmptyState(
-                Icons.inventory_2,
-                "No active shipments",
-                "Be the first to post a shipment request!",
-              )
-            : ListView.builder(
-                physics: const NeverScrollableScrollPhysics(),
-                shrinkWrap: true,
-                itemCount: activeShipments.length,
-                itemBuilder: (context, index) {
-                  final shipment = activeShipments[index];
-                  final userData = userProvider.getUserById(shipment.userId);
-                  if (userData == null) {
-                    return const SizedBox.shrink();
-                  }
-                  return Column(
-                    children: [
-                      _buildShipmentCard(shipment, userData),
-                      const SizedBox(height: 16),
-                    ],
-                  );
-                },
-              );
+    return ShipmentCard(
+      shipment: trip,
+      userData: userData,
+      onPressed: () {
+        context.push(
+            '/trip-details?tripId=${trip.id}&userId=${trip.userId}&viewOnly=false');
       },
     );
   }
-
-  Widget _buildAllListings(List<TransportItem> activeShipments, List<TransportItem> activeTrips) {
-    List<TransportItem> items = [...activeShipments, ...activeTrips];
-    // items.sort((a, b) => b.createdAt.compareTo(a.createdAt));
-
-    return Consumer2<ShipmentProvider, UserProvider>(
-      builder: (context, shipmentProvider, userProvider, child) {
-        return items.isEmpty
-            ? buildEmptyState(
-                Icons.inventory_2,
-                "No active shipments",
-                "Be the first to post a shipment request!",
-              )
-            : ListView.builder(
-                physics: const NeverScrollableScrollPhysics(),
-                shrinkWrap: true,
-                itemCount: items.length,
-                itemBuilder: (context, index) {
-                  final shipment = items[index];
-                  final userData = userProvider.getUserById(shipment.userId);
-                  if (userData == null) {
-                    return const SizedBox.shrink();
-                  }
-                  return Column(
-                    children: [
-                      if (shipment is Shipment) _buildShipmentCard(shipment, userData),
-                      if (shipment is Trip) _buildTripcard(shipment, userData),
-                      const SizedBox(height: 16),
-                    ],
-                  );
-                },
-              );
-      },
-    );
-  }
-
 }
 
 Widget searchTextField({
