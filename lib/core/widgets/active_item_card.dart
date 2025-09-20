@@ -3,7 +3,7 @@ import 'package:quickdrop_app/core/widgets/actionButton.dart';
 import 'package:quickdrop_app/core/utils/imports.dart';
 import 'package:quickdrop_app/features/models/base_transport.dart';
 
-class ActiveItemCard extends StatelessWidget {
+class ActiveItemCard extends StatefulWidget {
   final TransportItem item;
   final VoidCallback onPressed; // Delete callback
   final VoidCallback onEditPressed;
@@ -18,9 +18,18 @@ class ActiveItemCard extends StatelessWidget {
   });
 
   @override
+  State<ActiveItemCard> createState() => _ActiveItemCardState();
+}
+
+class _ActiveItemCardState extends State<ActiveItemCard> {
+  
+
+
+  @override
+ 
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: onViewPressed,
+      onTap: widget.onViewPressed,
       child: Container(
         margin: const EdgeInsets.only(bottom: 16),
         decoration: BoxDecoration(
@@ -35,86 +44,88 @@ class ActiveItemCard extends StatelessWidget {
             ),
           ],
         ),
-        child: Column(
+        child:   Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Padding(
               padding: const EdgeInsets.all(16),
               child: Column( 
                 children: [
-                  _buildHeader(),
+                  BuildHeader(
+                    from: widget.item.from,
+                    to: widget.item.to,
+                    id: widget.item.id,
+                  ),
                   const SizedBox(height: 16),
                   _buildBody(),
               ])),
             _buildFooter(),
           ],
-        ),
-      ),
-    );
+      )));
   }
 
-  Widget _buildHeader() {
-    return Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'ID: ${item.id ?? 'N/A'}',
-                style: const TextStyle(
-                  fontSize: 14,
-                  color: Color(0xFF6B7280), // gray-500
-                  fontWeight: FontWeight.w400,
-                ),
-              ),
-              const SizedBox(height: 4),
-              Text(
-                '${item.from} → ${item.to}',
-                style: const TextStyle(
-                  fontSize: 18,
-                  color: Color(0xFF111827), // gray-900
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
-            ],
-          ),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-            decoration: BoxDecoration(
-              color: const Color(0xFFFEF2F2), // red-50
-              borderRadius: BorderRadius.circular(20),
-            ),
-            child: const Text(
-              'Pending',
-              style: TextStyle(
-                fontSize: 12,
-                color: Color(0xFFEA2A33), // primary red color
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-          ),
-        ],
 
-    );
-  }
 
   Widget _buildBody() {
-    return  Column(
-        children: [
-          _buildInfoRow(
-            icon: Icons.calendar_today,
-            text: 'Pickup : ${item.date} ',
-          ),
-          const SizedBox(height: 8),
-          _buildInfoRow(
-            icon: Icons.inventory_2_outlined,
-            text: 'Weight. ${item.weight}kg',
-          ),
-        ],
-      
+    return Column(
+      children: [
+        Row(
+          children: [
+            Expanded(
+              child: BuildInfoShip(
+                icon: Icons.calendar_today,
+                label: 'Pickup Date',
+                value: '${widget.item.date}',
+                accentColor: const Color(0xFFDC2626), // Red color for date
+              ),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: BuildInfoShip(
+                icon:  Icons.inventory_2_outlined,
+                label: 'Weight',
+                 value: '${widget.item.weight}kg',
+                accentColor: const Color(0xFF2563EB), // Blue color for weight
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 16),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Row(
+              children: [
+                Icon(
+                  Icons.schedule_outlined,
+                  size: 14,
+                  color: const Color(0xFF6B7280),
+                ),
+                const SizedBox(width: 6),
+                Text(
+                  'Est. Pickup: ${widget.item.date}',
+                  style: const TextStyle(
+                    fontSize: 12,
+                    color: Color(0xFF6B7280),
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
+              ],
+            ),
+            Text(
+              '${widget.item.price}dh',
+              style: const TextStyle(
+                fontSize: 20,
+                color: AppColors.blue,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+          ],
+        ),
+      ],
     );
   }
+
 
   Widget _buildInfoRow({required IconData icon, required String text}) {
     return Row(
@@ -122,14 +133,14 @@ class ActiveItemCard extends StatelessWidget {
         Icon(
           icon,
           size: 16,
-          color: const Color(0xFF9CA3AF), // gray-400
+          color: const Color(0xFF9CA3AF),
         ),
         const SizedBox(width: 8),
         Text(
           text,
           style: const TextStyle(
             fontSize: 14,
-            color: Color(0xFF374151), // gray-700
+            color: Color(0xFF374151),
             fontWeight: FontWeight.w400,
           ),
         ),
@@ -137,39 +148,49 @@ class ActiveItemCard extends StatelessWidget {
     );
   }
 
-
-
-
-
   Widget _buildFooter() {
     return Container(
       decoration: const BoxDecoration(
-        border: Border(
-          top: BorderSide(
-            color: Color(0xFFE5E7EB), // gray-200
-            width: 1,
-          ),
+        color: Color(0xFFF8FAFC),
+        borderRadius: BorderRadius.only(
+          bottomLeft: Radius.circular(16),
+          bottomRight: Radius.circular(16),
         ),
       ),
       child: Row(
         children: [
           Expanded(
-            child: buildActionButton(
-              label: 'Edit',
-              onPressed: onEditPressed,
-              isLeft: true,
+            child: BuildShipmentCardActionButton(
+              icon: Icons.visibility_outlined,
+              label: 'View',
+              onPressed: widget.onViewPressed,
+              color: const Color(0xFF2563EB),
             ),
           ),
           Container(
             width: 1,
             height: 48,
-            color: const Color(0xFFE5E7EB), // gray-200
+            color: const Color(0xFFE2E8F0),
           ),
           Expanded(
-            child: buildActionButton(
+            child: BuildShipmentCardActionButton(
+              icon: Icons.edit_outlined,
+              label: 'Edit',
+              onPressed: widget.onEditPressed,
+              color: const Color(0xFF059669),
+            ),
+          ),
+          Container(
+            width: 1,
+            height: 48,
+            color: const Color(0xFFE2E8F0),
+          ),
+          Expanded(
+            child: BuildShipmentCardActionButton(
+              icon: Icons.delete_outline,
               label: 'Delete',
-              onPressed: onPressed,
-              isLeft: false,
+              onPressed: widget.onPressed,
+              color: const Color(0xFFDC2626),
             ),
           ),
         ],
@@ -178,5 +199,4 @@ class ActiveItemCard extends StatelessWidget {
   }
 
 
-   
 }

@@ -356,7 +356,11 @@ class OngoingItemCardState extends State<OngoingItemCard> {
               padding: const EdgeInsets.all(16),
               child: Column( 
                 children: [
-                  _buildHeader(),
+                  BuildHeader(
+                      from: widget.item.from,
+                      to: widget.item.to,
+                      id: widget.item.id,
+                    ),
                   const SizedBox(height: 16),
                   _buildBody(),
               ])),
@@ -367,71 +371,75 @@ class OngoingItemCardState extends State<OngoingItemCard> {
     );
   }
 
-   Widget _buildHeader() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'ID: ${widget.item.id ?? 'N/A'}',
-              style: const TextStyle(
-                fontSize: 12,
-                color: Color(0xFF6B7280), // gray-500
-                fontWeight: FontWeight.w400,
-              ),
-            ),
-            const SizedBox(height: 4),
-            Text(
-              '${widget.item.from} → ${widget.item.to}',
-              style: const TextStyle(
-                fontSize: 18,
-                color: Color(0xFF111827), // gray-900
-                fontWeight: FontWeight.w700,
-              ),
-            ),
-          ],
-        ),
-        Container(
-          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-          decoration: BoxDecoration(
-            color: AppColors.blue600.withValues(alpha: 0.1), // blue-100
-            borderRadius: BorderRadius.circular(20),
-          ),
-          child: const Text(
-            'In Transit',
-            style: TextStyle(
-              fontSize: 12,
-              color: AppColors.blue700, // success color
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-        ),
-      ],
-    );
-  }
+
+
 
 
 
   Widget _buildBody() {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          'In Transit: ${widget.item.date}',
-          style: const TextStyle(
-            fontSize: 14,
-            color: Color(0xFF6B7280), // gray-500
-            fontWeight: FontWeight.w400,
-          ),
+        // Row(
+        //   children: [
+        //     Expanded(
+        //       child: BuildInfoShip(
+        //         icon: Icons.calendar_today,
+        //         label: 'Delivered on',
+        //         value: '${widget.item.date}',
+        //         accentColor: const Color(0xFFDC2626), // Red color for date
+        //       ),
+        //     ),
+        //     const SizedBox(width: 12),
+        //     Expanded(
+        //       child: BuildInfoShip(
+        //         icon:  Icons.inventory_2_outlined,
+        //         label: 'Weight',
+        //          value: '${widget.item.weight}kg',
+        //         accentColor: const Color(0xFF2563EB), // Blue color for weight
+        //       ),
+        //     ),
+        //   ],
+        // ),
+        // const SizedBox(height: 16),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Row(
+              children: [
+                const Icon(
+                  Icons.schedule_outlined,
+                  size: 14,
+                  color:  Color(0xFF6B7280),
+                ),
+                const SizedBox(width: 6),
+                Text(
+                  'Est Arrival: ${widget.item.date}',
+                  style: const TextStyle(
+                    fontSize: 12,
+                    color: Color(0xFF6B7280),
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
+              ],
+            ),
+            Text(
+              '${widget.item.price}dh',
+              style: const TextStyle(
+                fontSize: 20,
+                color: AppColors.blue,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+          ],
         ),
-        const SizedBox(height: 16),
+         const SizedBox(height: 16),
         _buildCourierCard(),
       ],
     );
   }
+
+
+
 
 
   Widget _buildCourierCard() {
@@ -533,45 +541,54 @@ class OngoingItemCardState extends State<OngoingItemCard> {
     );
   }
 
-
-  Widget _buildFooter() {
+ Widget _buildFooter() {
     return Container(
       decoration: const BoxDecoration(
-        border: Border(
-          top: BorderSide(
-            color: Color(0xFFE5E7EB), // gray-200
-            width: 1,
-          ),
+        color: Color(0xFFF8FAFC),
+        borderRadius: BorderRadius.only(
+          bottomLeft: Radius.circular(16),
+          bottomRight: Radius.circular(16),
         ),
       ),
       child: Row(
         children: [
           Expanded(
-            child: buildActionButton(
-              label: 'Delivered',
-              onPressed: _showDeliveryConfirmation,
-              isLeft: true,
+            child: BuildShipmentCardActionButton(
+              icon: Icons.visibility_outlined,
+              label: 'View',
+              onPressed: widget.onViewPressed,
+              color: const Color(0xFF2563EB),
             ),
           ),
           Container(
             width: 1,
             height: 48,
-            color: const Color(0xFFE5E7EB), // gray-200
+            color: const Color(0xFFE2E8F0),
           ),
           Expanded(
-            child: buildActionButton(
-              label: 'Report Issue',
-              onPressed: () => {},
-              isLeft: false,
+            child: BuildShipmentCardActionButton(
+              icon: Icons.check_circle_outline,
+              label: 'Delivered',
+              onPressed: widget.onViewPressed,
+              color: AppColors.succes,
+            ),
+          ),
+          Container(
+            width: 1,
+            height: 48,
+            color: const Color(0xFFE2E8F0),
+          ),
+          Expanded(
+            child: BuildShipmentCardActionButton(
+              icon: Icons.report_problem_outlined,
+              label: 'Report',
+              onPressed: widget.onViewPressed,
+              color: AppColors.error,
             ),
           ),
         ],
       ),
     );
-
-   
   }
-
-
 }
 
