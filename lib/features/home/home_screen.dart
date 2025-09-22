@@ -685,6 +685,7 @@ class _HomeScreenState extends State<HomeScreen> {
             buildHeaderIcon(
               icon: "assets/icon/help.svg",
               onTap: () => context.push("/help"),
+              color: AppColors.textSecondary
             ),
             const SizedBox(width: 12),
             const NotificationIcon(),

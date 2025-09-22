@@ -4,6 +4,7 @@ import 'package:quickdrop_app/core/utils/imports.dart';
 Widget buildHeaderIcon({
   required String icon,
   required VoidCallback onTap,
+  required Color color,
   bool hasNotification = false,
 }) {
   return GestureDetector(
@@ -24,7 +25,7 @@ Widget buildHeaderIcon({
         children: [
           CustomIcon(
             iconPath: icon,
-            color: AppColors.textSecondary,
+            color: color,
             size: 24,
           ),
           if (hasNotification)
@@ -47,7 +48,10 @@ Widget buildHeaderIcon({
 }
 
 class NotificationIcon extends StatelessWidget {
-  const NotificationIcon({super.key});
+  final Color color;
+  const NotificationIcon({ super.key,
+    this.color= AppColors.textSecondary
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -67,9 +71,9 @@ class NotificationIcon extends StatelessWidget {
             onTap: () => context.push("/notification"),
             child: Stack(
               children: [
-                const CustomIcon(
+                 CustomIcon(
                   iconPath: "assets/icon/notification.svg",
-                  color: AppColors.textSecondary,
+                  color: color,
                   size: 24,
                 ),
                 if (hasNotification)
