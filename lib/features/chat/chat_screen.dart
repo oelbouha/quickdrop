@@ -27,45 +27,34 @@ class _ChatScreenState extends State<ChatScreen>
     return Scaffold(
         backgroundColor: AppColors.background,
         appBar: AppBar(
-          backgroundColor: AppColors.appBarBackground,
-          title: PreferredSize(
-          preferredSize: const Size.fromHeight(48), child: 
+          backgroundColor: AppColors.blue,
+          centerTitle: true,
+          // elevation: 0,
+          title: const Text(
+            "Chats",
+            style:  TextStyle(
+              color: AppColors.white,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          actions: [
+            buildHeaderIcon(
+              icon: "assets/icon/help.svg",
+              onTap: () => print("Help tapped"),
+              color: AppColors.white
+            ),
+            const SizedBox(width: 8),
+            const NotificationIcon(
+              color: AppColors.white
+            ),
+            const SizedBox(width: 12),
+          ]
         
-        Container(
-          padding: const EdgeInsets.all(8),
-          child:  _buildAppBar())
-        
-        )),
+        ),
         body:  _buildChatConversations(),
     );
   }
 
-
-  Widget _buildAppBar() {
-    return const Row(
-      children: [
-        Text(
-          "Chat",
-          style: TextStyle(
-            color: AppColors.appBarText,
-            fontSize: 20,
-            fontWeight: FontWeight.w600,
-          ),
-        ),
-         Spacer(),
-         Row(
-          children: [
-            // buildHeaderIcon(
-            //   icon: "assets/icon/help.svg",
-            //   onTap: () => context.push("/help"),
-            // ),
-            //  SizedBox(width: 8),
-            NotificationIcon(),
-          ],
-        ),
-      ],
-    );
-  }
 
 
   Widget _buildChatConversations() {
