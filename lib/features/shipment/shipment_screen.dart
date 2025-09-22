@@ -11,7 +11,7 @@ class ShipmentScreen extends StatefulWidget {
 class _ShipmentScreenState extends State<ShipmentScreen>
     with SingleTickerProviderStateMixin {
   
-   final ScrollController _scrollController = ScrollController();
+  //  final ScrollController _scrollController = ScrollController();
   bool _isExpanded = true;
 
   int selectedIndex = 0;
@@ -23,7 +23,7 @@ class _ShipmentScreenState extends State<ShipmentScreen>
   void initState() {
     super.initState();
 
-    _scrollController.addListener(_handleScroll);
+    // _scrollController.addListener(_handleScroll);
 
     _tabController = TabController(length: 3, vsync: this);
 
@@ -32,7 +32,7 @@ class _ShipmentScreenState extends State<ShipmentScreen>
         user = Provider.of<UserProvider>(context, listen: false).user;
         final shipmentProvider =
             Provider.of<ShipmentProvider>(context, listen: false);
-        shipmentProvider.fetchShipmentsByUserId(user!.uid);
+        await  shipmentProvider.fetchShipmentsByUserId(user!.uid);
         final userIds = shipmentProvider.shipments
             .where((r) => r.matchedDeliveryUserId != null)
             .map((r) => r.matchedDeliveryUserId!)
@@ -57,13 +57,13 @@ class _ShipmentScreenState extends State<ShipmentScreen>
     });
   }
 
-    void _handleScroll() {
-    if (_scrollController.position.userScrollDirection == ScrollDirection.reverse && _isExpanded) {
-      setState(() => _isExpanded = false);
-    } else if (_scrollController.position.userScrollDirection == ScrollDirection.forward && !_isExpanded) {
-      setState(() => _isExpanded = true);
-    }
-  }
+  //   void _handleScroll() {
+  //   if (_scrollController.position.userScrollDirection == ScrollDirection.reverse && _isExpanded) {
+  //     setState(() => _isExpanded = false);
+  //   } else if (_scrollController.position.userScrollDirection == ScrollDirection.forward && !_isExpanded) {
+  //     setState(() => _isExpanded = true);
+  //   }
+  // }
 
   void removeShipment(String id) async {
     //  print("Removing shipment with id: $id");
@@ -93,7 +93,6 @@ class _ShipmentScreenState extends State<ShipmentScreen>
   @override
   void dispose() {
     _tabController.dispose();
-     _scrollController.dispose();
     super.dispose();
   }
 
@@ -179,7 +178,6 @@ class _ShipmentScreenState extends State<ShipmentScreen>
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: CustomAppBar(
-        expanded: _isExpanded,
         tabController: _tabController,
         tabs: const [
           "Active",
@@ -248,7 +246,7 @@ class _ShipmentScreenState extends State<ShipmentScreen>
                 buttonText: "Post Shipment",
               ))
             : ListView.builder(
-               controller: _scrollController,
+              //  controller: _scrollController,
              physics: const BouncingScrollPhysics(),
                 itemCount: activeShipments.length,
                 itemBuilder: (context, index) {
@@ -289,7 +287,7 @@ class _ShipmentScreenState extends State<ShipmentScreen>
               ))
             : ListView.builder(
               physics: const BouncingScrollPhysics(),
-               controller: _scrollController,
+              //  controller: _scrollController,
                 itemCount: ongoingShipments.length,
                 itemBuilder: (context, index) {
                   final shipment = ongoingShipments[index];
@@ -336,7 +334,7 @@ class _ShipmentScreenState extends State<ShipmentScreen>
               ))
             : ListView.builder(
               physics: const BouncingScrollPhysics(),
-               controller: _scrollController,
+              //  controller: _scrollController,
                 itemCount: pastShipments.length,
                 itemBuilder: (context, index) {
                   final trip = pastShipments[index];
@@ -363,6 +361,16 @@ class _ShipmentScreenState extends State<ShipmentScreen>
                             context.push('/shipment-details?shipmentId=${shipment.id}&userId=${shipment.userId}&viewOnly=true')
                           },
                           user: userData,
+                          onReviewPressed: () {
+                             showDialog(
+                              context: context,
+                              builder: (context) {
+                                return ReviewDialog(
+                                  recieverUser: userData,
+                                );
+                              },
+                            );
+                          },
                           onPressed: () {
                             removeShipment(pastShipments[index].id!);
                           }),

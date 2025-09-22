@@ -58,6 +58,11 @@ export 'package:quickdrop_app/core/providers/chat_provider.dart';
 export 'package:quickdrop_app/core/providers/statistics_provider.dart';
 export 'package:quickdrop_app/core/providers/review_provider.dart';
 
+
+
+export 'package:quickdrop_app/core/widgets/shipment_card_action_button.dart';
+export 'package:quickdrop_app/core/widgets/shipment_card_info_ship.dart';
+export 'package:quickdrop_app/core/widgets/shipment_card_header.dart';
 export 'package:quickdrop_app/core/widgets/textFeild.dart';
 export 'package:quickdrop_app/core/widgets/numberField.dart';
 export 'package:quickdrop_app/core/widgets/login_button.dart';

@@ -17,7 +17,7 @@ class _TripScreenState extends State<TripScreen>
   bool _isLoading = true;
   late TabController _tabController;
 
-  final ScrollController _scrollController = ScrollController();
+  // final ScrollController _scrollController = ScrollController();
   bool _isExpanded = true;
 
   void removeTrip(String id) async {
@@ -51,7 +51,7 @@ class _TripScreenState extends State<TripScreen>
   @override
   void initState() {
     super.initState();
-    _scrollController.addListener(_handleScroll);
+    // _scrollController.addListener(_handleScroll);
     _tabController = TabController(length: 3, vsync: this);
 
     // Fetch trips when the screen loads
@@ -59,7 +59,7 @@ class _TripScreenState extends State<TripScreen>
       try {
         user = Provider.of<UserProvider>(context, listen: false).user;
         final tripProvider = Provider.of<TripProvider>(context, listen: false);
-        tripProvider.fetchTripsBuUserId(user!.uid);
+        await tripProvider.fetchTripsBuUserId(user!.uid);
 
         final userIds = tripProvider.trips
             .where((r) => r.matchedDeliveryUserId != null)
@@ -85,13 +85,13 @@ class _TripScreenState extends State<TripScreen>
     });
   }
 
-   void _handleScroll() {
-    if (_scrollController.position.userScrollDirection == ScrollDirection.reverse && _isExpanded) {
-      setState(() => _isExpanded = false);
-    } else if (_scrollController.position.userScrollDirection == ScrollDirection.forward && !_isExpanded) {
-      setState(() => _isExpanded = true);
-    }
-  }
+  //  void _handleScroll() {
+  //   if (_scrollController.position.userScrollDirection == ScrollDirection.reverse && _isExpanded) {
+  //     setState(() => _isExpanded = false);
+  //   } else if (_scrollController.position.userScrollDirection == ScrollDirection.forward && !_isExpanded) {
+  //     setState(() => _isExpanded = true);
+  //   }
+  // }
 
   @override
   void dispose() {
@@ -104,7 +104,6 @@ class _TripScreenState extends State<TripScreen>
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: CustomAppBar(
-        expanded: _isExpanded,
         tabController: _tabController,
         tabs: const [
           "Active",
@@ -246,7 +245,6 @@ class _TripScreenState extends State<TripScreen>
               ))
           : ListView.builder(
              physics: const BouncingScrollPhysics(),
-             controller: _scrollController,
               itemCount: activeTrips.length,
               itemBuilder: (context, index) {
                 final trip = activeTrips[index];
@@ -285,7 +283,6 @@ class _TripScreenState extends State<TripScreen>
             : ListView.builder(
 
              physics: const BouncingScrollPhysics(),
-               controller: _scrollController,
                 itemCount: ongoingTrips.length,
                 itemBuilder: (context, index) {
                   final trip = ongoingTrips[index];
@@ -332,7 +329,6 @@ class _TripScreenState extends State<TripScreen>
             : ListView.builder(
 
              physics: const BouncingScrollPhysics(),
-               controller: _scrollController,
                 itemCount: completedTrips.length,
                 itemBuilder: (context, index) {
                   final trip = completedTrips[index];
@@ -357,7 +353,17 @@ class _TripScreenState extends State<TripScreen>
                          onViewPressed: () => {  context.push(
                               '/trip-details?tripId=${trip.id}&userId=${trip.userId}&viewOnly=true')},
                           item: trip,
-                          user: userData,
+                          user: userData, 
+                          onReviewPressed: () {
+                            showDialog(
+                              context: context,
+                              builder: (context) {
+                                return ReviewDialog(
+                                  recieverUser: userData,
+                                );
+                              },
+                            );
+                          },
                           onPressed: () {
                             removeTrip(completedTrips[index].id!);
                           }),

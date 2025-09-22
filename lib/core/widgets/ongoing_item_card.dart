@@ -360,9 +360,12 @@ class OngoingItemCardState extends State<OngoingItemCard> {
                       from: widget.item.from,
                       to: widget.item.to,
                       id: widget.item.id,
+      price:  widget.item.price
                     ),
                   const SizedBox(height: 16),
                   _buildBody(),
+                  const SizedBox(height: 16),
+                  _buildCourierCard(),
               ])),
             _buildFooter(),
           ],
@@ -375,71 +378,55 @@ class OngoingItemCardState extends State<OngoingItemCard> {
 
 
 
-
+ 
   Widget _buildBody() {
-    return Column(
+    return Row(
       children: [
-        // Row(
-        //   children: [
-        //     Expanded(
-        //       child: BuildInfoShip(
-        //         icon: Icons.calendar_today,
-        //         label: 'Delivered on',
-        //         value: '${widget.item.date}',
-        //         accentColor: const Color(0xFFDC2626), // Red color for date
-        //       ),
-        //     ),
-        //     const SizedBox(width: 12),
-        //     Expanded(
-        //       child: BuildInfoShip(
-        //         icon:  Icons.inventory_2_outlined,
-        //         label: 'Weight',
-        //          value: '${widget.item.weight}kg',
-        //         accentColor: const Color(0xFF2563EB), // Blue color for weight
-        //       ),
-        //     ),
-        //   ],
-        // ),
-        // const SizedBox(height: 16),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Row(
-              children: [
-                const Icon(
-                  Icons.schedule_outlined,
-                  size: 14,
-                  color:  Color(0xFF6B7280),
-                ),
-                const SizedBox(width: 6),
-                Text(
-                  'Est Arrival: ${widget.item.date}',
-                  style: const TextStyle(
-                    fontSize: 12,
-                    color: Color(0xFF6B7280),
-                    fontWeight: FontWeight.w400,
-                  ),
-                ),
-              ],
-            ),
-            Text(
-              '${widget.item.price}dh',
-              style: const TextStyle(
-                fontSize: 20,
-                color: AppColors.blue,
-                fontWeight: FontWeight.w700,
-              ),
-            ),
-          ],
+        
+        Expanded(
+          child: _buildInfoColumn(
+            label: 'Date',
+            value: '${widget.item.date}',
+          ),
         ),
-         const SizedBox(height: 16),
-        _buildCourierCard(),
+        Container(
+          width: 1,
+          height: 40,
+          color: const Color(0xFFE5E7EB),
+        ),
+        Expanded(
+          child: _buildInfoColumn(
+            label: 'Weight',
+            value: '${widget.item.weight}kg',
+          ),
+        ),
       ],
     );
   }
 
-
-
+  Widget _buildInfoColumn({required String label, required String value}) {
+    return Column(
+      children: [
+        Text(
+          label,
+          style: const TextStyle(
+            fontSize: 12,
+            color: Color(0xFF6B7280),
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+        const SizedBox(height: 4),
+        Text(
+          value,
+          style: const TextStyle(
+            fontSize: 14,
+            color: Color(0xFF111827),
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+      ],
+    );
+  }
 
 
   Widget _buildCourierCard() {
@@ -541,54 +528,40 @@ class OngoingItemCardState extends State<OngoingItemCard> {
     );
   }
 
- Widget _buildFooter() {
-    return Container(
-      decoration: const BoxDecoration(
-        color: Color(0xFFF8FAFC),
-        borderRadius: BorderRadius.only(
-          bottomLeft: Radius.circular(16),
-          bottomRight: Radius.circular(16),
-        ),
-      ),
-      child: Row(
-        children: [
-          Expanded(
-            child: BuildShipmentCardActionButton(
-              icon: Icons.visibility_outlined,
-              label: 'View',
-              onPressed: widget.onViewPressed,
-              color: const Color(0xFF2563EB),
-            ),
-          ),
-          Container(
-            width: 1,
-            height: 48,
-            color: const Color(0xFFE2E8F0),
-          ),
-          Expanded(
-            child: BuildShipmentCardActionButton(
-              icon: Icons.check_circle_outline,
-              label: 'Delivered',
-              onPressed: widget.onViewPressed,
-              color: AppColors.succes,
-            ),
-          ),
-          Container(
-            width: 1,
-            height: 48,
-            color: const Color(0xFFE2E8F0),
-          ),
-          Expanded(
-            child: BuildShipmentCardActionButton(
-              icon: Icons.report_problem_outlined,
-              label: 'Report',
-              onPressed: widget.onViewPressed,
-              color: AppColors.error,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
 
+
+  Widget _buildFooter() {
+    return Padding(
+      padding: const EdgeInsets.only(
+        left: 16,
+        right: 16,
+        top: 8,
+        bottom: 8
+      ),
+      child:  Row(
+      children: [
+
+        Expanded(
+          child: BuildPrimaryButton(
+            onPressed: _showDeliveryConfirmation,
+            label: 'Delivered',
+            color: AppColors.succes,
+            icon: Icons.check_circle_outline
+          ),
+        ),
+        const SizedBox(width: 12),
+        BuildSecondaryButton(
+          icon: Icons.visibility_outlined,
+          onPressed: widget.onViewPressed,
+        ),
+        const SizedBox(width: 12),
+        BuildSecondaryButton(
+          icon: Icons.delete_outline,
+          onPressed: widget.onViewPressed,
+        ),
+      ],
+    ));
+  }
+   
+     
+}

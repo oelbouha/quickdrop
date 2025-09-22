@@ -22,19 +22,12 @@ class ActiveItemCard extends StatefulWidget {
 }
 
 class _ActiveItemCardState extends State<ActiveItemCard> {
-  
-
-
   @override
- 
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: widget.onViewPressed,
-      child: Container(
-        margin: const EdgeInsets.only(bottom: 16),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(12),
+    return Container(
+      decoration: BoxDecoration(
+       color: AppColors.cardBackground,
+          borderRadius: BorderRadius.circular(AppTheme.cardRadius),
           boxShadow: [
             BoxShadow(
               color: Colors.black.withOpacity(0.08),
@@ -42,9 +35,19 @@ class _ActiveItemCardState extends State<ActiveItemCard> {
               blurRadius: 8,
               offset: const Offset(0, 2),
             ),
+            BoxShadow(
+              color: Colors.black.withOpacity(0.04),
+              spreadRadius: 0,
+              blurRadius: 4,
+              offset: const Offset(0, 1),
+            ),
           ],
-        ),
-        child:   Column(
+          border: Border.all(
+            color: AppColors.cardBackground.withOpacity(0.1),
+            width: 0.5,
+          ),
+      ),
+      child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Padding(
@@ -52,96 +55,62 @@ class _ActiveItemCardState extends State<ActiveItemCard> {
               child: Column( 
                 children: [
                   BuildHeader(
-                    from: widget.item.from,
-                    to: widget.item.to,
-                    id: widget.item.id,
-                  ),
+                      from: widget.item.from,
+                      to: widget.item.to,
+                      id: widget.item.id,
+                      price: widget.item.price
+                    ),
                   const SizedBox(height: 16),
                   _buildBody(),
               ])),
             _buildFooter(),
           ],
-      )));
+        ));
   }
 
-
-
   Widget _buildBody() {
-    return Column(
+    return Row(
       children: [
-        Row(
-          children: [
-            Expanded(
-              child: BuildInfoShip(
-                icon: Icons.calendar_today,
-                label: 'Pickup Date',
-                value: '${widget.item.date}',
-                accentColor: const Color(0xFFDC2626), // Red color for date
-              ),
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: BuildInfoShip(
-                icon:  Icons.inventory_2_outlined,
-                label: 'Weight',
-                 value: '${widget.item.weight}kg',
-                accentColor: const Color(0xFF2563EB), // Blue color for weight
-              ),
-            ),
-          ],
+        
+        Expanded(
+          child: _buildInfoColumn(
+            label: 'Date',
+            value: '${widget.item.date}',
+          ),
         ),
-        const SizedBox(height: 16),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Row(
-              children: [
-                Icon(
-                  Icons.schedule_outlined,
-                  size: 14,
-                  color: const Color(0xFF6B7280),
-                ),
-                const SizedBox(width: 6),
-                Text(
-                  'Est. Pickup: ${widget.item.date}',
-                  style: const TextStyle(
-                    fontSize: 12,
-                    color: Color(0xFF6B7280),
-                    fontWeight: FontWeight.w400,
-                  ),
-                ),
-              ],
-            ),
-            Text(
-              '${widget.item.price}dh',
-              style: const TextStyle(
-                fontSize: 20,
-                color: AppColors.blue,
-                fontWeight: FontWeight.w700,
-              ),
-            ),
-          ],
+        Container(
+          width: 1,
+          height: 40,
+          color: const Color(0xFFE5E7EB),
+        ),
+        Expanded(
+          child: _buildInfoColumn(
+            label: 'Weight',
+            value: '${widget.item.weight}kg',
+          ),
         ),
       ],
     );
   }
 
-
-  Widget _buildInfoRow({required IconData icon, required String text}) {
-    return Row(
+  Widget _buildInfoColumn({required String label, required String value}) {
+    return Column(
       children: [
-        Icon(
-          icon,
-          size: 16,
-          color: const Color(0xFF9CA3AF),
-        ),
-        const SizedBox(width: 8),
         Text(
-          text,
+          label,
+          style: const TextStyle(
+            fontSize: 12,
+            color: Color(0xFF6B7280),
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+        const SizedBox(height: 4),
+        Text(
+          value,
           style: const TextStyle(
             fontSize: 14,
-            color: Color(0xFF374151),
-            fontWeight: FontWeight.w400,
+            color: Color(0xFF111827),
+            fontWeight: FontWeight.w600,
           ),
         ),
       ],
@@ -149,54 +118,86 @@ class _ActiveItemCardState extends State<ActiveItemCard> {
   }
 
   Widget _buildFooter() {
-    return Container(
-      decoration: const BoxDecoration(
-        color: Color(0xFFF8FAFC),
-        borderRadius: BorderRadius.only(
-          bottomLeft: Radius.circular(16),
-          bottomRight: Radius.circular(16),
-        ),
+    return Padding(
+      padding: const EdgeInsets.only(
+        left: 16,
+        right: 16,
+        top: 8,
+        bottom: 12
       ),
-      child: Row(
-        children: [
-          Expanded(
-            child: BuildShipmentCardActionButton(
-              icon: Icons.visibility_outlined,
-              label: 'View',
-              onPressed: widget.onViewPressed,
-              color: const Color(0xFF2563EB),
+      child:  Row(
+      children: [
+        Expanded(
+           child: BuildPrimaryButton(
+            onPressed: widget.onViewPressed,
+            label: 'View details',
+            color: const Color(0xFF2563EB),
+            icon: Icons.visibility_outlined
+          ),
+        ),
+        const SizedBox(width: 12),
+        _buildSecondaryButton(
+          icon: Icons.edit_outlined,
+          onPressed: widget.onEditPressed,
+        ),
+        const SizedBox(width: 12),
+        _buildSecondaryButton(
+          icon: Icons.delete_outline,
+          onPressed: widget.onPressed,
+        ),
+      ],
+    ));
+  }
+
+  Widget _buildPrimaryButton() {
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: widget.onViewPressed,
+        borderRadius: BorderRadius.circular(12),
+        child: Container(
+          padding: const EdgeInsets.symmetric(vertical: 12),
+          decoration: BoxDecoration(
+            color: const Color(0xFF2563EB),
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: const Text(
+            'View Trip',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 16,
+              fontWeight: FontWeight.w600,
             ),
           ),
-          Container(
-            width: 1,
-            height: 48,
-            color: const Color(0xFFE2E8F0),
-          ),
-          Expanded(
-            child: BuildShipmentCardActionButton(
-              icon: Icons.edit_outlined,
-              label: 'Edit',
-              onPressed: widget.onEditPressed,
-              color: const Color(0xFF059669),
-            ),
-          ),
-          Container(
-            width: 1,
-            height: 48,
-            color: const Color(0xFFE2E8F0),
-          ),
-          Expanded(
-            child: BuildShipmentCardActionButton(
-              icon: Icons.delete_outline,
-              label: 'Delete',
-              onPressed: widget.onPressed,
-              color: const Color(0xFFDC2626),
-            ),
-          ),
-        ],
+        ),
       ),
     );
   }
 
-
+  Widget _buildSecondaryButton({
+    required IconData icon,
+    required VoidCallback onPressed,
+  }) {
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: onPressed,
+        borderRadius: BorderRadius.circular(12),
+        child: Container(
+          padding: const EdgeInsets.all(12),
+          decoration: BoxDecoration(
+            color: const Color(0xFFF3F4F6),
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: Icon(
+            icon,
+            size: 16,
+            color: const Color(0xFF6B7280),
+          ),
+        ),
+      ),
+    );
+  }
 }
+
