@@ -645,8 +645,8 @@ class _HomeScreenState extends State<HomeScreen> {
         GestureDetector(
           onTap: () => context.push("/profile"),
           child: Container(
-            width: 40,
-            height: 40,
+            width: 48,
+            height: 48,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
               border: Border.all(color: AppColors.blue, width: 2),
@@ -671,7 +671,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     child: const Icon(
                       Icons.person,
                       color: AppColors.blueStart,
-                      size: 26,
+                      size: 24,
                     ),
                   );
                 },
@@ -687,7 +687,7 @@ class _HomeScreenState extends State<HomeScreen> {
               onTap: () => context.push("/help"),
               color: AppColors.textSecondary
             ),
-            const SizedBox(width: 12),
+            const SizedBox(width: 16),
             const NotificationIcon(),
           ],
         ),

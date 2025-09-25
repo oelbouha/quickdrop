@@ -34,7 +34,8 @@ class _ChatScreenState extends State<ChatScreen>
             "Chats",
             style:  TextStyle(
               color: AppColors.white,
-              fontWeight: FontWeight.bold,
+              fontWeight: FontWeight.w500,
+              fontSize: 22,
             ),
           ),
           actions: [
@@ -43,11 +44,11 @@ class _ChatScreenState extends State<ChatScreen>
               onTap: () => print("Help tapped"),
               color: AppColors.white
             ),
-            const SizedBox(width: 8),
+            const SizedBox(width: 16),
             const NotificationIcon(
               color: AppColors.white
             ),
-            const SizedBox(width: 12),
+            const SizedBox(width: 16),
           ]
         
         ),

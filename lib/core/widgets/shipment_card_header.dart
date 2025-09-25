@@ -46,17 +46,16 @@ class BuildHeader extends StatelessWidget {
                   const SizedBox(width: 8),
               Text(
                 from,
-                style: const TextStyle(
-                  fontSize: 20,
-                  color: Color(0xFF111827), // Gray-900
-                  fontWeight: FontWeight.w700,
+                style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.w600,
+                  color: const Color(0xFF111827), // Gray-900
                 ),
               ),]),
               const SizedBox(height: 4),
               Row(
                 children: [
                   const CustomIcon(
-                    iconPath: "assets/icon/map-point.svg",
+                    iconPath: "assets/icon/arrow-right.svg",
                     size: 16,
                     color: Color(0xFF6B7280), // Gray-500
                   ),
@@ -64,10 +63,9 @@ class BuildHeader extends StatelessWidget {
                   Flexible(
                     child: Text(
                       to,
-                      style: const TextStyle(
-                        fontSize: 18,
-                        color: Color(0xFF6B7280), // Gray-500
-                        fontWeight: FontWeight.w600,
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        color: const Color(0xFF6B7280),
+                        fontWeight: FontWeight.w500,
                       ),
                     ),
                   ),
@@ -81,20 +79,18 @@ class BuildHeader extends StatelessWidget {
           children: [
             Text(
               price,
-              style: const TextStyle(
-                fontSize: 24,
-                color: Color(0xFF111827), // Gray-900
-                fontWeight: FontWeight.w900,
-              ),
+             style: Theme.of(context).textTheme.titleLarge?.copyWith(
+              fontWeight: FontWeight.w600,
+              color: const Color(0xFF111827),
             ),
-            const Text(
+            ),
+             Text(
               'DH',
-              style: TextStyle(
-                fontSize: 12,
-                color: Color(0xFF6B7280), // Gray-500
-                fontWeight: FontWeight.w600,
-                letterSpacing: 0.5,
-              ),
+              style: Theme.of(context).textTheme.labelSmall?.copyWith(
+              color: const Color(0xFF6B7280),
+              fontWeight: FontWeight.w500,
+              letterSpacing: 0.5,
+            ),
             ),
           ],
         ),
