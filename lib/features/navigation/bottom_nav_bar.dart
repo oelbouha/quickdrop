@@ -55,14 +55,14 @@ class BottomNavScreen extends StatelessWidget {
       items: <BottomNavigationBarItem>[
         BottomNavigationBarItem(
           icon: _buildIconWithBackground(
-            iconPath: "assets/icon/magnifer.svg",
+            iconPath: "assets/icon/search.svg",
             isSelected: _calculateIndex(context) == 0,
           ),
           label: 'Search',
         ),
         BottomNavigationBarItem(
           icon: _buildIconWithBackground(
-            iconPath: "assets/icon/car.svg",
+            iconPath: "assets/icon/route.svg",
             isSelected: _calculateIndex(context) == 1,
           ),
           label: 'Trip',
@@ -76,10 +76,10 @@ class BottomNavScreen extends StatelessWidget {
         ),
         BottomNavigationBarItem(
           icon: _buildIconWithBackground(
-            iconPath: "assets/icon/money.svg",
+            iconPath: "assets/icon/requests.svg",
             isSelected: _calculateIndex(context) == 3,
           ),
-          label: 'Offers',
+          label: 'Requests',
         ),
         BottomNavigationBarItem(
           icon: _buildIconWithBackground(
