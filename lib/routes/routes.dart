@@ -105,7 +105,7 @@ class AppRouter {
                     const NoTransitionPage(child: ShipmentScreen()),
               ),
               GoRoute(
-                path: '/offers',
+                path: '/requests',
                 pageBuilder: (context, state) =>
                     const NoTransitionPage(child: OfferScreen()),
               ),

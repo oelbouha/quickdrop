@@ -1,6 +1,7 @@
 import 'package:quickdrop_app/core/widgets/actionButton.dart';
 import 'package:quickdrop_app/core/widgets/destination.dart';
 import 'package:quickdrop_app/core/utils/imports.dart';
+import 'package:quickdrop_app/core/widgets/report.dart';
 import 'package:quickdrop_app/core/widgets/review.dart';
 import 'package:quickdrop_app/features/models/base_transport.dart';
 export 'package:quickdrop_app/core/widgets/user_profile.dart';
@@ -27,6 +28,17 @@ class OngoingItemCardState extends State<OngoingItemCard> {
       context: context,
       builder: (context) {
         return ReviewDialog(
+          recieverUser: widget.user,
+        );
+      },
+    );
+  }
+
+    void _submitReport() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return ReportDialog(
           recieverUser: widget.user,
         );
       },
@@ -557,7 +569,7 @@ class OngoingItemCardState extends State<OngoingItemCard> {
         const SizedBox(width: 12),
         BuildSecondaryButton(
           icon: "assets/icon/report.svg",
-          onPressed: widget.onViewPressed,
+          onPressed: _submitReport,
         ),
       ],
     ));

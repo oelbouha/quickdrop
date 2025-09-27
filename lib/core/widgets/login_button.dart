@@ -34,17 +34,17 @@ class LoginButton extends StatelessWidget {
           child: Center(
             child: isLoading?
                  SizedBox(
-                  width: 28,
-                  height: 28,
+                  width: 24,
+                  height: 24,
                   child: loadingAnimation(size: 30)
               ) 
             :
               Text(
                 hintText,
-                style:  TextStyle(
-                    color: textColor,
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold),
+                style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                      color: Theme.of(context).colorScheme.onPrimary,
+                      fontWeight: FontWeight.bold,
+                    ),
               ),
           )),
     );
@@ -77,7 +77,7 @@ class Button extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
          width: double.infinity,
-          height: 52,
+          height: 48,
           margin: const EdgeInsets.symmetric(vertical: 20),
           child: ElevatedButton(
             onPressed: isLoading ? null : onPressed,
@@ -98,8 +98,9 @@ class Button extends StatelessWidget {
               )
             : Text(
                 hintText,
-                style:  TextStyle(
-                    color: textColor, fontWeight: FontWeight.bold, fontSize: 16
+                 style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                      color: Theme.of(context).colorScheme.onPrimary,
+                      fontWeight: FontWeight.bold,
                     ),
               ),
           ))

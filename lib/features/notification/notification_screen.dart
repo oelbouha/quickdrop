@@ -78,7 +78,7 @@ class NotificationScreenState extends State<NotificationScreen> {
                                   color: Colors.red, size: 12),
                           onTap: () {
                             context.pop();
-                            context.go("/offers");
+                            context.go("/requests");
                             notifProvider.markAsRead(notif.id);
                           },
                         ),

@@ -108,7 +108,13 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+     return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: SystemUiOverlayStyle.dark.copyWith(
+        statusBarColor: Colors.transparent, //  background transparent
+        statusBarIconBrightness: Brightness.dark, // dark icons (black)
+        statusBarBrightness: Brightness.light,   // iOS
+      ),
+      child: Scaffold(
       backgroundColor: const Color(0xFFF8FAFC),
       body: Container(
         decoration: const BoxDecoration(
@@ -117,9 +123,11 @@ class _HomeScreenState extends State<HomeScreen> {
         child: SafeArea(
           child: Column(
                   children: [
-                    // App Bar
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                      decoration: BoxDecoration(
+                        // color: AppColors.blue,
+                      ),
                       child: _buildAppBar(),
                     ),
                     Expanded(
@@ -144,7 +152,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
         ),
       ),
-    );
+    ));
   }
 
   Widget _buildHeroSection() {

@@ -76,7 +76,7 @@ class BottomNavScreen extends StatelessWidget {
         ),
         BottomNavigationBarItem(
           icon: _buildIconWithBackground(
-            iconPath: "assets/icon/requests.svg",
+            iconPath: "assets/icon/mail-alt.svg",
             isSelected: _calculateIndex(context) == 3,
           ),
           label: 'Requests',
@@ -117,7 +117,7 @@ class BottomNavScreen extends StatelessWidget {
     final location = GoRouterState.of(context).uri;
     if (location.path == '/trip')  return 1;
     if (location.path == "/shipment") return 2;
-    if (location.path == '/offers') return 3;
+    if (location.path == '/requests') return 3;
     if (location.path == '/chat') return 4;
     return 0;
   }
@@ -137,7 +137,7 @@ class BottomNavScreen extends StatelessWidget {
         context.go('/chat');
         break;
       case 3:
-        context.go('/offers');
+        context.go('/requests');
         break;
     }
   }

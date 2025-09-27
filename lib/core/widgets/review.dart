@@ -64,11 +64,11 @@ class _ReviewDialogState extends State<ReviewDialog> {
 
   @override
   Widget build(BuildContext context) {
-    return Dialog(
+    return  Dialog(
       backgroundColor: AppColors.cardBackground,
       shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(AppTheme.cardRadius)),
-      child: Padding(
+      child: SingleChildScrollView (child:Padding(
         padding: const EdgeInsets.only(
           top: 10,
           left: 20,
@@ -98,9 +98,10 @@ class _ReviewDialogState extends State<ReviewDialog> {
                   fontWeight: FontWeight.bold),
             ),
             const Text(
-              "Please rate your experience with the shipment",
+              "Please rate your experience with the user and provide feedback",
               style: TextStyle(fontSize: 14, color: AppColors.shipmentText),
             ),
+             const SizedBox(height: 16),
             RatingBar.builder(
               initialRating: _rating,
               minRating: 1,
@@ -118,15 +119,15 @@ class _ReviewDialogState extends State<ReviewDialog> {
                 });
               },
             ),
-            const SizedBox(height: 10),
+            const SizedBox(height: 16),
             CustomTextField(
               controller: reviewController,
-              hintText: "Share your thoughts about the user",
+              hintText: "Share your thoughts ",
               backgroundColor: AppColors.cardBackground,
               maxLines: 3,
               validator: Validators.notEmpty,
             ),
-            const SizedBox(height: 20),
+            // const SizedBox(height: 16),
             Container(
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(8),
@@ -139,7 +140,7 @@ class _ReviewDialogState extends State<ReviewDialog> {
                 ))
           ],
         ),
-      ),
+      ),)
     );
   }
 }
