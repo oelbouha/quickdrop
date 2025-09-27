@@ -18,7 +18,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) {
     return AppBar(
       backgroundColor: AppColors.blue,
-      centerTitle: true,
+      // centerTitle: true,
       title: Text(
         title ?? "",
         style: const TextStyle(

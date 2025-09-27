@@ -49,7 +49,10 @@ final String? Function(String?)? validator; // For form validation
           borderRadius: BorderRadius.circular(AppTheme.cardRadius),
         ),
         suffixIcon: IconButton(
-          icon: const Icon(Icons.calendar_today),
+          icon: const CustomIcon(
+            iconPath: "assets/icon/calendar.svg",
+            color: Colors.grey
+          ),
           onPressed: onTap,
         ),
           errorStyle: const TextStyle(height: 0, fontSize: 0),

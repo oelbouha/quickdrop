@@ -158,7 +158,18 @@ class DeliveryRequestState extends State<PendingRequest> {
           // _buildMainContent(),
           _buildBody(),
           const SizedBox(height: 16),
-          _buildActionButton(),
+          Row(
+            children: [
+            Expanded(child:_buildActionButton()),
+            const SizedBox(width: 12),
+            BuildSecondaryButton(
+              icon: "assets/icon/eye.svg",
+              onPressed: () => {
+                 context.push('/shipment-details?shipmentId=${widget.shipment.id}&userId=${widget.shipment.userId}&viewOnly=true')
+                              
+              },
+            ),
+            ]),
         ],
       ),
     );
@@ -193,7 +204,7 @@ class DeliveryRequestState extends State<PendingRequest> {
       child: ElevatedButton.icon(
         onPressed: _isProcessing ? null : _refuseRequest,
         icon: _isProcessing
-            ? SizedBox(
+            ? const SizedBox(
                 width: 18,
                 height: 18,
                 child: CircularProgressIndicator(
@@ -201,7 +212,7 @@ class DeliveryRequestState extends State<PendingRequest> {
                   valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
                 ),
               )
-            : Icon(
+            : const Icon(
                 Icons.close_rounded,
                 size: 20,
                 color: Colors.white,
@@ -209,8 +220,8 @@ class DeliveryRequestState extends State<PendingRequest> {
         label: Text(
           _isProcessing ? 'Cancelling Request...' : 'Cancel Request',
           style: const TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.w600,
+            fontSize: 14,
+            fontWeight: FontWeight.w500,
             color: Colors.white,
             letterSpacing: 0.5,
           ),
@@ -222,7 +233,7 @@ class DeliveryRequestState extends State<PendingRequest> {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12),
           ),
-          padding: const EdgeInsets.symmetric(vertical: 16),
+          padding: const EdgeInsets.symmetric(vertical: 12),
           disabledBackgroundColor: AppColors.error.withOpacity(0.6),
         ),
       ),

@@ -38,7 +38,7 @@ class BuildHeader extends StatelessWidget {
               // const SizedBox(height: 8),
               Row(
                 children: [
-              Icon(
+              const Icon(
                     Icons.circle,
                     size: 10,
                     color: AppColors.blue, // Gray-500
@@ -55,7 +55,7 @@ class BuildHeader extends StatelessWidget {
               Row(
                 children: [
                   const CustomIcon(
-                    iconPath: "assets/icon/arrow-right.svg",
+                    iconPath: "assets/icon/arrow-bottom-right.svg",
                     size: 16,
                     color: Color(0xFF6B7280), // Gray-500
                   ),

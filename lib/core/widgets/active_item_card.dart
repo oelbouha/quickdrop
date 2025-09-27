@@ -132,48 +132,24 @@ class _ActiveItemCardState extends State<ActiveItemCard> {
             onPressed: widget.onViewPressed,
             label: 'View details',
             color: const Color(0xFF2563EB),
-            icon: Icons.visibility_outlined
+            icon: "assets/icon/eye.svg"
           ),
         ),
         const SizedBox(width: 12),
-        _buildSecondaryButton(
-          icon: Icons.edit_outlined,
+        BuildSecondaryButton(
+          icon: "assets/icon/edit.svg",
           onPressed: widget.onEditPressed,
         ),
         const SizedBox(width: 12),
-        _buildSecondaryButton(
-          icon: Icons.delete_outline,
+        BuildSecondaryButton(
+          icon: "assets/icon/trash-bin.svg",
           onPressed: widget.onPressed,
         ),
       ],
     ));
   }
 
-  Widget _buildPrimaryButton() {
-    return Material(
-      color: Colors.transparent,
-      child: InkWell(
-        onTap: widget.onViewPressed,
-        borderRadius: BorderRadius.circular(12),
-        child: Container(
-          padding: const EdgeInsets.symmetric(vertical: 12),
-          decoration: BoxDecoration(
-            color: const Color(0xFF2563EB),
-            borderRadius: BorderRadius.circular(12),
-          ),
-          child: const Text(
-            'View Trip',
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 16,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-        ),
-      ),
-    );
-  }
+
 
   Widget _buildSecondaryButton({
     required IconData icon,

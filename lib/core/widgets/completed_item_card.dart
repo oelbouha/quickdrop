@@ -201,12 +201,12 @@ class CompletedItemCardState extends State<CompletedItemCard> {
             onPressed: _submitReview,
             label: 'Review',
             color: AppColors.rateBackground,
-            icon: Icons.rate_review
+            icon: "assets/icon/star.svg"
           ),
         ),
         const SizedBox(width: 12),
         BuildSecondaryButton(
-          icon: Icons.visibility_outlined,
+          icon: "assets/icon/eye.svg",
           onPressed: widget.onViewPressed,
         ),
         // const SizedBox(width: 12),

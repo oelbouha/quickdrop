@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:quickdrop_app/core/widgets/custom_svg.dart';
 
   
   
@@ -6,7 +7,7 @@ import 'package:flutter/material.dart';
     required VoidCallback onPressed,
     required String label,
     required Color color,
-    required IconData icon,
+    required String icon,
   }) {
     return Material(
       color: Colors.transparent,
@@ -23,16 +24,16 @@ import 'package:flutter/material.dart';
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [ 
-            Icon(
-              icon,
-              size: 16,
+            CustomIcon(
+              iconPath: icon,
+              size: 20,
               color: Colors.white,
           ),
           const SizedBox(width: 8),
             Text(
             label,
             textAlign: TextAlign.center,
-            style: TextStyle(
+            style: const TextStyle(
               color: Colors.white,
               fontSize: 14,
               fontWeight: FontWeight.w500,
@@ -46,7 +47,7 @@ import 'package:flutter/material.dart';
   }
 
   Widget BuildSecondaryButton({
-    required IconData icon,
+    required String icon,
     required VoidCallback onPressed,
   }) {
     return Material(
@@ -60,8 +61,8 @@ import 'package:flutter/material.dart';
             color: const Color(0xFFF3F4F6),
             borderRadius: BorderRadius.circular(12),
           ),
-          child: Icon(
-            icon,
+          child: CustomIcon(
+            iconPath: icon,
             size: 16,
             color: const Color(0xFF6B7280),
           ),

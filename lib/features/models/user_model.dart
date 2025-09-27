@@ -186,6 +186,7 @@ class UserProvider with ChangeNotifier {
 
   Future<void> fetchUsersData(List<String> ids) async {
     for (final id in ids) {
+      print("Fetching user data for ID: $id");
       if (!_users.containsKey(id)) {
         final data =
             await FirebaseFirestore.instance.collection('users').doc(id).get();

@@ -546,17 +546,17 @@ class OngoingItemCardState extends State<OngoingItemCard> {
             onPressed: _showDeliveryConfirmation,
             label: 'Delivered',
             color: AppColors.succes,
-            icon: Icons.check_circle_outline
+            icon: "assets/icon/circle-check.svg"
           ),
         ),
         const SizedBox(width: 12),
         BuildSecondaryButton(
-          icon: Icons.visibility_outlined,
+          icon: "assets/icon/eye.svg",
           onPressed: widget.onViewPressed,
         ),
         const SizedBox(width: 12),
         BuildSecondaryButton(
-          icon: Icons.delete_outline,
+          icon: "assets/icon/report.svg",
           onPressed: widget.onViewPressed,
         ),
       ],

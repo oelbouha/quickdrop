@@ -10,7 +10,6 @@ class ShipmentScreen extends StatefulWidget {
 
 class _ShipmentScreenState extends State<ShipmentScreen>
     with SingleTickerProviderStateMixin {
-  
   //  final ScrollController _scrollController = ScrollController();
   bool _isExpanded = true;
 
@@ -32,7 +31,7 @@ class _ShipmentScreenState extends State<ShipmentScreen>
         user = Provider.of<UserProvider>(context, listen: false).user;
         final shipmentProvider =
             Provider.of<ShipmentProvider>(context, listen: false);
-        await  shipmentProvider.fetchShipmentsByUserId(user!.uid);
+        await shipmentProvider.fetchShipmentsByUserId(user!.uid);
         final userIds = shipmentProvider.shipments
             .where((r) => r.matchedDeliveryUserId != null)
             .map((r) => r.matchedDeliveryUserId!)
@@ -67,27 +66,27 @@ class _ShipmentScreenState extends State<ShipmentScreen>
 
   void removeShipment(String id) async {
     //  print("Removing shipment with id: $id");
-     final confirmed = await ConfirmationDialogTypes.showDeleteConfirmation(
+    final confirmed = await ConfirmationDialogTypes.showDeleteConfirmation(
       context: context,
       message: 'This action cannot be undone. Are you sure?',
     );
 
-      if (!confirmed) return ;
-      try {
-          await Provider.of<ShipmentProvider>(context, listen: false)
-              .deleteShipment(id);
-          await Provider.of<DeliveryRequestProvider>(context, listen: false)
-              .deleteRequestsByShipmentId(id);
-          AppUtils.showDialog(
-              context, 'Shipment deleted succusfully', AppColors.succes);
-          Provider.of<StatisticsProvider>(context, listen: false)
-              .decrementField(user!.uid, "pendingShipments");
-        } catch (e) {
-          if (mounted) {
-            AppUtils.showDialog(
-                context, 'Failed to delete shipment: $e', AppColors.error);
-                }
-        } 
+    if (!confirmed) return;
+    try {
+      await Provider.of<ShipmentProvider>(context, listen: false)
+          .deleteShipment(id);
+      await Provider.of<DeliveryRequestProvider>(context, listen: false)
+          .deleteRequestsByShipmentId(id);
+      AppUtils.showDialog(
+          context, 'Shipment deleted succusfully', AppColors.succes);
+      Provider.of<StatisticsProvider>(context, listen: false)
+          .decrementField(user!.uid, "pendingShipments");
+    } catch (e) {
+      if (mounted) {
+        AppUtils.showDialog(
+            context, 'Failed to delete shipment: $e', AppColors.error);
+      }
+    }
   }
 
   @override
@@ -96,31 +95,31 @@ class _ShipmentScreenState extends State<ShipmentScreen>
     super.dispose();
   }
 
-
   Widget _buildEmptyState({
     required IconData icon,
     required String title,
     required String subtitle,
     required String buttonText,
   }) {
-    return  SizedBox.expand(
-    child: Center(
-      child: Padding(
-        padding: EdgeInsets.all(48),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
+    return SizedBox.expand(
+        child: Center(
+            child: Padding(
+      padding: EdgeInsets.all(48),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
         children: [
           Container(
-             padding: EdgeInsets.all(16),
-             decoration: BoxDecoration(
+            padding: EdgeInsets.all(16),
+            decoration: BoxDecoration(
               color: AppColors.blue700.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(60),
             ),
-          child: Icon(
-            icon,
-            size: 64,
-            color: AppColors.blue700.withValues(alpha: 0.6),
-          ),),
+            child: Icon(
+              icon,
+              size: 64,
+              color: AppColors.blue700.withValues(alpha: 0.6),
+            ),
+          ),
           const SizedBox(height: 16),
           Text(
             title,
@@ -169,8 +168,8 @@ class _ShipmentScreenState extends State<ShipmentScreen>
             // ),
           ),
         ],
-      ),))
-    );
+      ),
+    )));
   }
 
   @override
@@ -185,12 +184,12 @@ class _ShipmentScreenState extends State<ShipmentScreen>
           "Completed",
         ],
         title: "Shipments",
-
       ),
       body: _isLoading
           ? loadingAnimation()
           : Consumer<ShipmentProvider>(builder: (context, provider, child) {
-              final user = Provider.of<UserProvider>(context, listen: false).user;
+              final user =
+                  Provider.of<UserProvider>(context, listen: false).user;
               if (user == null) {
                 return const Center(
                     child: Text('Please log in to view shipments'));
@@ -239,25 +238,33 @@ class _ShipmentScreenState extends State<ShipmentScreen>
             left: AppTheme.cardPadding, right: AppTheme.cardPadding),
         color: AppColors.background,
         child: activeShipments.isEmpty
-            ? Center(child: _buildEmptyState(
+            ? Center(
+                child: _buildEmptyState(
                 icon: Icons.inventory_2,
                 title: "No active shipments",
                 subtitle: "Be the first to post a shipment request!",
                 buttonText: "Post Shipment",
               ))
             : ListView.builder(
-              //  controller: _scrollController,
-             physics: const BouncingScrollPhysics(),
+                //  controller: _scrollController,
+                physics: const BouncingScrollPhysics(),
                 itemCount: activeShipments.length,
                 itemBuilder: (context, index) {
                   final shipment = activeShipments[index];
+                  print("user id :::: ${shipment.userId}");
                   return Column(
                     children: [
                       if (index == 0)
                         const SizedBox(height: AppTheme.gapBetweenCards),
                       ActiveItemCard(
-                          onEditPressed: () => {context.push('/add-shipment?shipmentId=${shipment.id}&isEdit=true')},
-                          onViewPressed: () => {context.push('/shipment-details?shipmentId=${shipment.id}&userId=${shipment.userId}&viewOnly=true')},
+                          onEditPressed: () => {
+                                context.push(
+                                    '/add-shipment?shipmentId=${shipment.id}&isEdit=true')
+                              },
+                          onViewPressed: () => {
+                                context.push(
+                                    '/shipment-details?shipmentId=${shipment.id}&userId=${shipment.userId}&viewOnly=true')
+                              },
                           item: shipment,
                           onPressed: () {
                             removeShipment(activeShipments[index].id!);
@@ -279,36 +286,39 @@ class _ShipmentScreenState extends State<ShipmentScreen>
             left: AppTheme.cardPadding, right: AppTheme.cardPadding),
         color: AppColors.background,
         child: ongoingShipments.isEmpty
-            ? Center(child: _buildEmptyState(
+            ? Center(
+                child: _buildEmptyState(
                 icon: Icons.inventory_2,
                 title: "No Ongoing shipments",
                 subtitle: "Be the first to post a shipment request!",
                 buttonText: "Post Shipment",
               ))
             : ListView.builder(
-              physics: const BouncingScrollPhysics(),
-              //  controller: _scrollController,
+                physics: const BouncingScrollPhysics(),
+                //  controller: _scrollController,
                 itemCount: ongoingShipments.length,
                 itemBuilder: (context, index) {
                   final shipment = ongoingShipments[index];
                   if (shipment.matchedDeliveryUserId == null) {
-                    return const SizedBox
-                        .shrink();
+                    return const SizedBox.shrink();
                   }
                   final userData =
                       Provider.of<UserProvider>(context, listen: false)
                           .getUserById(shipment.matchedDeliveryUserId!);
                   if (userData == null) {
-                    return const SizedBox
-                        .shrink();
+                    return const SizedBox.shrink();
                   }
                   return Column(
                     children: [
                       if (index == 0)
                         const SizedBox(height: AppTheme.gapBetweenCards),
                       OngoingItemCard(
-                        onViewPressed: () => {context.push('/shipment-details?shipmentId=${shipment.id}&userId=${shipment.userId}&viewOnly=true')},
-                        item: ongoingShipments[index], user: userData),
+                          onViewPressed: () => {
+                                context.push(
+                                    '/shipment-details?shipmentId=${shipment.id}&userId=${shipment.userId}&viewOnly=true')
+                              },
+                          item: ongoingShipments[index],
+                          user: userData),
                       const SizedBox(height: AppTheme.gapBetweenCards),
                     ],
                   );
@@ -326,15 +336,16 @@ class _ShipmentScreenState extends State<ShipmentScreen>
             left: AppTheme.cardPadding, right: AppTheme.cardPadding),
         color: AppColors.background,
         child: pastShipments.isEmpty
-            ? Center(child: _buildEmptyState(
+            ? Center(
+                child: _buildEmptyState(
                 icon: Icons.inventory_2,
                 title: "No Completed shipments",
                 subtitle: "Be the first to post a shipment request!",
                 buttonText: "Post Shipment",
               ))
             : ListView.builder(
-              physics: const BouncingScrollPhysics(),
-              //  controller: _scrollController,
+                physics: const BouncingScrollPhysics(),
+                //  controller: _scrollController,
                 itemCount: pastShipments.length,
                 itemBuilder: (context, index) {
                   final trip = pastShipments[index];
@@ -358,11 +369,12 @@ class _ShipmentScreenState extends State<ShipmentScreen>
                       CompletedItemCard(
                           item: shipment,
                           onViewPressed: () => {
-                            context.push('/shipment-details?shipmentId=${shipment.id}&userId=${shipment.userId}&viewOnly=true')
-                          },
+                                context.push(
+                                    '/shipment-details?shipmentId=${shipment.id}&userId=${shipment.userId}&viewOnly=true')
+                              },
                           user: userData,
                           onReviewPressed: () {
-                             showDialog(
+                            showDialog(
                               context: context,
                               builder: (context) {
                                 return ReviewDialog(

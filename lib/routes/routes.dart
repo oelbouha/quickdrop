@@ -1,11 +1,11 @@
 import 'package:quickdrop_app/core/utils/imports.dart';
-import 'package:quickdrop_app/features/offers/negotiation_screen.dart';
+import 'package:quickdrop_app/features/requests/negotiation_screen.dart';
 import 'package:quickdrop_app/features/home/home_screen.dart';
 import 'package:quickdrop_app/features/auth/intro_screen.dart';
 import 'package:quickdrop_app/features/auth/signup.dart';
 import 'package:quickdrop_app/features/auth/signup_screen.dart';
 import 'package:quickdrop_app/features/chat/chat_screen.dart';
-import 'package:quickdrop_app/features/offers/offer_screen.dart';
+import 'package:quickdrop_app/features/requests/requests_screen.dart';
 import 'package:quickdrop_app/features/profile/profile_screen.dart';
 import 'package:quickdrop_app/features/shipment/shipment_screen.dart';
 import 'package:quickdrop_app/features/trip/trip_screen.dart';

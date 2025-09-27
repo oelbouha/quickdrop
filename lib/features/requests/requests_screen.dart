@@ -1,10 +1,10 @@
-import 'package:quickdrop_app/features/offers/request.dart';
+import 'package:quickdrop_app/features/requests/request.dart';
 import 'package:quickdrop_app/features/chat/chat_conversation_card.dart';
-import 'package:quickdrop_app/features/offers/pending_request.dart';
+import 'package:quickdrop_app/features/requests/pending_request.dart';
 import 'package:go_router/go_router.dart';
 import 'package:quickdrop_app/core/widgets/app_header.dart';
 import 'package:quickdrop_app/core/utils/imports.dart';
-import 'package:quickdrop_app/features/offers/negotiation_card.dart';
+import 'package:quickdrop_app/features/requests/negotiation_card.dart';
 import 'package:quickdrop_app/core/providers/negotiation_provider.dart';
 
 
@@ -43,10 +43,10 @@ class _OfferScreenState extends State<OfferScreen>
 
             // Extract all senderIds and fetch user data at once
             final userIds = deliveryProvider.requests
-                .map((r) => r.senderId)
+                .expand((r) => [r.senderId, r.receiverId])
                 .toSet()
                 .toList();
-
+            // print("Fetched user IDs: ${userIds.length}");
             final shipsIds = deliveryProvider.requests
                 .map((r) => r.shipmentId)
                 .toSet()
@@ -88,7 +88,7 @@ class _OfferScreenState extends State<OfferScreen>
             "Received",
             "Negotiate",
           ],
-          title: "Offers",
+          title: "Requests",
         ),
         body: _isLoading
           ? loadingAnimation() 
@@ -266,6 +266,7 @@ class _OfferScreenState extends State<OfferScreen>
                   return const SizedBox.shrink();
                 }
                 if (userData == null) {
+                   print("Error fetching user ${request.receiverId}");
                   return const SizedBox.shrink();
                 }
 
