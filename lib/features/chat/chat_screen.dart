@@ -28,7 +28,7 @@ class _ChatScreenState extends State<ChatScreen>
         backgroundColor: AppColors.background,
         appBar: AppBar(
           backgroundColor: AppColors.blue,
-          centerTitle: true,
+          // centerTitle: true,
           // elevation: 0,
           title: const Text(
             "Chats",
