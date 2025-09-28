@@ -191,7 +191,7 @@ class _SignupState extends State<Signup> {
         const SizedBox(
           height: 6,
         ),
-        Button(
+        LoginButton(
           hintText: "Continue",
           onPressed: _signupUserWithPhoneNumber,
           isLoading: _isEmailLoading,

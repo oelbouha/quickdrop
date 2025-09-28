@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:quickdrop_app/core/utils/imports.dart';
 import 'package:flutter/services.dart';
+import 'package:quickdrop_app/core/widgets/auth_button.dart';
 
 class IntroScreen extends StatefulWidget {
   const IntroScreen({super.key});
@@ -9,85 +10,245 @@ class IntroScreen extends StatefulWidget {
   _IntroScreenState createState() => _IntroScreenState();
 }
 
-class _IntroScreenState extends State<IntroScreen> {
+class _IntroScreenState extends State<IntroScreen> with TickerProviderStateMixin {
   bool _isLoginLoading = false;
   bool _isSignUpLoading = false;
+  bool _isGoogleLoading = false;
+  
+  late AnimationController _fadeController;
+  late Animation<double> _fadeAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _fadeController = AnimationController(
+      duration: const Duration(milliseconds: 600),
+      vsync: this,
+    );
+    _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(parent: _fadeController, curve: Curves.easeOut),
+    );
+    _fadeController.forward();
+  }
+
+  @override
+  void dispose() {
+    _fadeController.dispose();
+    super.dispose();
+  }
+
+  void _signInWithGoogle() async {
+    if (_isGoogleLoading) return;
+    
+    // Add haptic feedback
+    HapticFeedback.lightImpact();
+    
+    setState(() {
+      _isGoogleLoading = true;
+    });
+
+    try {
+      await Provider.of<UserProvider>(context, listen: false)
+          .signInWithGoogle(context);
+    } catch (e) {
+      if (mounted) AppUtils.showDialog(context, e.toString(), AppColors.error);
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isGoogleLoading = false;
+        });
+      }
+    }
+  }
+
+  void _navigateWithHaptic(String route) {
+    HapticFeedback.lightImpact();
+    context.pushNamed(route);
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
         decoration: const BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage("assets/images/intro.png"), 
-            fit: BoxFit.cover, 
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              Color(0xFFFFFFFF),
+              Color(0xFFF8FAFC),
+              Color(0xFFEFF6FF), 
+            ],
           ),
         ),
         child: SafeArea(
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 24.0),
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Column(
-                  children: [
-                    const SizedBox(height: 32),
-                    Image.asset(
-                      "assets/images/logo.png",
-                      height: 40,
-                    ),
-                  ],
+                Expanded(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      FadeTransition(
+                        opacity: _fadeAnimation,
+                        child: Container(
+                          width: 80,
+                          height: 80,
+                          decoration: BoxDecoration(
+                            gradient: const LinearGradient(
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                              colors: [
+                                Color(0xFF2563EB), // blue-600
+                                Color(0xFF1D4ED8), // blue-700
+                              ],
+                            ),
+                            borderRadius: BorderRadius.circular(20),
+                            boxShadow: [
+                              BoxShadow(
+                                color: const Color(0xFF2563EB).withOpacity(0.2),
+                                blurRadius: 12,
+                                offset: const Offset(0, 4),
+                              ),
+                            ],
+                          ),
+                          child: const Icon(
+                            Icons.local_shipping_rounded,
+                            color: Colors.white,
+                            size: 40,
+                          ),
+                        ),
+                      ),
+
+                      const SizedBox(height: 48),
+
+                      /// Enhanced Hero Text
+                      Column(
+                        children: [
+                          RichText(
+                            textAlign: TextAlign.center,
+                            text: TextSpan(
+                              style: const TextStyle(
+                                fontSize: 40,
+                                fontWeight: FontWeight.bold,
+                                height: 1.2,
+                              ),
+                              children: [
+                                const TextSpan(
+                                  text: "Ship anywhere.\n",
+                                  style: TextStyle(color: Color(0xFF1F2937)),
+                                ),
+                                TextSpan(
+                                  text: "anytime.",
+                                  style: TextStyle(
+                                    foreground: Paint()
+                                      ..shader =  LinearGradient(
+                                        colors: [
+                                          Color(0xFF2563EB),
+                                          Color(0xFF1D4ED8),
+                                        ],
+                                      ).createShader(
+                                         Rect.fromLTWH(0.0, 0.0, 200.0, 70.0),
+                                      ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          
+                          const SizedBox(height: 16),
+                          
+                          /// Value Proposition
+                          const Text(
+                            "Fast, reliable delivery",
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.w600,
+                              color: Color(0xFF4B5563),
+                            ),
+                          ),
+                          
+                          const SizedBox(height: 8),
+                          
+                          const Text(
+                            "Send packages across the city in minutes, not hours.",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: Color(0xFF6B7280),
+                              height: 1.5,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
-                const SizedBox(height: 32),
-                
-                const Spacer(),
+
+                /// Bottom Action Section
                 Column(
                   children: [
-                    LoginButton(
+                   
+                   LoginButton(
                       hintText: "Sign in",
                       backgroundColor: AppColors.blue700,
                       textColor: AppColors.white,
                       onPressed: () {
-                        setState(() {
-                          _isLoginLoading = true;
-                        });
                         context.pushNamed('login');
-                        setState(() {
-                          _isLoginLoading = false;
-                        });
                       },
                       isLoading: _isLoginLoading,
                       radius: 60,
                     ),
-                    
                     const SizedBox(height: 12),
-                    
                     LoginButton(
                       hintText: "Sign up",
                       onPressed: () {
-                        setState(() {
-                          _isSignUpLoading = true;
-                        });
                         context.pushNamed('signup');
-                        setState(() {
-                          _isSignUpLoading = false;
-                        });
                       },
                       backgroundColor: AppColors.appBarIcons,
                       isLoading: _isSignUpLoading,
                       radius: 60,
                     ),
+                  
+                    
+                    const SizedBox(height: 12),
+                    
+                    /// Google Sign In Button
+                    AuthButton(
+                      hintText: "Continue with Google",
+                      onPressed: _signInWithGoogle,
+                      imagePath: "assets/images/google.png",
+                      isLoading: _isGoogleLoading,
+                      backgroundColor: AppColors.background,
+                      radius: 60,
+                    ),
+
+                    const SizedBox(height: 24),
+
+                    /// Terms Text
+                    const Text(
+                      "By continuing, you agree to our Terms and Privacy Policy",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: Color(0xFF9CA3AF),
+                        height: 1.4,
+                      ),
+                    ),
+
+                    const SizedBox(height: 24),
+
+                    /// Bottom handle bar
+                    Container(
+                      width: 128,
+                      height: 4,
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFD1D5DB),
+                        borderRadius: BorderRadius.circular(2),
+                      ),
+                    ),
                   ],
-                ),
-                
-                const SizedBox(height: 32),
-                Container(
-                  width: 100,
-                  height: 4,
-                  decoration: BoxDecoration(
-                    color: Colors.black,
-                    borderRadius: BorderRadius.circular(2),
-                  ),
                 ),
               ],
             ),

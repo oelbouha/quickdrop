@@ -133,11 +133,11 @@ class _HomeScreenState extends State<HomeScreen> {
                     Expanded(
                       child: SingleChildScrollView(
                         physics: const BouncingScrollPhysics(),
-                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            const SizedBox(height: 24),
+                            // const SizedBox(height: 24),
                             _buildHeroSection(),
                             const SizedBox(height: 32),
                             _buildOurServices(),
@@ -198,82 +198,145 @@ class _HomeScreenState extends State<HomeScreen> {
     extra: filters,
   );
   }
-  Widget _buildSearchSection() {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.2),
-            blurRadius: 10,
-            offset: const Offset(0, 5),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        spacing: 16,
-        children: [
-          // Origin field
-          TextFieldWithHeader(
-              controller: fromController,
-              displayHeader: false,
-              hintText: "From",
-              headerText: "To",
-              isRequired: false,
-              validator: Validators.notEmpty,
-              iconPath: "assets/icon/map-point.svg"
+  
+Widget _buildSearchSection() {
+  return Container(
+    padding: const EdgeInsets.all(16),
+    decoration: BoxDecoration(
+      color: Colors.white,
+      borderRadius: BorderRadius.circular(12),
+      boxShadow: [
+        BoxShadow(
+          color: Colors.black.withOpacity(0.05),
+          blurRadius: 8,
+          offset: const Offset(0, 4),
+        ),
+      ],
+    ),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Combined Origin, Swap, and Destination section
+        Stack(
+          children: [
+            Column(
+              children: [
+                // Origin field
+                TextFieldWithHeader(
+                  controller: fromController,
+                  displayHeader: false,
+                  hintText: "Pickup location",
+                  iconColor: AppColors.error,
+                  headerText: "From",
+                  isRequired: false,
+                  validator: Validators.notEmpty,
+                  iconPath: "assets/icon/map-point.svg",
+                ),
+                const SizedBox(height: 24), // Space for the swap button
+                
+                // Destination field
+                TextFieldWithHeader(
+                  controller: toController,
+                   iconColor: AppColors.blue700,
+                  displayHeader: false,
+                  isRequired: false,
+                  hintText: "Drop-off location",
+                  headerText: "To",
+                  validator: Validators.notEmpty,
+                  iconPath: "assets/icon/map-point.svg",
+                ),
+              ],
             ),
-          // Destination field
-          TextFieldWithHeader(
-              controller: toController,
-              displayHeader: false,
-               isRequired: false,
-              hintText: "To",
-              headerText: "To",
-              validator: Validators.notEmpty,
-              iconPath: "assets/icon/map-point.svg"
+            
+            // Swap button 
+            Positioned(
+              right: 12,
+              top: 50, 
+              child: GestureDetector(
+                onTap: () {
+                  final temp = fromController.text;
+                  fromController.text = toController.text;
+                  toController.text = temp;
+                },
+                child: Container(
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF2563EB), // Strong blue color
+                    borderRadius: BorderRadius.circular(12),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.1),
+                        blurRadius: 4,
+                        offset: const Offset(0, 2),
+                      ),
+                    ],
+                  ),
+                  child: const Icon(
+                    Icons.swap_vert,
+                    size: 20,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
             ),
-          // Filter chips
-          _buildServiceTypes(),
-          // Date field
-          DateTextField(
-            controller: dateController,
-            backgroundColor: AppColors.cardBackground,
-            onTap: () => _selectDate(context),
-            hintText: "Select pickup date",
-            validator: Validators.notEmpty,
-          ),
+          ],
+        ),
+        const SizedBox(height: 16),
 
-          // Search button
-          SizedBox(
-            width: double.infinity,
-            child: ElevatedButton(
-              onPressed: () => perfumeSearch(),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF2563EB),
-                foregroundColor: Colors.white,
-                padding: const EdgeInsets.symmetric(vertical: 12),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                elevation: 0,
+        // Filter chips
+        _buildServiceTypes(),
+        const SizedBox(height: 16),
+
+        // Date field
+        DateTextField(
+          controller: dateController,
+          backgroundColor: AppColors.cardBackground,
+          onTap: () => _selectDate(context),
+          hintText: "Select pickup date",
+          validator: Validators.notEmpty,
+        ),
+        const SizedBox(height: 20),
+
+        // Search button
+        SizedBox(
+          width: double.infinity,
+          child: ElevatedButton(
+            onPressed: () => perfumeSearch(),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color(0xFF2563EB),
+              foregroundColor: Colors.white,
+              padding: const EdgeInsets.symmetric(vertical: 14),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
               ),
-              child: const Text(
-                "Find Couriers",
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
+              elevation: 0,
+            ),
+            child: const Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                CustomIcon(
+                  iconPath: "assets/icon/search.svg",
+                  size: 20,
+                  color: Colors.white,
                 ),
-              ),
+                SizedBox(width: 8),
+                Text(
+                  "Search",
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ],
             ),
           ),
-        ],
-      ),
-    );
-  }
+        ),
+      ],
+    ),
+  );
+}
+
+
 
   Widget _buildSearchField({
     required TextEditingController controller,
@@ -382,6 +445,8 @@ class _HomeScreenState extends State<HomeScreen> {
       });
     }
   }
+
+
 
   Widget _buildOurServiceCard(String title, String description, String iconPath,
       String backgroundImageUrl) {

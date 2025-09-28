@@ -5,20 +5,19 @@ import 'package:quickdrop_app/theme/AppTheme.dart';
 class AuthButton extends StatelessWidget {
   final String hintText;
   final VoidCallback onPressed;
-  final String? imagePath; // Optional image
+  final String? imagePath; // Optional image/logo
   final bool isLoading;
   final double radius;
   final Color backgroundColor;
   final Color textColor;
   final Color borderColor;
 
-
   const AuthButton({
     super.key,
     required this.hintText,
     required this.onPressed,
     this.imagePath,
-    this.radius = AppTheme.textFeildRadius,
+    this.radius = 8.0, // Material 3 default
     this.backgroundColor = AppColors.cardBackground,
     this.textColor = AppColors.shipmentText,
     this.borderColor = AppColors.lessImportant,
@@ -28,37 +27,44 @@ class AuthButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: isLoading? null : onPressed,
+      onTap: isLoading ? null : onPressed,
       child: Container(
-        padding: const EdgeInsets.all(12),
+        height: 52, 
+        padding: const EdgeInsets.symmetric(horizontal: 16),
         decoration: BoxDecoration(
-          // color:  backgroundColor, 
+          color: backgroundColor,
           borderRadius: BorderRadius.circular(radius),
-          border: Border.all(width: 1, color: isLoading? AppColors.shipmentText: borderColor),
+          border: Border.all(
+            width: 1,
+            color: isLoading ? AppColors.shipmentText : borderColor,
+          ),
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             if (isLoading)
               const SizedBox(
-                width: 28,
-                height: 28,
+                width: 24,
+                height: 24,
                 child: CircularProgressIndicator(
-                  strokeWidth: 3,
+                  strokeWidth: 2.5,
                   color: AppColors.blue,
                 ),
               )
             else ...[
               if (imagePath != null)
                 SizedBox(
-                  width: 28,
+                  width: 24, 
+                  height: 24,
                   child: Image.asset(imagePath!, fit: BoxFit.contain),
                 ),
-              const SizedBox(width: 8),
+              if (imagePath != null) const SizedBox(width: 8),
               Text(
                 hintText,
-                style:
-                     TextStyle(color: textColor, fontSize: 14, fontWeight: FontWeight.bold),
+                style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                      color: textColor,
+                      fontWeight: FontWeight.w500, 
+                    ),
               ),
             ],
           ],

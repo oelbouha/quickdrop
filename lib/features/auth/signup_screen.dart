@@ -228,7 +228,7 @@ class _SingupPageState extends State<SignUpScreen> {
             const SizedBox(
               height: 24,
             ),
-            Button(
+            LoginButton(
                 hintText: "Continue",
                 radius: 30  ,
                 backgroundColor: AppColors.dark,

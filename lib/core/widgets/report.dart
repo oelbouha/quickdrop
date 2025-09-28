@@ -44,7 +44,6 @@ class _ReportDialogState extends State<ReportDialog> {
         return;
       }
 
-      // ⚠️ Reusing ReviewModel for now — replace with ReportModel when you make one
       ReportModel report = ReportModel(
         receiverId: widget.recieverUser.uid,
         senderId: user.uid,

@@ -241,8 +241,8 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
             validator: Validators.notEmpty,
             radius: 30,
           ),
-          const SizedBox(height: 24), // Add spacing before button
-          Button(
+          const SizedBox(height: 24), 
+          LoginButton(
             hintText: "Sign in",
             onPressed: _signInUserWithEmail,
             isLoading: _isEmailLoading,
@@ -274,7 +274,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
             ),
           ),
           AuthButton(
-            hintText: "Sign in with Google",
+            hintText: "Continue with Google",
             onPressed: _signInWithGoogle,
             imagePath: "assets/images/google.png",
             isLoading: _isGoogleLoading,

@@ -12,6 +12,7 @@ class TextFieldWithHeader extends StatelessWidget {
   final bool isRequired;
   final String? iconPath;
   final IconData? prefixIcon;
+  final Color iconColor;
   final String? suffixText;
   final TextInputType keyboardType;
   final String? Function(String?)? validator;
@@ -24,8 +25,9 @@ class TextFieldWithHeader extends StatelessWidget {
     required this.hintText,
     this.iconPath,
     this.prefixIcon,
+    this.iconColor = AppColors.lessImportant,
     this.suffixText,
-     this.headerText = "",
+    this.headerText = "",
     this.obsecureText = false,
     this.displayHeader = true,
     this.keyboardType = TextInputType.text,
@@ -38,13 +40,13 @@ class TextFieldWithHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
      final BorderSide borderSide = BorderSide(
-      color: Colors.grey,
+      color: Colors.grey.shade200,
       width: AppTheme.textFieldBorderWidth,
     );
 
      final BorderSide focusedBorderSide = BorderSide(
       color:  AppColors.blue,
-      width: AppTheme.textFieldBorderWidth,
+      width: 2,
     );
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -87,34 +89,35 @@ class TextFieldWithHeader extends StatelessWidget {
                     color: AppColors.shipmentText,
                   ),
                   decoration: InputDecoration(
-
-    // contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 8),
+                    filled: true,
+                    fillColor: Colors.grey.shade50,
+                    contentPadding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
                     hintText: hintText,
-                    hintStyle: TextStyle(
-                      color: Colors.grey[400],
+                    hintStyle: const TextStyle(
+                      color: Color(0xFF9CA3AF),
                       fontWeight: FontWeight.normal,
                     ),
                     enabledBorder: OutlineInputBorder(
                     borderSide: borderSide,
-                    borderRadius: BorderRadius.circular(AppTheme.textFeildRadius),
+                    borderRadius: BorderRadius.circular(16),
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderSide: focusedBorderSide,
-                    borderRadius: BorderRadius.circular(AppTheme.cardRadius),
+                    borderRadius: BorderRadius.circular(16),
                   ),
                   errorBorder: OutlineInputBorder(
                     borderSide: const BorderSide(
                       color: AppColors.error,
                       width: AppTheme.textFieldBorderWidth,
                     ),
-                    borderRadius: BorderRadius.circular(AppTheme.cardRadius),
+                    borderRadius: BorderRadius.circular(16),
                   ),
                   focusedErrorBorder: OutlineInputBorder(
                     borderSide: const BorderSide(
                       color: AppColors.error,
                       width: AppTheme.textFieldBorderWidth,
                     ),
-                    borderRadius: BorderRadius.circular(AppTheme.cardRadius),
+                    borderRadius: BorderRadius.circular(16),
                   ),
                     prefixIcon: _buildPrefixIcon(),        
                   ),
@@ -129,7 +132,7 @@ class TextFieldWithHeader extends StatelessWidget {
     if (prefixIcon != null) {
       return Icon(
         prefixIcon,
-        color: AppColors.lessImportant,
+        color: iconColor,
         size: 20,
       );
     } else if (iconPath != null) {
@@ -138,7 +141,7 @@ class TextFieldWithHeader extends StatelessWidget {
         child: CustomIcon(
           iconPath: iconPath!,
           size: 20,
-          color: AppColors.lessImportant,
+          color:iconColor,
         ),
       );
     }
