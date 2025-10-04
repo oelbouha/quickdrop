@@ -141,18 +141,13 @@ Future<void> _pickImage() async {
     return Scaffold(
       backgroundColor: Colors.grey[50],
       appBar: AppBar(
-        title: const Text(
-          'Edit Profile',
-          style: TextStyle(
-            color: AppColors.dark,
-            fontWeight: FontWeight.w600,
+         backgroundColor: AppColors.appBarBackground,
+          title: const Text(
+            'Edit  profile',
+            style: TextStyle(color: AppColors.appBarText, fontWeight: FontWeight.w600),
+            
           ),
-        ),
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        centerTitle: true,
-        iconTheme: const IconThemeData(color: Colors.black),
-        systemOverlayStyle: SystemUiOverlayStyle.dark,
+          centerTitle: true,
       ),
       body:  SingleChildScrollView(
           physics: const BouncingScrollPhysics(),

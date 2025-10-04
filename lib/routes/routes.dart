@@ -110,7 +110,7 @@ class AppRouter {
                     const NoTransitionPage(child: OfferScreen()),
               ),
               GoRoute(
-                path: '/chat',
+                path: '/chats',
                 pageBuilder: (context, state) =>
                     const NoTransitionPage(child: ChatScreen()),
               ),

@@ -62,14 +62,12 @@ Widget build(BuildContext context) {
       if (snapshot.connectionState != ConnectionState.done) {
         return   Scaffold(
            appBar: AppBar(
-          backgroundColor: Colors.white,
+          backgroundColor: AppColors.appBarBackground,
           title: const Text(
             'Profile',
-            style: TextStyle(color: AppColors.dark, fontWeight: FontWeight.w600),
+            style: TextStyle(color: AppColors.appBarText, fontWeight: FontWeight.w600),
             
           ),
-           iconTheme: const IconThemeData(color: Colors.black),
-          systemOverlayStyle: SystemUiOverlayStyle.dark,
           centerTitle: true,
         ),
           backgroundColor: AppColors.background,
@@ -145,14 +143,12 @@ String formatTimeAgo(Duration diff) {
     return Scaffold(
         backgroundColor: AppColors.background,
         appBar: AppBar(
-          backgroundColor: Colors.white,
+          backgroundColor: AppColors.appBarBackground,
           title: const Text(
             'Profile',
-            style: TextStyle(color: AppColors.dark, fontWeight: FontWeight.w600),
+            style: TextStyle(color: AppColors.appBarText, fontWeight: FontWeight.w600),
             
           ),
-           iconTheme: const IconThemeData(color: Colors.black),
-          systemOverlayStyle: SystemUiOverlayStyle.dark,
           centerTitle: true,
         ),
         body:  SingleChildScrollView(
@@ -511,8 +507,8 @@ Widget _buildUserStats() {
                   overflow: TextOverflow.ellipsis,
                 ),
                  Text(
-                  widget.user.status,
-                  style:  TextStyle(
+                  widget.user.status.toString(),
+                  style: const TextStyle(
                     fontSize: 12,
                     color: AppColors.dark,
 

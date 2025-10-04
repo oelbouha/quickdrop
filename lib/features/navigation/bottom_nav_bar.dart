@@ -86,7 +86,7 @@ class BottomNavScreen extends StatelessWidget {
             iconPath: "assets/icon/chat-round.svg",
             isSelected: _calculateIndex(context) == 4,
           ),
-          label: 'Chat',
+          label: 'Chats',
         ),
       ],
     ),
@@ -118,7 +118,7 @@ class BottomNavScreen extends StatelessWidget {
     if (location.path == '/trip')  return 1;
     if (location.path == "/shipment") return 2;
     if (location.path == '/requests') return 3;
-    if (location.path == '/chat') return 4;
+    if (location.path == '/chats') return 4;
     return 0;
   }
 
@@ -134,7 +134,7 @@ class BottomNavScreen extends StatelessWidget {
         context.go('/shipment');
         break;
       case 4:
-        context.go('/chat');
+        context.go('/chats');
         break;
       case 3:
         context.go('/requests');

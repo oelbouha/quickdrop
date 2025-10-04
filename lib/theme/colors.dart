@@ -48,9 +48,9 @@ class AppColors {
   static const Color primary = blue700;
 
    // AppBar
-  static const Color appBarBackground = white;
-  static const Color appBarText = headingText;
-  static const Color appBarIcons = headingText;
+  static const Color appBarBackground = blue;
+  static const Color appBarText = white;
+  static const Color appBarIcons = white;
 
   static const Color dark = Color(0xFF0d0c22);
   static const Color navTextActive = blue;

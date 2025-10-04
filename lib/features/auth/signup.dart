@@ -185,11 +185,11 @@ class _SignupState extends State<Signup> {
           textAlign: TextAlign.start,
         ),
         const SizedBox(
-          height: 6,
+          height: 8,
         ),
         PhoneNumber(controller: phoneNumberController),
         const SizedBox(
-          height: 6,
+          height: 24,
         ),
         LoginButton(
           hintText: "Continue",
@@ -198,7 +198,7 @@ class _SignupState extends State<Signup> {
           radius: 30,
         ),
         const SizedBox(
-          height: 15,
+          height: 24,
         ),
         const Row(
           children: [
@@ -227,7 +227,7 @@ class _SignupState extends State<Signup> {
           ],
         ),
         const SizedBox(
-          height: 15,
+          height: 24,
         ),
         AuthButton(
           hintText: "Sign up with Google",
@@ -238,7 +238,7 @@ class _SignupState extends State<Signup> {
           radius: 30,
         ),
         const SizedBox(
-          height: 30,
+          height: 24,
         ),
         textWithLink(
             text: "Already have an account? ",

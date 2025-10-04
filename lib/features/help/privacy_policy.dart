@@ -12,7 +12,7 @@ class PrivacyPolicy extends StatelessWidget {
           'Privacy Policy',
           style: TextStyle(color: AppColors.appBarText, fontWeight: FontWeight.w600),
         ),
-        backgroundColor: AppColors.barColor,
+        backgroundColor: AppColors.appBarBackground,
         centerTitle: true,
 
         iconTheme: const IconThemeData(color: AppColors.appBarIcons),

@@ -28,12 +28,12 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
         ),
       ),
       actions: [
-        buildHeaderIcon(
-          icon: "assets/icon/help.svg",
-          onTap: () => print("Help tapped"),
-          color: AppColors.white,
-        ),
-        const SizedBox(width: 16),
+        // buildHeaderIcon(
+        //   icon: "assets/icon/help.svg",
+        //   onTap: () => print("Help tapped"),
+        //   color: AppColors.white,
+        // ),
+        // const SizedBox(width: 16),
         const NotificationIcon(color: AppColors.white),
         const SizedBox(width: 16), 
       ],
@@ -41,7 +41,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
           ? PreferredSize(
               preferredSize: const Size.fromHeight(48),
               child: Container(
-                color: AppColors.appBarBackground,
+                color: AppColors.white,
                 child: TabBar(
                   controller: tabController,
                   labelColor: AppColors.blue700,

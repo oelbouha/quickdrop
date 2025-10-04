@@ -206,7 +206,7 @@ class _IntroScreenState extends State<IntroScreen> with TickerProviderStateMixin
                       onPressed: () {
                         context.pushNamed('signup');
                       },
-                      backgroundColor: AppColors.appBarIcons,
+                      backgroundColor: AppColors.dark,
                       isLoading: _isSignUpLoading,
                       radius: 60,
                     ),

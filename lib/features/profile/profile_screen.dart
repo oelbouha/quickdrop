@@ -260,7 +260,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   Text(
                     title,
                     style: const TextStyle(
-                      fontSize: 14,
+                      fontSize: 16,
                       fontWeight: FontWeight.w600,
                       color: Colors.black87,
                     ),
@@ -395,15 +395,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
-        // color: AppColors.error,
-        // borderRadius: BorderRadius.circular(16),
-        // boxShadow: [
-        //   BoxShadow(
-        //     color: Colors.black.withValues(alpha: 0.05),
-        //     blurRadius: 10,
-        //     offset: const Offset(0, 2),
-        //   ),
-        // ],
+        color: AppColors.error,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.05),
+            blurRadius: 10,
+            offset: const Offset(0, 2),
+          ),
+        ],
       ),
       child: Material(
         color: Colors.transparent,
@@ -414,8 +414,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
             padding: const EdgeInsets.only(
                 left: 16,
                 right: 16,
-                top: 12,
-                bottom: 12,
+                top: 8,
+                bottom: 8,
             ),
             child: Row(
               children: [
@@ -423,7 +423,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   width: 40,
                   height: 40,
                   decoration: BoxDecoration(
-                    // color: Colors.red[50],++
+                    color: Colors.red[50],
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: const Center(
@@ -439,9 +439,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   child: Text(
                     "Log out",
                     style: TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w500,
-                      color: AppColors.error,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                      color: AppColors.white,
                     ),
                   ),
                 ),

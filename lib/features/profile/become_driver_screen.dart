@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:quickdrop_app/core/utils/imports.dart';
 import 'package:quickdrop_app/core/widgets/profile_image.dart';
+import 'package:quickdrop_app/features/profile/payment.screen.dart';
 
 
 
@@ -158,20 +159,18 @@ Future<void> _pickImage() async {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[50],
+      backgroundColor: AppColors.background,
       appBar: AppBar(
-        title: const Text(
+        title:  Text(
           'Registration',
           style: TextStyle(
-            color: AppColors.dark,
+            color: AppColors.appBarText,
             fontWeight: FontWeight.w600,
           ),
         ),
-        backgroundColor: Colors.transparent,
+        backgroundColor: AppColors.appBarBackground,
         elevation: 0,
         centerTitle: true,
-        iconTheme: const IconThemeData(color: Colors.black),
-        systemOverlayStyle: SystemUiOverlayStyle.dark,
       ),
       body: _isLoadingData 
       ? loadingAnimation()
@@ -179,7 +178,7 @@ Future<void> _pickImage() async {
           physics: const BouncingScrollPhysics(),
           child: Padding(
             padding: const EdgeInsets.all(AppTheme.homeScreenPadding),
-            child: _buildUpdateScreen(),
+            child: PaymentScreen(),
           ),
         
       ),

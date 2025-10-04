@@ -47,8 +47,8 @@ import 'package:quickdrop_app/core/widgets/custom_svg.dart';
                     Text(
                       title,
                       style: const TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w500,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
                         color: Colors.black87,
                       ),
                     ),

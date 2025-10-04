@@ -13,7 +13,6 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   int selectedIndex = 0;
-  bool _isLoading = true;
   UserData? user;
   String selectedFilter = "Trip";
   int? expandedFaqIndex;
@@ -70,7 +69,7 @@ class _HomeScreenState extends State<HomeScreen> {
       // If user is null, redirect to login
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (mounted) {
-          context.go("/login");
+          // context.go("/login");
         }
       });
       return;
@@ -98,11 +97,7 @@ class _HomeScreenState extends State<HomeScreen> {
           AppUtils.showDialog(
               context, 'Error fetching shipments: $e', AppColors.error);
         }
-      } finally {
-        setState(() {
-          _isLoading = false;
-        });
-      }
+      } 
     });
   }
 
@@ -261,7 +256,7 @@ Widget _buildSearchSection() {
                 child: Container(
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
-                    color: const Color(0xFF2563EB), // Strong blue color
+                    color: const Color(0xFF2563EB), 
                     borderRadius: BorderRadius.circular(12),
                     boxShadow: [
                       BoxShadow(

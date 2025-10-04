@@ -101,13 +101,44 @@ class RequestState extends State<Request> with SingleTickerProviderStateMixin {
             .collection('shipments')
             .doc(widget.request.shipmentId);
 
-        // Update the trip document
-        transaction.update(tripRef, {
-          'status': DeliveryStatus.ongoing,
-          'matchedDeliveryId': widget.request.shipmentId,
-          'matchedDeliveryUserId': widget.request.receiverId,
-          'price': widget.request.price
-        });
+         final tripDoc = await tripRef.get();
+        final shipmentDoc = await shipmentRef.get();
+
+        final tripData = tripDoc.data();
+        final shipmentData = shipmentDoc.data();
+
+        if (tripData != null && shipmentData != null) {
+          final tripWeight = double.tryParse(tripData['weight'].toString()) ?? 0.0;
+          final shipmentWeight = double.tryParse(shipmentData['weight'].toString()) ?? 0.0;
+
+          final weight = tripWeight - shipmentWeight;
+
+          if (weight == 0) {
+            // Update the trip document
+            transaction.update(tripRef, {
+              'status': DeliveryStatus.ongoing,
+              'matchedDeliveryId': widget.request.shipmentId,
+              'matchedDeliveryUserId': widget.request.receiverId,
+              'price': widget.request.price
+            });
+            
+          } else {
+            // Create a new trip with same details but updated weight
+            final newTripRef = FirebaseFirestore.instance.collection('trips').doc();
+
+            transaction.set(newTripRef, {
+              ...tripData, 
+              'weight': shipmentWeight.toString(),
+              'status': DeliveryStatus.ongoing,
+               'matchedDeliveryId': widget.request.shipmentId,
+              'matchedDeliveryUserId': widget.request.receiverId,
+            });
+            transaction.update(tripRef, {
+              'weight': weight.toString(), 
+            });
+        }
+          
+        }
 
         // Update the shipment document
         transaction.update(shipmentRef, {

@@ -235,7 +235,7 @@ class _SingupPageState extends State<SignUpScreen> {
                 onPressed: _singUpUserWithEmail,
                 isLoading: _isEmailLoading),
             const SizedBox(
-              height: 32,
+              height: 24,
             ),
           ],
         ));

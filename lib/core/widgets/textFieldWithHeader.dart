@@ -99,25 +99,25 @@ class TextFieldWithHeader extends StatelessWidget {
                     ),
                     enabledBorder: OutlineInputBorder(
                     borderSide: borderSide,
-                    borderRadius: BorderRadius.circular(16),
+                    borderRadius: BorderRadius.circular(12),
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderSide: focusedBorderSide,
-                    borderRadius: BorderRadius.circular(16),
+                    borderRadius: BorderRadius.circular(12),
                   ),
                   errorBorder: OutlineInputBorder(
                     borderSide: const BorderSide(
                       color: AppColors.error,
                       width: AppTheme.textFieldBorderWidth,
                     ),
-                    borderRadius: BorderRadius.circular(16),
+                    borderRadius: BorderRadius.circular(12),
                   ),
                   focusedErrorBorder: OutlineInputBorder(
                     borderSide: const BorderSide(
                       color: AppColors.error,
                       width: AppTheme.textFieldBorderWidth,
                     ),
-                    borderRadius: BorderRadius.circular(16),
+                    borderRadius: BorderRadius.circular(12),
                   ),
                     prefixIcon: _buildPrefixIcon(),        
                   ),

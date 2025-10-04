@@ -22,30 +22,28 @@ class _TripScreenState extends State<TripScreen>
 
   void removeTrip(String id) async {
     final confirmed = await ConfirmationDialog.show(
-        context: context,
-        message: 'Are you sure you want to delete this shipment?',
-        header: 'Delete Shipment',
-        buttonHintText: 'Delete',
-        iconData: Icons.delete_outline,
-      );
-      if (!confirmed) return ; 
+      context: context,
+      message: 'Are you sure you want to delete this shipment?',
+      header: 'Delete Shipment',
+      buttonHintText: 'Delete',
+      iconData: Icons.delete_outline,
+    );
+    if (!confirmed) return;
 
-      try {
-        await Provider.of<TripProvider>(context, listen: false)
-            .deleteTrip(id);
-        await Provider.of<DeliveryRequestProvider>(context, listen: false)
-            .deleteRequestsByTripId(id);
+    try {
+      await Provider.of<TripProvider>(context, listen: false).deleteTrip(id);
+      await Provider.of<DeliveryRequestProvider>(context, listen: false)
+          .deleteRequestsByTripId(id);
+      AppUtils.showDialog(
+          context, 'Trip deleted succusfully!', AppColors.succes);
+      Provider.of<StatisticsProvider>(context, listen: false)
+          .decrementField(user!.uid, "pendingTrips");
+    } catch (e) {
+      if (mounted) {
         AppUtils.showDialog(
-            context, 'Trip deleted succusfully!', AppColors.succes);
-        Provider.of<StatisticsProvider>(context, listen: false)
-            .decrementField(user!.uid, "pendingTrips");
-      } catch (e) {
-        if (mounted) {
-          AppUtils.showDialog(
-              context, 'Failed to delete Trip: $e', AppColors.error);
-        }
-      } 
-      
+            context, 'Failed to delete Trip: $e', AppColors.error);
+      }
+    }
   }
 
   @override
@@ -73,7 +71,7 @@ class _TripScreenState extends State<TripScreen>
       } catch (e) {
         if (mounted)
           AppUtils.showDialog(
-              context, "Failed to fetch Shipments", AppColors.error);
+              context, "Failed to fetch trips ${e}", AppColors.error);
       } finally {
         // Ensure the loading state is updated even if an error occurs
         if (mounted) {
@@ -136,7 +134,6 @@ class _TripScreenState extends State<TripScreen>
                       s.status == DeliveryStatus.completed)
                   .toList();
 
-
               return TabBarView(
                 controller: _tabController,
                 children: [
@@ -155,30 +152,31 @@ class _TripScreenState extends State<TripScreen>
     );
   }
 
- Widget _buildEmptyState({
+  Widget _buildEmptyState({
     required IconData icon,
     required String title,
     required String subtitle,
     required String buttonText,
   }) {
-    return  SizedBox.expand(
-    child: Center(
-      child: Padding(
-        padding: EdgeInsets.all(48),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
+    return SizedBox.expand(
+        child: Center(
+            child: Padding(
+      padding: EdgeInsets.all(48),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
         children: [
-                   Container(
-             padding: EdgeInsets.all(16),
-             decoration: BoxDecoration(
+          Container(
+            padding: EdgeInsets.all(16),
+            decoration: BoxDecoration(
               color: AppColors.blue700.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(60),
             ),
-          child: Icon(
-            icon,
-            size: 64,
-            color: AppColors.blue700.withValues(alpha: 0.6),
-          ),),
+            child: Icon(
+              icon,
+              size: 64,
+              color: AppColors.blue700.withValues(alpha: 0.6),
+            ),
+          ),
           const SizedBox(height: 16),
           Text(
             title,
@@ -227,8 +225,8 @@ class _TripScreenState extends State<TripScreen>
             // ),
           ),
         ],
-      ),))
-    );
+      ),
+    )));
   }
 
   Widget _buildActiveTrips(List<Trip> activeTrips) {
@@ -237,14 +235,15 @@ class _TripScreenState extends State<TripScreen>
           left: AppTheme.cardPadding, right: AppTheme.cardPadding),
       color: AppColors.background,
       child: activeTrips.isEmpty
-          ? Center(child: _buildEmptyState(
-               icon: Icons.directions_car,
-                title: "No active trips",
-                subtitle: "Start earning by offering trip capacity!",
-                buttonText: "Post Trip",
-              ))
+          ? Center(
+              child: _buildEmptyState(
+              icon: Icons.directions_car,
+              title: "No active trips",
+              subtitle: "Start earning by offering trip capacity!",
+              buttonText: "Post Trip",
+            ))
           : ListView.builder(
-             physics: const BouncingScrollPhysics(),
+              physics: const BouncingScrollPhysics(),
               itemCount: activeTrips.length,
               itemBuilder: (context, index) {
                 final trip = activeTrips[index];
@@ -253,9 +252,13 @@ class _TripScreenState extends State<TripScreen>
                     if (index == 0)
                       const SizedBox(height: AppTheme.gapBetweenCards),
                     ActiveItemCard(
-                      onEditPressed: () => {context.push('/add-trip?tripId=${trip.id}&isEdit=true')},
-                      onViewPressed: () => {  context.push(
-                              '/trip-details?tripId=${trip.id}&userId=${trip.userId}&viewOnly=true')},
+                      onEditPressed: () => {
+                        context.push('/add-trip?tripId=${trip.id}&isEdit=true')
+                      },
+                      onViewPressed: () => {
+                        context.push(
+                            '/trip-details?tripId=${trip.id}&userId=${trip.userId}&viewOnly=true')
+                      },
                       item: trip,
                       onPressed: () => {removeTrip(trip.id!)},
                     ),
@@ -274,15 +277,15 @@ class _TripScreenState extends State<TripScreen>
             left: AppTheme.cardPadding, right: AppTheme.cardPadding),
         color: AppColors.background,
         child: ongoingTrips.isEmpty
-            ? Center(child: _buildEmptyState(
-               icon: Icons.directions_car,
+            ? Center(
+                child: _buildEmptyState(
+                icon: Icons.directions_car,
                 title: "No ovgoing trips",
                 subtitle: "Start earning by offering trip capacity!",
                 buttonText: "Post Trip",
               ))
             : ListView.builder(
-
-             physics: const BouncingScrollPhysics(),
+                physics: const BouncingScrollPhysics(),
                 itemCount: ongoingTrips.length,
                 itemBuilder: (context, index) {
                   final trip = ongoingTrips[index];
@@ -301,9 +304,12 @@ class _TripScreenState extends State<TripScreen>
                       if (index == 0)
                         const SizedBox(height: AppTheme.gapBetweenCards),
                       OngoingItemCard(
-                           onViewPressed: () => {  context.push(
-                              '/trip-details?tripId=${trip.id}&userId=${trip.userId}&viewOnly=true')},
-                          item: ongoingTrips[index], user: userData),
+                          onViewPressed: () => {
+                                context.push(
+                                    '/trip-details?tripId=${trip.id}&userId=${trip.userId}&viewOnly=true')
+                              },
+                          item: ongoingTrips[index],
+                          user: userData),
                       const SizedBox(height: AppTheme.gapBetweenCards),
                     ],
                   );
@@ -320,15 +326,15 @@ class _TripScreenState extends State<TripScreen>
             left: AppTheme.cardPadding, right: AppTheme.cardPadding),
         color: AppColors.background,
         child: completedTrips.isEmpty
-            ? Center(child: _buildEmptyState(
-               icon: Icons.directions_car,
+            ? Center(
+                child: _buildEmptyState(
+                icon: Icons.directions_car,
                 title: "No completed trips",
                 subtitle: "Start earning by offering trip capacity!",
                 buttonText: "Post Trip",
               ))
             : ListView.builder(
-
-             physics: const BouncingScrollPhysics(),
+                physics: const BouncingScrollPhysics(),
                 itemCount: completedTrips.length,
                 itemBuilder: (context, index) {
                   final trip = completedTrips[index];
@@ -350,10 +356,12 @@ class _TripScreenState extends State<TripScreen>
                       if (index == 0)
                         const SizedBox(height: AppTheme.gapBetweenCards),
                       CompletedItemCard(
-                         onViewPressed: () => {  context.push(
-                              '/trip-details?tripId=${trip.id}&userId=${trip.userId}&viewOnly=true')},
+                          onViewPressed: () => {
+                                context.push(
+                                    '/trip-details?tripId=${trip.id}&userId=${trip.userId}&viewOnly=true')
+                              },
                           item: trip,
-                          user: userData, 
+                          user: userData,
                           onReviewPressed: () {
                             showDialog(
                               context: context,

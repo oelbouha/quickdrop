@@ -113,13 +113,9 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
           },
         );
 
-        await FirebaseFirestore.instance
-            .collection('users')
-            .doc(userId)
-            .set({
+        await FirebaseFirestore.instance.collection('users').doc(userId).set({
           'fcmToken': token,
         }, SetOptions(merge: true));
-
       } catch (e) {
         print("Error getting FCM token: $e");
       }
@@ -141,6 +137,11 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
         await saveCredentials(
             emailController.text.trim(), passwordController.text.trim());
         _handleFcmTokenSave(FirebaseAuth.instance.currentUser!.uid);
+        // UserData user = await Provider.of<UserProvider>(context, listen: false)
+        //     .fetchUserData(FirebaseAuth.instance.currentUser!.uid);
+        // Provider.of<UserProvider>(context, listen: false).setUser(user);
+        // print("Signed in successfully");
+        // print("user :: ${FirebaseAuth.instance.currentUser}");
         context.go('/home');
       } catch (e) {
         print("Error signing in: $e");
@@ -184,16 +185,28 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.background,
-      resizeToAvoidBottomInset: false,
-      body: SafeArea(
-        child: Center(
-            child: SingleChildScrollView(
-          padding: const EdgeInsets.all(16),
-          child: _buildLogInScreen(),
-        )),
-      ),
-    );
+        backgroundColor: AppColors.background,
+        resizeToAvoidBottomInset: false,
+        body: Container(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                Color(0xFFFFFFFF),
+                Color(0xFFF8FAFC),
+                Color(0xFFEFF6FF),
+              ],
+            ),
+          ),
+          child: SafeArea(
+            child: Center(
+                child: SingleChildScrollView(
+              padding: const EdgeInsets.all(16),
+              child: _buildLogInScreen(),
+            )),
+          ),
+        ));
   }
 
   Widget _buildLogInScreen() {
@@ -218,20 +231,20 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
           FadeTransition(
             opacity: _fadeAnimation,
             child: const Text(
-              'Please sign in to continue',
+              'Sign in to continue your shipments',
               style: TextStyle(
                 fontSize: 16,
                 color: AppColors.shipmentText,
               ),
             ),
           ),
-          const SizedBox(height: 32),
+          const SizedBox(height: 24),
           IconTextField(
             controller: emailController,
             keyboardType: TextInputType.emailAddress,
             hintText: 'Email',
             obsecureText: false,
-            radius: 30,
+            radius: 60,
             iconPath: "assets/icon/email.svg",
             validator: Validators.email,
           ),
@@ -239,9 +252,9 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
           PasswordTextfield(
             controller: passwordController,
             validator: Validators.notEmpty,
-            radius: 30,
+            radius: 60,
           ),
-          const SizedBox(height: 24), 
+          const SizedBox(height: 24),
           LoginButton(
             hintText: "Sign in",
             onPressed: _signInUserWithEmail,
@@ -249,7 +262,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
             radius: 60,
           ),
           Container(
-            margin: const EdgeInsets.only(top: 16, bottom: 16),
+            margin: const EdgeInsets.only(top: 24, bottom: 24),
             child: const Row(
               children: [
                 Expanded(

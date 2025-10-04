@@ -63,15 +63,13 @@ class SecurityScreenState extends State<SecurityScreen> {
         title: const Text(
           'Profile Settings',
           style: TextStyle(
-            color: AppColors.dark,
+            color: AppColors.appBarText,
             fontWeight: FontWeight.w600,
           ),
         ),
-        backgroundColor: Colors.transparent,
+        backgroundColor: AppColors.appBarBackground,
         elevation: 0,
         centerTitle: true,
-        iconTheme: const IconThemeData(color: Colors.black),
-        systemOverlayStyle: SystemUiOverlayStyle.dark,
       ),
       body: _isLoading
     ? loadingAnimation()

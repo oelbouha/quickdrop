@@ -1,395 +1,438 @@
 import 'package:flutter/material.dart';
-import 'package:quickdrop_app/core/widgets/destination.dart';
+export 'package:firebase_core/firebase_core.dart';
+export 'package:firebase_core/firebase_core.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:intl/intl.dart';
 import 'package:quickdrop_app/core/utils/imports.dart';
-import 'package:quickdrop_app/core/widgets/review.dart';
-import 'package:quickdrop_app/features/models/base_transport.dart';
+import 'package:quickdrop_app/features/models/statictics_model.dart';
 
-class CompletedItemCard extends StatefulWidget {
-  final TransportItem item;
-  final UserData user;
-  final VoidCallback onPressed;
-  final VoidCallback onViewPressed;
 
-  const CompletedItemCard({
-    super.key,
-    required this.item,
-    required this.user,
-    required this.onPressed,
-    required this.onViewPressed,
+enum UserRole { customer, driver }
+enum DriverStatus { pending, approved, rejected }
+enum SubscriptionStatus { inactive, active }
+
+
+class UserData {
+  final String uid;
+  final String? email;
+  final String? displayName;
+  final String? firstName;
+  final String? lastName;
+  final String? photoUrl;
+  String? phoneNumber;
+  String? createdAt;
+  String? fcmToken;
+  String? idNumber;
+  String? carPlateNumber;
+  String? carModel;
+  String? driverNumber;
+  String status;
+  String driverStatus;
+  String subscriptionStatus;
+  String subscriptionEndsAt;
+
+  UserData({
+    required this.uid,
+    this.email,
+    this.displayName,
+    this.firstName,
+    this.lastName,
+    this.photoUrl,
+    this.phoneNumber,
+    this.createdAt,
+    this.fcmToken,
+    this.idNumber,
+    this.carPlateNumber,
+    this.carModel,
+    this.driverNumber,
+    this.subscriptionEndsAt = "fdfd",
+    this.status = "customer",
+    this.driverStatus = "pending",
+    this.subscriptionStatus = "inactive",
   });
+  Map<String, dynamic> toMap() {
+    return {
+      'uid': uid,
+      'email': email,
+      'displayName': displayName,
+      'firstName': firstName,
+      'lastName': lastName,
+      'photoUrl': photoUrl,
+      'createdAt': createdAt,
+      'status': status,
+      'phoneNumber': phoneNumber,
+      'idNumber': idNumber,
+      'carPlateNumber': carPlateNumber,
+      'carModel': carModel,
+      'driverNumber': driverNumber,
+      'fcmToken': fcmToken,
+      'driverStatus': driverStatus,
+      'subscriptionStatus': subscriptionStatus,
+      'subscriptionEndsAt' : subscriptionEndsAt,
+    };
+  }
 
-  @override
-  CompletedItemCardState createState() => CompletedItemCardState();
+  factory UserData.fromMap(Map<String, dynamic> map) {
+    return UserData(
+        uid: map['uid'],
+        email: map['email'],
+        displayName: map['displayName'],
+        photoUrl: map['photoUrl'],
+        phoneNumber: map['phoneNumber'],
+        firstName: map['firstName'],
+        lastName: map['lastName'],
+        status: map['status'] ?? "Customer",
+        fcmToken: map['fcmToken'],
+        idNumber: map['idNumber'],
+        carPlateNumber: map['carPlateNumber'],
+        carModel: map['carModel'],
+        driverNumber: map['driverNumber'],
+        driverStatus: map['driverStatus'],
+        subscriptionStatus: map['subscriptionStatus'],
+        subscriptionEndsAt : map["subscriptionEndsAt"],
+        createdAt: map["createdAt"]);
+  }
 }
 
-class CompletedItemCardState extends State<OngoingItemCard> {
-  void _submitReview() {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return ReviewDialog(
-          recieverUser: widget.user,
-        );
-      },
-    );
+class UserProvider with ChangeNotifier {
+  UserData? _user;
+  final Map<String, UserData> _users = {};
+
+  UserData? get user => _user;
+
+  UserData? getUserById(String uid) => _users[uid];
+
+  void setUser(UserData user) {
+    _user = user;
+    notifyListeners();
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: widget.onViewPressed,
-      child: Container(
-        margin: const EdgeInsets.only(bottom: 16),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(12),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.08),
-              spreadRadius: 0,
-              blurRadius: 8,
-              offset: const Offset(0, 2),
-            ),
-          ],
-        ),
-        child: Column(
-          children: [
-            Padding(
-                padding: const EdgeInsets.all(16),
-                child: Column(children: [
-                  _buildHeader(),
-                  const SizedBox(height: 16),
-                  _buildBody(),
-                ])),
-            _buildFooter(),
-          ],
-        ),
-      ),
-    );
+  void clearUser() {
+    _user = null;
+    notifyListeners();
   }
 
-  Widget _buildHeader() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'ID: ${widget.item.id ?? 'N/A'}',
-              style: const TextStyle(
-                fontSize: 12,
-                color: Color(0xFF6B7280), // gray-500
-                fontWeight: FontWeight.w400,
-              ),
-            ),
-            const SizedBox(height: 4),
-            Text(
-              '${widget.item.from} → ${widget.item.to}',
-              style: const TextStyle(
-                fontSize: 18,
-                color: Color(0xFF111827), // gray-900
-                fontWeight: FontWeight.w700,
-              ),
-            ),
-          ],
-        ),
-        Container(
-          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-          decoration: BoxDecoration(
-            color: const Color(0xFFDCFCE7), // green-100
-            borderRadius: BorderRadius.circular(20),
-          ),
-          child: const Text(
-            'Delivered',
-            style: TextStyle(
-              fontSize: 12,
-              color: Color(0xFF10B981), // success color
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-        ),
-      ],
-    );
+  void updateUserFcmToken(String token, String userId) {
+    FirebaseFirestore.instance.collection('users').doc(userId).set({
+      'fcmToken': token,
+    }, SetOptions(merge: true));
   }
 
-
-  Widget _buildBody() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          'Delivered on: ${widget.item.date}',
-          style: const TextStyle(
-            fontSize: 14,
-            color: Color(0xFF6B7280), // gray-500
-            fontWeight: FontWeight.w400,
-          ),
-        ),
-        // const SizedBox(height: 4),
-        // Text(
-        //   _formatDriverInfo(),
-        //   style: const TextStyle(
-        //     fontSize: 14,
-        //     color: Color(0xFF6B7280), // gray-500
-        //     fontWeight: FontWeight.w400,
-        //   ),
-        // ),
-        const SizedBox(height: 16),
-        _buildCourierCard(),
-      ],
-    );
+  Future<bool> doesUserRequestDriverMode(String uid) async {
+    try {
+      final doc = await FirebaseFirestore.instance
+          .collection('driverRequests')
+          .doc(uid)
+          .get();
+      return doc.exists;
+    } catch (e) {
+      // print("Error checking driver request: $e");
+      return false;
+    }
   }
 
-  Widget _buildCourierCard() {
-    // if (widget.user == null) return SizedBox.shrink();
-    return Container(
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: AppColors.courierInfoBackground,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-          color: AppColors.blue.withOpacity(0.1),
-          width: 0.5,
-        ),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              const CustomIcon(
-                iconPath: "assets/icon/user.svg",
-                size: 14,
-                color: AppColors.blue600,
-              ),
-              const SizedBox(width: 6),
-              Text(
-                'Your Courier',
-                style: TextStyle(
-                  fontSize: 11,
-                  color: AppColors.textSecondary,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 12),
-          Row(
-            children: [
-              Expanded(
-                child: UserProfileWithRating(
-                  user: widget.user,
-                  header: widget.user.displayName ?? 'Guest',
-                  avatarSize: 36,
-                  headerFontSize: 12,
-                  subHeaderFontSize: 9,
-                  onPressed: () => {
-                    context
-                        .push('/profile/statistics?userId=${widget.user.uid}')
-                  },
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
+  Future<void> requestDriverMode(UserData user) async {
+    try {
+      FirebaseFirestore.instance.collection('driverRequests').doc(user.uid).set(
+            user.toMap(),
+            SetOptions(merge: true),
+          );
+
+      notifyListeners();
+    } catch (e) {
+      rethrow;
+    }
   }
 
-  Widget _buildFooter() {
-    return Container(
-      decoration: const BoxDecoration(
-        border: Border(
-          top: BorderSide(
-            color: Color(0xFFE5E7EB), // gray-200
-            width: 1,
-          ),
-        ),
-      ),
-      padding: const EdgeInsets.all(8),
-      child: Row(
-        children: [
-          Expanded(
-            child: _buildActionButton(
-              label: 'Report Issue',
-              backgroundColor: const Color(0xFFF3F4F6), // gray-100
-              textColor: const Color(0xFF6B7280), // gray-500
-              onPressed: () => {},
-            ),
-          ),
-          const SizedBox(width: 8),
-          Expanded(
-            child: _buildActionButton(
-              label: 'Leave Review',
-              backgroundColor: const Color(0xFFF59E0B), // gold
-              textColor: Colors.white,
-              onPressed: () => _submitReview(),
-              icon: Icons.star,
-            ),
-          ),
-        ],
-      ),
-    );
+  Future<void> deleteUser(String userId) async {
+    try {
+      final snapshot = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(userId)
+          .get();
+      await snapshot.reference.delete();
+      // for (var doc in snapshot.docs) {
+      // }
+
+      notifyListeners();
+    } catch (e) {
+      // print("Error fetching shipments: $e");
+      rethrow;
+    }
   }
 
-  Widget _buildActionButton({
-    required String label,
-    required Color backgroundColor,
-    required Color textColor,
-    required VoidCallback onPressed,
-    IconData? icon,
+  Future<void> updateUserInfo(UserData updatedUser) async {
+    final userDocRef =
+        FirebaseFirestore.instance.collection('users').doc(updatedUser.uid);
+
+    // final docSnapshot = await userDocRef.get();
+
+    final updateMap = {
+      if (updatedUser.email != null) 'email': updatedUser.email,
+      if (updatedUser.displayName != null)
+        'displayName': updatedUser.displayName,
+      if (updatedUser.firstName != null) 'firstName': updatedUser.firstName,
+      if (updatedUser.lastName != null) 'lastName': updatedUser.lastName,
+      if (updatedUser.phoneNumber != null)
+        'phoneNumber': updatedUser.phoneNumber,
+      if (updatedUser.photoUrl != null) 'photoUrl': updatedUser.photoUrl,
+    };
+    userDocRef.update(updateMap);
+    await fetchUser(updatedUser.uid);
+    _users[updatedUser.uid] = _user!;
+    notifyListeners();
+  }
+
+  Future<void> saveUserToFirestore(UserData user) async {
+    try {
+      final userDocRef =
+          FirebaseFirestore.instance.collection('users').doc(user.uid);
+      final docSnapshot = await userDocRef.get();
+
+      final userMap = user.toMap();
+
+      if (!docSnapshot.exists) {
+        await userDocRef.set(userMap);
+        _users[user.uid] = user;
+        _user = user;
+        notifyListeners();
+      }
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<void> fetchUsersData(List<String> ids) async {
+    for (final id in ids) {
+      print("Fetching user data for ID: $id");
+      if (!_users.containsKey(id)) {
+        final data =
+            await FirebaseFirestore.instance.collection('users').doc(id).get();
+        if (data.exists) {
+          _users[id] = UserData.fromMap(data.data()!);
+        }
+      }
+    }
+  }
+
+  Future<UserData> fetchUserData(String uid) async {
+    if (_users.containsKey(uid)) {
+      return _users[uid]!;
+    }
+    try {
+      final userDoc =
+          await FirebaseFirestore.instance.collection('users').doc(uid).get();
+      // print("userDoc: ${userDoc.data()}");
+      if (userDoc.exists) {
+        final user = UserData.fromMap(userDoc.data()!);
+        _users[uid] = user;
+        // print("User fetched: ${user.displayName}");
+        return user;
+      } else {
+        throw Exception('User not found');
+      }
+    } catch (e) {
+      throw Exception('Error fetching user data: $e');
+    }
+  }
+
+  Future<void> singOutUser() async {
+    try {
+      await FirebaseAuth.instance.signOut();
+      _user = null;
+      _users.clear();
+      notifyListeners();
+    } catch (e) {
+      throw Exception('Error signing out: $e');
+    }
+  }
+
+  Future<void> signInWithGoogle(BuildContext context) async {
+    try {
+      final GoogleSignIn googleSignIn = GoogleSignIn(
+        scopes: ['email'],
+      );
+      await googleSignIn.signOut();
+
+      GoogleSignInAccount? googleUser = await googleSignIn.signIn();
+      if (googleUser == null) {
+        return;
+      }
+
+      final GoogleSignInAuthentication googleAuth =
+          await googleUser.authentication;
+
+      final AuthCredential credential = GoogleAuthProvider.credential(
+          accessToken: googleAuth.accessToken, idToken: googleAuth.idToken);
+
+      UserCredential userCredential =
+          await FirebaseAuth.instance.signInWithCredential(credential);
+      if (userCredential.user == null) {
+        throw Exception('User credential is null');
+      }
+      UserData user = UserData(
+        uid: userCredential.user!.uid,
+        email: userCredential.user!.email,
+        firstName: userCredential.user!.displayName?.split(' ').first,
+        lastName: userCredential.user!.displayName?.split(' ').last,
+        phoneNumber: userCredential.user!.phoneNumber,
+        displayName: userCredential.user!.displayName,
+        photoUrl: userCredential.user!.photoURL,
+        createdAt: DateFormat('dd/MM/yyyy').format(DateTime.now()).toString(),
+      );
+      StatisticsModel stats = StatisticsModel(
+        pendingShipments: 0,
+        ongoingShipments: 0,
+        completedShipments: 0,
+        pendingTrips: 0,
+        ongoingTrips: 0,
+        completedTrips: 0,
+        reviewCount: 0,
+        id: user.uid,
+        userId: user.uid,
+      );
+      await Provider.of<StatisticsProvider>(context, listen: false)
+          .addStatictics(user.uid, stats);
+      _user = user;
+      await saveUserToFirestore(user);
+
+      context.go('/home');
+
+      notifyListeners();
+    } on FirebaseAuthException catch (e) {
+      throw Exception('Error signing in with Google: $e');
+    } catch (e) {
+      throw Exception('An unexpected error occurred: $e');
+    }
+  }
+
+  Future<void> singUpUserWithEmail(
+      String email,
+      String password,
+      String firstName,
+      String lastName,
+      String phoneNumber,
+      BuildContext context) async {
+    try {
+      UserCredential userCredential =
+          await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+      UserData user = UserData(
+        uid: userCredential.user!.uid,
+        email: userCredential.user!.email,
+        firstName: firstName,
+        lastName: lastName,
+        displayName: "${firstName} ${lastName}",
+        phoneNumber: phoneNumber,
+        photoUrl: null,
+        createdAt: DateFormat('dd/MM/yyyy').format(DateTime.now()).toString(),
+      );
+
+      StatisticsModel stats = StatisticsModel(
+        pendingShipments: 0,
+        ongoingShipments: 0,
+        completedShipments: 0,
+        pendingTrips: 0,
+        ongoingTrips: 0,
+        completedTrips: 0,
+        reviewCount: 0,
+        id: user.uid,
+        userId: user.uid,
+      );
+      await Provider.of<StatisticsProvider>(context, listen: false)
+          .addStatictics(user.uid, stats);
+      _user = user;
+      await saveUserToFirestore(user);
+    } on FirebaseAuthException catch (e) {
+      String errorMessage;
+      switch (e.code) {
+        case 'email-already-in-use':
+          errorMessage = 'Email is already in use.';
+          break;
+        case 'invalid-email':
+          errorMessage = 'Invalid email format.';
+          break;
+        case 'weak-password':
+          errorMessage = 'Password is too weak.';
+          break;
+        default:
+          errorMessage = e.message ?? 'An error occurred during sign-up.';
+      }
+      throw Exception(errorMessage);
+    }
+  }
+
+  Future<void> signInUserWithEmail(String email, String password) async {
+    try {
+      UserCredential userCredential =
+          await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+      if (userCredential.user != null) {
+        await fetchUser(userCredential.user!.uid);
+        notifyListeners();
+      }
+    } on FirebaseAuthException catch (e) {
+      String errorMessage;
+      switch (e.code) {
+        case 'user-not-found':
+          errorMessage = AppTheme.loginErrorMessage;
+          break;
+        case 'wrong-password':
+          errorMessage = AppTheme.loginErrorMessage;
+          break;
+        case 'invalid-email':
+          errorMessage = 'Invalid email format.';
+          break;
+        case 'invalid-credential':
+          errorMessage = AppTheme.loginErrorMessage;
+          break;
+        default:
+          errorMessage = e.message ?? 'An error occurred during login.';
+      }
+      throw Exception(errorMessage);
+    }
+  }
+
+  Future<void> fetchUser(String uid) async {
+    // if (_users.containsKey(uid)) {
+    //   _user = _users[uid];
+    //   notifyListeners();
+    //   return;
+    // }
+    try {
+      final userDoc =
+          await FirebaseFirestore.instance.collection('users').doc(uid).get();
+      if (userDoc.exists) {
+        // print("user exist ");
+        _user = UserData.fromMap(userDoc.data()!);
+        // print(_user!.displayName);
+        notifyListeners();
+      }
+    } catch (e) {
+      print('Error fetching user data: $e');
+    }
+  }
+}
+
+extension on UserData {
+  UserData copyWith({
+    String? uid,
+    String? email,
+    String? displayName,
+    String? photoUrl,
+    String? createdAt,
   }) {
-    return Material(
-      color: Colors.transparent,
-      child: InkWell(
-        onTap: onPressed,
-        borderRadius: BorderRadius.circular(20),
-        child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          decoration: BoxDecoration(
-            color: backgroundColor,
-            borderRadius: BorderRadius.circular(20),
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              if (icon != null) ...[
-                Icon(
-                  icon,
-                  size: 16,
-                  color: textColor,
-                ),
-                const SizedBox(width: 6),
-              ],
-              Text(
-                label,
-                style: TextStyle(
-                  color: textColor,
-                  fontSize: 14,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
+    return UserData(
+      uid: uid ?? this.uid,
+      displayName: displayName ?? this.displayName,
+      email: email ?? this.email,
+      photoUrl: photoUrl ?? this.photoUrl,
+      createdAt: createdAt ?? this.createdAt,
     );
   }
-
-
-}
-
-Widget _buildActionButton({
-  required String label,
-  required Color color,
-  required Color backgroundColor,
-  required Color borderColor,
-  required VoidCallback onTap,
-  required Widget iconWidget,
-}) {
-  return Material(
-    color: Colors.transparent,
-    child: InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(12),
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-        decoration: BoxDecoration(
-          color: backgroundColor,
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(
-            color: borderColor,
-            width: 1,
-          ),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            IconTheme(
-              data: IconThemeData(color: color),
-              child: iconWidget,
-            ),
-            const SizedBox(width: 8),
-            Text(
-              label,
-              style: TextStyle(
-                color: color,
-                fontSize: 14,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-          ],
-        ),
-      ),
-    ),
-  );
-}
-
-Widget buildHeader({
-  required id,
-  required label,
-  required Color backgroundColor,
-  Color circleColor = const Color(0xFF10b981),
-  Color gradientStart = const Color(0xFFdbeafe),
-  Color gradientEnd = const Color(0xFFe0e7ff),
-}) {
-  return Container(
-    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-    decoration: BoxDecoration(
-      color: AppColors.completedstatusBackground.withOpacity(0.3),
-      borderRadius: const BorderRadius.only(
-        topLeft: Radius.circular(AppTheme.cardRadius),
-        topRight: Radius.circular(AppTheme.cardRadius),
-      ),
-    ),
-    child: Row(
-      children: [
-        Container(
-          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-          decoration: BoxDecoration(
-            color: AppColors.completedstatusBackground,
-            borderRadius: BorderRadius.circular(20),
-            border: Border.all(
-              color: AppColors.completedStatusText.withOpacity(0.3),
-              width: 1,
-            ),
-          ),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Container(
-                width: 6,
-                height: 6,
-                decoration: const BoxDecoration(
-                  color: AppColors.completedStatusText,
-                  shape: BoxShape.circle,
-                ),
-              ),
-              const SizedBox(width: 6),
-              Text(
-                label,
-                style: TextStyle(
-                  fontSize: 10,
-                  color: AppColors.completedStatusText,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-            ],
-          ),
-        ),
-        const Spacer(),
-        Text(
-          'ID: #${id ?? 'N/A'}',
-          style: TextStyle(
-            fontSize: 10,
-            color: AppColors.textSecondary,
-            fontWeight: FontWeight.w500,
-          ),
-        ),
-      ],
-    ),
-  );
 }

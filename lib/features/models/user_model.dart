@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 export 'package:firebase_core/firebase_core.dart';
 export 'package:firebase_core/firebase_core.dart';
@@ -6,6 +7,11 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:intl/intl.dart';
 import 'package:quickdrop_app/core/utils/imports.dart';
 import 'package:quickdrop_app/features/models/statictics_model.dart';
+
+enum UserRole { customer, driver }
+enum DriverStatus { pending, approved, rejected }
+enum SubscriptionStatus { inactive, active }
+
 
 class UserData {
   final String uid;
@@ -22,6 +28,8 @@ class UserData {
   String? carModel;
   String? driverNumber;
   String status;
+  String driverStatus;
+  String subscriptionStatus;
 
   UserData(
       {required this.uid,
@@ -37,7 +45,10 @@ class UserData {
       this.carPlateNumber,
       this.carModel,
       this.driverNumber,
-      this.status = "Customer"});
+      this.status = "customer",
+      this.driverStatus = "pending",
+      this.subscriptionStatus = "inactive",
+    });
   Map<String, dynamic> toMap() {
     return {
       'uid': uid,
@@ -53,7 +64,9 @@ class UserData {
       'carPlateNumber': carPlateNumber,
       'carModel': carModel,
       'driverNumber': driverNumber,
-      'fcmToken': fcmToken
+      'fcmToken': fcmToken,
+       'driverStatus': driverStatus,
+      'subscriptionStatus': subscriptionStatus,
     };
   }
 
@@ -72,6 +85,8 @@ class UserData {
         carPlateNumber: map['carPlateNumber'],
         carModel: map['carModel'],
         driverNumber: map['driverNumber'],
+            driverStatus: map['driverStatus'],
+        subscriptionStatus: map['subscriptionStatus'],
         createdAt: map["createdAt"]);
   }
 }
