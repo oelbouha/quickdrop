@@ -65,15 +65,17 @@ class _HomeScreenState extends State<HomeScreen> {
     super.initState();
     typeController.text = "Shipment";
     user = Provider.of<UserProvider>(context, listen: false).user;
+    // print("namemememememmem :: ${user!.displayName!}");
     if (user == null) {
       // If user is null, redirect to login
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (mounted) {
-          // context.go("/login");
+          context.go("/login");
         }
       });
       return;
     }
+    
     dateController.text = _getCurrentDate();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       try {
@@ -722,7 +724,7 @@ Widget _buildSearchSection() {
             child: ClipRRect(
              borderRadius: BorderRadius.circular(21),
             child: CachedNetworkImage(
-            imageUrl:  user!.photoUrl!,
+            imageUrl: user?.photoUrl ?? AppTheme.defaultProfileImage ,
             fit: BoxFit.cover,
             placeholder: (context, url) => Container(
                 decoration: BoxDecoration(
