@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 export 'package:firebase_core/firebase_core.dart';
 export 'package:firebase_core/firebase_core.dart';
@@ -7,6 +6,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:intl/intl.dart';
 import 'package:quickdrop_app/core/utils/imports.dart';
 import 'package:quickdrop_app/features/models/statictics_model.dart';
+
 
 enum UserRole { customer, driver }
 enum DriverStatus { pending, approved, rejected }
@@ -30,25 +30,27 @@ class UserData {
   String status;
   String driverStatus;
   String subscriptionStatus;
+  String? subscriptionEndsAt;
 
-  UserData(
-      {required this.uid,
-      this.email,
-      this.displayName,
-      this.firstName,
-      this.lastName,
-      this.photoUrl,
-      this.phoneNumber,
-      this.createdAt,
-      this.fcmToken,
-      this.idNumber,
-      this.carPlateNumber,
-      this.carModel,
-      this.driverNumber,
-      this.status = "customer",
-      this.driverStatus = "pending",
-      this.subscriptionStatus = "inactive",
-    });
+  UserData({
+    required this.uid,
+    this.email,
+    this.displayName,
+    this.firstName,
+    this.lastName,
+    this.photoUrl,
+    this.phoneNumber,
+    this.createdAt,
+    this.fcmToken,
+    this.idNumber,
+    this.carPlateNumber,
+    this.carModel,
+    this.driverNumber,
+    this.subscriptionEndsAt ,
+    this.status = "customer",
+    this.driverStatus = "pending",
+    this.subscriptionStatus = "inactive",
+  });
   Map<String, dynamic> toMap() {
     return {
       'uid': uid,
@@ -65,8 +67,9 @@ class UserData {
       'carModel': carModel,
       'driverNumber': driverNumber,
       'fcmToken': fcmToken,
-       'driverStatus': driverStatus,
+      'driverStatus': driverStatus,
       'subscriptionStatus': subscriptionStatus,
+      'subscriptionEndsAt' : subscriptionEndsAt,
     };
   }
 
@@ -85,8 +88,9 @@ class UserData {
         carPlateNumber: map['carPlateNumber'],
         carModel: map['carModel'],
         driverNumber: map['driverNumber'],
-            driverStatus: map['driverStatus'],
+        driverStatus: map['driverStatus'],
         subscriptionStatus: map['subscriptionStatus'],
+        subscriptionEndsAt : map["subscriptionEndsAt"],
         createdAt: map["createdAt"]);
   }
 }
@@ -213,17 +217,17 @@ class UserProvider with ChangeNotifier {
   }
 
   Future<UserData> fetchUserData(String uid) async {
-    if (_users.containsKey(uid)) {
-      return _users[uid]!;
-    }
+    // if (_users.containsKey(uid)) {
+    //   return _users[uid]!;
+    // }
     try {
       final userDoc =
           await FirebaseFirestore.instance.collection('users').doc(uid).get();
-      // print("userDoc: ${userDoc.data()}");
+      print("userDoc: ${userDoc.data()}");
       if (userDoc.exists) {
         final user = UserData.fromMap(userDoc.data()!);
         _users[uid] = user;
-        // print("User fetched: ${user.displayName}");
+        print("User fetched: ${user.displayName}");
         return user;
       } else {
         throw Exception('User not found');
@@ -232,7 +236,6 @@ class UserProvider with ChangeNotifier {
       throw Exception('Error fetching user data: $e');
     }
   }
-
 
   Future<void> singOutUser() async {
     try {
@@ -244,21 +247,20 @@ class UserProvider with ChangeNotifier {
       throw Exception('Error signing out: $e');
     }
   }
-  
+
   Future<void> signInWithGoogle(BuildContext context) async {
     try {
-
-       final GoogleSignIn googleSignIn = GoogleSignIn(
+      final GoogleSignIn googleSignIn = GoogleSignIn(
         scopes: ['email'],
       );
-       await googleSignIn.signOut();
+      await googleSignIn.signOut();
 
       GoogleSignInAccount? googleUser = await googleSignIn.signIn();
       if (googleUser == null) {
         return;
       }
 
-       final GoogleSignInAuthentication googleAuth =
+      final GoogleSignInAuthentication googleAuth =
           await googleUser.authentication;
 
       final AuthCredential credential = GoogleAuthProvider.credential(
@@ -294,11 +296,11 @@ class UserProvider with ChangeNotifier {
           .addStatictics(user.uid, stats);
       _user = user;
       await saveUserToFirestore(user);
-      
-          context.go('/home');
-        
+
+      context.go('/home');
+
       notifyListeners();
-    }  on FirebaseAuthException catch (e) {
+    } on FirebaseAuthException catch (e) {
       throw Exception('Error signing in with Google: $e');
     } catch (e) {
       throw Exception('An unexpected error occurred: $e');

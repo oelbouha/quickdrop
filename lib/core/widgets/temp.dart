@@ -30,7 +30,7 @@ class UserData {
   String status;
   String driverStatus;
   String subscriptionStatus;
-  String subscriptionEndsAt;
+  String? subscriptionEndsAt;
 
   UserData({
     required this.uid,
@@ -46,7 +46,7 @@ class UserData {
     this.carPlateNumber,
     this.carModel,
     this.driverNumber,
-    this.subscriptionEndsAt = "fdfd",
+    this.subscriptionEndsAt ,
     this.status = "customer",
     this.driverStatus = "pending",
     this.subscriptionStatus = "inactive",

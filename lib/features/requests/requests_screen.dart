@@ -59,6 +59,7 @@ class _OfferScreenState extends State<OfferScreen>
           }
         } catch (e) {
           if (mounted) {
+            print("Error fetching requests: $e");
             AppUtils.showDialog(
                 context, "Failed to fetch requests: ${e.toString()}", AppColors.error);
           }

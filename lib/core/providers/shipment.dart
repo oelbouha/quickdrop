@@ -137,6 +137,11 @@ class ShipmentProvider with ChangeNotifier {
 
   Future<void> fetchShipmentsByIds(List<String> ids) async {
     try {
+       if (ids.isEmpty) {
+        _shipments = [];
+        notifyListeners();
+        return; 
+      }
       final snapshot = await _firestore
           .collection('shipments')
           .where(FieldPath.documentId, whereIn: ids)

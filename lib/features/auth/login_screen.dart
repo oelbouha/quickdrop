@@ -137,9 +137,9 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
         await saveCredentials(
             emailController.text.trim(), passwordController.text.trim());
         _handleFcmTokenSave(FirebaseAuth.instance.currentUser!.uid);
-        // UserData user = await Provider.of<UserProvider>(context, listen: false)
-        //     .fetchUserData(FirebaseAuth.instance.currentUser!.uid);
-        // Provider.of<UserProvider>(context, listen: false).setUser(user);
+        UserData user = await Provider.of<UserProvider>(context, listen: false)
+            .fetchUserData(FirebaseAuth.instance.currentUser!.uid);
+        Provider.of<UserProvider>(context, listen: false).setUser(user);
         // print("Signed in successfully");
         // print("user :: ${FirebaseAuth.instance.currentUser}");
         context.go('/home');

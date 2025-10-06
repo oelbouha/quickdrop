@@ -55,6 +55,11 @@ class DeliveryRequestProvider with ChangeNotifier {
         .where('receiverId', isEqualTo: userId)
         .get();
 
+    if (senderSnapshot.docs.isEmpty && receiverSnapshot.docs.isEmpty) {
+      _requests = [];
+      notifyListeners();
+      return;
+    }
     // Combine and deduplicate results
     final allDocs = [...senderSnapshot.docs, ...receiverSnapshot.docs];
     final uniqueDocs = allDocs.fold<Map<String, QueryDocumentSnapshot>>(
@@ -68,7 +73,7 @@ class DeliveryRequestProvider with ChangeNotifier {
 
     notifyListeners();
   } catch (e) {
-    // print('Error fetching requests: $e');
+    print('Error fetching requests: $e');
     _requests = [];
     notifyListeners();
     rethrow;
