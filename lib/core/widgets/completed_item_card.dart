@@ -205,7 +205,7 @@ class CompletedItemCardState extends State<CompletedItemCard> {
           ),
         ),
         const SizedBox(width: 12),
-        BuildSecondaryButton(
+        SecondaryButton(
           icon: "assets/icon/eye.svg",
           onPressed: widget.onViewPressed,
         ),

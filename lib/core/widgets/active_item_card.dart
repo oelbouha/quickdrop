@@ -131,19 +131,22 @@ class _ActiveItemCardState extends State<ActiveItemCard> {
            child: BuildPrimaryButton(
             onPressed: widget.onViewPressed,
             label: 'View details',
-            color: Theme.of(context).colorScheme.tertiary,
+            color: Theme.of(context).colorScheme.secondary,
             icon: "assets/icon/eye.svg"
           ),
         ),
         const SizedBox(width: 12),
-        BuildSecondaryButton(
+        SecondaryButton(
           icon: "assets/icon/edit.svg",
           onPressed: widget.onEditPressed,
+          iconColor: Theme.of(context).colorScheme.primary,
+          
         ),
         const SizedBox(width: 12),
-        BuildSecondaryButton(
+        SecondaryButton(
           icon: "assets/icon/trash-bin.svg",
           onPressed: widget.onPressed,
+          iconColor: AppColors.error,
         ),
       ],
     ));

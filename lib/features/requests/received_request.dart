@@ -27,7 +27,11 @@ class RequestState extends State<Request> with SingleTickerProviderStateMixin {
   late AnimationController _animationController;
   late Animation<double> _scaleAnimation;
   bool _isProcessing = false;
-  String _processingAction = '';
+  
+
+  bool _isViewLoading = false;
+  bool _isAcceptLoading = false;
+  bool _isRefuseLoading = false;
 
   @override
   void initState() {
@@ -52,11 +56,10 @@ class RequestState extends State<Request> with SingleTickerProviderStateMixin {
   }
 
   void _refuseRequest() async {
-    if (_isProcessing) return;
+    if (_isRefuseLoading) return;
     
     setState(() {
-      _isProcessing = true;
-      _processingAction = 'refuse';
+      _isRefuseLoading = true;
     });
     
     try {
@@ -73,21 +76,18 @@ class RequestState extends State<Request> with SingleTickerProviderStateMixin {
     } finally {
       if (mounted) {
         setState(() {
-          _isProcessing = false;
-          _processingAction = '';
+          _isRefuseLoading = false;
         });
       }
     }
   }
 
   void _acceptRequest() async {
-    if (_isProcessing) return;
+    if (_isAcceptLoading) return;
     
     setState(() {
-      _isProcessing = true;
-      _processingAction = 'accept';
+      _isAcceptLoading = true;
     });
-    _animationController.forward();
     
     try {
       await FirebaseFirestore.instance.runTransaction((transaction) async {
@@ -176,10 +176,8 @@ class RequestState extends State<Request> with SingleTickerProviderStateMixin {
     } finally {
       if (mounted) {
         setState(() {
-          _isProcessing = false;
-          _processingAction = '';
+          _isAcceptLoading = false;
         });
-        _animationController.reverse();
       }
     }
   }
@@ -343,60 +341,35 @@ Widget _buildHeader() {
               ),
               ),
               const SizedBox(width: 8),
-                BuildSecondaryButton(
-              icon: "assets/icon/eye.svg",
-              onPressed: () => {
-                 context.push('/shipment-details?shipmentId=${widget.shipment.id}&userId=${widget.shipment.userId}&viewOnly=true')          
-              },
+                SecondaryButton(
+                  icon: "assets/icon/eye.svg",
+                  isLoading: _isViewLoading,
+                  onPressed: () async {
+                    setState(() => _isViewLoading = true);
+                    context.push('/shipment-details?shipmentId=${widget.shipment.id}&userId=${widget.shipment.userId}&viewOnly=true');        
+                    setState(() => _isViewLoading = false);
+                  },
             ),
             const SizedBox(width: 8),
-              ElevatedButton(
-                  onPressed: (_isProcessing && _processingAction == 'accept') ? null : _acceptRequest,
-                 style: ElevatedButton.styleFrom(
+             SecondaryButton(
+                  icon: "assets/icon/check.svg",
+                  isLoading: _isAcceptLoading,
                   backgroundColor: AppColors.succes,
-                  foregroundColor: Colors.white,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 0),
-                  elevation: 0,
-                ),
-                  child: (_isProcessing && _processingAction == 'accept')
-                      ? const SizedBox(
-                          width: 16,
-                          height: 16,
-                          child: CircularProgressIndicator(
-                            strokeWidth: 2,
-                            valueColor: AlwaysStoppedAnimation<Color>(AppColors.error),
-                          ),
-                        )
-                      : const Icon(Icons.done, size: 18),
-                
-              ),
-              const SizedBox(width: 8),
-               ElevatedButton(
-                  onPressed: (_isProcessing && _processingAction == 'refuse') ? null : _refuseRequest,
-                 style: ElevatedButton.styleFrom(
+                  iconColor: Colors.white,
+                  onPressed: () async {
+                    _acceptRequest();
+                  },
+            ),
+             const SizedBox(width: 8),
+             SecondaryButton(
+                  icon: "assets/icon/close.svg",
+                  isLoading: _isRefuseLoading,
                   backgroundColor: AppColors.error,
-                  foregroundColor: Colors.white,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  padding: const EdgeInsets.symmetric(vertical: 4),
-                  elevation: 0,
-                ),
-                  child: (_isProcessing && _processingAction == 'refuse')
-                      ? const SizedBox(
-                          width: 16,
-                          height: 16,
-                          child: CircularProgressIndicator(
-                            strokeWidth: 2,
-                            valueColor: AlwaysStoppedAnimation<Color>(AppColors.error),
-                          ),
-                        )
-                      : const Icon(Icons.close, size: 18),
-                
-              ),
+                  iconColor: Colors.white,
+                  onPressed: () async {
+                    _refuseRequest();
+                  },
+            ),
               
             ],
           ),

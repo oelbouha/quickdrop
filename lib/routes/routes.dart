@@ -96,12 +96,12 @@ class AppRouter {
                     const NoTransitionPage(child: HomeScreen()),
               ),
               GoRoute(
-                path: '/trip',
+                path: '/trips',
                 pageBuilder: (context, state) =>
                     const NoTransitionPage(child: TripScreen()),
               ),
               GoRoute(
-                path: '/shipment',
+                path: '/shipments',
                 pageBuilder: (context, state) =>
                     const NoTransitionPage(child: ShipmentScreen()),
               ),

@@ -67,7 +67,7 @@ class BottomNavScreen extends StatelessWidget {
             isSelected: _calculateIndex(context) == 1,
             context: context
           ),
-          label: 'Trip',
+          label: 'Trips',
         ),
         BottomNavigationBarItem(
           icon: _buildIconWithBackground(
@@ -75,7 +75,7 @@ class BottomNavScreen extends StatelessWidget {
             isSelected: _calculateIndex(context) == 2,
             context: context
           ),
-          label: 'Shipment',
+          label: 'Shipments',
         ),
         BottomNavigationBarItem(
           icon: _buildIconWithBackground(
@@ -122,8 +122,8 @@ class BottomNavScreen extends StatelessWidget {
 
   int _calculateIndex(BuildContext context) {
     final location = GoRouterState.of(context).uri;
-    if (location.path == '/trip')  return 1;
-    if (location.path == "/shipment") return 2;
+    if (location.path == '/trips')  return 1;
+    if (location.path == "/shipments") return 2;
     if (location.path == '/requests') return 3;
     if (location.path == '/chats') return 4;
     return 0;
@@ -135,10 +135,10 @@ class BottomNavScreen extends StatelessWidget {
         context.go('/home');
         break;
       case 1:
-        context.go('/trip');
+        context.go('/trips');
         break;
       case 2:
-        context.go('/shipment');
+        context.go('/shipments');
         break;
       case 4:
         context.go('/chats');

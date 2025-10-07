@@ -562,14 +562,16 @@ class OngoingItemCardState extends State<OngoingItemCard> {
           ),
         ),
         const SizedBox(width: 12),
-        BuildSecondaryButton(
+        SecondaryButton(
           icon: "assets/icon/eye.svg",
           onPressed: widget.onViewPressed,
+          iconColor: Theme.of(context).colorScheme.primary,
         ),
         const SizedBox(width: 12),
-        BuildSecondaryButton(
+        SecondaryButton(
           icon: "assets/icon/report.svg",
           onPressed: _submitReport,
+           iconColor: Theme.of(context).colorScheme.error,
         ),
       ],
     ));

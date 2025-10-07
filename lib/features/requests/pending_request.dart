@@ -6,6 +6,7 @@ class PendingRequest extends StatefulWidget {
   final UserData user;
   final TransportItem shipment;
 
+
   const PendingRequest({
     super.key,
     required this.request,
@@ -162,12 +163,12 @@ class DeliveryRequestState extends State<PendingRequest> {
             children: [
             Expanded(child:_buildActionButton()),
             const SizedBox(width: 12),
-            BuildSecondaryButton(
+            SecondaryButton(
               icon: "assets/icon/eye.svg",
+              iconColor: Theme.of(context).colorScheme.primary,
               onPressed: () => {
                  context.push('/shipment-details?shipmentId=${widget.shipment.id}&userId=${widget.shipment.userId}&viewOnly=true')          
-              },
-            ),
+              },),
             ]),
         ],
       ),

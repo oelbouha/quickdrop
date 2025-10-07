@@ -72,7 +72,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
             subHeaderFontSize: 10,
             avatarSize: 40,
             borderColor: AppColors.blue700,
-            headerColor: AppColors.appBarText,
+            headerColor: AppColors.dark,
           ),
            iconTheme: const IconThemeData(
             color: Colors.black, // Set the arrow back color to black
