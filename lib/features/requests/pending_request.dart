@@ -165,8 +165,7 @@ class DeliveryRequestState extends State<PendingRequest> {
             BuildSecondaryButton(
               icon: "assets/icon/eye.svg",
               onPressed: () => {
-                 context.push('/shipment-details?shipmentId=${widget.shipment.id}&userId=${widget.shipment.userId}&viewOnly=true')
-                              
+                 context.push('/shipment-details?shipmentId=${widget.shipment.id}&userId=${widget.shipment.userId}&viewOnly=true')          
               },
             ),
             ]),

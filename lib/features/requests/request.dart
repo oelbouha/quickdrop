@@ -343,6 +343,13 @@ Widget _buildHeader() {
               ),
               ),
               const SizedBox(width: 8),
+                BuildSecondaryButton(
+              icon: "assets/icon/eye.svg",
+              onPressed: () => {
+                 context.push('/shipment-details?shipmentId=${widget.shipment.id}&userId=${widget.shipment.userId}&viewOnly=true')          
+              },
+            ),
+            const SizedBox(width: 8),
               ElevatedButton(
                   onPressed: (_isProcessing && _processingAction == 'accept') ? null : _acceptRequest,
                  style: ElevatedButton.styleFrom(
@@ -390,6 +397,7 @@ Widget _buildHeader() {
                       : const Icon(Icons.close, size: 18),
                 
               ),
+              
             ],
           ),
     );

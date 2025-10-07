@@ -461,7 +461,7 @@ class _NegotiationContentState extends State<NegotiationContent> {
         subHeaderFontSize: 10,
         avatarSize: 36,
         borderColor: AppColors.blue700,
-        headerColor: AppColors.appBarText,
+        headerColor: AppColors.dark,
       ),
       iconTheme: const IconThemeData(color: Colors.black),
       systemOverlayStyle: SystemUiOverlayStyle.dark,
