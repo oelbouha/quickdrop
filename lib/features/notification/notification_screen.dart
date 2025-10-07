@@ -64,7 +64,8 @@ class NotificationScreenState extends State<NotificationScreen> {
 
                       return Container(
                         width: double.infinity,
-                        color: notif.read ? Colors.grey[200] : Colors.blue[50],
+                        color: notif.read ? Theme.of(context).colorScheme.secondary.withOpacity(0.1) 
+                          : Theme.of(context).colorScheme.primary.withOpacity(0.1),
                         child: ListTile(
                           title: Text(notif.message),
                           subtitle: Text(
