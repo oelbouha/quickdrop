@@ -325,8 +325,7 @@ class PaymentScreenState extends State<PaymentScreen> {
     return Column(
       children: [
         _buildHeroSection(),
-        // const SizedBox(height: 24),
-        // Free Trial Badge
+        
         _buildFreeTrialBadge(),
         // Pricing Card
         _buildPriceCard(),
