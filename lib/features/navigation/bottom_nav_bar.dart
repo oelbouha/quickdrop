@@ -57,6 +57,7 @@ class BottomNavScreen extends StatelessWidget {
           icon: _buildIconWithBackground(
             iconPath: "assets/icon/search.svg",
             isSelected: _calculateIndex(context) == 0,
+            context: context
           ),
           label: 'Search',
         ),
@@ -64,6 +65,7 @@ class BottomNavScreen extends StatelessWidget {
           icon: _buildIconWithBackground(
             iconPath: "assets/icon/route.svg",
             isSelected: _calculateIndex(context) == 1,
+            context: context
           ),
           label: 'Trip',
         ),
@@ -71,6 +73,7 @@ class BottomNavScreen extends StatelessWidget {
           icon: _buildIconWithBackground(
             iconPath: "assets/icon/package.svg",
             isSelected: _calculateIndex(context) == 2,
+            context: context
           ),
           label: 'Shipment',
         ),
@@ -78,6 +81,7 @@ class BottomNavScreen extends StatelessWidget {
           icon: _buildIconWithBackground(
             iconPath: "assets/icon/mail-alt.svg",
             isSelected: _calculateIndex(context) == 3,
+            context: context
           ),
           label: 'Requests',
         ),
@@ -85,6 +89,7 @@ class BottomNavScreen extends StatelessWidget {
           icon: _buildIconWithBackground(
             iconPath: "assets/icon/chat-round.svg",
             isSelected: _calculateIndex(context) == 4,
+            context: context
           ),
           label: 'Chats',
         ),
@@ -93,10 +98,11 @@ class BottomNavScreen extends StatelessWidget {
   ),
         ));
   }
-
+  
   Widget _buildIconWithBackground({
     required String iconPath,
     required bool isSelected,
+    required BuildContext context
   }) {
     return Container(
       padding: const EdgeInsets.all(2),
@@ -108,10 +114,11 @@ class BottomNavScreen extends StatelessWidget {
       child: CustomIcon(
         iconPath: iconPath,
         size: 20,
-        color: isSelected ? AppColors.blue600 : AppColors.navTextInactive,
+        color: isSelected ? Theme.of(context).colorScheme.primary : AppColors.navTextInactive,
       ),
     );
   }
+
 
   int _calculateIndex(BuildContext context) {
     final location = GoRouterState.of(context).uri;

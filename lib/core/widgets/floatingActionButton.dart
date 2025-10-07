@@ -25,7 +25,7 @@ class FloatButton extends StatelessWidget {
         // height: 50,
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: AppColors.blue700,
+          color: Theme.of(context).colorScheme.primary,
           borderRadius: BorderRadius.circular(50),
           boxShadow: [
             BoxShadow(

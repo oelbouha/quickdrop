@@ -17,7 +17,10 @@ Widget buildProfileImage({
         height: size,
         decoration: BoxDecoration(
             color: AppColors.blueStart.withValues(alpha: 0.1),
-            borderRadius: BorderRadius.circular(500),
+            // borderRadius: BorderRadius.circular(500),
+
+              shape: BoxShape.circle,
+              border: Border.all(color: AppColors.blue, width: 2),
           ),
         child: user!.photoUrl != null ? CachedNetworkImage(
               imageUrl: user.photoUrl!,
@@ -43,9 +46,17 @@ Widget buildProfileImage({
                     ),
                   );
                 },
-            ) : Image.asset(
-              "assets/images/profile.png",
-            )
+            ) : Container(
+                    decoration: BoxDecoration(
+                      color: AppColors.blueStart.withValues(alpha: 0.1),
+                      borderRadius: BorderRadius.circular(100),
+                    ),
+                    child: Icon(
+                      Icons.person,
+                      color: AppColors.blueStart,
+                      size: size * 0.6,
+                    ),
+                  )
       ),
     ),
   );

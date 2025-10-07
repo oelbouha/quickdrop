@@ -69,6 +69,10 @@ class _IntroScreenState extends State<IntroScreen> with TickerProviderStateMixin
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        appBar: AppBar(
+          
+          systemOverlayStyle: SystemUiOverlayStyle.dark,
+        ),
       body: Container(
         decoration: const BoxDecoration(
           gradient: LinearGradient(
@@ -96,12 +100,12 @@ class _IntroScreenState extends State<IntroScreen> with TickerProviderStateMixin
                           width: 80,
                           height: 80,
                           decoration: BoxDecoration(
-                            gradient: const LinearGradient(
+                            gradient:  LinearGradient(
                               begin: Alignment.topLeft,
                               end: Alignment.bottomRight,
                               colors: [
-                                Color(0xFF2563EB), // blue-600
-                                Color(0xFF1D4ED8), // blue-700
+                                Theme.of(context).colorScheme.primary,
+                                Theme.of(context).colorScheme.tertiary,
                               ],
                             ),
                             borderRadius: BorderRadius.circular(20),
@@ -144,9 +148,9 @@ class _IntroScreenState extends State<IntroScreen> with TickerProviderStateMixin
                                   style: TextStyle(
                                     foreground: Paint()
                                       ..shader =  LinearGradient(
-                                        colors: [
-                                          Color(0xFF2563EB),
-                                          Color(0xFF1D4ED8),
+                                        colors: [  
+                                          Theme.of(context).colorScheme.primary,
+                                          Theme.of(context).colorScheme.tertiary,
                                         ],
                                       ).createShader(
                                          Rect.fromLTWH(0.0, 0.0, 200.0, 70.0),
@@ -172,7 +176,7 @@ class _IntroScreenState extends State<IntroScreen> with TickerProviderStateMixin
                           const SizedBox(height: 8),
                           
                           const Text(
-                            "Send packages across the city in minutes, not hours.",
+                            "Connect with trusted travelers and ship your packages.",
                             textAlign: TextAlign.center,
                             style: TextStyle(
                               fontSize: 14,
@@ -192,8 +196,8 @@ class _IntroScreenState extends State<IntroScreen> with TickerProviderStateMixin
                    
                    LoginButton(
                       hintText: "Sign in",
-                      backgroundColor: AppColors.blue700,
-                      textColor: AppColors.white,
+                      backgroundColor: Theme.of(context).colorScheme.primary,
+                      textColor: Theme.of(context).colorScheme.onPrimary,
                       onPressed: () {
                         context.pushNamed('login');
                       },
@@ -206,7 +210,7 @@ class _IntroScreenState extends State<IntroScreen> with TickerProviderStateMixin
                       onPressed: () {
                         context.pushNamed('signup');
                       },
-                      backgroundColor: AppColors.dark,
+                      backgroundColor: Theme.of(context).colorScheme.secondary,
                       isLoading: _isSignUpLoading,
                       radius: 60,
                     ),

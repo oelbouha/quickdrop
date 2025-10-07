@@ -90,7 +90,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         ),
         centerTitle: true,
         iconTheme: const IconThemeData(color: AppColors.appBarIcons),
-        systemOverlayStyle: SystemUiOverlayStyle.dark,
+        // systemOverlayStyle: SystemUiOverlayStyle.dark,
         elevation: 0,
       ),
       backgroundColor: AppColors.background,
@@ -395,15 +395,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
-        color: AppColors.error,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.05),
-            blurRadius: 10,
-            offset: const Offset(0, 2),
-          ),
-        ],
+        // color: AppColors.error,
+        // borderRadius: BorderRadius.circular(16),
+        // boxShadow: [
+        //   BoxShadow(
+        //     color: Colors.black.withValues(alpha: 0.05),
+        //     blurRadius: 10,
+        //     offset: const Offset(0, 2),
+        //   ),
+        // ],
       ),
       child: Material(
         color: Colors.transparent,
@@ -423,8 +423,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   width: 40,
                   height: 40,
                   decoration: BoxDecoration(
-                    color: Colors.red[50],
-                    borderRadius: BorderRadius.circular(12),
+                    // color: Colors.red[50],
+                    // borderRadius: BorderRadius.circular(12),
                   ),
                   child: const Center(
                     child: Icon(
@@ -441,7 +441,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w600,
-                      color: AppColors.white,
+                      color: Colors.red,
                     ),
                   ),
                 ),

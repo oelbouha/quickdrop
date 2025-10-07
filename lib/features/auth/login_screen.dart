@@ -185,6 +185,9 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+       appBar: AppBar(
+          systemOverlayStyle: SystemUiOverlayStyle.dark,
+        ),
         backgroundColor: AppColors.background,
         resizeToAvoidBottomInset: false,
         body: Container(

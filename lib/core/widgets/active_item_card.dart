@@ -131,7 +131,7 @@ class _ActiveItemCardState extends State<ActiveItemCard> {
            child: BuildPrimaryButton(
             onPressed: widget.onViewPressed,
             label: 'View details',
-            color: const Color(0xFF2563EB),
+            color: Theme.of(context).colorScheme.tertiary,
             icon: "assets/icon/eye.svg"
           ),
         ),

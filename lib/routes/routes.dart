@@ -1,4 +1,5 @@
 import 'package:quickdrop_app/core/utils/imports.dart';
+import 'package:quickdrop_app/features/profile/payment.screen.dart';
 import 'package:quickdrop_app/features/requests/negotiation_screen.dart';
 import 'package:quickdrop_app/features/home/home_screen.dart';
 import 'package:quickdrop_app/features/auth/intro_screen.dart';
@@ -217,6 +218,14 @@ class AppRouter {
           pageBuilder: (context, state) => buildCustomTransitionPage(
             context,
             const BecomeDriverScreen(),
+          ),
+        ),
+         GoRoute(
+          name: "Payment",
+          path: "/Payment",
+          pageBuilder: (context, state) => buildCustomTransitionPage(
+            context,
+            const PaymentScreen(),
           ),
         ),
         GoRoute(

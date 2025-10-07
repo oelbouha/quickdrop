@@ -45,7 +45,7 @@ class NotificationScreenState extends State<NotificationScreen> {
           backgroundColor: AppColors.appBarBackground,
           centerTitle: true,
           iconTheme: const IconThemeData(color: AppColors.appBarIcons),
-          systemOverlayStyle: SystemUiOverlayStyle.dark,
+          // systemOverlayStyle: SystemUiOverlayStyle.dark,
         ),
         body: _isLoading
             ? loadingAnimation()

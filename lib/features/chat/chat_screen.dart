@@ -39,13 +39,13 @@ class _ChatScreenState extends State<ChatScreen>
             ),
           ),
           actions: [
-            buildHeaderIcon(
-              icon: "assets/icon/help.svg",
-              onTap: () => print("Help tapped"),
-              color: AppColors.white
-            ),
-            const SizedBox(width: 16),
-            const NotificationIcon(
+            // buildHeaderIcon(
+            //   icon: "assets/icon/help.svg",
+            //   onTap: () => print("Help tapped"),
+            //   color: AppColors.white
+            // ),
+            // const SizedBox(width: 16),
+             NotificationIcon(
               color: AppColors.white
             ),
             const SizedBox(width: 16),

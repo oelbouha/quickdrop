@@ -56,10 +56,10 @@ class HelpScreenState extends State<HelpScreen> {
             style: TextStyle(
                 color: AppColors.appBarText, fontWeight: FontWeight.w600),
           ),
-          backgroundColor: AppColors.appBarBackground,
+          backgroundColor: Theme.of(context).primaryColor,
           centerTitle: true,
           iconTheme: const IconThemeData(color: AppColors.appBarIcons),
-          systemOverlayStyle: SystemUiOverlayStyle.dark,
+          // systemOverlayStyle: SystemUiOverlayStyle.dark,
         ),
         body: SingleChildScrollView(
             physics: const BouncingScrollPhysics(),

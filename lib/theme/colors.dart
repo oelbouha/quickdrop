@@ -10,7 +10,7 @@ class AppColors {
 
   static const Color textFieldHintText = Color(0xFFb3b3b3);
 
-  static const Color blue = Color(0xFF2563EB);
+  static const Color blue = Color(0xFF6750A4);
   static const Color success = Color(0xFF10B981);
   static const Color warning = Color(0xFFF59E0B);
   static const Color error = Color(0xFFEF4444);
@@ -64,17 +64,12 @@ class AppColors {
 
 
 
-    // Gradient Colors inspired by React version
-  static const Color blueStart = Color(0xFF2563EB);    // from-blue-600
-  static const Color blueEnd = Color(0xFF1D4ED8);      // to-blue-700
+  static const Color blueStart = Color(0xFF6750A4);    // from-blue-600
+  static const Color blueEnd = Color(0xFF6750A4);      // to-blue-700
   static const Color purpleStart = Color(0xFF9333EA);  // from-purple-600
   static const Color purpleEnd = Color(0xFF7C3AED);    // to-purple-700
   
-  // Background Colors
-  static const Color backgroundStart = Color(0xFFDBEAFE); // from-blue-50
-  static const Color backgroundMiddle = Color(0xFFFFFFFF); // via-white
-  static const Color backgroundEnd = Color(0xFFFAF5FF);   // to-purple-50
-  
+ 
   // Card Colors
   static const Color cardBackground = Color(0xFFFFFFFF);
   static const Color cardBackgroundBlur = Color(0x99FFFFFF); // bg-white/60
@@ -88,7 +83,7 @@ class AppColors {
   
   // Interactive Colors
   static const Color blue600 = Color(0xFF2563EB);
-  static const Color blue700 = Color(0xFF1D4ED8);
+  static const Color blue700 = Color(0xFF6750A4);
   static const Color purple600 = Color(0xFF9333EA);
   static const Color purple700 = Color(0xFF7C3AED);
   static const Color yellow400 = Color(0xFFFBBF24);

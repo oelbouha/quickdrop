@@ -16,7 +16,7 @@ class TermsOfService extends StatelessWidget {
         centerTitle: true,
 
         iconTheme: const IconThemeData(color: AppColors.appBarIcons),
-        systemOverlayStyle: SystemUiOverlayStyle.dark,
+        // systemOverlayStyle: SystemUiOverlayStyle.dark,
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),

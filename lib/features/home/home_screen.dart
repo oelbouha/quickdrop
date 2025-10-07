@@ -3,6 +3,7 @@ import 'package:quickdrop_app/core/utils/imports.dart';
 import 'package:quickdrop_app/core/widgets/build_header_icon.dart';
 import 'package:quickdrop_app/core/widgets/home_page_skeleton.dart';
 import 'package:quickdrop_app/features/home/search_page.dart';
+import 'package:quickdrop_app/core/widgets/profile_image.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -122,7 +123,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   children: [
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                      decoration: BoxDecoration(
+                      decoration: const BoxDecoration(
                         // color: AppColors.blue,
                       ),
                       child: _buildAppBar(),
@@ -134,7 +135,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            // const SizedBox(height: 24),
+                            const SizedBox(height: 16),
                             _buildHeroSection(),
                             const SizedBox(height: 32),
                             _buildOurServices(),
@@ -155,18 +156,39 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget _buildHeroSection() {
     return Column(
       children: [
-        const Text(
-          "Ship anywhere, anytime",
-          style: TextStyle(
-            fontSize: 32,
-            fontWeight: FontWeight.bold,
-            color: Color(0xFF1F2937),
-          ),
-          textAlign: TextAlign.center,
-        ),
+         RichText(
+                            textAlign: TextAlign.center,
+                            text: TextSpan(
+                              style: const TextStyle(
+                                fontSize: 40,
+                                fontWeight: FontWeight.bold,
+                                height: 1.2,
+                              ),
+                              children: [
+                                const TextSpan(
+                                  text: "Ship anywhere.\n",
+                                  style: TextStyle(color: Color(0xFF1F2937)),
+                                ),
+                                TextSpan(
+                                  text: "anytime.",
+                                  style: TextStyle(
+                                    foreground: Paint()
+                                      ..shader =  LinearGradient(
+                                        colors: [  
+                                          Theme.of(context).colorScheme.primary,
+                                          Theme.of(context).colorScheme.primary,
+                                        ],
+                                      ).createShader(
+                                         Rect.fromLTWH(0.0, 0.0, 200.0, 70.0),
+                                      ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
         const SizedBox(height: 8),
         const Text(
-          "Connect with trusted travelers and ship your packages for up to 70% less than traditional carriers.",
+          "Connect with trusted travelers and ship your packages.",
           style: TextStyle(
             color: Color(0xFF6B7280),
             fontSize: 16,
@@ -204,7 +226,7 @@ Widget _buildSearchSection() {
       borderRadius: BorderRadius.circular(12),
       boxShadow: [
         BoxShadow(
-          color: Colors.black.withOpacity(0.05),
+          color: Colors.black.withOpacity(0.1),
           blurRadius: 8,
           offset: const Offset(0, 4),
         ),
@@ -213,7 +235,6 @@ Widget _buildSearchSection() {
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Combined Origin, Swap, and Destination section
         Stack(
           children: [
             Column(
@@ -223,7 +244,7 @@ Widget _buildSearchSection() {
                   controller: fromController,
                   displayHeader: false,
                   hintText: "Pickup location",
-                  iconColor: AppColors.error,
+                  iconColor: Theme.of(context).colorScheme.primary,
                   headerText: "From",
                   isRequired: false,
                   validator: Validators.notEmpty,
@@ -234,7 +255,7 @@ Widget _buildSearchSection() {
                 // Destination field
                 TextFieldWithHeader(
                   controller: toController,
-                   iconColor: AppColors.blue700,
+                   iconColor: Theme.of(context).colorScheme.primary,
                   displayHeader: false,
                   isRequired: false,
                   hintText: "Drop-off location",
@@ -258,7 +279,7 @@ Widget _buildSearchSection() {
                 child: Container(
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
-                    color: const Color(0xFF2563EB), 
+                    color: Theme.of(context).colorScheme.tertiary, 
                     borderRadius: BorderRadius.circular(12),
                     boxShadow: [
                       BoxShadow(
@@ -300,7 +321,7 @@ Widget _buildSearchSection() {
           child: ElevatedButton(
             onPressed: () => perfumeSearch(),
             style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFF2563EB),
+              backgroundColor: Theme.of(context).colorScheme.primary,
               foregroundColor: Colors.white,
               padding: const EdgeInsets.symmetric(vertical: 14),
               shape: RoundedRectangleBorder(
@@ -373,6 +394,8 @@ Widget _buildSearchSection() {
     );
   }
 
+
+
   Widget _buildServiceTypes() {
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
@@ -385,7 +408,7 @@ Widget _buildSearchSection() {
               label: Text(
                 filter,
                 style: TextStyle(
-                  color: isSelected ? Colors.white : const Color(0xFF6B7280),
+                  color: isSelected ? Colors.white : Theme.of(context).colorScheme.secondary,
                   fontSize: 14,
                   fontWeight: FontWeight.w500,
                 ),
@@ -397,7 +420,7 @@ Widget _buildSearchSection() {
                 });
               },
               backgroundColor: const Color(0xFFF3F4F6),
-              selectedColor: const Color(0xFF2563EB),
+              selectedColor: Theme.of(context).colorScheme.primary,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(20),
                 side: BorderSide.none,
@@ -712,44 +735,14 @@ Widget _buildSearchSection() {
  Widget _buildAppBar() {
     return Row(
       children: [
-        GestureDetector(
-          onTap: () => context.push("/profile"),
-          child: Container(
-            width: 48,
-            height: 48,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              border: Border.all(color: AppColors.blue, width: 2),
-            ),
-            child: ClipRRect(
-             borderRadius: BorderRadius.circular(21),
-            child: CachedNetworkImage(
-            imageUrl: user?.photoUrl ?? AppTheme.defaultProfileImage ,
-            fit: BoxFit.cover,
-            placeholder: (context, url) => Container(
-                decoration: BoxDecoration(
-                  color: AppColors.blueStart.withValues(alpha: 0.1),
-                ),
-                child: const Center(
-                    child: CircularProgressIndicator(color: AppColors.blue700, strokeWidth: 2))),
-            errorWidget: (context, error, stackTrace) {
-                  return Container(
-                    decoration: BoxDecoration(
-                      color: AppColors.blueStart.withValues(alpha: 0.1),
-                      borderRadius: BorderRadius.circular(50),
-                    ),
-                    child: const Icon(
-                      Icons.person,
-                      color: AppColors.blueStart,
-                      size: 24,
-                    ),
-                  );
-                },
-          )
-            ),
-          ),
-        ),
-        const Spacer(),
+         GestureDetector(
+        onTap: () {
+          context.push(
+              '/profile'); 
+        },
+        child: buildProfileImage(user: user, size: 48),
+         ),
+       const Spacer(),
         Row(
           children: [
             buildHeaderIcon(
@@ -761,7 +754,6 @@ Widget _buildSearchSection() {
             const NotificationIcon(),
           ],
         ),
-        // const Spacer(),
         
       ],
     );

@@ -17,7 +17,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      backgroundColor: AppColors.blue,
+      backgroundColor: Theme.of(context).colorScheme.primary,
       // centerTitle: true,
       title: Text(
         title ?? "",
@@ -44,9 +44,9 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                 color: AppColors.white,
                 child: TabBar(
                   controller: tabController,
-                  labelColor: AppColors.blue700,
+                  labelColor: Theme.of(context).colorScheme.secondary,
                   unselectedLabelColor: AppColors.tabTextInactive,
-                  indicatorColor: AppColors.blue700,
+                  indicatorColor: Theme.of(context).colorScheme.secondary,
                   indicatorWeight: 2,
                   indicatorSize: TabBarIndicatorSize.label,
                   dividerColor: AppColors.lessImportant,
