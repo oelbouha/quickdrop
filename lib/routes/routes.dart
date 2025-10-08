@@ -21,6 +21,7 @@ import 'package:quickdrop_app/features/help/privacy_policy.dart';
 import 'package:quickdrop_app/features/help/terms_of_service.dart';
 import 'package:quickdrop_app/features/auth/verify_email_screen.dart';
 import 'package:quickdrop_app/features/auth/verify_phone_number.dart';
+import 'package:quickdrop_app/main.dart';
 
 CustomTransitionPage buildCustomTransitionPage(
   BuildContext context,
@@ -116,6 +117,17 @@ class AppRouter {
                     const NoTransitionPage(child: ChatScreen()),
               ),
             ]),
+        GoRoute(
+          path: '/',
+          name: 'splash',
+          builder: (context, state) => const SplashRedirect(),
+        ),
+        GoRoute(
+          path: '/onboarding',
+          name: 'onboarding',
+          builder: (context, state) => const OnboardingScreen(),
+        ),
+
         GoRoute(
           path: '/',
           name: 'intro',

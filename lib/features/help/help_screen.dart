@@ -32,12 +32,12 @@ class HelpScreenState extends State<HelpScreen> {
     {
       "question": "How do I become a courier?",
       "answer":
-          "Simply sign up, verify your identity, and start accepting delivery requests on routes you're already traveling. You set your own prices and schedule."
+          "Simply Go to your profile click on become driver, fill your informtion and wait for approval,  and start requesting delivery requests on routes you're already traveling. You set your own prices and schedule."
     },
     {
       "question": "What if something goes wrong with my shipment?",
       "answer":
-          "We provide 24/7 customer support and full insurance coverage. If there's any issue, our team will resolve it quickly and ensure you're compensated."
+          "We provide 24/7 customer support . If there's any issue, our team will resolve it quickly."
     }
   ];
 
