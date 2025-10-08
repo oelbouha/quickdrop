@@ -4,8 +4,6 @@ import 'package:quickdrop_app/core/widgets/profile_image.dart';
 import 'package:quickdrop_app/features/profile/payment.screen.dart';
 
 
-
-
 class BecomeDriverScreen extends StatefulWidget {
   const BecomeDriverScreen({Key? key}) : super(key: key);
 
@@ -156,6 +154,10 @@ Future<void> _pickImage() async {
     }
   }
 
+  bool _isDriverShouldPay() {
+    return false;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -178,7 +180,7 @@ Future<void> _pickImage() async {
           physics: const BouncingScrollPhysics(),
           child: Padding(
             padding: const EdgeInsets.all(AppTheme.homeScreenPadding),
-            child: PaymentScreen(),
+            child: _isDriverShouldPay() ? PaymentScreen() : _buildUpdateScreen(),
           ),
         
       ),

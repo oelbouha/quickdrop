@@ -40,7 +40,7 @@ class PrivacyPolicy extends StatelessWidget {
               'Personal Information:',
               '• Name and contact information (email, phone number)\n'
               '• Profile photo and identification documents\n'
-              '• Payment information (processed securely through third parties)\n'
+              // '• Payment information (processed securely through third parties)\n'
               '• Delivery addresses and location data\n'
               '• Device information and unique identifiers',
             ),
@@ -49,25 +49,17 @@ class PrivacyPolicy extends StatelessWidget {
               '• App usage patterns and preferences\n'
               '• Delivery history and transaction records\n'
               '• Communication between users (for safety and quality purposes)\n'
-              '• Ratings and reviews\n'
-              '• GPS location data during active deliveries',
+              '• Ratings and reviews\n',
             ),
-            _buildSubSection(
-              'Technical Information:',
-              '• Device type, operating system, and app version\n'
-              '• IP address and network information\n'
-              '• Crash reports and performance data\n'
-              '• Cookies and similar tracking technologies',
-            ),
+           
             _buildSection(
               '2. How We Use Your Information',
               'We use your information to:\n'
               '• Facilitate package deliveries and connect users\n'
-              '• Process payments and maintain transaction records\n'
+              // '• Process payments and maintain transaction records\n'
               '• Verify user identity and ensure platform safety\n'
               '• Provide customer support and resolve disputes\n'
               '• Improve our services and develop new features\n'
-              '• Send important notifications about your deliveries\n'
               '• Comply with legal requirements and prevent fraud\n'
               '• Analyze usage patterns to enhance user experience',
             ),
@@ -79,30 +71,20 @@ class PrivacyPolicy extends StatelessWidget {
               '• With service providers who assist our operations\n'
               '• When required by law or legal process\n'
               '• To protect our rights and prevent illegal activities\n'
-              '• In case of business transfer or merger (with user notification)\n\n'
               'We never sell your personal information to third parties.',
             ),
+            
             _buildSection(
-              '4. Location Data',
-              'We collect location data to:\n'
-              '• Match senders with nearby carriers\n'
-              '• Provide real-time delivery tracking\n'
-              '• Calculate delivery distances and fees\n'
-              '• Ensure deliveries are completed successfully\n\n'
-              'Location tracking is only active during delivery processes and can be disabled in your device settings, though this may limit app functionality.',
-            ),
-            _buildSection(
-              '5. Data Security',
+              '4. Data Security',
               'We implement industry-standard security measures including:\n'
               '• Encryption of data in transit and at rest\n'
               '• Secure authentication and access controls\n'
               '• Regular security audits and updates\n'
               '• Limited access to personal information by employees\n'
-              '• Secure payment processing through certified providers\n\n'
               'However, no method of transmission over the Internet is 100% secure.',
             ),
             _buildSection(
-              '6. Data Retention',
+              '5. Data Retention',
               'We retain your information for as long as:\n'
               '• Your account is active\n'
               '• Needed to provide our services\n'
@@ -111,39 +93,36 @@ class PrivacyPolicy extends StatelessWidget {
               'You can request account deletion at any time, though some information may be retained for legal compliance.',
             ),
             _buildSection(
-              '7. Your Rights and Choices',
+              '6. Your Rights and Choices',
               'You have the right to:\n'
               '• Access and review your personal information\n'
               '• Correct inaccurate or incomplete data\n'
               '• Delete your account and associated data\n'
-              '• Opt out of marketing communications\n'
-              '• Request a copy of your data\n'
-              '• Withdraw consent where applicable\n\n'
               'To exercise these rights, contact us through the app or email.',
             ),
             _buildSection(
-              '8. Children\'s Privacy',
+              '7. Children\'s Privacy',
               'Our service is not intended for users under 18 years of age. We do not knowingly collect personal information from children under 18. If we become aware of such collection, we will delete the information immediately.',
             ),
             _buildSection(
-              '9. International Data Transfers',
+              '8. International Data Transfers',
               'Your information may be transferred to and processed in countries other than your own. We ensure appropriate safeguards are in place to protect your data in accordance with this Privacy Policy.',
             ),
             _buildSection(
-              '10. Third-Party Services',
+              '9. Third-Party Services',
               'Our app may contain links to third-party services or integrate with external platforms. This Privacy Policy does not cover third-party practices. Please review their privacy policies separately.',
             ),
             _buildSection(
-              '11. Changes to This Policy',
+              '10. Changes to This Policy',
               'We may update this Privacy Policy periodically. We will notify users of significant changes through the app or email. Your continued use after changes indicates acceptance of the updated policy.',
             ),
-            _buildSection(
-              '12. Contact Us',
-              'For questions about this Privacy Policy or data practices, contact us at:\n'
-              'Email: privacy@quickdrop.com\n'
-              'Address: address\n'
-              'Phone: phone number',
-            ),
+            // _buildSection(
+            //   '12. Contact Us',
+            //   'For questions about this Privacy Policy or data practices, contact us at:\n'
+            //   'Email: privacy@quickdrop.com\n'
+            //   'Address: address\n'
+            //   'Phone: phone number',
+            // ),
             const SizedBox(height: 32),
           ],
         ),

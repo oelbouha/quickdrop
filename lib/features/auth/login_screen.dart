@@ -89,7 +89,6 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
 
       final fcm = FirebaseMessaging.instance;
 
-      // Request permission (required for Android 13+)
       NotificationSettings settings = await fcm.requestPermission(
         alert: true,
         badge: true,

@@ -129,7 +129,7 @@ class AppRouter {
         ),
 
         GoRoute(
-          path: '/',
+          path: '/intro',
           name: 'intro',
           builder: (context, state) => const IntroScreen(),
         ),

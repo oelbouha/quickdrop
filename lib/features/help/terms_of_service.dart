@@ -63,10 +63,10 @@ class TermsOfService extends StatelessWidget {
               '• Cash or negotiable instruments\n'
               '• Items that violate intellectual property rights',
             ),
-            _buildSection(
-              '5. Payment and Fees',
-              'Payment processing is handled through our secure payment system. Delivery fees are determined by distance, package size, and urgency. QuickDrop retains a service fee from each transaction. Refunds may be available in cases of non-delivery or service failure, subject to our refund policy.',
-            ),
+            // _buildSection(
+            //   '5. Payment and Fees',
+            //   'Payment processing is handled through our secure payment system. Delivery fees are determined by distance, package size, and urgency. QuickDrop retains a service fee from each transaction. Refunds may be available in cases of non-delivery or service failure, subject to our refund policy.',
+            // ),
             _buildSection(
               '6. Liability and Insurance',
               'QuickDrop acts as a platform connecting users and is not liable for:\n'
@@ -97,16 +97,16 @@ class TermsOfService extends StatelessWidget {
               '10. Modifications',
               'We reserve the right to modify these terms at any time. Users will be notified of significant changes through the app or email. Continued use after modifications constitutes acceptance of the new terms.',
             ),
-            _buildSection(
-              '11. Governing Law',
-              'These terms are governed by the laws of [YOUR JURISDICTION]. Any disputes will be resolved through binding arbitration or in courts of [YOUR JURISDICTION].',
-            ),
-            _buildSection(
-              '12. Contact Information',
-              'For questions about these Terms of Service, contact us at:\n'
-              'Email: legal@quickdrop.com\n'
-              'Address: address',
-            ),
+            // _buildSection(
+            //   '11. Governing Law',
+            //   'These terms are governed by the laws of [YOUR JURISDICTION]. Any disputes will be resolved through binding arbitration or in courts of [YOUR JURISDICTION].',
+            // ),
+            // _buildSection(
+            //   '12. Contact Information',
+            //   'For questions about these Terms of Service, contact us at:\n'
+            //   'Email: legal@quickdrop.com\n'
+            //   'Address: address',
+            // ),
             const SizedBox(height: 32),
           ],
         ),
