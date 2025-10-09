@@ -155,6 +155,11 @@ Future<void> _pickImage() async {
   }
 
   bool _isDriverShouldPay() {
+    final user = Provider.of<UserProvider>(context, listen: false).user;
+    
+    if (user?.subscriptionStatus == "inactive") {
+      return true;
+    }
     return false;
   }
 

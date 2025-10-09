@@ -1,4 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_stripe/flutter_stripe.dart';
+import 'package:cloud_functions/cloud_functions.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:intl/intl.dart';
+import 'package:quickdrop_app/core/utils/imports.dart';
+import 'package:quickdrop_app/features/models/user_model.dart';
+
 
 class PaymentScreen extends StatefulWidget {
   const PaymentScreen({Key? key}) : super(key: key);
@@ -10,6 +17,63 @@ class PaymentScreen extends StatefulWidget {
 class PaymentScreenState extends State<PaymentScreen> {
   bool _isLoading = false;
   bool _agreeToTerms = false;
+
+
+
+
+Future<void> _startPayment() async {
+  setState(() => _isLoading = true);
+
+  try {
+    final user = Provider.of<UserProvider>(context, listen: false).user;
+    if (user == null) throw Exception("User not logged in"); 
+
+    final userId = user.uid; 
+    final email = user.email; 
+    const priceId = "prod_TCTfBkJD3j6MTS"; 
+
+    
+    final HttpsCallable callable =
+        FirebaseFunctions.instance.httpsCallable('createCheckoutSession');
+
+    final response = await callable.call({
+      'email': email,
+      'userId': userId,
+      'priceId': priceId,
+    });
+
+    final sessionId = response.data['sessionId'];
+
+    //  Open the Stripe payment sheet
+    await Stripe.instance.initPaymentSheet(
+      paymentSheetParameters: SetupPaymentSheetParameters(
+        merchantDisplayName: 'QuickDrop',
+        paymentIntentClientSecret: sessionId,
+      ),
+    );
+
+    await Stripe.instance.presentPaymentSheet();
+
+    // Update Firestore on success
+    await FirebaseFirestore.instance.collection('users').doc(userId).update({
+      'subscriptionStatus': 'active',
+      'subscriptionEndsAt': DateFormat('dd/MM/yyyy')
+          .format(DateTime.now().add(const Duration(days: 30))),
+    });
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text("Subscription activated!")),
+    );
+  } catch (e) {
+    print("Payment error: $e");
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text("Payment failed: $e")),
+    );
+  } finally {
+    setState(() => _isLoading = false);
+  }
+}
+
 
   Widget _buildHeroSection() {
     return Container(
@@ -371,10 +435,7 @@ class PaymentScreenState extends State<PaymentScreen> {
               onPressed: _agreeToTerms && !_isLoading
                   ? () {
                       setState(() => _isLoading = true);
-                      // TODO: Add  payment logic here
-                      Future.delayed(const Duration(seconds: 2), () {
-                        setState(() => _isLoading = false);
-                      });
+                      _startPayment();
                     }
                   : null,
               style: ElevatedButton.styleFrom(
