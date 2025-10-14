@@ -1,10 +1,10 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_stripe/flutter_stripe.dart';
+
 import 'package:cloud_functions/cloud_functions.dart';
+import 'package:flutter_stripe/flutter_stripe.dart';
+import 'package:cloud_functions/cloud_functions.dart' as functions;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
 import 'package:quickdrop_app/core/utils/imports.dart';
-import 'package:quickdrop_app/features/models/user_model.dart';
 
 
 class PaymentScreen extends StatefulWidget {
@@ -19,62 +19,83 @@ class PaymentScreenState extends State<PaymentScreen> {
   bool _agreeToTerms = false;
 
 
+Future<void> _testFunction() async {
+  try {
+    print('Testing function...');
+    
+    final callable = FirebaseFunctions.instanceFor(region: 'us-central1')
+        .httpsCallable('testPayment');
+    
+    final result = await callable.call({
+      'test': 'data',
+      'amount': 2999,
+    });
+
+    print('Test result: ${result.data}');
+  } catch (e) {
+    print('Test error: $e');
+  }
+}
 
 
 Future<void> _startPayment() async {
   setState(() => _isLoading = true);
 
   try {
-    final user = Provider.of<UserProvider>(context, listen: false).user;
-    if (user == null) throw Exception("User not logged in"); 
+    final firebaseUser = FirebaseAuth.instance.currentUser;
+    if (firebaseUser == null) {
+      throw Exception("Not signed in");
+    }
 
-    final userId = user.uid; 
-    final email = user.email; 
-    const priceId = "prod_TCTfBkJD3j6MTS"; 
+    print('User: ${firebaseUser.uid}');
+    print('Calling createPaymentIntent...');
 
+    final callable = FirebaseFunctions.instanceFor(region: 'us-central1')
+        .httpsCallable(
+          'createPaymentIntent',
+          options: HttpsCallableOptions(
+            timeout: const Duration(seconds: 120), // Increase timeout to 2 minutes
+          ),
+        );
     
-    final HttpsCallable callable =
-        FirebaseFunctions.instance.httpsCallable('createCheckoutSession');
-
-    final response = await callable.call({
-      'email': email,
-      'userId': userId,
-      'priceId': priceId,
+    final result = await callable.call(<String, dynamic>{
+      'amount': 2999,
+      'currency': 'usd',
     });
 
-    final sessionId = response.data['sessionId'];
+    print('Function returned: ${result.data}');
 
-    //  Open the Stripe payment sheet
+    final clientSecret = result.data['clientSecret'];
+    
     await Stripe.instance.initPaymentSheet(
       paymentSheetParameters: SetupPaymentSheetParameters(
         merchantDisplayName: 'QuickDrop',
-        paymentIntentClientSecret: sessionId,
+        paymentIntentClientSecret: clientSecret,
       ),
     );
 
     await Stripe.instance.presentPaymentSheet();
 
-    // Update Firestore on success
-    await FirebaseFirestore.instance.collection('users').doc(userId).update({
-      'subscriptionStatus': 'active',
-      'subscriptionEndsAt': DateFormat('dd/MM/yyyy')
-          .format(DateTime.now().add(const Duration(days: 30))),
-    });
-
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text("Subscription activated!")),
-    );
+    if (mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Subscription activated!")),
+      );
+    }
   } catch (e) {
     print("Payment error: $e");
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text("Payment failed: $e")),
-    );
+    if (mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Payment failed: ${e.toString()}")),
+      );
+    }
   } finally {
-    setState(() => _isLoading = false);
+    if (mounted) {
+      setState(() => _isLoading = false);
+    }
   }
 }
 
-
+ 
   Widget _buildHeroSection() {
     return Container(
       width: double.infinity,

@@ -140,11 +140,11 @@ class _IntroScreenState extends State<IntroScreen> with TickerProviderStateMixin
                               ),
                               children: [
                                 const TextSpan(
-                                  text: "Ship anywhere.\n",
+                                  text: "Ship Anywhere.\n",
                                   style: TextStyle(color: Color(0xFF1F2937)),
                                 ),
                                 TextSpan(
-                                  text: "anytime.",
+                                  text: "Anytime.",
                                   style: TextStyle(
                                     foreground: Paint()
                                       ..shader =  LinearGradient(
