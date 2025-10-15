@@ -1,0 +1,97 @@
+{
+  "@@locale": "fr",
+
+  "welcome": "Bon retour",
+
+  "login_title": "Connectez-vous pour continuer vos envois",
+  "signup_title": "Terminez votre inscription",
+  "full_name": "Nom complet",
+  "first_name": "Prénom sur la carte d'identité",
+  "last_name": "Nom de famille sur la carte d'identité",
+
+  "important_note": "Note importante",
+  "signup_note": "Assurez-vous que votre nom correspond à celui de votre pièce d'identité officielle.",
+
+  "enter_phone_number_msg": "Veuillez entrer votre numéro de téléphone",
+  "join_us_via_phone": "Rejoignez-nous par téléphone",
+  "signup_phone_title": "Nous vous enverrons un SMS pour confirmer votre numéro de téléphone.",
+  "already_have_account": "Vous avez déjà un compte ? ",
+
+  "intro_title": "Expédiez partout",
+  "intro_subtitle": "Livraison rapide et fiable",
+  "intro_description": "Connectez-vous avec des voyageurs de confiance et envoyez vos colis.",
+
+  "cntinue": "Continuer",
+  "email": "Email",
+  "password": "Mot de passe",
+  "or": "ou",
+  "dont_have_accout": "Vous n'avez pas de compte ? ",
+  "login": "Se connecter",
+  "signup": "S'inscrire",
+  "continue_with_google": "Continuer avec Google",
+  "policy": "En continuant, vous acceptez nos Conditions d'utilisation et notre Politique de confidentialité.",
+
+  "pickup_location": "Lieu de collecte",
+  "drop_off_location": "Lieu de dépôt",
+  "select_pickup_date": "Sélectionnez la date de collecte",
+
+  "view_details" : "Voir les détails",
+  "notifications" : "Notifications",
+  "no_notification" : "Aucune notification pour le moment",
+
+  "search": "Rechercher",
+  "requests": "Demandes",
+  "chats": "Discussions",
+
+
+  "active" : "Actif",
+  "ongoing" : "En cours",
+  "completed" : "Terminé",
+  "send" : "Envoyé",
+  "received" : "Reçu",
+  "negotiate" : "Négocier",
+  "date" : "Date",
+  "weight" : "Poids",
+
+
+
+  "faq": "Questions fréquentes",
+  "home_title_part1": "Expédiez partout",
+  "home_title_part2": "À tout moment.",
+  "intro_description": "Connectez-vous avec des voyageurs de confiance et envoyez vos colis.",
+
+  "faq_title": "Questions fréquentes",
+
+  "faq_q1": "Comment QuickDrop garantit-il la sécurité des colis ?",
+  "faq_a1": "Tous les livreurs sont vérifiés grâce à des contrôles d'identité et d'antécédents. Chaque colis est assuré, suivi et manipulé avec soin par des voyageurs de confiance.",
+
+  "faq_q2": "Que puis-je envoyer avec QuickDrop ?",
+  "faq_a2": "Vous pouvez envoyer des documents, des appareils électroniques, des vêtements, des cadeaux et la plupart des objets personnels. Les articles interdits incluent les matières dangereuses, les substances illégales et les objets fragiles mal emballés.",
+
+  "faq_q3": "Combien puis-je économiser par rapport aux transporteurs traditionnels ?",
+  "faq_a3": "Les utilisateurs économisent généralement 50 à 70 % par rapport aux grands transporteurs comme FedEx ou UPS, surtout pour les envois internationaux. Les prix varient selon la taille, le poids et la destination.",
+
+  "faq_q4": "Comment devenir livreur ?",
+  "faq_a4": "Allez dans votre profil, cliquez sur 'Devenir conducteur', remplissez vos informations, attendez l'approbation, puis commencez à accepter des livraisons. Vous fixez vos propres prix et horaires.",
+
+  "faq_q5": "Que faire si quelque chose se passe mal avec mon envoi ?",
+  "faq_a5": "Nous offrons une assistance client 24h/24 et 7j/7. En cas de problème, notre équipe le résoudra rapidement.",
+
+  "service_send_title": "Envoyer des colis",
+  "service_send_description": "Connectez-vous avec des voyageurs vérifiés se rendant à votre destination. Économisez jusqu'à 70 % sur les frais d'expédition grâce à notre réseau de livreurs de confiance.",
+
+  "service_courier_title": "Devenir livreur",
+  "service_courier_description": "Transformez vos trajets en revenus. Transportez des colis et gagnez de l'argent sur les routes que vous prenez déjà. Fixez vos propres tarifs et horaires.",
+
+  "feature_tag_1": "Voyageurs vérifiés",
+  "feature_tag_2": "Aucun intermédiaire",
+  "feature_tag_3": "Itinéraires flexibles",
+  "feature_tag_4": "Communauté de confiance",
+
+  "trips": "Trajets",
+  "shipments": "Envois",
+
+  "settings_title": "Paramètres",
+  "settings_language": "Langue",
+  "settings_logout": "Se déconnecter"
+}

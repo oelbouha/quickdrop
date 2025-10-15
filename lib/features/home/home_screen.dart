@@ -15,7 +15,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   int selectedIndex = 0;
   UserData? user;
-  String selectedFilter = "Trip";
+  String selectedFilter = "Trips";
   int? expandedFaqIndex;
 
   final fromController = TextEditingController();
@@ -25,52 +25,35 @@ class _HomeScreenState extends State<HomeScreen> {
   final typeController = TextEditingController();
   final dateController = TextEditingController();
 
-  final List<String> filterOptions = [
-    "All",
-    "Documents",
-    "Electronics",
-    "Apparel",
-    "Other"
-  ];
+ 
 
   final List<String> serviceTypes = [
-    "Trip",
-    "Shipment",
+    "Trips",
+    "Shipments",
   ];
 
-  final List<Map<String, String>> faqs = [
-    {
-      "question": "How does QuickDrop ensure package safety?",
-      "answer": "All couriers are verified through ID checks and background screening. Every package is insured, tracked in real-time, and handled with care by trusted travelers."
-    },
-    {
-      "question": "What can I ship with QuickDrop?",
-      "answer": "You can ship documents, electronics, clothing, gifts, and most personal items. Prohibited items include hazardous materials, illegal substances, and fragile items without proper packaging."
-    },
-    {
-      "question": "How much can I save compared to traditional shipping?",
-      "answer": "Users typically save 50-70% compared to major carriers like FedEx or UPS, especially for international shipments. Prices vary based on size, weight, and destination."
-    },
-    {
-      "question": "How do I become a courier?",
-      "answer": 
-          "Simply Go to your profile click on become driver, fill your informtion and wait for approval,  and start requesting delivery requests on routes you're already traveling. You set your own prices and schedule."
-    },
-    {
-      "question": "What if something goes wrong with my shipment?",
-      "answer": 
-          "We provide 24/7 customer support . If there's any issue, our team will resolve it quickly."
-    }
-  ];
+List<Map<String, String>> getFaqs(BuildContext context) {
+    final t = AppLocalizations.of(context)!;
+
+    return [
+      {"question": t.faq_q1, "answer": t.faq_a1},
+      {"question": t.faq_q2, "answer": t.faq_a2},
+      {"question": t.faq_q3, "answer": t.faq_a3},
+      {"question": t.faq_q4, "answer": t.faq_a4},
+      {"question": t.faq_q5, "answer": t.faq_a5},
+    ];
+  }
+  
+
+  
+
 
   @override
   void initState() {
     super.initState();
     typeController.text = "Shipment";
     user = Provider.of<UserProvider>(context, listen: false).user;
-    // print("namemememememmem :: ${user!.displayName!}");
     if (user == null) {
-      // If user is null, redirect to login
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (mounted) {
           context.go("/login");
@@ -156,6 +139,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildHeroSection() {
+    final t = AppLocalizations.of(context)!;
     return Column(
       children: [
          RichText(
@@ -167,12 +151,12 @@ class _HomeScreenState extends State<HomeScreen> {
                                 height: 1.2,
                               ),
                               children: [
-                                const TextSpan(
-                                  text: "Ship Anywhere.\n",
-                                  style: TextStyle(color: Color(0xFF1F2937)),
+                                 TextSpan(
+                                  text: "${t.home_title_part1}\n",
+                                  style: const TextStyle(color: Color(0xFF1F2937)),
                                 ),
                                 TextSpan(
-                                  text: "Anytime.",
+                                  text: t.home_title_part2,
                                   style: TextStyle(
                                     foreground: Paint()
                                       ..shader =  LinearGradient(
@@ -189,9 +173,9 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                           ),
         const SizedBox(height: 8),
-        const Text(
-          "Connect with trusted travelers and ship your packages.",
-          style: TextStyle(
+         Text(
+          t.intro_description,
+          style:  const TextStyle(
             color: Color(0xFF6B7280),
             fontSize: 16,
             fontWeight: FontWeight.w400,
@@ -221,6 +205,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
   
 Widget _buildSearchSection() {
+  final t = AppLocalizations.of(context)!;
   return Container(
     padding: const EdgeInsets.all(16),
     decoration: BoxDecoration(
@@ -245,7 +230,7 @@ Widget _buildSearchSection() {
                 TextFieldWithHeader(
                   controller: fromController,
                   displayHeader: false,
-                  hintText: "Pickup location",
+                  hintText: t.pickup_location,
                   iconColor: Theme.of(context).colorScheme.primary,
                   headerText: "From",
                   isRequired: false,
@@ -260,7 +245,7 @@ Widget _buildSearchSection() {
                    iconColor: Theme.of(context).colorScheme.primary,
                   displayHeader: false,
                   isRequired: false,
-                  hintText: "Drop-off location",
+                  hintText: t.drop_off_location,
                   headerText: "To",
                   validator: Validators.notEmpty,
                   iconPath: "assets/icon/map-point.svg",
@@ -312,7 +297,7 @@ Widget _buildSearchSection() {
           controller: dateController,
           backgroundColor: AppColors.cardBackground,
           onTap: () => _selectDate(context),
-          hintText: "Select pickup date",
+          hintText: t.select_pickup_date,
           validator: Validators.notEmpty,
         ),
         const SizedBox(height: 20),
@@ -331,18 +316,18 @@ Widget _buildSearchSection() {
               ),
               elevation: 0,
             ),
-            child: const Row(
+            child:  Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                CustomIcon(
+                const CustomIcon(
                   iconPath: "assets/icon/search.svg",
                   size: 20,
                   color: Colors.white,
                 ),
-                SizedBox(width: 8),
+                const SizedBox(width: 8),
                 Text(
-                  "Search",
-                  style: TextStyle(
+                  t.search,
+                  style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w600,
                   ),
@@ -472,6 +457,7 @@ Widget _buildSearchSection() {
 
   Widget _buildOurServiceCard(String title, String description, String iconPath,
       String backgroundImageUrl) {
+        final t = AppLocalizations.of(context)!;
     return Container(
       width: double.infinity,
       height: 400,
@@ -575,9 +561,10 @@ Widget _buildSearchSection() {
                       spacing: 8,
                       runSpacing: 8,
                       children: [
-                        _buildFeatureTag("Instant quotes"),
-                        _buildFeatureTag("Real-time tracking"),
-                        _buildFeatureTag("Insurance included"),
+                        _buildFeatureTag(t.feature_tag_1),
+                        _buildFeatureTag(t.feature_tag_2),
+                        _buildFeatureTag(t.feature_tag_3),
+                        _buildFeatureTag(t.feature_tag_4),
                       ],
                     ),
                   ],
@@ -609,6 +596,7 @@ Widget _buildSearchSection() {
   }
 
   Widget _buildOurServices() {
+    final t = AppLocalizations.of(context)!;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -622,15 +610,15 @@ Widget _buildSearchSection() {
         // ),
         // const SizedBox(height: 20),
         _buildOurServiceCard(
-          "Send Packages",
-          "Connect with verified travelers heading to your destination. Save up to 70% on shipping costs with our trusted courier network.",
+          t.service_send_title,
+          t.service_send_description,
           "assets/icon/package.svg",
           "assets/images/back1.png",
         ),
         const SizedBox(height: 20),
         _buildOurServiceCard(
-          "Become a Courier",
-          "Turn your trips into earnings. Carry packages and make money on routes you're already taking. Set your own prices and schedule.",
+          t.service_courier_title,
+          t.service_courier_description,
           "assets/icon/car.svg",
           "assets/images/back2.png",
         ),
@@ -639,12 +627,15 @@ Widget _buildSearchSection() {
   }
 
   Widget _buildFAQSection() {
+    final t = AppLocalizations.of(context)!;
+    final faqs = getFaqs(context);
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          "Frequently Asked Questions",
-          style: TextStyle(
+         Text(
+          t.faq_title,
+          style:const TextStyle(
             color: AppColors.textPrimary,
             fontSize: 24,
             fontWeight: FontWeight.bold,

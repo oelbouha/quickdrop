@@ -24,15 +24,16 @@ class _ChatScreenState extends State<ChatScreen>
 
   @override
   Widget build(BuildContext context) {
+    final t = AppLocalizations.of(context)!;
     return Scaffold(
         backgroundColor: AppColors.background,
         appBar: AppBar(
           backgroundColor: AppColors.blue,
           // centerTitle: true,
           // elevation: 0,
-          title: const Text(
-            "Chats",
-            style:  TextStyle(
+          title:  Text(
+            t.chats,
+            style: const  TextStyle(
               color: AppColors.white,
               fontWeight: FontWeight.w500,
               fontSize: 22,

@@ -1,0 +1,136 @@
+{
+  "@@locale": "en",
+
+  "welcome": "Welcome Back",
+
+  "login_title": "Sign in to continue your shipments",
+  "signup_title": "Finish signing up",
+  "full_name": "Full Name",
+  "first_name": "First name on ID",
+  "last_name": "Last name on ID",
+
+  "important_note": "Important Note",
+  "signup_note": "Make sure your name matches your government ID.",
+
+  "enter_phone_number_msg" : "Please enter your phone number",
+  "join_us_via_phone": "Join us via phone",
+  "signup_phone_title" : "W'll text you to confirm your phone number. ",
+  "already_have_account": "Already have an account? ",
+
+  "intro_title": "Ship Anywhere",
+  "intro_subtitle": "Fast, reliable delivery",
+  "intro_description": "Connect with trusted travelers and ship your packages.",
+
+  "cntinue": "Continue",
+  "email" : "Email",
+  "password": "Password",
+  "or": "or",
+  "dont_have_accout" : "Don't have an account? ",
+  "login": "Login",
+  "signup": "Sign up",
+  "continue_with_google": "Continue with Google",
+  "policy": "By continuing, you agree to our Terms and Privacy Policy",
+
+  "notifications" : "Notifications",
+  "no_notification": "No Notifications yet",
+
+  "pickup_location" : "Pickup location",
+  "drop_off_location": "Drop-off location",
+  "select_pickup_date": "Select pickup date",
+  "view_details" : "View details",
+  
+  "trips": "Trips",
+  "shipments" : "Shipments",
+  "search": "Search",
+  "requests" : "Requests",
+  "chats" : "Chats",
+
+  "active" : "Active",
+  "ongoing" : "Ongoing",
+  "completed" : "Completed",
+  "send" : "Send",
+  "received" : "Received",
+  "negotiate" : "Negotiate",
+  "date" : "Date",
+  "weight" : "Weight",
+
+  "faq": "Frequently Asked Questions",
+  "home_title_part1": "Ship Anywhere",
+  "home_title_part2": "Anytime.",
+  "intro_description": "Connect with trusted travelers and ship your packages.",
+
+
+  "faq_title": "Frequently Asked Questions",
+
+  "faq_q1": "How does QuickDrop ensure package safety?",
+  "faq_a1": "All couriers are verified through ID checks and background screening. Every package is insured, tracked in real-time, and handled with care by trusted travelers.",
+
+  "faq_q2": "What can I ship with QuickDrop?",
+  "faq_a2": "You can ship documents, electronics, clothing, gifts, and most personal items. Prohibited items include hazardous materials, illegal substances, and fragile items without proper packaging.",
+
+  "faq_q3": "How much can I save compared to traditional shipping?",
+  "faq_a3": "Users typically save 50-70% compared to major carriers like FedEx or UPS, especially for international shipments. Prices vary based on size, weight, and destination.",
+
+  "faq_q4": "How do I become a courier?",
+  "faq_a4": "Simply go to your profile, click on 'Become a Driver', fill your information, wait for approval, and start accepting delivery requests. You set your own prices and schedule.",
+
+  "faq_q5": "What if something goes wrong with my shipment?",
+  "faq_a5": "We provide 24/7 customer support. If there's any issue, our team will resolve it quickly.",
+
+  "service_send_title": "Send Packages",
+  "service_send_description": "Connect with verified travelers heading to your destination. Save up to 70% on shipping costs with our trusted courier network.",
+
+  "service_courier_title": "Become a Courier",
+  "service_courier_description": "Turn your trips into earnings. Carry packages and make money on routes you're already taking. Set your own prices and schedule.",
+
+  "feature_tag_1": "Verified travelers",
+  "feature_tag_2": "No middlemen",
+  "feature_tag_3": "Flexible routes",
+  "feature_tag_4": "Trusted community",
+
+ 
+
+  "settings_language": "Language",
+
+  "profile": "Profile",
+  "no_user_data": "No user data available",
+  "guest_user": "Guest User",
+  "member_since": "Member since",
+  "version_info": "Version 1.0.0 - 2025",
+
+  "settings_logout_confirm_message": "Are you sure you want to log out?",
+  "settings_logout_header": "Log Out",
+  "settings_logout_button": "Log Out",
+  "settings_logout_error": "Error signing out:",
+  "feature_coming_soon": "feature is coming soon!",
+
+  "become_driver": "Become a driver",
+  "earn_money": "Earn money by delivering packages",
+  "refer_friends": "Refer friends",
+  "invite_friends": "Invite friends and earn rewards",
+
+  "settings": "Settings",
+  "support": "Support",
+  "legal": "Legal",
+
+  "personal_info": "Personal information",
+  "update_details": "Update your details and preferences",
+  "security": "Security",
+  "manage_account": "Manage account preferences",
+  "notifications": "Notifications",
+  "manage_notifications": "Manage your notification preferences",
+  "payment_methods": "Payment methods",
+  "manage_payments": "Add or remove payment methods",
+
+  "get_help": "Get help",
+  "contact_support": "Contact our support team",
+
+  "terms_service": "Terms of Service",
+  "read_terms": "Read our terms and conditions",
+  "privacy_policy": "Privacy Policy",
+  "learn_privacy": "Learn how we protect your data",
+
+
+  "logout": "Log out"
+}
+

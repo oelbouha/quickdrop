@@ -80,16 +80,17 @@ class _OfferScreenState extends State<OfferScreen>
 
   @override
   Widget build(BuildContext context) {
+    final t = AppLocalizations.of(context)!;
     return Scaffold(
         backgroundColor: AppColors.background,
         appBar: CustomAppBar(
           tabController: _tabController,
-          tabs: const [
-            "Send",
-            "Received",
-            "Negotiate",
+          tabs:  [
+            t.send,
+            t.received,
+            t.negotiate,
           ],
-          title: "Requests",
+          title: t.requests,
         ),
         body: _isLoading
           ? loadingAnimation() 

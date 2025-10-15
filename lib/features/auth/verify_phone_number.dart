@@ -130,6 +130,7 @@ class _VerifyPhoneScreenState extends State<VerifyPhoneScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final t = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: AppColors.cardBackground,
       appBar: AppBar(
@@ -197,7 +198,7 @@ class _VerifyPhoneScreenState extends State<VerifyPhoneScreen> {
                 ),
                 const SizedBox(height: 20),
                 Button(
-                  hintText: "Continue",
+                  hintText: t.cntinue,
                   radius: 30,
                   backgroundColor: AppColors.dark,
                   onPressed: () {

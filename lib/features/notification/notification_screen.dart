@@ -34,18 +34,18 @@ class NotificationScreenState extends State<NotificationScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final t = AppLocalizations.of(context)!;
     return Scaffold(
         backgroundColor: AppColors.background,
         appBar: AppBar(
-          title: const Text(
-            'Notifications',
-            style: TextStyle(
+          title:  Text(
+            t.notifications,
+            style:const  TextStyle(
                 color: AppColors.appBarText, fontWeight: FontWeight.w600),
           ),
           backgroundColor: AppColors.appBarBackground,
           centerTitle: true,
           iconTheme: const IconThemeData(color: AppColors.appBarIcons),
-          // systemOverlayStyle: SystemUiOverlayStyle.dark,
         ),
         body: _isLoading
             ? loadingAnimation()
@@ -55,7 +55,7 @@ class NotificationScreenState extends State<NotificationScreen> {
                   if (notifs.isEmpty) {
                     return Center(
                         child: buildEmptyState(
-                            Icons.notifications, "No Notifications yet", ""));
+                            Icons.notifications, t.no_notification, ""));
                   }
                   return ListView.builder(
                     itemCount: notifs.length,

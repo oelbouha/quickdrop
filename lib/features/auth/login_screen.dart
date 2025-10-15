@@ -212,6 +212,9 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
   }
 
   Widget _buildLogInScreen() {
+
+    final t = AppLocalizations.of(context)!;
+
     return Form(
       key: _formKey,
       child: Column(
@@ -220,9 +223,9 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
         children: [
           FadeTransition(
             opacity: _fadeAnimation,
-            child: const Text(
-              'Welcome Back',
-              style: TextStyle(
+            child:  Text(
+              t.welcome,
+              style: const TextStyle(
                 fontSize: 32,
                 fontWeight: FontWeight.bold,
                 color: AppColors.blue700,
@@ -232,9 +235,9 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
           const SizedBox(height: 16),
           FadeTransition(
             opacity: _fadeAnimation,
-            child: const Text(
-              'Sign in to continue your shipments',
-              style: TextStyle(
+            child:  Text(
+              t.login_title,
+              style: const TextStyle(
                 fontSize: 16,
                 color: AppColors.shipmentText,
               ),
@@ -244,7 +247,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
           IconTextField(
             controller: emailController,
             keyboardType: TextInputType.emailAddress,
-            hintText: 'Email',
+            hintText: t.email,
             obsecureText: false,
             radius: 60,
             iconPath: "assets/icon/email.svg",
@@ -258,28 +261,28 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
           ),
           const SizedBox(height: 24),
           LoginButton(
-            hintText: "Sign in",
+            hintText: t.login,
             onPressed: _signInUserWithEmail,
             isLoading: _isEmailLoading,
             radius: 60,
           ),
           Container(
             margin: const EdgeInsets.only(top: 24, bottom: 24),
-            child: const Row(
+            child:  Row(
               children: [
-                Expanded(
+                const Expanded(
                   child: Divider(
                     color: AppColors.lessImportant,
                     thickness: 0.4,
                   ),
                 ),
-                SizedBox(width: 16),
+                const SizedBox(width: 16),
                 Text(
-                  "or",
+                  t.or,
                   style: TextStyle(color: AppColors.shipmentText, fontSize: 12),
                 ),
-                SizedBox(width: 16),
-                Expanded(
+                const SizedBox(width: 16),
+                const Expanded(
                   child: Divider(
                     color: AppColors.lessImportant,
                     thickness: 0.4,
@@ -289,7 +292,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
             ),
           ),
           AuthButton(
-            hintText: "Continue with Google",
+            hintText: t.continue_with_google,
             onPressed: _signInWithGoogle,
             imagePath: "assets/images/google.png",
             isLoading: _isGoogleLoading,
@@ -298,8 +301,8 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
           ),
           const SizedBox(height: 24),
           textWithLink(
-            text: "Don't have an account? ",
-            textLink: "sign up",
+            text: t.dont_have_accout,
+            textLink: t.signup,
             navigatTo: '/signup',
             context: context,
           ),

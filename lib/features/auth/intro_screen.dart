@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:quickdrop_app/core/utils/imports.dart';
 import 'package:flutter/services.dart';
+
 import 'package:quickdrop_app/core/widgets/auth_button.dart';
 
 class IntroScreen extends StatefulWidget {
@@ -68,6 +69,8 @@ class _IntroScreenState extends State<IntroScreen> with TickerProviderStateMixin
 
   @override
   Widget build(BuildContext context) {
+    final t = AppLocalizations.of(context)!;
+   
     return Scaffold(
         appBar: AppBar(
           
@@ -139,12 +142,13 @@ class _IntroScreenState extends State<IntroScreen> with TickerProviderStateMixin
                                 height: 1.2,
                               ),
                               children: [
-                                const TextSpan(
-                                  text: "Ship Anywhere.\n",
-                                  style: TextStyle(color: Color(0xFF1F2937)),
+                                 TextSpan(
+                                  text: "${t.home_title_part1}\n",
+                                  style: const TextStyle(color: Color(0xFF1F2937)),
                                 ),
+                                
                                 TextSpan(
-                                  text: "Anytime.",
+                                  text: t.home_title_part2,
                                   style: TextStyle(
                                     foreground: Paint()
                                       ..shader =  LinearGradient(
@@ -164,9 +168,9 @@ class _IntroScreenState extends State<IntroScreen> with TickerProviderStateMixin
                           const SizedBox(height: 16),
                           
                           /// Value Proposition
-                          const Text(
-                            "Fast, reliable delivery",
-                            style: TextStyle(
+                           Text(
+                            t.intro_subtitle,
+                            style:const TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.w600,
                               color: Color(0xFF4B5563),
@@ -175,10 +179,10 @@ class _IntroScreenState extends State<IntroScreen> with TickerProviderStateMixin
                           
                           const SizedBox(height: 8),
                           
-                          const Text(
-                            "Connect with trusted travelers and ship your packages.",
+                           Text(
+                            t.intro_description,
                             textAlign: TextAlign.center,
-                            style: TextStyle(
+                            style: const TextStyle(
                               fontSize: 14,
                               color: Color(0xFF6B7280),
                               height: 1.5,
@@ -195,7 +199,7 @@ class _IntroScreenState extends State<IntroScreen> with TickerProviderStateMixin
                   children: [
                    
                    LoginButton(
-                      hintText: "Sign in",
+                      hintText: t.login,
                       backgroundColor: Theme.of(context).colorScheme.primary,
                       textColor: Theme.of(context).colorScheme.onPrimary,
                       onPressed: () {
@@ -206,7 +210,7 @@ class _IntroScreenState extends State<IntroScreen> with TickerProviderStateMixin
                     ),
                     const SizedBox(height: 12),
                     LoginButton(
-                      hintText: "Sign up",
+                      hintText: t.signup,
                       onPressed: () {
                         context.pushNamed('signup');
                       },
@@ -220,7 +224,7 @@ class _IntroScreenState extends State<IntroScreen> with TickerProviderStateMixin
                     
                     /// Google Sign In Button
                     AuthButton(
-                      hintText: "Continue with Google",
+                      hintText: t.continue_with_google,
                       onPressed: _signInWithGoogle,
                       imagePath: "assets/images/google.png",
                       isLoading: _isGoogleLoading,
@@ -231,10 +235,10 @@ class _IntroScreenState extends State<IntroScreen> with TickerProviderStateMixin
                     const SizedBox(height: 24),
 
                     /// Terms Text
-                    const Text(
-                      "By continuing, you agree to our Terms and Privacy Policy",
+                     Text(
+                      t.policy,
                       textAlign: TextAlign.center,
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 12,
                         color: Color(0xFF9CA3AF),
                         height: 1.4,

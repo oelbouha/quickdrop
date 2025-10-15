@@ -37,7 +37,6 @@ class _SignupState extends State<Signup> {
       return;
     }
 
-    print("phone number :: $phone");
     await FirebaseAuth.instance.verifyPhoneNumber(
       phoneNumber: phone,
       verificationCompleted: (PhoneAuthCredential credential) async {
@@ -160,13 +159,14 @@ class _SignupState extends State<Signup> {
   }
 
   Widget _buildLogInScreen() {
+    final t = AppLocalizations.of(context)!;
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          "Join us via phone",
-          style: TextStyle(
+         Text(
+         t.signup_phone_title,
+          style:const TextStyle(
               color: AppColors.headingText,
               fontWeight: FontWeight.w700,
               fontSize: 30),
@@ -175,9 +175,9 @@ class _SignupState extends State<Signup> {
         const SizedBox(
           height: 10,
         ),
-        const Text(
-          "W'll text you to confirm your phone number. ",
-          style: TextStyle(
+         Text(
+          t.enter_phone_number_msg,
+          style: const TextStyle(
             color: AppColors.shipmentText,
             fontWeight: FontWeight.w400,
             fontSize: 14,
@@ -192,7 +192,7 @@ class _SignupState extends State<Signup> {
           height: 24,
         ),
         LoginButton(
-          hintText: "Continue",
+          hintText: t.cntinue,
           onPressed: _signupUserWithPhoneNumber,
           isLoading: _isEmailLoading,
           radius: 30,
@@ -200,25 +200,25 @@ class _SignupState extends State<Signup> {
         const SizedBox(
           height: 24,
         ),
-        const Row(
+         Row(
           children: [
-            Expanded(
+           const Expanded(
               child: Divider(
                 color: AppColors.lessImportant,
                 thickness: 0.4,
               ),
             ),
-            SizedBox(
+           const SizedBox(
               width: 8,
             ),
             Text(
-              "or",
+              t.or,
               style: TextStyle(color: AppColors.shipmentText, fontSize: 12),
             ),
-            SizedBox(
+           const SizedBox(
               width: 8,
             ),
-            Expanded(
+           const Expanded(
               child: Divider(
                 color: AppColors.lessImportant,
                 thickness: 0.4,
@@ -230,7 +230,7 @@ class _SignupState extends State<Signup> {
           height: 24,
         ),
         AuthButton(
-          hintText: "Sign up with Google",
+          hintText: t.continue_with_google,
           onPressed: _signInWithGoogle,
           imagePath: "assets/images/google.png",
           isLoading: _isGoogleLoading,
@@ -241,8 +241,8 @@ class _SignupState extends State<Signup> {
           height: 24,
         ),
         textWithLink(
-            text: "Already have an account? ",
-            textLink: "sign in",
+            text: t.already_have_account,
+            textLink: t.login,
             navigatTo: '/login',
             context: context),
       ],

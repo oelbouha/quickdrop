@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:quickdrop_app/l10n/app_localizations.dart';
 import 'package:quickdrop_app/theme/colors.dart';
 import 'package:quickdrop_app/core/widgets/custom_svg.dart';
 import 'package:flutter/services.dart';
@@ -22,6 +23,7 @@ class BottomNavScreen extends StatelessWidget {
     //   systemNavigationBarIconBrightness:
     //       Brightness.light, // Make icons light if the background is dark
     // ));
+    final t = AppLocalizations.of(context)!;
     return Scaffold(
         body: child,
         bottomNavigationBar: Container(
@@ -59,7 +61,7 @@ class BottomNavScreen extends StatelessWidget {
             isSelected: _calculateIndex(context) == 0,
             context: context
           ),
-          label: 'Search',
+          label: t.search,
         ),
         BottomNavigationBarItem(
           icon: _buildIconWithBackground(
@@ -67,7 +69,7 @@ class BottomNavScreen extends StatelessWidget {
             isSelected: _calculateIndex(context) == 1,
             context: context
           ),
-          label: 'Trips',
+          label: t.trips,
         ),
         BottomNavigationBarItem(
           icon: _buildIconWithBackground(
@@ -75,7 +77,7 @@ class BottomNavScreen extends StatelessWidget {
             isSelected: _calculateIndex(context) == 2,
             context: context
           ),
-          label: 'Shipments',
+          label: t.shipments,
         ),
         BottomNavigationBarItem(
           icon: _buildIconWithBackground(
@@ -83,7 +85,7 @@ class BottomNavScreen extends StatelessWidget {
             isSelected: _calculateIndex(context) == 3,
             context: context
           ),
-          label: 'Requests',
+          label: t.requests,
         ),
         BottomNavigationBarItem(
           icon: _buildIconWithBackground(
@@ -91,7 +93,7 @@ class BottomNavScreen extends StatelessWidget {
             isSelected: _calculateIndex(context) == 4,
             context: context
           ),
-          label: 'Chats',
+          label: t.chats,
         ),
       ],
     ),
@@ -109,7 +111,7 @@ class BottomNavScreen extends StatelessWidget {
       width: 48,
       height: 24,
       decoration: BoxDecoration(
-          // color: isSelected ? AppColors.blue600.withOpacity(0.4) : null,
+          // color: isSelected ? AppColors.blue.withOpacity(0.4) : null,
           borderRadius: BorderRadius.circular(20)),
       child: CustomIcon(
         iconPath: iconPath,

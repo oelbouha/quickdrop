@@ -97,15 +97,16 @@ class _SingupPageState extends State<SignUpScreen> {
   }
 
   Widget _buildSignUpScreen() {
+    final t = AppLocalizations.of(context)!;
     return Form(
         key: _formKey,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              "Finish signing up",
-              style: TextStyle(
+             Text(
+              t.signup_title,
+              style:const TextStyle(
                   color: AppColors.headingText,
                   fontSize: 24,
                   fontWeight: FontWeight.bold),
@@ -115,8 +116,8 @@ class _SingupPageState extends State<SignUpScreen> {
             ),
             TextFieldWithHeader(
               controller: firstNameController,
-              headerText: 'Full Name',
-              hintText: 'First name on ID',
+              headerText: t.full_name,
+              hintText: t.first_name,
               obsecureText: false,
               iconPath: "assets/icon/user.svg",
               isRequired: false,
@@ -125,7 +126,7 @@ class _SingupPageState extends State<SignUpScreen> {
             const SizedBox(height: 8),
             TextFieldWithHeader(
               controller: lastNameController,
-              hintText: 'Last name on ID',
+              hintText: t.last_name,
               displayHeader: false,
               iconPath: "assets/icon/user.svg",
               isRequired: false,
@@ -135,8 +136,8 @@ class _SingupPageState extends State<SignUpScreen> {
             
              buildInfoCard(
               icon: Icons.info_outline,
-              title: "Important Note",
-              message: "Make sure your name matches your government ID.",
+              title: t.important_note,
+              message: t.signup_note,
               color: Colors.blue,
             ),
             // TipWidget(message: "Make sure this matches the name on your government ID or passport."),
@@ -163,7 +164,7 @@ class _SingupPageState extends State<SignUpScreen> {
               controller: emailController,
               hintText: 'example@gmail.com',
               isRequired: false,
-              headerText: 'Email',
+              headerText: t.email,
               obsecureText: false,
               iconPath: "assets/icon/email.svg",
               validator: Validators.email,
@@ -229,7 +230,7 @@ class _SingupPageState extends State<SignUpScreen> {
               height: 24,
             ),
             LoginButton(
-                hintText: "Continue",
+                hintText: t.cntinue,
                 radius: 30  ,
                 backgroundColor: AppColors.dark,
                 onPressed: _singUpUserWithEmail,

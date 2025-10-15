@@ -174,16 +174,17 @@ class _ShipmentScreenState extends State<ShipmentScreen>
 
   @override
   Widget build(BuildContext context) {
+    final t = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: CustomAppBar(
         tabController: _tabController,
-        tabs: const [
-          "Active",
-          "Ongoing",
-          "Completed",
+        tabs:  [
+          t.active,
+          t.ongoing,
+          t.completed,
         ],
-        title: "Shipments",
+        title: t.shipments,
       ),
       body: _isLoading
           ? loadingAnimation()

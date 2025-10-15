@@ -2,6 +2,8 @@ export 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 export 'package:flutter/services.dart'; 
 
+export 'package:quickdrop_app/l10n/app_localizations.dart';
+
 export 'package:quickdrop_app/theme/colors.dart';
 export 'package:quickdrop_app/theme/AppTheme.dart';
 export 'package:quickdrop_app/theme/error_page.dart';

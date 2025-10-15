@@ -24,6 +24,7 @@ class ActiveItemCard extends StatefulWidget {
 class _ActiveItemCardState extends State<ActiveItemCard> {
   @override
   Widget build(BuildContext context) {
+    
     return Container(
       decoration: BoxDecoration(
        color: AppColors.cardBackground,
@@ -69,12 +70,14 @@ class _ActiveItemCardState extends State<ActiveItemCard> {
   }
 
   Widget _buildBody() {
+
+    final t = AppLocalizations.of(context)!;
     return Row(
       children: [
         
         Expanded(
           child: _buildInfoColumn(
-            label: 'Date',
+            label: t.date,
             value: '${widget.item.date}',
           ),
         ),
@@ -85,7 +88,7 @@ class _ActiveItemCardState extends State<ActiveItemCard> {
         ),
         Expanded(
           child: _buildInfoColumn(
-            label: 'Weight',
+            label: t.weight,
             value: '${widget.item.weight}kg',
           ),
         ),
@@ -118,6 +121,7 @@ class _ActiveItemCardState extends State<ActiveItemCard> {
   }
 
   Widget _buildFooter() {
+    final t = AppLocalizations.of(context)!;
     return Padding(
       padding: const EdgeInsets.only(
         left: 16,
@@ -130,7 +134,7 @@ class _ActiveItemCardState extends State<ActiveItemCard> {
         Expanded(
            child: BuildPrimaryButton(
             onPressed: widget.onViewPressed,
-            label: 'View details',
+            label: t.view_details,
             color: Theme.of(context).colorScheme.secondary,
             icon: "assets/icon/eye.svg"
           ),

@@ -99,16 +99,18 @@ class _TripScreenState extends State<TripScreen>
 
   @override
   Widget build(BuildContext context) {
+    final t = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: CustomAppBar(
         tabController: _tabController,
-        tabs: const [
-          "Active",
-          "Ongoing",
-          "Completed",
-        ],
-        title: "Trips",
+        tabs: 
+         [
+            t.active,
+            t.ongoing,
+            t.completed,
+          ],
+        title: t.trips,
       ),
       body: _isLoading
           ? loadingAnimation()
