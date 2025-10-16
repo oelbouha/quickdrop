@@ -13,33 +13,18 @@ class HelpScreen extends StatefulWidget {
 class HelpScreenState extends State<HelpScreen> {
   int? expandedFaqIndex;
 
-  final List<Map<String, String>> faqs = [
-    {
-      "question": "How does QuickDrop ensure package safety?",
-      "answer":
-          "All couriers are verified through ID checks and background screening. Every package is insured, tracked in real-time, and handled with care by trusted travelers."
-    },
-    {
-      "question": "What can I ship with QuickDrop?",
-      "answer":
-          "You can ship documents, electronics, clothing, gifts, and most personal items. Prohibited items include hazardous materials, illegal substances, and fragile items without proper packaging."
-    },
-    {
-      "question": "How much can I save compared to traditional shipping?",
-      "answer":
-          "Users typically save 50-70% compared to major carriers like FedEx or UPS, especially for international shipments. Prices vary based on size, weight, and destination."
-    },
-    {
-      "question": "How do I become a courier?",
-      "answer":
-          "Simply Go to your profile click on become driver, fill your informtion and wait for approval,  and start requesting delivery requests on routes you're already traveling. You set your own prices and schedule."
-    },
-    {
-      "question": "What if something goes wrong with my shipment?",
-      "answer":
-          "We provide 24/7 customer support . If there's any issue, our team will resolve it quickly."
-    }
-  ];
+
+  List<Map<String, String>> getFaqs(BuildContext context) {
+    final t = AppLocalizations.of(context)!;
+
+    return [
+      {"question": t.faq_q1, "answer": t.faq_a1},
+      {"question": t.faq_q2, "answer": t.faq_a2},
+      {"question": t.faq_q3, "answer": t.faq_a3},
+      {"question": t.faq_q4, "answer": t.faq_a4},
+      {"question": t.faq_q5, "answer": t.faq_a5},
+    ];
+  }
 
   @override
   void initState() {
@@ -48,12 +33,13 @@ class HelpScreenState extends State<HelpScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final t = AppLocalizations.of(context)!;
     return Scaffold(
         backgroundColor: AppColors.background,
         appBar: AppBar(
-          title: const Text(
-            'Help',
-            style: TextStyle(
+          title:  Text(
+            t.help_title,
+            style:const  TextStyle(
                 color: AppColors.appBarText, fontWeight: FontWeight.w600),
           ),
           backgroundColor: Theme.of(context).primaryColor,
@@ -76,12 +62,14 @@ class HelpScreenState extends State<HelpScreen> {
   }
 
   Widget _buildFAQSection() {
+    final t = AppLocalizations.of(context)!;
+    final faqs = getFaqs(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          "Frequently Asked Questions",
-          style: TextStyle(
+         Text(
+          t.faq_title,
+          style:const TextStyle(
             color: AppColors.textPrimary,
             fontSize: 18,
             fontWeight: FontWeight.bold,
@@ -196,6 +184,7 @@ class _AskQuestionWidgetState extends State<AskQuestionWidget> {
     setState(() {
       _isSubmitting = true;
     });
+    final t = AppLocalizations.of(context)!;
 
     HelpModel question = HelpModel(
       senderId: FirebaseAuth.instance.currentUser?.uid ?? 'anonymous',
@@ -210,12 +199,12 @@ class _AskQuestionWidgetState extends State<AskQuestionWidget> {
 
       if (mounted) {
         AppUtils.showDialog(context,
-            "Your question has been added successfully!", AppColors.succes);
+            t.success_add_question, AppColors.succes);
       }
     } catch (e) {
       if (mounted) {
         AppUtils.showDialog(
-            context, "Failed to submit your question", AppColors.error);
+            context, t.failed_add_question, AppColors.error);
       }
     }
     setState(() {
@@ -236,6 +225,8 @@ class _AskQuestionWidgetState extends State<AskQuestionWidget> {
 
   @override
   Widget build(BuildContext context) {
+
+    final t = AppLocalizations.of(context)!;
     return Container(
       width: double.infinity,
       child: Column(
@@ -257,9 +248,9 @@ class _AskQuestionWidgetState extends State<AskQuestionWidget> {
                 ),
               ),
               const SizedBox(width: 12),
-              const Text(
-                'Still Have Questions?',
-                style: TextStyle(
+               Text(
+                t.still_have_questions,
+                style:const TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
                   color: Color(0xFF111827),
@@ -297,6 +288,7 @@ class _AskQuestionWidgetState extends State<AskQuestionWidget> {
   }
 
   Widget _buildSuccessMessage() {
+    final t = AppLocalizations.of(context)!;
     return Column(
       children: [
         Container(
@@ -313,18 +305,18 @@ class _AskQuestionWidgetState extends State<AskQuestionWidget> {
           ),
         ),
         const SizedBox(height: 16),
-        const Text(
-          'Question Sent Successfully!',
-          style: TextStyle(
+         Text(
+          t.success_add_question,
+          style:const TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.w600,
             color: Color(0xFF111827),
           ),
         ),
         const SizedBox(height: 8),
-        const Text(
-          'We\'ll get back to you within 24 hours.',
-          style: TextStyle(
+         Text(
+          t.question_reply_time,
+          style:const TextStyle(
             fontSize: 14,
             color: Color(0xFF6B7280),
           ),
@@ -334,20 +326,20 @@ class _AskQuestionWidgetState extends State<AskQuestionWidget> {
   }
 
   Widget _buildQuestionForm() {
+    final t = AppLocalizations.of(context)!;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          'Can\'t find what you\'re looking for? Send us your question and our support team will help you out.',
-          style: TextStyle(
+         Text(t.question_form_info,
+          style:const TextStyle(
             fontSize: 14,
             color: Color(0xFF6B7280),
           ),
         ),
         const SizedBox(height: 24),
-        const Text(
-          'Your Question',
-          style: TextStyle(
+         Text(
+          t.your_question_label,
+          style:const TextStyle(
             fontSize: 14,
             fontWeight: FontWeight.w500,
             color: Color(0xFF374151),
@@ -358,7 +350,7 @@ class _AskQuestionWidgetState extends State<AskQuestionWidget> {
           controller: _questionController,
           maxLines: 4,
           decoration: InputDecoration(
-            hintText: 'What would you like to know about QuickDrop?',
+            hintText: t.question_hint,
             hintStyle: const TextStyle(color: Color(0xFF9CA3AF)),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(8),
@@ -386,10 +378,10 @@ class _AskQuestionWidgetState extends State<AskQuestionWidget> {
               ),
             ),
             child: _isSubmitting
-                ? const Row(
+                ?  Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      SizedBox(
+                      const SizedBox(
                         width: 16,
                         height: 16,
                         child: CircularProgressIndicator(
@@ -397,16 +389,16 @@ class _AskQuestionWidgetState extends State<AskQuestionWidget> {
                           strokeWidth: 2,
                         ),
                       ),
-                      SizedBox(width: 8),
-                      Text('Sending Question...'),
+                     const  SizedBox(width: 8),
+                      Text(t.sending_question),
                     ],
                   )
-                : const Row(
+                :  Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Icon(Icons.send, size: 16),
-                      SizedBox(width: 8),
-                      Text('Send Question'),
+                      const Icon(Icons.send, size: 16),
+                      const SizedBox(width: 8),
+                      Text(t.send_question),
                     ],
                   ),
           ),
@@ -424,35 +416,29 @@ class HelpfulTipsWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final t = AppLocalizations.of(context)!;
     final tips = [
       {
         'icon': Icons.inventory_2,
         'color': Colors.blue,
-        'title': 'Package Smart',
-        'description':
-            'Use sturdy boxes and bubble wrap for fragile items. Label clearly with both sender and recipient information.'
-      },
+        'title': t.tip_1_title,
+        'description':t.tip_1_description ,
+        },
       {
         'icon': Icons.security,
         'color': Colors.green,
-        'title': 'Stay Safe',
-        'description':
-            'Always verify courier profiles and ratings before booking. Meet in public places for handoffs when possible.'
-      },
+        'title': t.tip_2_title,
+        'description':t.tip_2_description,      },
       {
         'icon': Icons.attach_money,
         'color': Colors.orange,
-        'title': 'Save More',
-        'description':
-            'Book in advance and be flexible with delivery dates to get the best rates from our courier network.'
-      },
+        'title': t.tip_3_title,
+        'description':t.tip_3_description      },
       {
         'icon': Icons.group,
         'color': Colors.purple,
-        'title': 'Build Trust',
-        'description':
-            'Leave honest reviews and maintain good communication with your courier throughout the delivery process.'
-      },
+        'title': t.tip_4_title,
+        'description': t.tip_4_description      },
     ];
 
     return Column(
@@ -474,9 +460,9 @@ class HelpfulTipsWidget extends StatelessWidget {
               ),
             ),
             const SizedBox(width: 12),
-            const Text(
-              'Helpful Tips',
-              style: TextStyle(
+             Text(
+              t.helpful_tips,
+              style:const TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
                 color: Color(0xFF111827),

@@ -232,6 +232,7 @@ class _TripScreenState extends State<TripScreen>
   }
 
   Widget _buildActiveTrips(List<Trip> activeTrips) {
+    final t = AppLocalizations.of(context)!;
     return Container(
       margin: const EdgeInsets.only(
           left: AppTheme.cardPadding, right: AppTheme.cardPadding),
@@ -240,8 +241,8 @@ class _TripScreenState extends State<TripScreen>
           ? Center(
               child: _buildEmptyState(
               icon: Icons.directions_car,
-              title: "No active trips",
-              subtitle: "Start earning by offering trip capacity!",
+              title: t.no_active_trips,
+              subtitle: t.no_active_trips_subtitle,
               buttonText: "Post Trip",
             ))
           : ListView.builder(
@@ -273,6 +274,7 @@ class _TripScreenState extends State<TripScreen>
   }
 
   Widget _buildOngoingTrips(List<Trip> ongoingTrips) {
+    final t = AppLocalizations.of(context)!;
     return Consumer<TripProvider>(builder: (context, tripProvider, child) {
       return Container(
         margin: const EdgeInsets.only(
@@ -282,8 +284,8 @@ class _TripScreenState extends State<TripScreen>
             ? Center(
                 child: _buildEmptyState(
                 icon: Icons.directions_car,
-                title: "No ovgoing trips",
-                subtitle: "Start earning by offering trip capacity!",
+                title: t.no_ongoing_trips,
+                subtitle: t.no_ongoing_trips_subtitle,
                 buttonText: "Post Trip",
               ))
             : ListView.builder(
@@ -322,6 +324,7 @@ class _TripScreenState extends State<TripScreen>
   }
 
   Widget _buildOPastTrips(List<Trip> completedTrips) {
+    final t = AppLocalizations.of(context)!;
     return Consumer<TripProvider>(builder: (context, tripProvider, child) {
       return Container(
         margin: const EdgeInsets.only(
@@ -331,8 +334,8 @@ class _TripScreenState extends State<TripScreen>
             ? Center(
                 child: _buildEmptyState(
                 icon: Icons.directions_car,
-                title: "No completed trips",
-                subtitle: "Start earning by offering trip capacity!",
+                title: t.no_completed_trips,
+                subtitle: t.no_completed_trips_subtitle,
                 buttonText: "Post Trip",
               ))
             : ListView.builder(

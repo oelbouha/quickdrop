@@ -1,25 +1,25 @@
 {
   "@@locale": "ar",
 
-  "welcome": "مرحباً بعودتك",
+  "welcome": "مرحبًا بعودتك",
 
   "login_title": "سجّل الدخول لمتابعة شحناتك",
   "signup_title": "أكمل التسجيل",
   "full_name": "الاسم الكامل",
-  "first_name": "الاسم الأول في بطاقة الهوية",
-  "last_name": "اسم العائلة في بطاقة الهوية",
+  "first_name": "الاسم الأول في البطاقة",
+  "last_name": "اسم العائلة في البطاقة",
 
-  "important_note": "ملاحظة هامة",
-  "signup_note": "تأكد من أن اسمك يطابق الاسم في بطاقة هويتك الحكومية.",
+  "important_note": "ملاحظة مهمة",
+  "signup_note": "تأكد أن اسمك يطابق الاسم في بطاقتك الحكومية.",
 
-  "enter_phone_number_msg": "يرجى إدخال رقم هاتفك",
+  "enter_phone_number_msg": "يرجى إدخال رقم الهاتف",
   "join_us_via_phone": "انضم إلينا عبر الهاتف",
-  "signup_phone_title": "سنرسل لك رسالة نصية لتأكيد رقم هاتفك.",
+  "signup_phone_title": "سنرسل لك رسالة نصية لتأكيد رقمك.",
   "already_have_account": "هل لديك حساب بالفعل؟ ",
 
   "intro_title": "اشحن إلى أي مكان",
   "intro_subtitle": "توصيل سريع وموثوق",
-  "intro_description": "تواصل مع مسافرين موثوقين وأرسل طرودك بأمان.",
+  "intro_description": "تواصل مع مسافرين موثوقين لشحن طرودك.",
 
   "cntinue": "متابعة",
   "email": "البريد الإلكتروني",
@@ -29,71 +29,293 @@
   "login": "تسجيل الدخول",
   "signup": "إنشاء حساب",
   "continue_with_google": "المتابعة باستخدام Google",
-  "policy": "بالمتابعة، فإنك توافق على الشروط وسياسة الخصوصية.",
+  "policy": "بالمتابعة، فإنك توافق على الشروط وسياسة الخصوصية الخاصة بنا.",
+
+  "notifications": "الإشعارات",
+  "no_notification": "لا توجد إشعارات بعد",
 
   "pickup_location": "موقع الاستلام",
   "drop_off_location": "موقع التسليم",
   "select_pickup_date": "اختر تاريخ الاستلام",
+  "view_details": "عرض التفاصيل",
   
-  "notifications" : "الإشعارات",
-  "no_notification" : "لا توجد إشعارات بعد",
-
-
-  "view_details" : "عرض التفاصيل",
-
-
+  "trips": "الرحلات",
+  "shipments": "الشحنات",
   "search": "بحث",
   "requests": "الطلبات",
   "chats": "المحادثات",
-   "trips": "الرحلات",
-  "shipments": "الشحنات",
 
-  "active" : "نشط",
-  "ongoing" : "قيد التنفيذ",
-  "completed" : "مكتمل",
-  "send" : "إرسال",
-  "received" : "مستلم",
-  "negotiate" : "تفاوض",
-  "date" : "التاريخ",
-  "weight" : "الوزن",
-
+  "active": "نشط",
+  "ongoing": "جارٍ",
+  "completed": "مكتمل",
+  "send": "مرسلة",
+  "received": "مستلمة",
+  "negotiate": "تفاوض",
+  "date": "التاريخ",
+  "weight": "الوزن",
 
   "faq": "الأسئلة الشائعة",
   "home_title_part1": "اشحن إلى أي مكان",
   "home_title_part2": "في أي وقت.",
-  "intro_description": "تواصل مع مسافرين موثوقين وأرسل طرودك بأمان.",
-
   "faq_title": "الأسئلة الشائعة",
 
-  "faq_q1": "كيف يضمن QuickDrop سلامة الطرود؟",
-  "faq_a1": "يتم التحقق من هوية جميع السائقين وفحص خلفياتهم. كل طرد مؤمّن ويتم التعامل معه بعناية من قبل مسافرين موثوقين.",
+  "faq_q1": "كيف تضمن QuickDrop سلامة الطرود؟",
+  "faq_a1": "يتم التحقق من هوية جميع السائقين من خلال بطاقات الهوية والفحص الأمني. كل طرد مؤمن عليه ومتابع في الوقت الحقيقي ويتم التعامل معه بعناية.",
 
   "faq_q2": "ما الذي يمكنني شحنه عبر QuickDrop؟",
-  "faq_a2": "يمكنك شحن المستندات، الإلكترونيات، الملابس، الهدايا، ومعظم الأغراض الشخصية. يُحظر شحن المواد الخطرة أو غير القانونية أو الأشياء الهشة دون تغليف مناسب.",
+  "faq_a2": "يمكنك شحن الوثائق والإلكترونيات والملابس والهدايا ومعظم الأغراض الشخصية. المواد المحظورة تشمل المواد الخطرة والممنوعة والأغراض الهشة دون تغليف مناسب.",
 
-  "faq_q3": "كم يمكنني أن أوفر مقارنة بخدمات الشحن التقليدية؟",
-  "faq_a3": "يوفر المستخدمون عادة من 50٪ إلى 70٪ مقارنة بالشركات الكبرى مثل FedEx أو UPS، خصوصًا للشحنات الدولية. تختلف الأسعار حسب الحجم والوزن والوجهة.",
+  "faq_q3": "كم يمكنني التوفير مقارنة بخدمات الشحن التقليدية؟",
+  "faq_a3": "يوفر المستخدمون عادة من 50٪ إلى 70٪ مقارنة بخدمات مثل FedEx أو UPS، خصوصًا للشحن الدولي. تختلف الأسعار حسب الحجم والوزن والوجهة.",
 
   "faq_q4": "كيف أصبح سائق توصيل؟",
-  "faq_a4": "اذهب إلى ملفك الشخصي، واضغط على 'كن سائقًا'، وأدخل معلوماتك، وانتظر الموافقة، ثم ابدأ بقبول طلبات التوصيل. يمكنك تحديد أسعارك وجدولك بنفسك.",
+  "faq_a4": "اذهب إلى ملفك الشخصي، واضغط على 'كن سائقًا'، واملأ معلوماتك، وانتظر الموافقة، ثم ابدأ في قبول الطلبات. يمكنك تحديد أسعارك وجدولك بنفسك.",
 
-  "faq_q5": "ماذا أفعل إذا حدثت مشكلة أثناء الشحن؟",
-  "faq_a5": "نوفر دعمًا فنيًا على مدار الساعة. في حال حدوث أي مشكلة، سيعمل فريقنا على حلها بسرعة.",
+  "faq_q5": "ماذا لو حدثت مشكلة في شحنتي؟",
+  "faq_a5": "نقدم دعمًا فنيًا على مدار الساعة طوال الأسبوع. في حال حدوث مشكلة، سنتعامل معها بسرعة.",
 
   "service_send_title": "إرسال الطرود",
-  "service_send_description": "تواصل مع مسافرين موثوقين متجهين إلى وجهتك. وفر ما يصل إلى 70٪ من تكاليف الشحن عبر شبكتنا الموثوقة.",
+  "service_send_description": "تواصل مع مسافرين موثوقين متجهين إلى وجهتك. وفر حتى 70٪ من تكاليف الشحن عبر شبكتنا الموثوقة.",
 
   "service_courier_title": "كن سائق توصيل",
-  "service_courier_description": "حوّل رحلاتك إلى مصدر دخل. انقل الطرود واربح المال في الرحلات التي تقوم بها بالفعل. يمكنك تحديد الأسعار والجدول بنفسك.",
+  "service_courier_description": "حوّل رحلاتك إلى أرباح. انقل الطرود واكسب المال أثناء تنقلك. اختر أسعارك وجدولك بنفسك.",
 
   "feature_tag_1": "مسافرون موثوقون",
   "feature_tag_2": "بدون وسطاء",
-  "feature_tag_3": "مسارات مرنة",
+  "feature_tag_3": "طرق مرنة",
   "feature_tag_4": "مجتمع موثوق",
 
- 
-
-  "settings_title": "الإعدادات",
   "settings_language": "اللغة",
-  "settings_logout": "تسجيل الخروج"
+
+  "profile": "الملف الشخصي",
+  "no_user_data": "لا توجد بيانات للمستخدم",
+  "guest_user": "مستخدم زائر",
+  "member_since": "عضو منذ",
+  "version_info": "الإصدار 1.0.0 - 2025",
+
+  "settings_logout_confirm_message": "هل أنت متأكد أنك تريد تسجيل الخروج؟",
+  "settings_logout_header": "تسجيل الخروج",
+  "settings_logout_button": "تسجيل الخروج",
+  "settings_logout_error": "حدث خطأ أثناء تسجيل الخروج:",
+  "feature_coming_soon": "الميزة قادمة قريبًا!",
+
+  "become_driver": "كن سائقًا",
+  "earn_money": "اكسب المال من خلال توصيل الطرود",
+  "refer_friends": "أوصِ الأصدقاء",
+  "invite_friends": "ادعُ أصدقاءك واكسب المكافآت",
+
+  "settings": "الإعدادات",
+  "support": "الدعم",
+  "legal": "قانوني",
+
+  "personal_info": "المعلومات الشخصية",
+  "update_details": "حدّث بياناتك وتفضيلاتك",
+  "security": "الأمان",
+  "manage_account": "إدارة إعدادات الحساب",
+  "manage_notifications": "إدارة إعدادات الإشعارات",
+  "payment_methods": "طرق الدفع",
+  "manage_payments": "أضف أو احذف وسيلة دفع",
+
+  "get_help": "الحصول على المساعدة",
+  "contact_support": "تواصل مع فريق الدعم",
+
+  "terms_service": "شروط الخدمة",
+  "read_terms": "اقرأ الشروط والأحكام",
+  "privacy_policy": "سياسة الخصوصية",
+  "learn_privacy": "تعرف على كيفية حماية بياناتك",
+
+  "logout": "تسجيل الخروج",
+
+   "edit_profile": "تعديل الملف الشخصي",
+  "update_profile": "تحديث الملف الشخصي",
+  "update_profile_subtitle": "حافظ على معلوماتك محدثة",
+  "profile_image": "صورة الملف الشخصي",
+  "change_image": "تغيير الصورة",
+  "important": "مهم",
+  "profile_image_note": "تأكد من أن صورتك واضحة وسهلة التعرف.",
+  "personal_information": "المعلومات الشخصية",
+  "first_name": "الاسم الأول",
+  "enter_first_name": "أدخل اسمك الأول",
+  "last_name": "اسم العائلة",
+  "enter_last_name": "أدخل اسم العائلة",
+  "personal_info_note": "تأكد أن هذا يتطابق مع الاسم في بطاقة الهوية أو جواز السفر.",
+  "contact_information": "معلومات الاتصال",
+  "email_address": "البريد الإلكتروني",
+  "email_hint": "example@gmail.com",
+  "phone_number": "رقم الهاتف",
+  "phone_hint": "06 000 00 00",
+  "save_changes": "حفظ التغييرات",
+  "saving": "جارٍ الحفظ...",
+  "save_changes_header": "حفظ التغييرات",
+  "save_changes_message": "هل أنت متأكد أنك تريد تحديث معلوماتك؟",
+  "save_button_text": "حفظ",
+  "cancel_button_text": "إلغاء",
+  "update_success_title": "تم تحديث المعلومات بنجاح!",
+  "update_success_message": "تم تحديث معلومات حسابك بنجاح.",
+  "update_error_message": "فشل في تحديث معلومات الملف الشخصي",
+  "image_uploading_message": "الصورة لا تزال قيد التحميل، يرجى الانتظار",
+
+
+
+
+  "help_title": "المساعدة",
+  "faq_title": "الأسئلة الشائعة",
+  "still_have_questions": "هل لا تزال لديك أسئلة؟",
+  "helpful_tips": "نصائح مفيدة",
+
+  "question_sent_success": "تم إرسال سؤالك بنجاح!",
+  "question_reply_time": "سنعاود التواصل معك خلال 24 ساعة.",
+  "question_form_info": "لم تجد ما تبحث عنه؟ أرسل لنا سؤالك وسيساعدك فريق الدعم لدينا.",
+  "your_question_label": "سؤالك",
+  "question_hint": "ما الذي ترغب بمعرفته حول QuickDrop؟",
+  "send_question": "إرسال السؤال",
+  "sending_question": "جاري إرسال السؤال...",
+  "success_add_question": "تمت إضافة سؤالك بنجاح!",
+  "failed_add_question": "فشل في إرسال السؤال",
+
+  "tip_1_title": "التغليف الذكي",
+  "tip_1_description": "استخدم صناديق قوية ولف الفقاعات للأغراض الهشة. ضع ملصقًا واضحًا يحتوي على معلومات المرسل والمستلم.",
+
+  "tip_2_title": "ابقَ آمنًا",
+  "tip_2_description": "تحقق دائمًا من ملفات السعاة وتقييماتهم قبل الحجز. قابلهم في أماكن عامة إن أمكن.",
+
+  "tip_3_title": "وفر أكثر",
+  "tip_3_description": "احجز مسبقًا وكن مرنًا في مواعيد التسليم لتحصل على أفضل الأسعار من شبكة السعاة لدينا.",
+
+  "tip_4_title": "ابنِ الثقة",
+  "tip_4_description": "اترك تقييمات صادقة وحافظ على تواصل جيد مع الساعي طوال عملية التسليم.",
+
+   "no_ongoing_shipments": "لا توجد شحنات جارية",
+  "no_ongoing_shipments_subtitle": "بعد قبولك أو إنشاء شحنة جديدة، ستظهر هنا.",
+
+  "no_completed_shipments": "لا توجد شحنات مكتملة",
+  "no_completed_shipments_subtitle": "ستظهر الشحنات المكتملة هنا بعد تسليمها.",
+
+  "no_active_shipments": "لا توجد شحنات نشطة",
+  "no_active_shipments_subtitle": "ستظهر الشحنات النشطة هنا بعد أن تبدأ العملية.",
+
+   "no_ongoing_trips": "لا توجد رحلات جارية",
+  "no_ongoing_trips_subtitle": "بعد إنشاء الرحلة أو قبولها، ستظهر هنا.",
+
+  "no_completed_trips": "لا توجد رحلات مكتملة",
+  "no_completed_trips_subtitle": "ستظهر رحلاتك المكتملة هنا بعد التسليم.",
+
+  "no_active_trips": "لا توجد رحلات نشطة",
+  "no_active_trips_subtitle": "ستظهر الرحلات الجارية هنا بمجرد البدء.",
+
+
+
+
+
+  "create_trip": "إنشاء رحلة",
+  "update_trip": "تحديث الرحلة",
+  "processing": "جارٍ المعالجة...",
+  "back": "رجوع",
+  "trip_details": "تفاصيل الرحلة",
+  "delivery_price": "سعر التوصيل (درهم)",
+  "available_weight": "الوزن المتاح (كغ)",
+  "pricing_tip_title": "نصيحة التسعير",
+  "pricing_tip_message": "حدد سعرًا تنافسيًا بناءً على المسافة وحجم الطرد ودرجة الاستعجال.",
+  "trip_locations": "مواقع الرحلة",
+  "pickup_location": "موقع الاستلام",
+  "delivery_location": "موقع التسليم",
+  "from_hint": "من",
+  "to_hint": "إلى",
+  "location_tip_title": "تفاصيل الموقع مهمة",
+  "location_tip_message": "قم بتضمين المعالم، أرقام المباني، وتفاصيل الطابق لتسهيل الاستلام والتسليم.",
+  "timing": "الوقت",
+  "pickup_date": "تاريخ الاستلام",
+  "select_pickup_date": "اختر تاريخ الاستلام",
+  "transport_type": "نوع وسيلة النقل",
+  "timing_tip_title": "توقيت مرن",
+  "timing_tip_message": "سنتواصل معك لتأكيد وقت الاستلام الدقيق في التاريخ الذي تفضله.",
+  "trip_list_success_title": "تم إضافة الرحلة بنجاح!",
+  "trip_list_success_message": "تمت إضافة رحلتك وهي الآن مرئية للمندوبين.",
+  "trip_update_success_title": "تم تحديث الرحلة بنجاح!",
+  "trip_update_success_message": "تم تحديث رحلتك وهي الآن مرئية للمندوبين.",
+  "trip_list_failed": "فشل في إضافة الرحلة",
+  "fields_empty": "بعض الحقول فارغة",
+  "login_required": "يرجى تسجيل الدخول لإضافة شحنة",
+  "pickup_required": "موقع الاستلام مطلوب",
+  "delivery_required": "موقع التسليم مطلوب",
+  "price_required": "السعر مطلوب",
+  "price_number": "يجب أن يكون السعر رقمًا",
+  "weight_required": "الوزن مطلوب",
+  "weight_number": "يجب أن يكون الوزن رقمًا",
+  "pickup_date_required": "تاريخ الاستلام مطلوب",
+
+    "tip_1_step": "تفاصيل الطرد",
+  "tip_2_step": "مواقع التسليم",
+  "tip_3_step": "الوقت والصورة",
+
+
+  
+  "shipment_list_success_title": "تم نشر الطرد بنجاح!",
+  "shipment_list_success_message": "تمت إضافة شحنتك وهي الآن مرئية للسعاة.",
+  "shipment_update_success_title": "تم تحديث الشحنة بنجاح!",
+  "shipment_update_success_message": "تم تحديث شحنتك وهي الآن مرئية للسعاة.",
+  "shipment_list_failed": "فشل في نشر الشحنة: {e}",
+  "shipment_update_failed": "فشل في تحديث الشحنة: {e}",
+  "fields_empty": "يرجى ملء جميع الحقول المطلوبة",
+  "login_required": "يرجى تسجيل الدخول لإضافة شحنة",
+  "image_required": "يرجى اختيار صورة",
+  "image_upload_failed": "فشل رفع الصورة",
+  "image_upload_failed_with_error": "فشل رفع الصورة: {e}",
+  "image_uploading": "يتم تحميل الصورة، يرجى الانتظار",
+  "image_not_selected": "لم يتم اختيار أي صورة",
+  "package_details": "تفاصيل الطرد",
+  "delivery_locations": "مواقع التسليم",
+  "package_dimensions": "أبعاد الطرد",
+  "timing_image": "الوقت والصورة",
+  "update_shipment": "تحديث الشحنة",
+  "create_shipment": "إنشاء شحنة",
+
+  "package_name_required": "اسم الطرد مطلوب",
+  "description_required": "الوصف مطلوب",
+  "package_type_required": "نوع الطرد مطلوب",
+  "price_required": "السعر مطلوب",
+  "price_number": "يجب أن يكون السعر رقمًا",
+  "pickup_required": "موقع الالتقاط مطلوب",
+  "delivery_required": "موقع التسليم مطلوب",
+  "weight_required": "الوزن مطلوب",
+  "weight_number": "يجب أن يكون الوزن رقمًا",
+  "quantity_required": "الكمية مطلوبة",
+  "pickup_date_required": "تاريخ الالتقاط مطلوب",
+  "package_name_label": "اسم الطرد",
+  "package_name_hint": "مثلاً: غطاء هاتف، كتاب، وثائق",
+  "package_description_label": "وصف الطرد",
+  "package_description_hint": "صف محتوى الطرد بالتفصيل...",
+  "delivery_price_label": "سعر التوصيل (درهم)",
+  "delivery_price_hint": "0.00",
+  "pricing_tip_title": "نصيحة التسعير",
+  "pricing_tip_message": "حدد سعرًا مناسبًا بناءً على المسافة وحجم الطرد ومستوى الاستعجال.",
+  "weight_label": "الوزن (كغ)",
+  "weight_hint": "1.0",
+  "quantity_label": "الكمية",
+  "quantity_hint": "1",
+  "package_type_label": "نوع الطرد",
+  "package_type_box": "صندوق",
+  "package_type_envelope": "ظرف",
+  "package_type_bag": "حقيبة",
+  "package_type_pallet": "منصة",
+  "package_type_accessories": "إكسسوارات",
+  "dimensions_tip_title": "القياسات الدقيقة تساعد السعاة على التحضير",
+  "dimensions_tip_message": "تحديد الأبعاد بدقة يضمن مطابقة أفضل وتأخيرًا أقل.",
+
+  "request_sent_success": "تم إرسال الطلب بنجاح",
+  "please_complete_all_fields": "يرجى ملء جميع الحقول المطلوبة",
+  "please_select_trip": "يرجى اختيار رحلة",
+  "selected_trip_invalid": "الرحلة المحددة غير صالحة",
+  "send_request": "إرسال الطلب",
+  "send_offer": "إرسال العرض",
+  "choose_a_trip": "اختر رحلة",
+  "no_active_trips_available": "لا توجد رحلات نشطة تطابق وجهة هذه الشحنة",
+  "add_a_note": "إضافة ملاحظة",
+  "starting_from": "يبدأ من",
+  "note": "ملاحظة",
+  "route": "المسار",
+  "package_image": "صورة الطرد"
+
+
+
 }

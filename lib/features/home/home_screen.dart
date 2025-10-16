@@ -206,6 +206,7 @@ List<Map<String, String>> getFaqs(BuildContext context) {
   
 Widget _buildSearchSection() {
   final t = AppLocalizations.of(context)!;
+  bool isArabic = Localizations.localeOf(context).languageCode == 'ar';
   return Container(
     padding: const EdgeInsets.all(16),
     decoration: BoxDecoration(
@@ -255,8 +256,9 @@ Widget _buildSearchSection() {
             
             // Swap button 
             Positioned(
-              right: 12,
+              right: isArabic? null: 12,
               top: 50, 
+              left: isArabic? 12: null,
               child: GestureDetector(
                 onTap: () {
                   final temp = fromController.text;

@@ -232,6 +232,7 @@ class _ShipmentScreenState extends State<ShipmentScreen>
   }
 
   Widget _buildActiveShipment(List<Shipment> activeShipments) {
+    final t = AppLocalizations.of(context)!;
     return Consumer<ShipmentProvider>(
         builder: (context, shipmentProvider, child) {
       return Container(
@@ -242,8 +243,8 @@ class _ShipmentScreenState extends State<ShipmentScreen>
             ? Center(
                 child: _buildEmptyState(
                 icon: Icons.inventory_2,
-                title: "No active shipments",
-                subtitle: "Be the first to post a shipment request!",
+                title: t.no_active_shipments,
+                subtitle: t.no_active_shipments_subtitle,
                 buttonText: "Post Shipment",
               ))
             : ListView.builder(
@@ -252,7 +253,6 @@ class _ShipmentScreenState extends State<ShipmentScreen>
                 itemCount: activeShipments.length,
                 itemBuilder: (context, index) {
                   final shipment = activeShipments[index];
-                  print("user id :::: ${shipment.userId}");
                   return Column(
                     children: [
                       if (index == 0)
@@ -280,6 +280,7 @@ class _ShipmentScreenState extends State<ShipmentScreen>
   }
 
   Widget _buildOngoingShipment(List<Shipment> ongoingShipments) {
+    final t = AppLocalizations.of(context)!;
     return Consumer<ShipmentProvider>(
         builder: (context, shipmentProvider, child) {
       return Container(
@@ -290,8 +291,8 @@ class _ShipmentScreenState extends State<ShipmentScreen>
             ? Center(
                 child: _buildEmptyState(
                 icon: Icons.inventory_2,
-                title: "No Ongoing shipments",
-                subtitle: "Be the first to post a shipment request!",
+                title: t.no_ongoing_shipments,
+                subtitle: t.no_ongoing_shipments_subtitle,
                 buttonText: "Post Shipment",
               ))
             : ListView.builder(
@@ -330,6 +331,7 @@ class _ShipmentScreenState extends State<ShipmentScreen>
   }
 
   Widget _buildOPastShipment(List<Shipment> pastShipments) {
+    final t = AppLocalizations.of(context)!;
     return Consumer<ShipmentProvider>(
         builder: (context, shipmentProvider, child) {
       return Container(
@@ -340,8 +342,8 @@ class _ShipmentScreenState extends State<ShipmentScreen>
             ? Center(
                 child: _buildEmptyState(
                 icon: Icons.inventory_2,
-                title: "No Completed shipments",
-                subtitle: "Be the first to post a shipment request!",
+                title: t.no_completed_shipments,
+                subtitle: t.no_completed_shipments_subtitle,
                 buttonText: "Post Shipment",
               ))
             : ListView.builder(

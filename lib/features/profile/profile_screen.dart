@@ -80,12 +80,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final t = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(
         backgroundColor: AppColors.appBarBackground,
-        title: const Text(
-          'Profile',
-          style: TextStyle(
+        title:  Text(
+          t.profile,
+          style:const  TextStyle(
               color: AppColors.appBarText, fontWeight: FontWeight.w600),
         ),
         centerTitle: true,
@@ -122,12 +123,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Widget _buildUserStats() {
+    final t = AppLocalizations.of(context)!;
     final userProvider = Provider.of<UserProvider>(context);
     final user = userProvider.user;
+
+  bool isArabic = Localizations.localeOf(context).languageCode == 'ar';
     if (user == null) {
-      return const Center(
+      return  Center(
         child: Text(
-          'No user data available',
+          t.no_user_data,
           style: TextStyle(fontSize: 16, color: Colors.grey),
         ),
       );
@@ -160,7 +164,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      user.displayName ?? 'Guest User',
+                      user.displayName ?? t.guest_user,
                       style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w600,
@@ -170,7 +174,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       overflow: TextOverflow.ellipsis,
                     ),
                     Text(
-                      'Member since ${formatDate(user.createdAt!)}',
+                      '${t.member_since} ${formatDate(user.createdAt!)}',
                       style: TextStyle(
                         fontSize: 12,
                         color: Colors.grey[600],
@@ -178,8 +182,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ),
                   ]),
               const Spacer(),
-              const CustomIcon(
-                iconPath: "assets/icon/alt-arrow-right.svg",
+               CustomIcon(
+                iconPath: isArabic ?  "assets/icon/alt-arrow-left.svg": "assets/icon/alt-arrow-right.svg",
                 color: Colors.black,
                 size: 20,
               ),
@@ -189,19 +193,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Widget _buildQuickActions() {
+    final t = AppLocalizations.of(context)!;
     return Column(
       children: [
         _buildQuickActionItem(
-          title: "Become a driver",
-          subtitle: "Earn money by delivering packages",
+          title: t.become_driver,
+          subtitle: t.earn_money,
           icon: Icons.local_shipping_outlined,
           color: AppColors.blue700,
           onTap: () => {context.push("/Register-driver")},
         ),
         const SizedBox(height: 16),
         _buildQuickActionItem(
-          title: "Refer friends",
-          subtitle: "Invite friends and earn rewards",
+          title: t.refer_friends,
+          subtitle: t.invite_friends,
           icon: Icons.card_giftcard_outlined,
           color: const Color(0xFF00A699),
           onTap: () => _showComingSoon("refer to your friend"),
@@ -288,30 +293,31 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Widget _buildSettingsSection() {
+    final t = AppLocalizations.of(context)!;
     return _buildSection(
-      title: "Settings",
+      title: t.settings,
       children: [
         settingsCard(
-          title: "Personal information",
-          subtitle: "Update your details and preferences",
+          title: t.personal_info,
+          subtitle: t.update_details,
           iconPath: "assets/icon/edit-user.svg",
           onTap: () => context.push("/profile/info"),
         ),
         settingsCard(
-          title: "Security",
-          subtitle: "Manage account preferences",
+          title: t.security,
+          subtitle: t.manage_account,
           iconPath: "assets/icon/edit-user.svg",
           onTap: () => context.push("/profile-security"),
         ),
         settingsCard(
-          title: "Notifications",
-          subtitle: "Manage your notification preferences",
+          title: t.notifications,
+          subtitle: t.manage_notifications,
           iconPath: "assets/icon/notification.svg",
           onTap: () => _showComingSoon("notifications"),
         ),
         settingsCard(
-          title: "Payment methods",
-          subtitle: "Add or remove payment methods",
+          title: t.payment_methods,
+          subtitle: t.manage_payments,
           iconPath: "assets/icon/money.svg",
           onTap: () => _showComingSoon("Payment"),
         ),
@@ -320,12 +326,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Widget _buildSupportSection() {
+     final t = AppLocalizations.of(context)!;
     return _buildSection(
-      title: "Support",
+      title: t.support,
       children: [
         settingsCard(
-          title: "Get help",
-          subtitle: "Contact our support team",
+          title: t.get_help,
+          subtitle: t.contact_support,
           iconPath: "assets/icon/suport.svg",
           onTap: () => _showComingSoon("Contact support"),
         ),
@@ -334,18 +341,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Widget _buildLegalSection() {
+    final t = AppLocalizations.of(context)!;
     return _buildSection(
-      title: "Legal",
+      title: t.legal,
       children: [
         settingsCard(
-          title: "Terms of Service",
-          subtitle: "Read our terms and conditions",
+          title: t.terms_service,
+          subtitle: t.read_terms,
           iconPath: "assets/icon/condition.svg",
           onTap: () => context.push("/terms-of-service"),
         ),
         settingsCard(
-          title: "Privacy Policy",
-          subtitle: "Learn how we protect your data",
+          title: t.privacy_policy,
+          subtitle: t.learn_privacy,
           iconPath: "assets/icon/privacy.svg",
           onTap: () => context.push("/privacy-policy"),
         ),
@@ -392,6 +400,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Widget _buildLogoutSection() {
+     final t = AppLocalizations.of(context)!;
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
@@ -435,10 +444,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ),
                 ),
                 const SizedBox(width: 16),
-                const Expanded(
+                 Expanded(
                   child: Text(
-                    "Log out",
-                    style: TextStyle(
+                    t.logout,
+                    style:const TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w600,
                       color: Colors.red,
@@ -454,9 +463,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Widget _buildVersionInfo() {
+
+     final t = AppLocalizations.of(context)!;
     return Center(
       child: Text(
-        "Version 1.0.0 - 2025",
+        t.version_info ,
         style: TextStyle(
           fontSize: 14,
           color: Colors.grey[500],

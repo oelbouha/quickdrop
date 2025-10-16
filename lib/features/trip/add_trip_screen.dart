@@ -32,12 +32,21 @@ class _AddTripScreenState extends State<AddTripScreen>
   int _currentStep = 0;
   final _pageController = PageController();
 
-  final List<String> _stepTitles = [
-    'Package Details',
-    'Delivery Locations',
-    // 'Package Dimensions',
-    'Timing & Image',
-  ];
+  // final List<String> stepTitles = [
+  //   'Package Details',
+  //   'Delivery Locations',
+  //   // 'Package Dimensions',
+  //   'Timing & Image',
+    
+  // ];
+
+   List<String> getSteps(BuildContext context) {
+    final t = AppLocalizations.of(context)!;
+
+    return [
+      t.tip_1_step, t.tip_2_step, t.tip_3_step
+    ];
+  }
 
   final List<IconData> _stepIcons = [
     Icons.inventory_2_outlined,
@@ -97,6 +106,8 @@ class _AddTripScreenState extends State<AddTripScreen>
 
   void _listTrip() async {
     if (_isListButtonLoading) return;
+    final loc = AppLocalizations.of(context)!;
+
     setState(() {
       _isListButtonLoading = true;
     });
@@ -107,7 +118,7 @@ class _AddTripScreenState extends State<AddTripScreen>
       final user = FirebaseAuth.instance.currentUser;
       if (user == null) {
         AppUtils.showDialog(
-            context, 'Please log in to list a shipment', AppColors.error);
+            context, loc.login_required, AppColors.error);
         return;
       }
 
@@ -125,24 +136,24 @@ class _AddTripScreenState extends State<AddTripScreen>
         if (widget.isEditMode) {
           _updateTrip();
           await showSuccessAnimation(context,
-                  title: widget.isEditMode ? 'Trip Updated Successfully!' : 'Trip Listed Successfully!',
-                  message:  widget.isEditMode ? 'Your Trip has been updated and is now visible to couriers.' : 'Your Trip has been added and is now visible to couriers.',
+                  title: widget.isEditMode ? loc.trip_update_success_title : loc.trip_list_success_title,
+                  message:  widget.isEditMode ? loc.trip_update_success_message : loc.trip_list_success_message,
                 );
         } else {
           await Provider.of<TripProvider>(context, listen: false).addTrip(trip);
           if (mounted) {
             Provider.of<StatisticsProvider>(context, listen: false)
                 .incrementField(user.uid, "pendingTrips");
-            await showSuccessAnimation(context,
-                  title: widget.isEditMode ? 'Trip Updated Successfully!' : 'Trip Listed Successfully!',
-                  message:  widget.isEditMode ? 'Your Trip has been updated and is now visible to couriers.' : 'Your Trip has been added and is now visible to couriers.',
+             await showSuccessAnimation(context,
+                  title: widget.isEditMode ? loc.trip_update_success_title : loc.trip_list_success_title,
+                  message:  widget.isEditMode ? loc.trip_update_success_message : loc.trip_list_success_message,
                 );
           }
         }
       } catch (e) {
         if (mounted) {
           AppUtils.showDialog(
-              context, 'Failed to list Trip ${e}', AppColors.error);
+              context, loc.trip_list_failed, AppColors.error);
         }
       } finally {
         setState(() {
@@ -150,7 +161,7 @@ class _AddTripScreenState extends State<AddTripScreen>
         });
       }
     } else {
-      AppUtils.showDialog(context, 'some fields are empty', AppColors.error);
+      AppUtils.showDialog(context, loc.fields_empty, AppColors.error);
     }
     setState(() {
       _isListButtonLoading = false;
@@ -213,13 +224,14 @@ class _AddTripScreenState extends State<AddTripScreen>
 
   @override
   Widget build(BuildContext context) {
+    final loc = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
         title:  Text(
-          widget.isEditMode ? 'Update trip' : 'Create Trip',
+          widget.isEditMode ? loc.update_trip : loc.create_trip,
           style: const TextStyle(
             color: AppColors.headingText,
             fontWeight: FontWeight.w600,
@@ -272,13 +284,14 @@ class _AddTripScreenState extends State<AddTripScreen>
   }
 
   Widget _buildTripDetails() {
+    final loc = AppLocalizations.of(context)!;
     return _buildStepContainer(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _buildSectionHeader(
             icon: Icons.inventory_2_outlined,
-            title: "Trip Details",
+            title: loc.trip_details,
             color: AppColors.blue700,
             backgroundColor: AppColors.blue700.withOpacity(0.1),
           ),
@@ -286,7 +299,7 @@ class _AddTripScreenState extends State<AddTripScreen>
           TextFieldWithHeader(
             controller: priceController,
             hintText: "0.00",
-            headerText: "Delivery Price (MAD)",
+            headerText: loc.delivery_price,
             validator: Validators.isNumber,
             keyboardType: TextInputType.number,
           ),
@@ -294,17 +307,16 @@ class _AddTripScreenState extends State<AddTripScreen>
           TextFieldWithHeader(
             controller: weightController,
             hintText: "0.00",
-            headerText: "Available Weight (kg)",
+            headerText: loc.available_weight,
             validator: Validators.isNumber,
             keyboardType: TextInputType.number,
           ),
           const SizedBox(height: 20),
           buildInfoCard(
             icon: Icons.info_outline,
-            title: "Pricing Tip",
-            message:
-                "Set a competitive price based on distance, package size, and urgency.",
-            color: Colors.blue,
+            title: loc.pricing_tip_title,
+            message:  loc.pricing_tip_message,    
+                    color: Colors.blue,
           ),
         ],
       ),
@@ -313,40 +325,41 @@ class _AddTripScreenState extends State<AddTripScreen>
 
 
   bool _validateCurrentStep() {
+    final loc = AppLocalizations.of(context)!;
     switch (_currentStep) {
       case 0: // Locations
         if (fromController.text.isEmpty) {
-          AppUtils.showDialog(context,'Pickup location is required', AppColors.error);
+          AppUtils.showDialog(context, loc.pickup_required, AppColors.error);
           return false;
         }
         if (toController.text.isEmpty) {
-          AppUtils.showDialog(context,'Delivery location is required', AppColors.error);
+          AppUtils.showDialog(context,loc.delivery_required, AppColors.error);
           return false;
         }
         return true;
       case 1: // Package Details
         if (priceController.text.isEmpty) {
-          AppUtils.showDialog(context,'Price is required', AppColors.error);
+          AppUtils.showDialog(context,loc.price_required, AppColors.error);
           return false;
         }
         if (Validators.isNumber(priceController.text) != null) {
-          AppUtils.showDialog(context,'Price must be a number', AppColors.error);
+          AppUtils.showDialog(context,loc.price_number, AppColors.error);
           return false;
         }
         return true;
       case 2: // Dimensions
         if (weightController.text.isEmpty) {
-          AppUtils.showDialog(context,'Weight is required', AppColors.error);
+          AppUtils.showDialog(context,loc.weight_required, AppColors.error);
           return false;
         }
         if (Validators.isNumber(weightController.text) != null) {
-          AppUtils.showDialog(context,'Weight must be a number', AppColors.error);
+          AppUtils.showDialog(context,loc.weight_number, AppColors.error);
           return false;
         }
         return true;
       case 3: // Timing
         if (dateController.text.isEmpty) {
-          AppUtils.showDialog(context,'Pickup date is required', AppColors.error);
+          AppUtils.showDialog(context,loc.pickup_date_required, AppColors.error);
           return false;
         }
         return true;
@@ -376,6 +389,9 @@ class _AddTripScreenState extends State<AddTripScreen>
   }
 
   Widget _buildNavigationButtons() {
+    final loc = AppLocalizations.of(context)!;
+    final stepTitles = getSteps(context);
+
     return Container(
       padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
@@ -398,7 +414,7 @@ class _AddTripScreenState extends State<AddTripScreen>
                 child: OutlinedButton.icon(
                   onPressed: _goToPreviousStep,
                   icon: const Icon(Icons.arrow_back, size: 18),
-                  label: const Text('Back'),
+                  label:  Text(loc.back),
                   style: OutlinedButton.styleFrom(
                     padding: const EdgeInsets.symmetric(vertical: 16),
                     shape: RoundedRectangleBorder(
@@ -419,7 +435,7 @@ class _AddTripScreenState extends State<AddTripScreen>
                 child: ElevatedButton.icon(
                   onPressed: _isListButtonLoading
                       ? null
-                      : (_currentStep == _stepTitles.length - 1
+                      : (_currentStep == stepTitles.length - 1
                           ? _listTrip
                           : _goToNextStep),
                   icon: _isListButtonLoading
@@ -433,17 +449,17 @@ class _AddTripScreenState extends State<AddTripScreen>
                           ),
                         )
                       : Icon(
-                          _currentStep == _stepTitles.length - 1
+                          _currentStep == stepTitles.length - 1
                               ? Icons.check
                               : Icons.arrow_forward,
                           size: 18,
                         ),
                   label: Text(
                     _isListButtonLoading
-                        ? 'Processing...'
-                        : (_currentStep == _stepTitles.length - 1
-                            ?  widget.isEditMode ? 'Update trip' : 'Create trip'
-                            : 'Continue'),
+                        ? loc.processing
+                        : (_currentStep == stepTitles.length - 1
+                            ?  widget.isEditMode ? loc.update_trip : loc.create_trip
+                            : loc.cntinue),
                   ),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppColors.blue700,
@@ -464,6 +480,7 @@ class _AddTripScreenState extends State<AddTripScreen>
   }
 
   Widget _buildProgressBar() {
+    final stepTitles = getSteps(context);
     return Container(
         // alignment: ali,
         padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
@@ -485,7 +502,7 @@ class _AddTripScreenState extends State<AddTripScreen>
               Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: List.generate(_stepTitles.length, (index) {
+                children: List.generate(stepTitles.length, (index) {
                   final isActive = _currentStep >= index;
                   final isCurrent = _currentStep == index;
 
@@ -526,7 +543,7 @@ class _AddTripScreenState extends State<AddTripScreen>
                           ),
                         ),
                         // Connecting line (except for last item)
-                        if (index < _stepTitles.length - 1)
+                        if (index < stepTitles.length - 1)
                           Flexible(
                             child: Container(
                               height: 2,
@@ -605,36 +622,36 @@ class _AddTripScreenState extends State<AddTripScreen>
   }
 
   Widget _buildPackageDestination() {
+    final loc = AppLocalizations.of(context)!;
     return _buildStepContainer(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _buildSectionHeader(
             icon: Icons.location_on_outlined,
-            title: "Trip Locations",
+            title: loc.trip_locations,
             color: const Color(0xFF10B981),
             backgroundColor: const Color(0xFFD1FAE5),
           ),
           const SizedBox(height: 24),
           TextFieldWithHeader(
               controller: fromController,
-              hintText: "From",
-              headerText: "Pickup Location",
+              hintText: loc.from_hint,
+              headerText: loc.pickup_location,
               validator: Validators.notEmpty,
               iconPath: "assets/icon/map-point.svg"),
           const SizedBox(height: 16),
           TextFieldWithHeader(
               controller: toController,
-              hintText: "To",
-              headerText: "Delivery Location",
+              hintText: loc.to_hint,
+              headerText: loc.delivery_location,
               validator: Validators.notEmpty,
               iconPath: "assets/icon/map-point.svg"),
           const SizedBox(height: 20),
           buildInfoCard(
             icon: Icons.location_on,
-            title: "Location Details Matter",
-            message:
-                "Include landmarks, building numbers, and floor details for smoother pickup and delivery.",
+            title: loc.location_tip_title,
+            message:loc.location_tip_message,
             color: Colors.green,
           ),
         ],
@@ -643,29 +660,30 @@ class _AddTripScreenState extends State<AddTripScreen>
   }
 
   Widget _buildTimingDetails() {
+    final loc = AppLocalizations.of(context)!;
     return _buildStepContainer(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _buildSectionHeader(
             icon: Icons.schedule_outlined,
-            title: "Timing",
+            title: loc.timing,
             color: const Color(0xFFF59E0B),
             backgroundColor: const Color(0xFFFEF3C7),
           ),
           const SizedBox(height: 20),
-          TextWithRequiredIcon(text: "Pickup Date"),
+          TextWithRequiredIcon(text: loc.pickup_date),
           const SizedBox(height: 8),
           DateTextField(
             controller: dateController,
             backgroundColor: AppColors.cardBackground,
             onTap: () => _selectDate(context),
-            hintText: "Select pickup date",
+            hintText: loc.select_pickup_date,
             validator: Validators.notEmpty,
           ),
           const SizedBox(height: 20),
           
-          TextWithRequiredIcon(text: "transport Type"),
+          TextWithRequiredIcon(text: loc.transport_type),
           TypeSelectorWidget(
             onTypeSelected: (type) {
               transportTypeController.text = type;
@@ -678,9 +696,8 @@ class _AddTripScreenState extends State<AddTripScreen>
           const SizedBox(height: 20),
           buildInfoCard(
             icon: Icons.schedule,
-            title: "Flexible Timing",
-            message:
-                "We'll contact you to confirm the exact pickup time within your preferred date.",
+            title: loc.timing_tip_title,
+            message: loc.timing_tip_message,
             color: Colors.orange,
           ),
         ],

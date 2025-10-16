@@ -92,8 +92,6 @@ class _ListingTripLoaderState extends State<ListingTripLoader> {
 
   @override
   Widget build(BuildContext context) {
-    print(
-        "fetching trip data for ${widget.shipmentId} by user ${widget.userId}");
     return FutureBuilder<(UserData, TransportItem)>(
       future: fetchData(),
       builder: (context, snapshot) {
@@ -245,6 +243,7 @@ class _ListingCardDetailsState extends State<ListingCardDetails> {
   }
 
   Widget _buildDetailsSection() {
+    final t = AppLocalizations.of(context)!;
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       padding: const EdgeInsets.all(20),
@@ -264,8 +263,8 @@ class _ListingCardDetailsState extends State<ListingCardDetails> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            "Package Details",
+           Text(
+            t.package_details,
             style: TextStyle(
               color: AppColors.headingText,
               fontWeight: FontWeight.bold,
@@ -275,7 +274,7 @@ class _ListingCardDetailsState extends State<ListingCardDetails> {
           const SizedBox(height: 20),
           _buildDetailItem(
             icon: "assets/icon/delivery.svg",
-            title: "Route",
+            title: t.route,
             child: Destination(
               from: widget.shipment.from,
               to: widget.shipment.to,
@@ -285,7 +284,7 @@ class _ListingCardDetailsState extends State<ListingCardDetails> {
           ),
           _buildDetailItem(
             icon: "assets/icon/calendar.svg",
-            title: "Delivery Date",
+            title: t.pickup_date,
             child: Text(
               widget.shipment.date,
               style: const TextStyle(
@@ -296,7 +295,7 @@ class _ListingCardDetailsState extends State<ListingCardDetails> {
           ),
           _buildDetailItem(
             icon: "assets/icon/weight.svg",
-            title: _selectedShipment == null ? "Available Weight" : "Weight",
+            title: _selectedShipment == null ? t.available_weight : t.weight_label,
             child: Text(
               '${widget.shipment.weight} kg',
               style: const TextStyle(
@@ -310,7 +309,7 @@ class _ListingCardDetailsState extends State<ListingCardDetails> {
                 ? "assets/icon/package.svg"
                 : "assets/icon/car.svg",
             title:
-                _selectedShipment != null ? "Package type" : "Transport type",
+                _selectedShipment != null ? t.package_type_label : "Transport type",
             child: Text(
               '${_selectedShipment == null ? _selectedTrip!.transportType : _selectedShipment!.type}',
               style: const TextStyle(
@@ -370,6 +369,7 @@ class _ListingCardDetailsState extends State<ListingCardDetails> {
   }
 
   Widget _buildPriceAndAction() {
+    final t = AppLocalizations.of(context)!;
     if (widget.viewOnly || _selectedShipment == null ||
         _selectedShipment?.userId == FirebaseAuth.instance.currentUser?.uid) {
       return Container();
@@ -395,8 +395,8 @@ class _ListingCardDetailsState extends State<ListingCardDetails> {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
-                  "Starting from",
+                 Text(
+                  t.starting_from,
                   style: TextStyle(
                     fontSize: 12,
                     fontWeight: FontWeight.w600,
@@ -436,7 +436,7 @@ class _ListingCardDetailsState extends State<ListingCardDetails> {
             onPressed: _showRequestSheet,
             icon: const Icon(Icons.send, size: 18),
             label: Text(
-              _isMenuOpen ? 'send Request' : 'Send Offer',
+              _isMenuOpen ? t.send_request : t.send_offer,
               style: TextStyle(fontWeight: FontWeight.w600),
             ),
             style: ElevatedButton.styleFrom(
@@ -502,6 +502,7 @@ class _ListingCardDetailsState extends State<ListingCardDetails> {
   }
 
   Widget _buildDescription() {
+    final t = AppLocalizations.of(context)!;
     if (_selectedShipment == null) {
       return Container();
     }
@@ -529,7 +530,7 @@ class _ListingCardDetailsState extends State<ListingCardDetails> {
                   fontSize: 26,
                   color: AppColors.headingText,
                   fontWeight: FontWeight.bold)),
-          const Text("Package Description",
+           Text(t.package_description_hint,
               style: TextStyle(
                   color: AppColors.headingText,
                   fontWeight: FontWeight.bold,
@@ -622,19 +623,20 @@ class _ListingCardDetailsState extends State<ListingCardDetails> {
 // Replace the _sendDeliveryRequest method with this version:
 
   void _sendDeliveryRequest(Trip? trip, [StateSetter? setModalState]) async {
+    final t = AppLocalizations.of(context)!;
     if (_isLoading) return;
 
     if (!_formKey.currentState!.validate()) {
       AppUtils.showDialog(
-          context, 'Please complete all required fields', AppColors.error);
+          context, t.please_complete_all_fields, AppColors.error);
       return;
     }
     if (trip == null) {
-      AppUtils.showDialog(context, 'Please select a trip', AppColors.error);
+      AppUtils.showDialog(context, t.please_select_trip, AppColors.error);
       return;
     }
     if (trip.id == null) {
-      AppUtils.showDialog(context, 'Selected trip is invalid', AppColors.error);
+      AppUtils.showDialog(context, t.selected_trip_invalid, AppColors.error);
       return;
     }
 
@@ -657,7 +659,7 @@ class _ListingCardDetailsState extends State<ListingCardDetails> {
       if (user == null) {
         updateLoadingState(false);
         AppUtils.showDialog(
-            context, 'Please log in to list a shipment', AppColors.error);
+            context, t.login_required, AppColors.error);
         return;
       }
 
@@ -677,7 +679,7 @@ class _ListingCardDetailsState extends State<ListingCardDetails> {
 
         // Show success message
         AppUtils.showDialog(
-            context, 'Request sent successfully', AppColors.succes);
+            context, t.request_sent_success, AppColors.succes);
         Navigator.pop(context);
 
         // Close the bottom sheet after a short delay
@@ -701,10 +703,11 @@ class _ListingCardDetailsState extends State<ListingCardDetails> {
 // Also update the _buildRequesBody method to use StatefulBuilder:
 
   Widget _buildRequesBody() {
+    final t = AppLocalizations.of(context)!;
     return Consumer<TripProvider>(builder: (context, tripProvider, child) {
       final user = FirebaseAuth.instance.currentUser;
       if (user == null) {
-        return const Center(child: Text('Please log in to send a request'));
+        return  Center(child: Text(t.login_required));
       }
 
       final activeTrips = tripProvider.trips
@@ -732,17 +735,17 @@ class _ListingCardDetailsState extends State<ListingCardDetails> {
                       ),
                     ),
                   ),
-                  const Text(
-                    "Select a Trip",
+                   Text(
+                    t.choose_a_trip,
                     style:
                         TextStyle(color: AppColors.headingText, fontSize: 16),
                   ),
                   const SizedBox(height: 10),
                   activeTrips.isEmpty
-                      ? const Text(
-                          "No active trips match this shipment's destination",
+                      ?  Text(
+                          t.no_active_trips_available,
                           style:
-                              TextStyle(color: AppColors.error, fontSize: 14),
+                              const TextStyle(color: AppColors.error, fontSize: 14),
                         )
                       : DropdownButtonFormField<Trip>(
                           decoration: InputDecoration(
@@ -754,15 +757,15 @@ class _ListingCardDetailsState extends State<ListingCardDetails> {
                                     color: AppColors.lessImportant),
                               )),
                           dropdownColor: AppColors.background,
-                          hint: const Text(
-                            "Choose a trip",
-                            style: TextStyle(color: AppColors.headingText),
+                          hint:  Text(
+                            t.choose_a_trip,
+                            style:const TextStyle(color: AppColors.headingText),
                           ),
                           items: activeTrips.map((trip) {
                             return DropdownMenuItem<Trip>(
                               value: trip,
                               child: Text(
-                                "${trip.from} to ${trip.to} - ${trip.date}",
+                                "${trip.from} ${t.to_hint} ${trip.to} - ${trip.date}",
                                 style: const TextStyle(
                                     color: AppColors.headingText),
                               ),
@@ -774,13 +777,13 @@ class _ListingCardDetailsState extends State<ListingCardDetails> {
                             });
                           },
                           validator: (value) =>
-                              value == null ? "Please select a trip" : null,
+                              value == null ? t.please_select_trip : null,
                         ),
                   const SizedBox(height: 20),
                   TextFieldWithHeader(
                     controller: noteController,
-                    hintText: "Add a note",
-                    headerText: "Note",
+                    hintText: t.add_a_note,
+                    headerText: t.note,
                     keyboardType: TextInputType.text,
                     isRequired: false,
                     maxLines: 2,
@@ -788,14 +791,14 @@ class _ListingCardDetailsState extends State<ListingCardDetails> {
                   const SizedBox(height: 10),
                   TextFieldWithHeader(
                     controller: priceController,
-                    hintText: "0.00",
-                    headerText: "Price (dh)",
+                    hintText: t.delivery_price_hint,
+                    headerText: t.delivery_price_label,
                     validator: Validators.isNumber,
                     keyboardType: TextInputType.number,
                   ),
                   const SizedBox(height: 20),
                   Button(
-                      hintText: "Send request",
+                      hintText: t.send_request,
                       isLoading: _isLoading,
                       onPressed: () {
                         _sendDeliveryRequest(_selectedTrip, setModalState);

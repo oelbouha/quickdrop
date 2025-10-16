@@ -1,10 +1,5 @@
 import 'dart:io'; // Import File class
-import 'dart:math';
-import 'package:flutter/services.dart';
-import 'package:flutter/material.dart';
 import 'package:quickdrop_app/core/utils/imports.dart';
-import 'package:quickdrop_app/core/widgets/dropDownTextField.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 export 'package:quickdrop_app/core/widgets/tipWidget.dart';
 
 class AddShipmentScreen extends StatefulWidget {
@@ -47,12 +42,20 @@ class _AddShipmentScreenState extends State<AddShipmentScreen>
   int _currentStep = 0;
   final _pageController = PageController();
 
-  final List<String> _stepTitles = [
-    'Package Details',
-    'Delivery Locations',
-    'Package Dimensions',
-    'Timing & Image',
-  ];
+  // final List<String> stepTitles = [
+  //   'Package Details',
+  //   'Delivery Locations',
+  //   'Package Dimensions',
+  //   'Timing & Image',
+  // ];
+
+   List<String> getSteps(BuildContext context) {
+    final t = AppLocalizations.of(context)!;
+
+    return [
+      t.package_details, t.delivery_locations, t.package_dimensions, t.timing_image
+    ];
+  }
 
   final List<IconData> _stepIcons = [
     Icons.inventory_2_outlined,
@@ -171,8 +174,9 @@ class _AddShipmentScreenState extends State<AddShipmentScreen>
   }
 
   void _listShipment() async {
+    final t = AppLocalizations.of(context)!;
     if (_selectedImage == null) {
-      AppUtils.showDialog(context, 'Please select an image', AppColors.error);
+      AppUtils.showDialog(context, t.image_not_selected, AppColors.error);
       return;
     }
     // if (_isImageLoading) {
@@ -189,7 +193,7 @@ class _AddShipmentScreenState extends State<AddShipmentScreen>
       final user = FirebaseAuth.instance.currentUser;
       if (user == null) {
         AppUtils.showDialog(
-            context, 'Please log in to list a shipment', AppColors.error);
+            context, t.login_required, AppColors.error);
         setState(() {
           _isListButtonLoading = false;
         });
@@ -201,14 +205,14 @@ class _AddShipmentScreenState extends State<AddShipmentScreen>
        imagePath =  await Provider.of<ShipmentProvider>(context, listen: false)
           .uploadImageToSupabase(File(_selectedImage!.path));
       if (imagePath == null) {
-        AppUtils.showDialog(context, 'Image upload failed', AppColors.error);
+        AppUtils.showDialog(context, t.image_upload_failed, AppColors.error);
         setState(() {
           _isListButtonLoading = false;
         });
         return;
       }
       } catch (e) {
-        AppUtils.showDialog(context, 'Image upload failed: $e', AppColors.error);
+        AppUtils.showDialog(context, t.image_upload_failed, AppColors.error);
         setState(() {
           _isListButtonLoading = false;
         });
@@ -237,11 +241,11 @@ class _AddShipmentScreenState extends State<AddShipmentScreen>
           await showSuccessAnimation(
             context,
             title: widget.isEditMode
-                ? 'Shipment Updated Successfully!'
-                : 'Package Listed Successfully!',
+                ? t.shipment_update_success_title
+                : t.shipment_list_success_title,
             message: widget.isEditMode
-                ? 'Your shipment has been updated and is now visible to couriers.'
-                : 'Your shipment has been added and is now visible to couriers.',
+                ? t.shipment_update_success_message
+                : t.shipment_list_success_message,
           );
         } else {
           await Provider.of<ShipmentProvider>(context, listen: false)
@@ -251,12 +255,12 @@ class _AddShipmentScreenState extends State<AddShipmentScreen>
                 .incrementField(user.uid, "pendingShipments");
             await showSuccessAnimation(
               context,
-              title: widget.isEditMode
-                  ? 'Shipment Updated Successfully!'
-                  : 'Package Listed Successfully!',
-              message: widget.isEditMode
-                  ? 'Your shipment has been updated and is now visible to couriers.'
-                  : 'Your shipment has been added and is now visible to couriers.',
+               title: widget.isEditMode
+                ? t.shipment_update_success_title
+                : t.shipment_list_success_title,
+            message: widget.isEditMode
+                ? t.shipment_update_success_message
+                : t.shipment_list_success_message,
             );
           }
         }
@@ -265,8 +269,8 @@ class _AddShipmentScreenState extends State<AddShipmentScreen>
           AppUtils.showDialog(
               context,
               widget.isEditMode
-                  ? 'Failed to update shipment: $e'
-                  : 'Failed to list shipment: $e',
+                  ? t.shipment_update_failed(e)
+                  : t.shipment_list_failed(e),
               AppColors.error);
         }
       } finally {
@@ -278,19 +282,20 @@ class _AddShipmentScreenState extends State<AddShipmentScreen>
       }
     } else {
       AppUtils.showDialog(
-          context, 'Please fill in all required fields', AppColors.error);
+          context, t.fields_empty, AppColors.error);
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final t = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
         title: Text(
-          widget.isEditMode ? 'Update Shipment' : 'Create Shipment',
+          widget.isEditMode ? t.update_shipment : t.create_shipment,
           style: const TextStyle(
             color: AppColors.headingText,
             fontWeight: FontWeight.w600,
@@ -341,6 +346,7 @@ class _AddShipmentScreenState extends State<AddShipmentScreen>
   }
 
   Widget _buildProgressBar() {
+    final stepTitles = getSteps(context);
     return Container(
         // alignment: ali,
         padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
@@ -362,7 +368,7 @@ class _AddShipmentScreenState extends State<AddShipmentScreen>
               Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: List.generate(_stepTitles.length, (index) {
+                children: List.generate(stepTitles.length, (index) {
                   final isActive = _currentStep >= index;
                   final isCurrent = _currentStep == index;
 
@@ -403,7 +409,7 @@ class _AddShipmentScreenState extends State<AddShipmentScreen>
                           ),
                         ),
                         // Connecting line (except for last item)
-                        if (index < _stepTitles.length - 1)
+                        if (index < stepTitles.length - 1)
                           Flexible(
                             child: Container(
                               height: 2,
@@ -428,7 +434,7 @@ class _AddShipmentScreenState extends State<AddShipmentScreen>
               // AnimatedSwitcher(
               //   duration: const Duration(milliseconds: 300),
               //   child: Text(
-              //     _stepTitles[_currentStep],
+              //     stepTitles[_currentStep],
               //     key: ValueKey(_currentStep),
               //     style: TextStyle(
               //       fontSize: 16,
@@ -444,7 +450,7 @@ class _AddShipmentScreenState extends State<AddShipmentScreen>
               // ClipRRect(
               //   borderRadius: BorderRadius.circular(4),
               //   child: LinearProgressIndicator(
-              //     value: (_currentStep + 1) / _stepTitles.length,
+              //     value: (_currentStep + 1) / stepTitles.length,
               //     backgroundColor: Colors.grey[200],
               //     valueColor: AlwaysStoppedAnimation<Color>(AppColors.blue700),
               //     minHeight: 6,
@@ -456,6 +462,8 @@ class _AddShipmentScreenState extends State<AddShipmentScreen>
   }
 
   Widget _buildNavigationButtons() {
+    final  stepTitles = getSteps(context);
+    final t = AppLocalizations.of(context)!;
     return Container(
       padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
@@ -478,7 +486,7 @@ class _AddShipmentScreenState extends State<AddShipmentScreen>
                 child: OutlinedButton.icon(
                   onPressed: _goToPreviousStep,
                   icon: const Icon(Icons.arrow_back, size: 18),
-                  label: const Text('Back'),
+                  label:  Text(t.back),
                   style: OutlinedButton.styleFrom(
                     padding: const EdgeInsets.symmetric(vertical: 16),
                     shape: RoundedRectangleBorder(
@@ -499,7 +507,7 @@ class _AddShipmentScreenState extends State<AddShipmentScreen>
                 child: ElevatedButton.icon(
                   onPressed: _isListButtonLoading
                       ? null
-                      : (_currentStep == _stepTitles.length - 1
+                      : (_currentStep == stepTitles.length - 1
                           ? _listShipment
                           : _goToNextStep),
                   icon: _isListButtonLoading
@@ -513,19 +521,19 @@ class _AddShipmentScreenState extends State<AddShipmentScreen>
                           ),
                         )
                       : Icon(
-                          _currentStep == _stepTitles.length - 1
+                          _currentStep == stepTitles.length - 1
                               ? Icons.check
                               : Icons.arrow_forward,
                           size: 18,
                         ),
                   label: Text(
                     _isListButtonLoading
-                        ? 'Processing...'
-                        : (_currentStep == _stepTitles.length - 1
+                        ? t.processing
+                        : (_currentStep == stepTitles.length - 1
                             ? widget.isEditMode
-                                ? 'Update Shipment'
-                                : 'Create Shipment'
-                            : 'Continue'),
+                                ? t.update_shipment
+                                : t.create_shipment
+                            : t.cntinue),
                   ),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppColors.blue700,
@@ -546,63 +554,64 @@ class _AddShipmentScreenState extends State<AddShipmentScreen>
   }
 
   bool _validateCurrentStep() {
+    final t = AppLocalizations.of(context)!;
     switch (_currentStep) {
       case 1: // Package Details
         if (packageNameController.text.isEmpty) {
           AppUtils.showDialog(
-              context, 'Package name is required', AppColors.error);
+              context, t.package_name_required, AppColors.error);
           return false;
         }
         if (descriptionController.text.isEmpty) {
           AppUtils.showDialog(
-              context, 'Description is required', AppColors.error);
+              context, t.description_required, AppColors.error);
           return false;
         }
         if (typeController.text.isEmpty) {
           AppUtils.showDialog(
-              context, 'Package type is required', AppColors.error);
+              context, t.package_type_required, AppColors.error);
           return false;
         }
         if (priceController.text.isEmpty) {
-          AppUtils.showDialog(context, 'Price is required', AppColors.error);
+          AppUtils.showDialog(context, t.price_required, AppColors.error);
           return false;
         }
         return true;
       case 0: // Locations
         if (fromController.text.isEmpty) {
           AppUtils.showDialog(
-              context, 'Pickup location is required', AppColors.error);
+              context, t.pickup_required, AppColors.error);
           return false;
         }
         if (toController.text.isEmpty) {
           AppUtils.showDialog(
-              context, 'Delivery location is required', AppColors.error);
+              context, t.delivery_required, AppColors.error);
           return false;
         }
         return true;
       case 2: // Dimensions
         if (weightController.text.isEmpty) {
-          AppUtils.showDialog(context, 'Weight is required', AppColors.error);
+          AppUtils.showDialog(context, t.weight_required, AppColors.error);
           return false;
         }
         if (packageQuantityController.text.isEmpty) {
-          AppUtils.showDialog(context, 'Quantity is required', AppColors.error);
+          AppUtils.showDialog(context, t.quantity_required, AppColors.error);
           return false;
         }
         return true;
       case 3: // Timing
         if (dateController.text.isEmpty) {
           AppUtils.showDialog(
-              context, 'Pickup date is required', AppColors.error);
+              context, t.pickup_date_required, AppColors.error);
           return false;
         }
         if (imagePath == null) {
           AppUtils.showDialog(
-              context, 'Please select an image', AppColors.error);
+              context, t.image_not_selected, AppColors.error);
           return false;
         }
         if (_isImageLoading) {
-          AppUtils.showDialog(context, 'Image is still uploading, please wait',
+          AppUtils.showDialog(context, t.image_uploading_message,
               AppColors.error);
           return false;
         }
@@ -633,6 +642,8 @@ class _AddShipmentScreenState extends State<AddShipmentScreen>
   }
 
   Future<void> _pickImage() async {
+        final t = AppLocalizations.of(context)!;
+
     if (_isImageLoading) return;
     setState(() {
       _isImageLoading = true;
@@ -652,7 +663,7 @@ class _AddShipmentScreenState extends State<AddShipmentScreen>
       setState(() {
         _isImageLoading = false;
       });
-      AppUtils.showDialog(context, 'No image selected', AppColors.error);
+      AppUtils.showDialog(context, t.image_not_selected, AppColors.error);
     }
   }
 
@@ -707,21 +718,22 @@ class _AddShipmentScreenState extends State<AddShipmentScreen>
   }
 
   Widget _buildPackageDetails() {
+    final t = AppLocalizations.of(context)!;
     return _buildStepContainer(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _buildSectionHeader(
             icon: Icons.inventory_2_outlined,
-            title: "Package Details",
+            title: t.package_details,
             color: AppColors.blue700,
             backgroundColor: AppColors.blue700.withOpacity(0.1),
           ),
           const SizedBox(height: 24),
           TextFieldWithHeader(
             controller: packageNameController,
-            headerText: "Package Name",
-            hintText: "e.g., Phone case, Book, Documents",
+            headerText: t.package_name_label,
+            hintText: t.package_name_hint,
             obsecureText: false,
             keyboardType: TextInputType.text,
             validator: Validators.notEmpty,
@@ -729,25 +741,24 @@ class _AddShipmentScreenState extends State<AddShipmentScreen>
           const SizedBox(height: 16),
           TextFieldWithHeader(
             controller: descriptionController,
-            hintText: "Describe your package content in detail...",
-            headerText: "Package Description",
+            hintText: t.package_description_hint,
+            headerText: t.package_description_label,
             maxLines: 3,
             validator: Validators.notEmpty,
           ),
           const SizedBox(height: 16),
           TextFieldWithHeader(
             controller: priceController,
-            hintText: "0.00",
-            headerText: "Delivery Price (MAD)",
+            hintText: t.delivery_price_hint,
+            headerText: t.delivery_price_label,
             validator: Validators.isNumber,
             keyboardType: TextInputType.number,
           ),
           const SizedBox(height: 20),
           buildInfoCard(
             icon: Icons.info_outline,
-            title: "Pricing Tip",
-            message:
-                "Set a competitive price based on distance, package size, and urgency.",
+            title: t.pricing_tip_title,
+            message:t.pricing_tip_message,
             color: Colors.blue,
           ),
         ],
@@ -756,13 +767,14 @@ class _AddShipmentScreenState extends State<AddShipmentScreen>
   }
 
   Widget _buildPackageDimensions() {
+    final t = AppLocalizations.of(context)!;
     return _buildStepContainer(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _buildSectionHeader(
             icon: Icons.straighten_outlined,
-            title: "Package Dimensions",
+            title: t.package_dimensions,
             color: const Color(0xFF8B5CF6),
             backgroundColor: const Color(0xFFEDE9FE),
           ),
@@ -772,8 +784,8 @@ class _AddShipmentScreenState extends State<AddShipmentScreen>
               Expanded(
                 child: TextFieldWithHeader(
                   controller: weightController,
-                  hintText: "1.0",
-                  headerText: "Weight (kg)",
+                  hintText: t.weight_hint,
+                  headerText: t.weight_label,
                   keyboardType: TextInputType.number,
                   validator: Validators.isNumber,
                 ),
@@ -782,8 +794,8 @@ class _AddShipmentScreenState extends State<AddShipmentScreen>
               Expanded(
                 child: TextFieldWithHeader(
                   controller: packageQuantityController,
-                  hintText: "1",
-                  headerText: "Quantity",
+                  hintText: t.quantity_hint,
+                  headerText: t.quantity_label,
                   keyboardType: TextInputType.number,
                   validator: Validators.notEmpty,
                 ),
@@ -833,7 +845,7 @@ class _AddShipmentScreenState extends State<AddShipmentScreen>
           //     ),
           //   ],
           // ),
-          TextWithRequiredIcon(text: "Package Type"),
+          TextWithRequiredIcon(text: t.package_type_label),
           TypeSelectorWidget(
             onTypeSelected: (type) {
               typeController.text = type;
@@ -846,9 +858,8 @@ class _AddShipmentScreenState extends State<AddShipmentScreen>
           const SizedBox(height: 20),
           buildInfoCard(
             icon: Icons.scale_outlined,
-            title: "Accurate measurements help couriers prepare",
-            message:
-                "Providing dimensions helps couriers choose appropriate transport.",
+            title: t.dimensions_tip_title,
+            message:t.dimensions_tip_message,            
             color: Colors.purple,
           ),
         ],
@@ -857,36 +868,36 @@ class _AddShipmentScreenState extends State<AddShipmentScreen>
   }
 
   Widget _buildPackageDestination() {
+      final t = AppLocalizations.of(context)!;
     return _buildStepContainer(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _buildSectionHeader(
             icon: Icons.location_on_outlined,
-            title: "Delivery Locations",
+            title: t.delivery_locations,
             color: const Color(0xFF10B981),
             backgroundColor: const Color(0xFFD1FAE5),
           ),
           const SizedBox(height: 24),
           TextFieldWithHeader(
               controller: fromController,
-              hintText: "Departure city",
-              headerText: "From",
+              hintText: t.pickup_location,
+              headerText: t.from_hint,
               validator: Validators.notEmpty,
               iconPath: "assets/icon/map-point.svg"),
           const SizedBox(height: 16),
           TextFieldWithHeader(
               controller: toController,
-              hintText: "Destination city",
-              headerText: "To",
+              hintText: t.delivery_location,
+              headerText: t.to_hint,
               validator: Validators.notEmpty,
               iconPath: "assets/icon/map-point.svg"),
           const SizedBox(height: 20),
           buildInfoCard(
             icon: Icons.location_on,
-            title: "Location Details Matter",
-            message:
-                "Include landmarks, building numbers, and floor details for smoother pickup and delivery.",
+            title: t.location_tip_title,
+            message: t.location_tip_message,           
             color: Colors.green,
           ),
         ],
@@ -895,18 +906,19 @@ class _AddShipmentScreenState extends State<AddShipmentScreen>
   }
 
   Widget _buildTimingDetails() {
+    final t = AppLocalizations.of(context)!;
     return _buildStepContainer(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _buildSectionHeader(
             icon: Icons.schedule_outlined,
-            title: "Timing & Image",
+            title: t.timing_image,
             color: const Color(0xFFF59E0B),
             backgroundColor: const Color(0xFFFEF3C7),
           ),
           const SizedBox(height: 24),
-          TextWithRequiredIcon(text: "Package Image"),
+          TextWithRequiredIcon(text: t.package_image),
           const SizedBox(height: 8),
           ImageUpload(
             onPressed: _pickImage,
@@ -917,21 +929,20 @@ class _AddShipmentScreenState extends State<AddShipmentScreen>
             isLoading: _isImageLoading,
           ),
           const SizedBox(height: 20),
-          TextWithRequiredIcon(text: "Preferred Pickup Date"),
+          TextWithRequiredIcon(text: t.pickup_date),
           const SizedBox(height: 8),
           DateTextField(
             controller: dateController,
             backgroundColor: AppColors.cardBackground,
             onTap: () => _selectDate(context),
-            hintText: "Select pickup date",
+            hintText: t.select_pickup_date,
             validator: Validators.notEmpty,
           ),
           const SizedBox(height: 20),
           buildInfoCard(
             icon: Icons.schedule,
-            title: "Flexible Timing",
-            message:
-                "We'll contact you to confirm the exact pickup time within your preferred date.",
+            title: t.timing_tip_title,
+            message:t.timing_tip_message,            
             color: Colors.orange,
           ),
         ],

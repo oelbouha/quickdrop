@@ -53,22 +53,23 @@ class UpdateUserInfoScreenState extends State<UpdateUserInfoScreen>
   }
 
   Future<void> updateInfo() async {
+    final t = AppLocalizations.of(context)!;
     if (_isLoading) return;
 
     // Haptic feedback
     // HapticFeedback.lightImpact();
 
     if (_isImageLoading) {
-      AppUtils.showDialog(context, "Image is still uploading, please wait", AppColors.error);
+      AppUtils.showDialog(context, t.image_uploading_message, AppColors.error);
       return;
     }
     if (_formKey.currentState!.validate()) {
       // Show confirmation dialog
       final confirmed =  await ConfirmationDialog.show(
         context: context,
-        message: 'Are you sure you want to update your information?',
-        header: 'Save Changes',
-        buttonHintText: 'save',
+        message: t.save_changes_message,
+        header: t.save_changes,
+        buttonHintText: t.save_button_text,
         buttonColor: AppColors.blue700,
         iconColor: AppColors.blue700,
         iconData: Icons.save,
@@ -95,14 +96,14 @@ class UpdateUserInfoScreenState extends State<UpdateUserInfoScreen>
 
         if (mounted) {
           await showSuccessAnimation(context,
-            title: "Information updated Successfully!",
-            message: "Your sccount information has beenu pdated Successfully."
+            title: t.update_success_title,
+            message: t.update_success_message
           );
         }
       } catch (e) {
         if (mounted) {
           HapticFeedback.heavyImpact();
-          AppUtils.showDialog(context, "Failed to update profile information", AppColors.error);
+          AppUtils.showDialog(context, t.update_error_message, AppColors.error);
         }
       } finally {
         if (mounted) {
@@ -128,23 +129,22 @@ Future<void> _pickImage() async {
         _selectedImage = File(pickerFile.path);
          imagePath =  await Provider.of<ShipmentProvider>(context, listen: false)
             .uploadImageToSupabase(File(pickerFile.path));
-          print("Image uploaded to Supabase: $imagePath");
       setState(() {
         _isImageLoading = false;
-        print("Image selected: ${_selectedImage!.path}");
       });
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final t = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: Colors.grey[50],
       appBar: AppBar(
          backgroundColor: AppColors.appBarBackground,
-          title: const Text(
-            'Edit  profile',
-            style: TextStyle(color: AppColors.appBarText, fontWeight: FontWeight.w600),
+          title:  Text(
+            t.edit_profile,
+            style:const TextStyle(color: AppColors.appBarText, fontWeight: FontWeight.w600),
             
           ),
           centerTitle: true,
@@ -181,6 +181,8 @@ Future<void> _pickImage() async {
   }
 
   Widget _buildHeaderSection() {
+
+    final t = AppLocalizations.of(context)!;
     return Container(
       padding: const EdgeInsets.all(18),
       decoration: BoxDecoration(
@@ -214,17 +216,16 @@ Future<void> _pickImage() async {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
-                      "Update Profile",
-                      style: TextStyle(
+                     Text(
+                      t.update_profile,
+                      style:const TextStyle(
                         color: AppColors.headingText,
                         fontSize: 24,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
                     const SizedBox(height: 4),
-                    Text(
-                      "Keep your information up to date",
+                    Text(t.update_profile_subtitle,
                       style: TextStyle(
                         color: Colors.grey[600],
                         fontSize: 14,
@@ -243,8 +244,9 @@ Future<void> _pickImage() async {
 
 
  Widget _buildImageInfoSection() {
+  final t = AppLocalizations.of(context)!;
     return _buildSection(
-      title: "Profile Image",
+      title: t.profile_image,
       icon: Icons.image,
       children: [
         Row(
@@ -272,8 +274,8 @@ Future<void> _pickImage() async {
                   borderRadius: BorderRadius.circular(12),
                 ),
               ),
-              child: const Text(
-                'Change Image',
+              child:  Text(
+                t.change_image,
                 style: TextStyle(color: Colors.white),
               ),
             ),
@@ -289,9 +291,8 @@ Future<void> _pickImage() async {
         const SizedBox(height: 16),
         buildInfoCard(
           icon: Icons.info_outline,
-          title: "Important",
-          message:
-              "Make sure your profile image is clear and recognizable.",
+          title: t.important,
+          message: t.profile_image_note,
           color: Colors.blue,
         ),
       ],
@@ -301,8 +302,9 @@ Future<void> _pickImage() async {
 
 
   Widget _buildPersonalInfoSection() {
+    final t = AppLocalizations.of(context)!;
     return _buildSection(
-      title: "Personal Information",
+      title: t.personal_info,
       icon: Icons.badge_outlined,
       children: [
         Row(
@@ -310,8 +312,8 @@ Future<void> _pickImage() async {
             Expanded(
               child: ImprovedTextField(
                 controller: firstNameController,
-                label: 'First Name',
-                hint: 'Enter your first name',
+                label: t.first_name,
+                hint: t.enter_first_name,
                 icon: Icons.person_outline,
                 validator: Validators.name,
               ),
@@ -320,8 +322,8 @@ Future<void> _pickImage() async {
             Expanded(
               child: ImprovedTextField(
                 controller: lastNameController,
-                label: 'Last Name',
-                hint: 'Enter your last name',
+                label: t.last_name,
+                hint: t.enter_last_name,
                 icon: Icons.person_outline,
                 validator: Validators.name,
               ),
@@ -331,9 +333,8 @@ Future<void> _pickImage() async {
         const SizedBox(height: 16),
         buildInfoCard(
           icon: Icons.info_outline,
-          title: "Important",
-          message:
-              "Make sure this matches the name on your government ID or passport.",
+          title: t.important,
+          message:t.personal_info_note,
           color: Colors.blue,
         ),
       ],
@@ -341,14 +342,15 @@ Future<void> _pickImage() async {
   }
 
   Widget _buildContactInfoSection() {
+    final t = AppLocalizations.of(context)!;
     return _buildSection(
-      title: "Contact Information",
+      title: t.contact_information,
       icon: Icons.contact_mail_outlined,
       children: [
         ImprovedTextField(
           controller: emailController,
-          label: 'Email Address',
-          hint: 'example@gmail.com',
+          label: t.email_address,
+          hint: t.email_hint,
           icon: Icons.email_outlined,
           keyboardType: TextInputType.emailAddress,
           validator: Validators.email,
@@ -356,8 +358,8 @@ Future<void> _pickImage() async {
         const SizedBox(height: 16),
         ImprovedTextField(
           controller: phoneNumberController,
-          label: 'Phone Number',
-          hint: '06 000 00 00',
+          label: t.phone_number,
+          hint: t.phone_hint,
           icon: Icons.phone_outlined,
           keyboardType: TextInputType.phone,
           validator: Validators.phone,
@@ -409,6 +411,7 @@ Future<void> _pickImage() async {
   }
 
   Widget _buildSaveButton() {
+    final t = AppLocalizations.of(context)!;
     return Container(
       width: double.infinity,
       height: 56,
@@ -440,7 +443,7 @@ Future<void> _pickImage() async {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 if (_isLoading) ...[
-                  SizedBox(
+                 const SizedBox(
                     width: 20,
                     height: 20,
                     child: CircularProgressIndicator(
@@ -449,20 +452,20 @@ Future<void> _pickImage() async {
                     ),
                   ),
                   const SizedBox(width: 12),
-                  const Text(
-                    'Saving...',
-                    style: TextStyle(
+                   Text(
+                    t.saving,
+                    style:const TextStyle(
                       color: Colors.white,
                       fontSize: 16,
                       fontWeight: FontWeight.w600,
                     ),
                   ),
                 ] else ...[
-                  Icon(Icons.save, color: Colors.white, size: 20),
+                  const Icon(Icons.save, color: Colors.white, size: 20),
                   const SizedBox(width: 8),
-                  const Text(
-                    'Save Changes',
-                    style: TextStyle(
+                   Text(
+                    t.save_changes,
+                    style:const TextStyle(
                       color: Colors.white,
                       fontSize: 16,
                       fontWeight: FontWeight.w600,

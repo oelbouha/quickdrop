@@ -22,6 +22,7 @@ class ConfirmationDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final t = AppLocalizations.of(context)!;
     final effectiveIconColor = iconColor ?? AppColors.error;
     final effectiveButtonColor = buttonColor ?? AppColors.error;
 
@@ -87,7 +88,7 @@ class ConfirmationDialog extends StatelessWidget {
             ),
           ),
           child: Text(
-            'Cancel',
+            t.cancel_button_text,
             style: TextStyle(
               color: Colors.grey[600],
               fontWeight: FontWeight.w600,
@@ -172,8 +173,8 @@ extension ConfirmationDialogTypes on ConfirmationDialog {
   static Future<bool> showSaveConfirmation({
     required BuildContext context,
     required String message,
-    String header = 'Save Changes',
-    String buttonText = 'Save',
+    required  String header ,
+    required String buttonText ,
   }) {
     return ConfirmationDialog.show(
       context: context,

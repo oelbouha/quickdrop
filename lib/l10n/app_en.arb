@@ -109,6 +109,9 @@
   "refer_friends": "Refer friends",
   "invite_friends": "Invite friends and earn rewards",
 
+
+
+
   "settings": "Settings",
   "support": "Support",
   "legal": "Legal",
@@ -131,6 +134,201 @@
   "learn_privacy": "Learn how we protect your data",
 
 
-  "logout": "Log out"
+  "logout": "Log out",
+
+
+
+
+
+  "edit_profile": "Edit Profile",
+  "update_profile": "Update Profile",
+  "update_profile_subtitle": "Keep your information up to date",
+  "profile_image": "Profile Image",
+  "change_image": "Change Image",
+  "important": "Important",
+  "profile_image_note": "Make sure your profile image is clear and recognizable.",
+  "personal_information": "Personal Information",
+  "first_name": "First Name",
+  "enter_first_name": "Enter your first name",
+  "last_name": "Last Name",
+  "enter_last_name": "Enter your last name",
+  "personal_info_note": "Make sure this matches the name on your government ID or passport.",
+  "contact_information": "Contact Information",
+  "email_address": "Email Address",
+  "email_hint": "example@gmail.com",
+  "phone_number": "Phone Number",
+  "phone_hint": "06 000 00 00",
+  "save_changes": "Save Changes",
+  "saving": "Saving...",
+  "save_changes_header": "Save Changes",
+  "save_changes_message": "Are you sure you want to update your information?",
+  "save_button_text": "Save",
+  "cancel_button_text": "Cancel",
+  "update_success_title": "Information updated successfully!",
+  "update_success_message": "Your account information has been updated successfully.",
+  "update_error_message": "Failed to update profile information",
+  "image_uploading_message": "Image is still uploading, please wait",
+
+
+
+  "help_title": "Help",
+  "faq_title": "Frequently Asked Questions",
+  "still_have_questions": "Still Have Questions?",
+  "helpful_tips": "Helpful Tips",
+
+  "question_sent_success": "Question Sent Successfully!",
+  "question_reply_time": "We'll get back to you within 24 hours.",
+  "question_form_info": "Can't find what you're looking for? Send us your question and our support team will help you out.",
+  "your_question_label": "Your Question",
+  "question_hint": "What would you like to know about QuickDrop?",
+  "send_question": "Send Question",
+  "sending_question": "Sending Question...",
+  "success_add_question": "Your question has been added successfully!",
+  "failed_add_question": "Failed to submit your question",
+
+  "tip_1_title": "Package Smart",
+  "tip_1_description": "Use sturdy boxes and bubble wrap for fragile items. Label clearly with both sender and recipient information.",
+
+  "tip_2_title": "Stay Safe",
+  "tip_2_description": "Always verify courier profiles and ratings before booking. Meet in public places for handoffs when possible.",
+
+  "tip_3_title": "Save More",
+  "tip_3_description": "Book in advance and be flexible with delivery dates to get the best rates from our courier network.",
+
+  "tip_4_title": "Build Trust",
+  "tip_4_description": "Leave honest reviews and maintain good communication with your courier throughout the delivery process.",
+
+
+   "no_ongoing_shipments": "No Ongoing Shipments",
+  "no_ongoing_shipments_subtitle": "After you create or accept a shipment, it will appear here.",
+
+  "no_completed_shipments": "No Completed Shipments",
+  "no_completed_shipments_subtitle": "Your completed shipments will appear here after delivery.",
+
+  "no_active_shipments": "No Active Shipments",
+  "no_active_shipments_subtitle": "Shipments that are currently in progress will show here once started.",
+
+
+  "no_ongoing_trips": "No Ongoing trips",
+  "no_ongoing_trips_subtitle": "After you create or accept a shipment, it will appear here.",
+
+  "no_completed_trips": "No Completed trips",
+  "no_completed_trips_subtitle": "Your completed trips will appear here after delivery.",
+
+  "no_active_trips": "No Active trips",
+  "no_active_trips_subtitle": "trips that are currently in progress will show here once started.",
+  
+  "tip_1_step": "Package Details",
+  "tip_2_step": "Delivery Locations",
+  "tip_3_step": "Timing & Image",
+  
+  "create_trip": "Create Trip",
+  "update_trip": "Update Trip",
+  "processing": "Processing...",
+  "back": "Back",
+  "trip_details": "Trip Details",
+  "delivery_price": "Delivery Price (MAD)",
+  "available_weight": "Available Weight (kg)",
+  "pricing_tip_title": "Pricing Tip",
+  "pricing_tip_message": "Set a competitive price based on distance, package size, and urgency.",
+  "trip_locations": "Trip Locations",
+  "pickup_location": "Pickup Location",
+  "delivery_location": "Delivery Location",
+  "from_hint": "From",
+  "to_hint": "To",
+  "location_tip_title": "Location Details Matter",
+  "location_tip_message": "Include landmarks, building numbers, and floor details for smoother pickup and delivery.",
+  "timing": "Timing",
+  "pickup_date": "Pickup Date",
+  "select_pickup_date": "Select pickup date",
+  "transport_type": "Transport Type",
+  "timing_tip_title": "Flexible Timing",
+  "timing_tip_message": "We'll contact you to confirm the exact pickup time within your preferred date.",
+  "trip_list_success_title": "Trip Listed Successfully!",
+  "trip_list_success_message": "Your trip has been added and is now visible to couriers.",
+  "trip_update_success_title": "Trip Updated Successfully!",
+  "trip_update_success_message": "Your trip has been updated and is now visible to couriers.",
+  "trip_list_failed": "Failed to list Trip",
+  "fields_empty": "Some fields are empty",
+  "login_required": "Please log in to list a shipment",
+  "pickup_required": "Pickup location is required",
+  "delivery_required": "Delivery location is required",
+  "price_required": "Price is required",
+  "price_number": "Price must be a number",
+  "weight_required": "Weight is required",
+  "weight_number": "Weight must be a number",
+  "pickup_date_required": "Pickup date is required",
+
+
+
+
+  "shipment_list_success_title": "Package Listed Successfully!",
+  "shipment_list_success_message": "Your shipment has been added and is now visible to couriers.",
+  "shipment_update_success_title": "Shipment Updated Successfully!",
+  "shipment_update_success_message": "Your shipment has been updated and is now visible to couriers.",
+  "shipment_list_failed": "Failed to list shipment: {e}",
+  "shipment_update_failed": "Failed to update shipment: {e}",
+  "fields_empty": "Please fill in all required fields",
+  "login_required": "Please log in to list a shipment",
+  "image_required": "Please select an image",
+  "image_upload_failed": "Image upload failed",
+  "image_upload_failed_with_error": "Image upload failed: {e}",
+  "image_uploading": "Image is still uploading, please wait",
+  "image_not_selected": "No image selected",
+  "package_details": "Package Details",
+  "delivery_locations": "Delivery Locations",
+  "package_dimensions": "Package Dimensions",
+  "timing_image": "Timing & Image",
+  "update_shipment": "Update Shipment",
+  "create_shipment": "Create Shipment",
+
+  "package_name_required": "Package name is required",
+  "description_required": "Description is required",
+  "package_type_required": "Package type is required",
+  "price_required": "Price is required",
+  
+  "pickup_required": "Pickup location is required",
+  "delivery_required": "Delivery location is required",
+  "weight_required": "Weight is required",
+  "weight_number": "Weight must be a number",
+  "quantity_required": "Quantity is required",
+  "pickup_date_required": "Pickup date is required",
+  "package_name_label": "Package Name",
+  "package_name_hint": "e.g., Phone case, Book, Documents",
+  "package_description_label": "Package Description",
+  "package_description_hint": "Describe your package content in detail...",
+  "delivery_price_label": "Delivery Price (MAD)",
+  "delivery_price_hint": "0.00",
+  "pricing_tip_title": "Pricing Tip",
+  "pricing_tip_message": "Set a competitive price based on distance, package size, and urgency.",
+  "weight_label": "Weight (kg)",
+  "weight_hint": "1.0",
+  "quantity_label": "Quantity",
+  "quantity_hint": "1",
+  "package_type_label": "Package Type",
+  "package_type_box": "Box",
+  "package_type_envelope": "Envelope",
+  "package_type_bag": "Bag",
+  "package_type_pallet": "Pallet",
+  "package_type_accessories": "Accessories",
+  "dimensions_tip_title": "Accurate measurements help couriers prepare",
+  "dimensions_tip_message": "Providing dimensions ensures better matching and fewer delays.",
+
+  
+  "request_sent_success": "Request sent successfully",
+  "please_complete_all_fields": "Please complete all required fields",
+  "please_select_trip": "Please select a trip",
+  "selected_trip_invalid": "Selected trip is invalid",
+  "send_request": "Send Request",
+  "send_offer": "Send Offer",
+  "choose_a_trip": "Choose a trip",
+  "no_active_trips_available": "No active trips match this shipment's destination",
+  "add_a_note": "Add a note",
+  "starting_from": "Starting from",
+  "note": "Note",
+  "route": "Route",
+  "package_image" : "Package Image"
+
+
 }
 
