@@ -485,7 +485,20 @@
     "security_delete_success_message": "Your account and data has been deleted successfully.",
     "security_profile_settings_title": "Profile Settings",
     "security_delete_account_subtitle": "Delete your account permanently",
-    "security_change_language_subtitle": "Change your language preference"
+    "security_change_language_subtitle": "Change your language preference",
+
+
+
+    "change_language_title" : "Language",
+    "delete_shipment_title" : "Delete Shipment",
+    "delete" :"Delete",
+    "action_cannot_be_undone": "This action cannot be undone. Are you sure?",
+    "shipment_deleted": "Shipment deleted succusfully",
+    "shipment_deleted_failed":"Failed to delete shipment",
+    "error_fetch_trips": "Failed to fetch Trips: {error}",
+    "trip_deleted": "Shipment deleted succusfully",
+    "trip_deleted_failed":"Failed to delete shipment",
+    "delete_trip_title" : "Delete Trip"
 
 
 

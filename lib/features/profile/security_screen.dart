@@ -94,7 +94,7 @@ class SecurityScreenState extends State<SecurityScreen> {
           title: AppLocalizations.of(context)!.settings_language,
           subtitle: AppLocalizations.of(context)!.security_change_language_subtitle,
           iconPath: "assets/icon/lang.svg",
-          onTap: () => {},
+          onTap: () => {context.push('/change-language')},
         ),
       ],
     );

@@ -1178,4 +1178,36 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get security_change_language_subtitle => 'Modifier vos préférences linguistiques';
+
+  @override
+  String get change_language_title => 'Langue';
+
+  @override
+  String get delete_shipment_title => 'Supprimer l\'expédition';
+
+  @override
+  String get delete => 'Supprimer';
+
+  @override
+  String get action_cannot_be_undone => 'Cette action ne peut pas être annulée. Êtes-vous sûr?';
+
+  @override
+  String get shipment_deleted => 'Expédition supprimée avec succès';
+
+  @override
+  String get shipment_deleted_failed => 'Échec de la suppression de l\'expédition';
+
+  @override
+  String error_fetch_trips(Object error) {
+    return 'Échec de la récupération des trajets: $error';
+  }
+
+  @override
+  String get trip_deleted => 'Trajet supprimé avec succès';
+
+  @override
+  String get trip_deleted_failed => 'Échec de la suppression du trajet';
+
+  @override
+  String get delete_trip_title => 'Supprimer le trajet';
 }

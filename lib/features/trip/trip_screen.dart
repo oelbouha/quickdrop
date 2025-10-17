@@ -21,12 +21,13 @@ class _TripScreenState extends State<TripScreen>
   bool _isExpanded = true;
 
   void removeTrip(String id) async {
+    final t = AppLocalizations.of(context)!;
     final confirmed = await ConfirmationDialog.show(
       context: context,
-      message: 'Are you sure you want to delete this shipment?',
-      header: 'Delete Shipment',
-      buttonHintText: 'Delete',
-      iconData: Icons.delete_outline,
+      message: t.action_cannot_be_undone,
+      header: t.delete_trip_title,
+      buttonHintText: t.delete,
+      iconPath: "assets/icon/trash-bin.svg",
     );
     if (!confirmed) return;
 
@@ -34,14 +35,12 @@ class _TripScreenState extends State<TripScreen>
       await Provider.of<TripProvider>(context, listen: false).deleteTrip(id);
       await Provider.of<DeliveryRequestProvider>(context, listen: false)
           .deleteRequestsByTripId(id);
-      AppUtils.showDialog(
-          context, 'Trip deleted succusfully!', AppColors.succes);
+      AppUtils.showDialog(context, t.trip_deleted, AppColors.succes);
       Provider.of<StatisticsProvider>(context, listen: false)
           .decrementField(user!.uid, "pendingTrips");
     } catch (e) {
       if (mounted) {
-        AppUtils.showDialog(
-            context, 'Failed to delete Trip: $e', AppColors.error);
+        AppUtils.showDialog(context, t.trip_deleted_failed, AppColors.error);
       }
     }
   }
@@ -54,6 +53,7 @@ class _TripScreenState extends State<TripScreen>
 
     // Fetch trips when the screen loads
     WidgetsBinding.instance.addPostFrameCallback((_) async {
+      final t = AppLocalizations.of(context)!;  
       try {
         user = Provider.of<UserProvider>(context, listen: false).user;
         final tripProvider = Provider.of<TripProvider>(context, listen: false);
@@ -69,9 +69,9 @@ class _TripScreenState extends State<TripScreen>
               .fetchUsersData(userIds);
         }
       } catch (e) {
-        if (mounted)
-          AppUtils.showDialog(
-              context, "Failed to fetch trips ${e}", AppColors.error);
+        if (mounted) {
+          AppUtils.showDialog(context, t.error_fetch_trips(e), AppColors.error);
+        }
       } finally {
         // Ensure the loading state is updated even if an error occurs
         if (mounted) {
@@ -104,12 +104,11 @@ class _TripScreenState extends State<TripScreen>
       backgroundColor: AppColors.background,
       appBar: CustomAppBar(
         tabController: _tabController,
-        tabs: 
-         [
-            t.active,
-            t.ongoing,
-            t.completed,
-          ],
+        tabs: [
+          t.active,
+          t.ongoing,
+          t.completed,
+        ],
         title: t.trips,
       ),
       body: _isLoading
@@ -117,8 +116,8 @@ class _TripScreenState extends State<TripScreen>
           : Consumer<TripProvider>(builder: (context, provider, child) {
               final user = FirebaseAuth.instance.currentUser;
               if (user == null) {
-                return const Center(
-                    child: Text('Please log in to view shipments'));
+                return Center(
+                    child: Text(AppLocalizations.of(context)!.login_required));
               }
 
               final activeTrips = provider.trips

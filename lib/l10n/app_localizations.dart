@@ -2418,6 +2418,66 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Change your language preference'**
   String get security_change_language_subtitle;
+
+  /// No description provided for @change_language_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Language'**
+  String get change_language_title;
+
+  /// No description provided for @delete_shipment_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Shipment'**
+  String get delete_shipment_title;
+
+  /// No description provided for @delete.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete'**
+  String get delete;
+
+  /// No description provided for @action_cannot_be_undone.
+  ///
+  /// In en, this message translates to:
+  /// **'This action cannot be undone. Are you sure?'**
+  String get action_cannot_be_undone;
+
+  /// No description provided for @shipment_deleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Shipment deleted succusfully'**
+  String get shipment_deleted;
+
+  /// No description provided for @shipment_deleted_failed.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to delete shipment'**
+  String get shipment_deleted_failed;
+
+  /// No description provided for @error_fetch_trips.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to fetch Trips: {error}'**
+  String error_fetch_trips(Object error);
+
+  /// No description provided for @trip_deleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Shipment deleted succusfully'**
+  String get trip_deleted;
+
+  /// No description provided for @trip_deleted_failed.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to delete shipment'**
+  String get trip_deleted_failed;
+
+  /// No description provided for @delete_trip_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Trip'**
+  String get delete_trip_title;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

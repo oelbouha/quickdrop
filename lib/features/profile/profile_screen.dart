@@ -49,7 +49,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       message: t.settings_logout_confirm_message,
       header: t.logout,
       buttonHintText: t.logout,
-      iconData: Icons.delete_outline,
+      iconPath: "assets/icon/logout.svg",
     );
 
     if (!confirmed) {

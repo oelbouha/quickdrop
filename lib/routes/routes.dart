@@ -1,4 +1,5 @@
 import 'package:quickdrop_app/core/utils/imports.dart';
+import 'package:quickdrop_app/features/profile/change_language_screen.dart';
 import 'package:quickdrop_app/features/profile/payment.screen.dart';
 import 'package:quickdrop_app/features/requests/negotiation_screen.dart';
 import 'package:quickdrop_app/features/home/home_screen.dart';
@@ -163,6 +164,15 @@ class AppRouter {
                 ),
               );
             }),
+        GoRoute(
+            path: '/change-language',
+            name: 'change-language',
+            pageBuilder: (context, state) {
+              return buildCustomTransitionPage(
+                context,
+                const ChangeLanguageScreen(),
+              );
+          }),
         GoRoute(
             path: '/verify-number',
             name: 'verify-number',

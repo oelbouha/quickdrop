@@ -471,7 +471,18 @@
   "security_delete_success_message": "Votre compte et vos données ont été supprimés avec succès.",
   "security_profile_settings_title": "Paramètres du profil",
   "security_delete_account_subtitle": "Supprimez votre compte de façon permanente",
-  "security_change_language_subtitle": "Modifier vos préférences linguistiques"
+  "security_change_language_subtitle": "Modifier vos préférences linguistiques",
+
+   "change_language_title": "Langue",
+    "delete_shipment_title": "Supprimer l'expédition",
+    "delete": "Supprimer",
+    "action_cannot_be_undone": "Cette action ne peut pas être annulée. Êtes-vous sûr?",
+    "shipment_deleted": "Expédition supprimée avec succès",
+    "shipment_deleted_failed": "Échec de la suppression de l'expédition",
+    "error_fetch_trips": "Échec de la récupération des trajets: {error}",
+    "trip_deleted": "Trajet supprimé avec succès",
+    "trip_deleted_failed": "Échec de la suppression du trajet",
+    "delete_trip_title": "Supprimer le trajet"
 
 
 

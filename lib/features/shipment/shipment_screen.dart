@@ -65,10 +65,13 @@ class _ShipmentScreenState extends State<ShipmentScreen>
   // }
 
   void removeShipment(String id) async {
+    final t = AppLocalizations.of(context)!;
     //  print("Removing shipment with id: $id");
     final confirmed = await ConfirmationDialogTypes.showDeleteConfirmation(
       context: context,
-      message: 'This action cannot be undone. Are you sure?',
+      header: t.delete_shipment_title,
+      buttonText: t.delete,
+      message: t.action_cannot_be_undone,
     );
 
     if (!confirmed) return;
@@ -78,13 +81,13 @@ class _ShipmentScreenState extends State<ShipmentScreen>
       await Provider.of<DeliveryRequestProvider>(context, listen: false)
           .deleteRequestsByShipmentId(id);
       AppUtils.showDialog(
-          context, 'Shipment deleted succusfully', AppColors.succes);
+          context, t.shipment_deleted, AppColors.succes);
       Provider.of<StatisticsProvider>(context, listen: false)
           .decrementField(user!.uid, "pendingShipments");
     } catch (e) {
       if (mounted) {
         AppUtils.showDialog(
-            context, 'Failed to delete shipment: $e', AppColors.error);
+            context, t.shipment_deleted_failed, AppColors.error);
       }
     }
   }
@@ -192,8 +195,8 @@ class _ShipmentScreenState extends State<ShipmentScreen>
               final user =
                   Provider.of<UserProvider>(context, listen: false).user;
               if (user == null) {
-                return const Center(
-                    child: Text('Please log in to view shipments'));
+                return  Center(
+                    child: Text(AppLocalizations.of(context)!.login_required));
               }
 
               final activeShipments = provider.shipments

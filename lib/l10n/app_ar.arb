@@ -470,7 +470,18 @@
   "security_delete_success_message": "تم حذف حسابك وبياناتك بنجاح.",
   "security_profile_settings_title": "إعدادات الملف الشخصي",
   "security_delete_account_subtitle": "احذف حسابك نهائيًا",
-  "security_change_language_subtitle": "تغيير تفضيلات اللغة"
+  "security_change_language_subtitle": "تغيير تفضيلات اللغة",
+
+   "change_language_title": "اللغة",
+    "delete_shipment_title": "حذف الشحنة",
+    "delete": "حذف",
+    "action_cannot_be_undone": "لا يمكن التراجع عن هذا الإجراء. هل أنت متأكد؟",
+    "shipment_deleted": "تم حذف الشحنة بنجاح",
+    "shipment_deleted_failed": "فشل حذف الشحنة",
+    "error_fetch_trips": "فشل في جلب الرحلات: {error}",
+    "trip_deleted": "تم حذف الرحلة بنجاح",
+    "trip_deleted_failed": "فشل حذف الرحلة",
+    "delete_trip_title": "حذف الرحلة"
 
 
 

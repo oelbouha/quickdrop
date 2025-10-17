@@ -1178,4 +1178,36 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get security_change_language_subtitle => 'تغيير تفضيلات اللغة';
+
+  @override
+  String get change_language_title => 'اللغة';
+
+  @override
+  String get delete_shipment_title => 'حذف الشحنة';
+
+  @override
+  String get delete => 'حذف';
+
+  @override
+  String get action_cannot_be_undone => 'لا يمكن التراجع عن هذا الإجراء. هل أنت متأكد؟';
+
+  @override
+  String get shipment_deleted => 'تم حذف الشحنة بنجاح';
+
+  @override
+  String get shipment_deleted_failed => 'فشل حذف الشحنة';
+
+  @override
+  String error_fetch_trips(Object error) {
+    return 'فشل في جلب الرحلات: $error';
+  }
+
+  @override
+  String get trip_deleted => 'تم حذف الرحلة بنجاح';
+
+  @override
+  String get trip_deleted_failed => 'فشل حذف الرحلة';
+
+  @override
+  String get delete_trip_title => 'حذف الرحلة';
 }

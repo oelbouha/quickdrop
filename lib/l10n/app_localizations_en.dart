@@ -1178,4 +1178,36 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get security_change_language_subtitle => 'Change your language preference';
+
+  @override
+  String get change_language_title => 'Language';
+
+  @override
+  String get delete_shipment_title => 'Delete Shipment';
+
+  @override
+  String get delete => 'Delete';
+
+  @override
+  String get action_cannot_be_undone => 'This action cannot be undone. Are you sure?';
+
+  @override
+  String get shipment_deleted => 'Shipment deleted succusfully';
+
+  @override
+  String get shipment_deleted_failed => 'Failed to delete shipment';
+
+  @override
+  String error_fetch_trips(Object error) {
+    return 'Failed to fetch Trips: $error';
+  }
+
+  @override
+  String get trip_deleted => 'Shipment deleted succusfully';
+
+  @override
+  String get trip_deleted_failed => 'Failed to delete shipment';
+
+  @override
+  String get delete_trip_title => 'Delete Trip';
 }
