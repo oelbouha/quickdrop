@@ -12,7 +12,7 @@ class ConfirmationDialog extends StatelessWidget {
   const ConfirmationDialog({
     super.key,
     required this.message,
-    this.iconPath = "assets/icon/trash-bin.svg",
+    required this.iconPath ,
     this.header = 'Delete Shipment',
     this.buttonHintText = "Delete",
     this.iconColor,
@@ -26,97 +26,121 @@ class ConfirmationDialog extends StatelessWidget {
     final effectiveIconColor = iconColor ?? AppColors.error;
     final effectiveButtonColor = buttonColor ?? AppColors.error;
 
-    return AlertDialog(
-      backgroundColor: AppColors.cardBackground,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(AppTheme.cardRadius),
-      ),
-      contentPadding: const EdgeInsets.only(
-        top: 20,
-        left: 20,
-        right: 20,
-        bottom: 10,
-      ),
-      title: Row(
-        children: [
-          Container(
-            padding: const EdgeInsets.all(8),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(30),
-              color: effectiveIconColor.withOpacity(0.1),
-            ),
-            child: iconData != null
-                ? Icon(
-                    iconData,
-                    color: effectiveIconColor,
-                    size: 24,
-                  )
-                : CustomIcon(
-                    iconPath: iconPath,
-                    color: effectiveIconColor,
-                    size: 24,
+    return Dialog(
+      backgroundColor: Colors.white,
+      elevation: 0,
+      child: Container(
+        width: 440,
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(24),
+              child: Column(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(50),
+                      color: effectiveIconColor.withOpacity(0.15),
+                    ),
+                    child: iconData != null
+                        ? Icon(
+                            iconData,
+                            color: effectiveIconColor,
+                            size: 32,
+                          )
+                        : CustomIcon(
+                            iconPath: iconPath,
+                            color: effectiveIconColor,
+                            size: 32,
+                          ),
                   ),
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Text(
-              header,
-              style: const TextStyle(
-                fontSize: 18,
-                color: AppColors.headingText,
-                fontWeight: FontWeight.bold,
+                  const SizedBox(height: 16),
+                  Text(
+                    header,
+                    style: const TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: AppColors.dark,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 12),
+                  Text(
+                    message,
+                    style: const TextStyle(
+                      fontSize: 14,
+                      color: AppColors.dark,
+                      height: 1.5,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ],
               ),
             ),
-          ),
-        ],
-      ),
-      content: Text(
-        message,
-        style: const TextStyle(
-          fontSize: 14,
-          color: AppColors.shipmentText,
-          height: 1.4,
+            Container(
+              height: 1,
+              color: const Color(0x1FFFFFFF),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
+              child: Column(
+                children: [
+                  SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      onPressed: () => Navigator.of(context).pop(true),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: effectiveButtonColor,
+                        padding: const EdgeInsets.symmetric(vertical: 12),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(6),
+                        ),
+                        elevation: 0,
+                      ),
+                      child: Text(
+                        buttonHintText,
+                        style: const TextStyle(
+                          color: Color(0xFFFFFFFF),
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  SizedBox(
+                    width: double.infinity,
+                    child: TextButton(
+                      onPressed: () => Navigator.of(context).pop(false),
+                      style: TextButton.styleFrom(
+                        backgroundColor: const Color(0xFF23272A),
+                        padding: const EdgeInsets.symmetric(vertical: 12),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(6),
+                        ),
+                      ),
+                      child: Text(
+                        t.cancel_button_text,
+                        style: const TextStyle(
+                          color: Color(0xFFB9BBBE),
+                          fontWeight: FontWeight.w600,
+                          fontSize: 16,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
         ),
       ),
-      actions: [
-        TextButton(
-          onPressed: () => Navigator.of(context).pop(false),
-          style: TextButton.styleFrom(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(AppTheme.cardButtonRadius),
-            ),
-          ),
-          child: Text(
-            t.cancel_button_text,
-            style: TextStyle(
-              color: Colors.grey[600],
-              fontWeight: FontWeight.w600,
-              fontSize: 16,
-            ),
-          ),
-        ),
-        const SizedBox(width: 8),
-        ElevatedButton(
-          onPressed: () => Navigator.of(context).pop(true),
-          style: ElevatedButton.styleFrom(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-            elevation: 0,
-            backgroundColor: effectiveButtonColor,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(AppTheme.cardButtonRadius),
-            ),
-          ),
-          child: Text(
-            buttonHintText,
-            style: const TextStyle(
-              color: AppColors.white,
-              fontWeight: FontWeight.bold,
-              fontSize: 16,
-            ),
-          ),
-        ),
-      ],
     );
   }
 
@@ -155,8 +179,8 @@ extension ConfirmationDialogTypes on ConfirmationDialog {
   static Future<bool> showDeleteConfirmation({
     required BuildContext context,
     required String message,
-    String header = 'Delete Item',
-    String buttonText = 'Delete',
+    required String header ,
+    required String buttonText ,
   }) {
     return ConfirmationDialog.show(
       context: context,
@@ -169,57 +193,8 @@ extension ConfirmationDialogTypes on ConfirmationDialog {
     );
   }
 
-  // Save confirmation
-  static Future<bool> showSaveConfirmation({
-    required BuildContext context,
-    required String message,
-    required  String header ,
-    required String buttonText ,
-  }) {
-    return ConfirmationDialog.show(
-      context: context,
-      message: message,
-      header: header,
-      buttonHintText: buttonText,
-      iconData: Icons.save_outlined,
-      iconColor: AppColors.blue600,
-      buttonColor: AppColors.blue600,
-    );
-  }
+ 
 
-  // Warning confirmation
-  static Future<bool> showWarningConfirmation({
-    required BuildContext context,
-    required String message,
-    String header = 'Warning',
-    String buttonText = 'Continue',
-  }) {
-    return ConfirmationDialog.show(
-      context: context,
-      message: message,
-      header: header,
-      buttonHintText: buttonText,
-      iconData: Icons.warning_outlined,
-      iconColor: Colors.orange,
-      buttonColor: Colors.orange,
-    );
-  }
+  
 
-  // Logout confirmation
-  static Future<bool> showLogoutConfirmation({
-    required BuildContext context,
-    String message = 'Are you sure you want to logout?',
-    String header = 'Logout',
-    String buttonText = 'Logout',
-  }) {
-    return ConfirmationDialog.show(
-      context: context,
-      message: message,
-      header: header,
-      buttonHintText: buttonText,
-      iconData: Icons.logout,
-      iconColor: AppColors.error,
-      buttonColor: AppColors.error,
-    );
-  }
 }
