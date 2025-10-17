@@ -34,7 +34,7 @@ class _ReviewDialogState extends State<ReviewDialog> {
       final user = FirebaseAuth.instance.currentUser;
       if (user == null) {
         AppUtils.showDialog(
-            context, 'Please log in to list a shipment', AppColors.error);
+            context, AppLocalizations.of(context)!.login_required, AppColors.error);
         return;
       }
 
@@ -48,11 +48,11 @@ class _ReviewDialogState extends State<ReviewDialog> {
       reviewProvider.addReview(review);
 
       AppUtils.showDialog(
-          context, "Review Submitted succesfully!", AppColors.succes);
+          context, AppLocalizations.of(context)!.review_submitted_success, AppColors.succes);
     } catch (e) {
       if (mounted)
         AppUtils.showDialog(
-            context, "Failed to submit review ", AppColors.error);
+            context, AppLocalizations.of(context)!.review_submit_failed, AppColors.error);
       // print(e);
     } finally {
       Navigator.pop(context);
@@ -90,16 +90,16 @@ class _ReviewDialogState extends State<ReviewDialog> {
                   color: AppColors.error,
                 )),
             const SizedBox(height: 10),
-            const Text(
-              "Rate your experience",
-              style: TextStyle(
+            Text(
+              AppLocalizations.of(context)!.rate_experience_title,
+              style: const TextStyle(
                   fontSize: 16,
                   color: AppColors.headingText,
                   fontWeight: FontWeight.bold),
             ),
-            const Text(
-              "Please rate your experience with the user and provide feedback",
-              style: TextStyle(fontSize: 14, color: AppColors.shipmentText),
+            Text(
+              AppLocalizations.of(context)!.rate_experience_subtitle,
+              style: const TextStyle(fontSize: 14, color: AppColors.shipmentText),
             ),
              const SizedBox(height: 16),
             RatingBar.builder(
@@ -122,7 +122,7 @@ class _ReviewDialogState extends State<ReviewDialog> {
             const SizedBox(height: 16),
             CustomTextField(
               controller: reviewController,
-              hintText: "Share your thoughts ",
+              hintText: AppLocalizations.of(context)!.review_hint_text,
               backgroundColor: AppColors.cardBackground,
               maxLines: 3,
               validator: Validators.notEmpty,
@@ -134,7 +134,7 @@ class _ReviewDialogState extends State<ReviewDialog> {
                 ),
                 child: Button(
                   onPressed: _submitReview,
-                  hintText: "Submit Review",
+                  hintText: AppLocalizations.of(context)!.submit_review_button,
                   isLoading: false,
                   backgroundColor: AppColors.blue700,
                 ))

@@ -10,7 +10,7 @@ class OngoingItemCard extends StatefulWidget {
   final TransportItem item;
   final UserData user;
   final VoidCallback onViewPressed;
-  
+
   const OngoingItemCard({
     super.key,
     required this.item,
@@ -34,7 +34,7 @@ class OngoingItemCardState extends State<OngoingItemCard> {
     );
   }
 
-    void _submitReport() {
+  void _submitReport() {
     showDialog(
       context: context,
       builder: (context) {
@@ -76,7 +76,9 @@ class OngoingItemCardState extends State<OngoingItemCard> {
             .decrementField(widget.item.userId, "ongoingTrips");
       }
     } catch (e) {
-      if (mounted) AppUtils.showDialog(context, "Failed to update shipment", AppColors.error);
+      if (mounted)
+        AppUtils.showDialog(
+            context, "Failed to update shipment", AppColors.error);
     }
   }
 
@@ -104,9 +106,9 @@ class OngoingItemCardState extends State<OngoingItemCard> {
                 ),
               ),
               const SizedBox(width: 12),
-              const Text(
-                'Mark as Delivered',
-                style: TextStyle(
+              Text(
+                AppLocalizations.of(context)!.mark_as_delivered_title,
+                style: const TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
                 ),
@@ -117,9 +119,9 @@ class OngoingItemCardState extends State<OngoingItemCard> {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-             const Text(
-                'Are you sure this item has been delivered successfully?',
-                style: TextStyle(
+              Text(
+                AppLocalizations.of(context)!.confirm_delivery_message,
+                style: const TextStyle(
                   fontSize: 14,
                   color: AppColors.textSecondary,
                 ),
@@ -147,7 +149,7 @@ class OngoingItemCardState extends State<OngoingItemCard> {
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      'Courier: ${widget.user.displayName ?? "Unknown"}',
+                      '${AppLocalizations.of(context)!.courier_label}: ${widget.user.displayName ?? AppLocalizations.of(context)!.guest_user}',
                       style: const TextStyle(
                         fontSize: 11,
                         color: AppColors.textSecondary,
@@ -155,7 +157,7 @@ class OngoingItemCardState extends State<OngoingItemCard> {
                     ),
                     const SizedBox(height: 2),
                     Text(
-                      'Price: ${widget.item.price} DH',
+                      '${AppLocalizations.of(context)!.price_label_dh}: ${widget.item.price} DH',
                       style: const TextStyle(
                         fontSize: 11,
                         color: AppColors.textSecondary,
@@ -165,9 +167,9 @@ class OngoingItemCardState extends State<OngoingItemCard> {
                 ),
               ),
               const SizedBox(height: 12),
-              const Text(
-                'This will complete the delivery and you\'ll be asked to rate the courier.',
-                style: TextStyle(
+              Text(
+                AppLocalizations.of(context)!.delivery_complete_rating_info,
+                style: const TextStyle(
                   fontSize: 12,
                   color: AppColors.succes,
                   fontWeight: FontWeight.w500,
@@ -180,11 +182,12 @@ class OngoingItemCardState extends State<OngoingItemCard> {
               onPressed: () => Navigator.of(context).pop(),
               style: TextButton.styleFrom(
                 foregroundColor: AppColors.textSecondary,
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               ),
-              child: const Text(
-                'Not Yet',
-                style: TextStyle(fontWeight: FontWeight.w600),
+              child: Text(
+                AppLocalizations.of(context)!.not_yet,
+                style: const TextStyle(fontWeight: FontWeight.w600),
               ),
             ),
             ElevatedButton(
@@ -195,14 +198,15 @@ class OngoingItemCardState extends State<OngoingItemCard> {
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColors.succes,
                 foregroundColor: Colors.white,
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8),
                 ),
               ),
-              child: const Text(
-                'Mark Delivered',
-                style: TextStyle(fontWeight: FontWeight.w600),
+              child: Text(
+                AppLocalizations.of(context)!.mark_delivered_button,
+                style: const TextStyle(fontWeight: FontWeight.w600),
               ),
             ),
           ],
@@ -235,9 +239,9 @@ class OngoingItemCardState extends State<OngoingItemCard> {
                 ),
               ),
               const SizedBox(width: 12),
-              const Text(
-                'Cancel Delivery',
-                style: TextStyle(
+              Text(
+                AppLocalizations.of(context)!.cancel_delivery_title,
+                style: const TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
                 ),
@@ -248,9 +252,9 @@ class OngoingItemCardState extends State<OngoingItemCard> {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-             const Text(
-                'Are you sure you want to cancel this ongoing delivery?',
-                style: TextStyle(
+              Text(
+                AppLocalizations.of(context)!.confirm_cancel_delivery_message,
+                style: const TextStyle(
                   fontSize: 14,
                   color: AppColors.textSecondary,
                 ),
@@ -278,7 +282,7 @@ class OngoingItemCardState extends State<OngoingItemCard> {
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      'Courier: ${widget.user.displayName ?? "Unknown"}',
+                      '${AppLocalizations.of(context)!.courier_label}: ${widget.user.displayName ?? AppLocalizations.of(context)!.guest_user}',
                       style: const TextStyle(
                         fontSize: 11,
                         color: AppColors.textSecondary,
@@ -288,9 +292,9 @@ class OngoingItemCardState extends State<OngoingItemCard> {
                 ),
               ),
               const SizedBox(height: 12),
-             const Text(
-                'Please contact the courier before canceling to avoid any issues.',
-                style: TextStyle(
+              Text(
+                AppLocalizations.of(context)!.cancel_warning_message,
+                style: const TextStyle(
                   fontSize: 12,
                   color: AppColors.error,
                   fontWeight: FontWeight.w500,
@@ -303,11 +307,12 @@ class OngoingItemCardState extends State<OngoingItemCard> {
               onPressed: () => Navigator.of(context).pop(),
               style: TextButton.styleFrom(
                 foregroundColor: AppColors.textSecondary,
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               ),
-              child: const Text(
-                'Keep Active',
-                style: TextStyle(fontWeight: FontWeight.w600),
+              child: Text(
+                AppLocalizations.of(context)!.keep_active_button,
+                style: const TextStyle(fontWeight: FontWeight.w600),
               ),
             ),
             ElevatedButton(
@@ -318,14 +323,15 @@ class OngoingItemCardState extends State<OngoingItemCard> {
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColors.error,
                 foregroundColor: Colors.white,
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8),
                 ),
               ),
-              child: const Text(
-                'Cancel Delivery',
-                style: TextStyle(fontWeight: FontWeight.w600),
+              child: Text(
+                AppLocalizations.of(context)!.cancel_delivery_button,
+                style: const TextStyle(fontWeight: FontWeight.w600),
               ),
             ),
           ],
@@ -365,20 +371,18 @@ class OngoingItemCardState extends State<OngoingItemCard> {
         child: Column(
           children: [
             Padding(
-              padding: const EdgeInsets.all(16),
-              child: Column( 
-                children: [
+                padding: const EdgeInsets.all(16),
+                child: Column(children: [
                   BuildHeader(
                       from: widget.item.from,
                       to: widget.item.to,
                       id: widget.item.id,
-      price:  widget.item.price
-                    ),
+                      price: widget.item.price),
                   const SizedBox(height: 16),
                   _buildBody(),
                   const SizedBox(height: 16),
                   _buildCourierCard(),
-              ])),
+                ])),
             _buildFooter(),
           ],
         ),
@@ -386,18 +390,13 @@ class OngoingItemCardState extends State<OngoingItemCard> {
     );
   }
 
-
-
-
-
- 
   Widget _buildBody() {
+    final t = AppLocalizations.of(context)!;
     return Row(
       children: [
-        
         Expanded(
           child: _buildInfoColumn(
-            label: 'Date',
+            label: t.date,
             value: '${widget.item.date}',
           ),
         ),
@@ -408,7 +407,7 @@ class OngoingItemCardState extends State<OngoingItemCard> {
         ),
         Expanded(
           child: _buildInfoColumn(
-            label: 'Weight',
+            label: t.weight,
             value: '${widget.item.weight}kg',
           ),
         ),
@@ -440,7 +439,6 @@ class OngoingItemCardState extends State<OngoingItemCard> {
     );
   }
 
-
   Widget _buildCourierCard() {
     return Container(
       padding: const EdgeInsets.all(12),
@@ -464,7 +462,7 @@ class OngoingItemCardState extends State<OngoingItemCard> {
               ),
               const SizedBox(width: 6),
               Text(
-                'Your Courier',
+                AppLocalizations.of(context)!.your_courier_label,
                 style: TextStyle(
                   fontSize: 11,
                   color: AppColors.textSecondary,
@@ -484,7 +482,8 @@ class OngoingItemCardState extends State<OngoingItemCard> {
                   headerFontSize: 12,
                   subHeaderFontSize: 9,
                   onPressed: () => {
-                    context.push('/profile/statistics?userId=${widget.user.uid}')
+                    context
+                        .push('/profile/statistics?userId=${widget.user.uid}')
                   },
                 ),
               ),
@@ -520,9 +519,9 @@ class OngoingItemCardState extends State<OngoingItemCard> {
                           color: AppColors.blue,
                         ),
                         const SizedBox(width: 6),
-                        const Text(
-                          'Chat',
-                          style: TextStyle(
+                        Text(
+                          AppLocalizations.of(context)!.chat_button,
+                          style: const TextStyle(
                             color: AppColors.blue,
                             fontSize: 12,
                             fontWeight: FontWeight.w600,
@@ -540,42 +539,31 @@ class OngoingItemCardState extends State<OngoingItemCard> {
     );
   }
 
-
-
   Widget _buildFooter() {
     return Padding(
-      padding: const EdgeInsets.only(
-        left: 16,
-        right: 16,
-        top: 8,
-        bottom: 8
-      ),
-      child:  Row(
-      children: [
-
-        Expanded(
-          child: BuildPrimaryButton(
-            onPressed: _showDeliveryConfirmation,
-            label: 'Delivered',
-            color: AppColors.succes,
-            icon: "assets/icon/circle-check.svg"
-          ),
-        ),
-        const SizedBox(width: 12),
-        SecondaryButton(
-          icon: "assets/icon/eye.svg",
-          onPressed: widget.onViewPressed,
-          iconColor: Theme.of(context).colorScheme.primary,
-        ),
-        const SizedBox(width: 12),
-        SecondaryButton(
-          icon: "assets/icon/report.svg",
-          onPressed: _submitReport,
-           iconColor: Theme.of(context).colorScheme.error,
-        ),
-      ],
-    ));
+        padding: const EdgeInsets.only(left: 16, right: 16, top: 8, bottom: 8),
+        child: Row(
+          children: [
+            Expanded(
+              child: BuildPrimaryButton(
+                  onPressed: _showDeliveryConfirmation,
+                  label: AppLocalizations.of(context)!.delivered_button,
+                  color: AppColors.succes,
+                  icon: "assets/icon/circle-check.svg"),
+            ),
+            const SizedBox(width: 12),
+            SecondaryButton(
+              icon: "assets/icon/eye.svg",
+              onPressed: widget.onViewPressed,
+              iconColor: Theme.of(context).colorScheme.primary,
+            ),
+            const SizedBox(width: 12),
+            SecondaryButton(
+              icon: "assets/icon/report.svg",
+              onPressed: _submitReport,
+              iconColor: Theme.of(context).colorScheme.error,
+            ),
+          ],
+        ));
   }
-   
-     
 }

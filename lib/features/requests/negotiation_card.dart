@@ -1,4 +1,3 @@
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:go_router/go_router.dart';
 // import 'package:quickdrop_app/core/widgets/custom_svg.dart';
@@ -45,6 +44,7 @@ class NegotiationCardState extends State<NegotiationCard> {
 
 
   void _refuseRequest() async {
+     final t = AppLocalizations.of(context)!;
      if (_isProcessing) return;
     
     setState(() {
@@ -62,11 +62,11 @@ class NegotiationCardState extends State<NegotiationCard> {
 
       if (mounted) {
         context.pop();
-        AppUtils.showDialog(context, "Request refused successfully", AppColors.succes);
+        AppUtils.showDialog(context, t.request_refused_success, AppColors.succes);
       }
     } catch (e) {
       if (mounted) {
-        AppUtils.showDialog(context, "Failed to refuse request $e", AppColors.error);
+        AppUtils.showDialog(context, t.request_refused_failed_with_error(e.toString()), AppColors.error);
       }
     } finally {
       if (mounted) {
@@ -143,6 +143,7 @@ class NegotiationCardState extends State<NegotiationCard> {
 
   
   Widget _buildStatusBanner() {
+    final t = AppLocalizations.of(context)!;
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.symmetric(vertical: 8),
@@ -159,18 +160,18 @@ class NegotiationCardState extends State<NegotiationCard> {
           ),
         ),
       ),
-      child: const  Row(
+      child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(
+          const Icon(
             Icons.schedule,
             size: 16,
             color: AppColors.warning,
           ),
-          SizedBox(width: 4),
+          const SizedBox(width: 4),
           Text(
-             'Negotiation in progress',
-            style: TextStyle(
+             t.negotiation_in_progress,
+            style: const TextStyle(
               color: AppColors.warning,
               fontSize: 12,
               fontWeight: FontWeight.w600,
@@ -183,6 +184,7 @@ class NegotiationCardState extends State<NegotiationCard> {
 
 
   Widget _buildActionButton() {
+    final t = AppLocalizations.of(context)!;
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
@@ -199,7 +201,7 @@ class NegotiationCardState extends State<NegotiationCard> {
       child: ElevatedButton.icon(
         onPressed: _isProcessing ? null : _refuseRequest,
         icon: _isProcessing
-            ? SizedBox(
+            ? const SizedBox(
                 width: 18,
                 height: 18,
                 child: CircularProgressIndicator(
@@ -207,13 +209,13 @@ class NegotiationCardState extends State<NegotiationCard> {
                   valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
                 ),
               )
-            : Icon(
+            : const Icon(
                 Icons.close_rounded,
                 size: 20,
                 color: Colors.white,
               ),
         label: Text(
-          _isProcessing ? 'Cancelling...' : 'Cancel Negotiation',
+          _isProcessing ? t.cancelling : t.cancel_negotiation,
           style: const TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.w600,

@@ -33,20 +33,22 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
       await DefaultCacheManager().downloadFile(image);
     } catch (e) {
-      print('Failed to precache image: $e');
+      // print('Failed to precache image: $e');
     }
   }
 
   void _singOutUser() async {
     if (_isSignoutLoading) return;
+
+    final t = AppLocalizations.of(context)!;
     setState(() {
       _isSignoutLoading = true;
     });
     final confirmed = await ConfirmationDialog.show(
       context: context,
-      message: 'Are you sure you want to log out?',
-      header: 'Log Out',
-      buttonHintText: 'Log Out',
+      message: t.settings_logout_confirm_message,
+      header: t.logout,
+      buttonHintText: t.logout,
       iconData: Icons.delete_outline,
     );
 

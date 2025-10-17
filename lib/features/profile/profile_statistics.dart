@@ -9,8 +9,6 @@ import 'package:intl/intl.dart';
 
 
 
-
-
 class ProfileStatisticsLoader extends StatefulWidget {
   final String userId;
 
@@ -42,12 +40,11 @@ Future<(UserData, StatisticsModel)> fetchData() async {
           await Provider.of<UserProvider>(context, listen: false)
               .fetchUsersData(userIds);
       if (stats == null) {
-        return Future.error("Statistics not found for user ${user.displayName}");
+        return Future.error("${AppLocalizations.of(context)!.profile_statistics_not_found} ${user.displayName}");
     }
     return (user, stats);
   } catch (e) {
-    // print('Error fetching user data: $e');
-    return Future.error("Error fetching user data: $e");
+    return Future.error("${AppLocalizations.of(context)!.profile_error_message}$e");
   }
 }
 
@@ -63,9 +60,9 @@ Widget build(BuildContext context) {
         return   Scaffold(
            appBar: AppBar(
           backgroundColor: AppColors.appBarBackground,
-          title: const Text(
-            'Profile',
-            style: TextStyle(color: AppColors.appBarText, fontWeight: FontWeight.w600),
+          title: Text(
+            AppLocalizations.of(context)!.profile_title,
+            style: const TextStyle(color: AppColors.appBarText, fontWeight: FontWeight.w600),
             
           ),
           centerTitle: true,
@@ -111,7 +108,6 @@ class ProfileStatisticsState extends State<ProfileStatistics> {
 String  calculateTime(String rawDate) {
   DateTime pastDate = DateFormat("dd/MM/yyyy").parse(rawDate);
 
-  // Get the difference between now and that date
   Duration diff = DateTime.now().difference(pastDate);
 
   String timeAgo = formatTimeAgo(diff);
@@ -120,20 +116,22 @@ String  calculateTime(String rawDate) {
 }
 
 String formatTimeAgo(Duration diff) {
+  final loc = AppLocalizations.of(context)!;
+  
   if (diff.inDays > 365) {
     int years = (diff.inDays / 365).floor();
-    return "$years year${years > 1 ? 's' : ''} ago";
+    return "$years ${years > 1 ? loc.profile_year_plural : loc.profile_year_singular} ${loc.profile_ago}";
   } else if (diff.inDays > 30) {
     int months = (diff.inDays / 30).floor();
-    return "$months month${months > 1 ? 's' : ''} ago";
+    return "$months ${months > 1 ? loc.profile_month_plural : loc.profile_month_singular} ${loc.profile_ago}";
   } else if (diff.inDays > 0) {
-    return "${diff.inDays} day${diff.inDays > 1 ? 's' : ''} ago";
+    return "${diff.inDays} ${diff.inDays > 1 ? loc.profile_day_plural : loc.profile_day_singular} ${loc.profile_ago}";
   } else if (diff.inHours > 0) {
-    return "${diff.inHours} hour${diff.inHours > 1 ? 's' : ''} ago";
+    return "${diff.inHours} ${diff.inHours > 1 ? loc.profile_hour_plural : loc.profile_hour_singular} ${loc.profile_ago}";
   } else if (diff.inMinutes > 0) {
-    return "${diff.inMinutes} minute${diff.inMinutes > 1 ? 's' : ''} ago";
+    return "${diff.inMinutes} ${diff.inMinutes > 1 ? loc.profile_minute_plural : loc.profile_minute_singular} ${loc.profile_ago}";
   } else {
-    return "just now";
+    return loc.profile_just_now;
   }
 }
 
@@ -144,9 +142,9 @@ String formatTimeAgo(Duration diff) {
         backgroundColor: AppColors.background,
         appBar: AppBar(
           backgroundColor: AppColors.appBarBackground,
-          title: const Text(
-            'Profile',
-            style: TextStyle(color: AppColors.appBarText, fontWeight: FontWeight.w600),
+          title: Text(
+            AppLocalizations.of(context)!.profile_title,
+            style: const TextStyle(color: AppColors.appBarText, fontWeight: FontWeight.w600),
             
           ),
           centerTitle: true,
@@ -155,7 +153,6 @@ String formatTimeAgo(Duration diff) {
             padding: const EdgeInsets.all(AppTheme.homeScreenPadding),
             physics: const BouncingScrollPhysics(),
             child: Column(children: [
-              // const SizedBox(height: AppTheme.cardPadding),
               _buildUserStats(),
               const SizedBox(height: AppTheme.cardPadding),
               _buildContent()
@@ -227,24 +224,23 @@ String formatTimeAgo(Duration diff) {
   Widget _buildShipmentsStats() {
     return Consumer<StatisticsProvider>(
       builder: (context, statsProvider, child) {
-        // final stats = statsProvider.stats;
         return _buildStatsRow([
           _buildStatCard(
-            title: "Pending",
+            title: AppLocalizations.of(context)!.profile_pending,
             value: widget.stats?.pendingShipments.toString() ?? "0",
             backgroundColor: AppColors.contactBackground,
             textColor: AppColors.blue,
             icon: Icons.pending_actions,
           ),
           _buildStatCard(
-            title: "Ongoing",
+            title: AppLocalizations.of(context)!.profile_ongoing,
             value: widget.stats?.ongoingShipments.toString() ?? "0",
             backgroundColor: AppColors.ongoingstatusBackground,
             textColor: AppColors.ongoingStatusText,
             icon: Icons.local_shipping,
           ),
           _buildStatCard(
-            title: "Completed",
+            title: AppLocalizations.of(context)!.profile_completed,
             value: widget.stats?.completedShipments.toString() ?? "0",
             backgroundColor: AppColors.completedstatusBackground,
             textColor: AppColors.completedStatusText,
@@ -257,20 +253,19 @@ String formatTimeAgo(Duration diff) {
 
   Widget _buildStatisticsSection() {
     return Container(
-      // margin: const EdgeInsets.symmetric(horizontal: 16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _buildSectionHeader(
             icon: "assets/icon/package.svg",
-            title: "Shipments Overview",
+            title: AppLocalizations.of(context)!.profile_shipments_overview,
           ),
           const SizedBox(height: 16),
           _buildShipmentsStats(),
           const SizedBox(height: 32),
           _buildSectionHeader(
             icon: "assets/icon/car.svg",
-            title: "Trips Overview",
+            title: AppLocalizations.of(context)!.profile_trips_overview,
           ),
           const SizedBox(height: 16),
           _buildTripsStats(),
@@ -305,21 +300,21 @@ String formatTimeAgo(Duration diff) {
       builder: (context, statsProvider, child) {
         return _buildStatsRow([
           _buildStatCard(
-            title: "Pending",
+            title: AppLocalizations.of(context)!.profile_pending,
             value: widget.stats?.pendingTrips.toString() ?? "0",
             backgroundColor: AppColors.contactBackground,
             textColor: AppColors.blue,
             icon: Icons.pending_actions,
           ),
           _buildStatCard(
-            title: "Ongoing",
+            title: AppLocalizations.of(context)!.profile_ongoing,
             value: widget.stats?.ongoingTrips.toString() ?? "0",
             backgroundColor: AppColors.ongoingstatusBackground,
             textColor: AppColors.ongoingStatusText,
             icon: Icons.directions_car,
           ),
           _buildStatCard(
-            title: "Completed",
+            title: AppLocalizations.of(context)!.profile_completed,
             value: widget.stats?.completedTrips.toString() ?? "0",
             backgroundColor: AppColors.completedstatusBackground,
             textColor: AppColors.completedStatusText,
@@ -342,7 +337,6 @@ String formatTimeAgo(Duration diff) {
         final reviews = reviewProvider.reviews;
         return Container(
             width: double.infinity,
-            // margin: const EdgeInsets.symmetric(horizontal: 16),
             child: Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -355,9 +349,9 @@ String formatTimeAgo(Duration diff) {
                         color: AppColors.blue,
                       ),
                       const SizedBox(width: 12),
-                      const Text(
-                        "Reviews",
-                        style: TextStyle(
+                      Text(
+                        AppLocalizations.of(context)!.profile_reviews,
+                        style: const TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.w600,
                           color: AppColors.headingText,
@@ -436,31 +430,22 @@ String formatTimeAgo(Duration diff) {
           width: 1,
         ),
       ),
-      child: const Column(
+      child: Column(
         children: [
-          Icon(
+          const Icon(
             Icons.star_border,
             size: 48,
             color: AppColors.textLight,
           ),
-           SizedBox(height: 16),
+           const SizedBox(height: 16),
            Text(
-            'No Reviews Yet',
-            style: TextStyle(
+            AppLocalizations.of(context)!.profile_no_reviews_yet,
+            style: const TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.w600,
               color: AppColors.headingText,
             ),
           ),
-          // const SizedBox(height: 8),
-          // const Text(
-          //   'Complete more trips to start receiving reviews from other users.',
-          //   textAlign: TextAlign.center,
-          //   style: TextStyle(
-          //     fontSize: 14,
-          //     color: AppColors.textMuted,
-          //   ),
-          // ),
         ],
       ),
     );
@@ -486,7 +471,7 @@ Widget _buildUserStats() {
         ),
       ],
     ),
-    child: FittedBox( // Scale entire content
+    child: FittedBox(
       fit: BoxFit.scaleDown,
       child: IntrinsicWidth(
         child: Row(
@@ -497,7 +482,7 @@ Widget _buildUserStats() {
                 buildProfileImage(user: widget.user, size: 120),
                 const SizedBox(height: 12),
                 Text(
-                  widget.user.displayName ?? 'Guest User',
+                  widget.user.displayName ?? AppLocalizations.of(context)!.profile_guest_user,
                   style: const TextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.w600,
@@ -525,8 +510,8 @@ Widget _buildUserStats() {
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 Text(
-                  'Joined',
-                  style: TextStyle(
+                  AppLocalizations.of(context)!.profile_joined,
+                  style: const TextStyle(
                     fontSize: 18,
                     color: AppColors.dark,
                     fontWeight: FontWeight.w600,
@@ -534,7 +519,7 @@ Widget _buildUserStats() {
                 ),
                 Text(
                   calculateTime(widget.user.createdAt!),
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.w600,
                     color: AppColors.dark,
@@ -551,6 +536,3 @@ Widget _buildUserStats() {
 }
 
 }
-
-
-

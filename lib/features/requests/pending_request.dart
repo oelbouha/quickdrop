@@ -23,6 +23,7 @@ class DeliveryRequestState extends State<PendingRequest> {
 
   void _refuseRequest() async {
     if (_isProcessing) return;
+  final t = AppLocalizations.of(context)!;
 
     setState(() => _isProcessing = true);
 
@@ -32,12 +33,12 @@ class DeliveryRequestState extends State<PendingRequest> {
 
       if (mounted) {
         AppUtils.showDialog(
-            context, "Request cancelled successfully", AppColors.succes);
+            context, t.request_refused_success, AppColors.succes);
       }
     } catch (e) {
       if (mounted) {
         AppUtils.showDialog(
-            context, "Failed to cancel request", AppColors.error);
+            context, t.request_refused_failed, AppColors.error);
       }
     } finally {
       if (mounted) {
@@ -112,7 +113,7 @@ class DeliveryRequestState extends State<PendingRequest> {
           ),
           const SizedBox(width: 8),
           Text(
-            'Waiting for response',
+            AppLocalizations.of(context)!.waiting_for_response,
             style: TextStyle(
               color: AppColors.warning,
               fontSize: 13,
@@ -143,7 +144,9 @@ class DeliveryRequestState extends State<PendingRequest> {
           ),
         ),
         const SizedBox(width: 16),
-        Expanded(child: buildPriceCard(price: widget.request.price, label: 'Offered Price')),
+        Expanded(
+          child: buildPriceCard(price: widget.request.price,
+           label:  AppLocalizations.of(context)!.offered_price)),
       ],
     );
   }
@@ -218,7 +221,7 @@ class DeliveryRequestState extends State<PendingRequest> {
                 color: Colors.white,
               ),
         label: Text(
-          _isProcessing ? 'Cancelling Request...' : 'Cancel Request',
+          _isProcessing ? AppLocalizations.of(context)!.cancelling : AppLocalizations.of(context)!.cancel_button_text,
           style: const TextStyle(
             fontSize: 14,
             fontWeight: FontWeight.w500,

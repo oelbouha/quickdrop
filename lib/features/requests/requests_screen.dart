@@ -1,8 +1,5 @@
 import 'package:quickdrop_app/features/requests/received_request.dart';
-import 'package:quickdrop_app/features/chat/chat_conversation_card.dart';
 import 'package:quickdrop_app/features/requests/pending_request.dart';
-import 'package:go_router/go_router.dart';
-import 'package:quickdrop_app/core/widgets/app_header.dart';
 import 'package:quickdrop_app/core/utils/imports.dart';
 import 'package:quickdrop_app/features/requests/negotiation_card.dart';
 import 'package:quickdrop_app/core/providers/negotiation_provider.dart';
@@ -25,7 +22,6 @@ class _OfferScreenState extends State<OfferScreen>
   void initState() {
     super.initState();
 
-
     user = Provider.of<UserProvider>(context, listen: false).user;
 
     _tabController = TabController(length: 3, vsync: this);
@@ -33,20 +29,16 @@ class _OfferScreenState extends State<OfferScreen>
       Future.microtask(() async {
         try {
           final user = FirebaseAuth.instance.currentUser;
-          // print("Current user: $user");
           if (user != null) {
             final deliveryProvider =
                 Provider.of<DeliveryRequestProvider>(context, listen: false);
 
             await deliveryProvider.fetchRequests(user.uid);
-            // print("Fetched requests: ${deliveryProvider.requests.length}");
 
-            // Extract all senderIds and fetch user data at once
             final userIds = deliveryProvider.requests
                 .expand((r) => [r.senderId, r.receiverId])
                 .toSet()
                 .toList();
-            // print("Fetched user IDs: ${userIds.length}");
             final shipsIds = deliveryProvider.requests
                 .map((r) => r.shipmentId)
                 .toSet()
@@ -59,9 +51,9 @@ class _OfferScreenState extends State<OfferScreen>
           }
         } catch (e) {
           if (mounted) {
-            print("Error fetching requests: $e");
+            final t = AppLocalizations.of(context)!;
             AppUtils.showDialog(
-                context, "Failed to fetch requests: ${e.toString()}", AppColors.error);
+                context, t.error_fetch_requests(e.toString()), AppColors.error);
           }
         } finally {
           setState(() {
@@ -93,7 +85,7 @@ class _OfferScreenState extends State<OfferScreen>
           title: t.requests,
         ),
         body: _isLoading
-          ? loadingAnimation() 
+          ? loadingAnimation()
           :TabBarView(
             controller: _tabController,
             children: [
@@ -110,6 +102,7 @@ class _OfferScreenState extends State<OfferScreen>
 
 
   Widget _buildNegotiationRequests() {
+    final t = AppLocalizations.of(context)!;
     final negotiationProvider = Provider.of<NegotiationProvider>(context);
 
     return Container(
@@ -121,40 +114,31 @@ class _OfferScreenState extends State<OfferScreen>
                   ConnectionState.waiting
               ? loadingAnimation()
               : snapshot.hasError
-                  ? const Center(child: Text("Error loading conversations"))
+                  ? Center(child: Text(t.error_loading_conversations))
                   : snapshot.hasData && (snapshot.data as List).isNotEmpty
                       ? ListView.builder(
                           itemCount: (snapshot.data as List).length,
                           itemBuilder: (context, index) {
-                            // print("data ${snapshot.data as List}");
-                            // final user =
                             if (snapshot.data == null) {
                               return  buildEmptyState(
                                      Icons.chat,
-                                      "No active negotiations",
-                                      "Start negotiating on delivery requests to see them here"
+                                      t.no_active_negotiations,
+                                      t.no_active_negotiations_subtitle
                                   );
                             }
                             final conversation = (snapshot.data as List)[index];
                             if (conversation['userId'] == null || conversation == null 
                               || conversation['shipmentId'] == null 
                               || conversation['requestId'] == null) {
-                                // print("conversation:");
-                                // print(conversation["requestId"]);
-                                // print(conversation["shipmentId"]);
-                                // print(conversation["userId"]);
                               return const SizedBox.shrink();
                             }
-                            // List<Map<String, dynamic>> user = conversation['user'];
-                            // print("user data: ${user}");
-                            // print("sender id: ${conversation['participants'][0]}");
                             return Column(children: [
                               if (index == 0)
                                 const SizedBox(
                                     height: AppTheme.gapBetweenCards),
                               NegotiationCard (
-                                header: conversation['userName'] ?? 'Guest',
-                                subHeader: conversation['lastMessage'] ?? 'No messages yet',
+                                header: conversation['userName'] ?? t.guest,
+                                subHeader: conversation['lastMessage'] ?? t.no_messages_yet,
                                 photoUrl: conversation['photoUrl'],
                                 userId: conversation['userId'],
                                 isMessageSeen: conversation['lastMessageSeen'],
@@ -168,14 +152,15 @@ class _OfferScreenState extends State<OfferScreen>
                         )
                       :  buildEmptyState(
                               Icons.request_page,
-                              "No active negotiations",
-                              "Start negotiating on delivery requests to see them here"
+                              t.no_active_negotiations,
+                              t.no_active_negotiations_subtitle
                           )
         ));
   }
 
 
   Widget _buildDeliveryRequests() {
+    final t = AppLocalizations.of(context)!;
     final requestProvider = Provider.of<DeliveryRequestProvider>(context);
     final requests = requestProvider.requests
         .where((request) =>
@@ -186,8 +171,8 @@ class _OfferScreenState extends State<OfferScreen>
     if (requests.isEmpty) {
       return  buildEmptyState(
               Icons.request_page,
-               "No Delivery requests",
-               "Incoming delivery requests will show up here"
+               t.no_delivery_requests,
+               t.no_delivery_requests_subtitle
           );
     }
     return Consumer<UserProvider>(builder: (context, userProvider, _) {
@@ -208,7 +193,6 @@ class _OfferScreenState extends State<OfferScreen>
                       Provider.of<ShipmentProvider>(context, listen: false)
                           .getShipment(request.shipmentId);
                 } catch (e) {
-                  // print("Error fetching shipment: $e");
                   return const SizedBox.shrink();
                 }
                 if (userData == null) {
@@ -232,6 +216,7 @@ class _OfferScreenState extends State<OfferScreen>
   }
 
   Widget _buildMyRequests() {
+    final t = AppLocalizations.of(context)!;
     final requestProvider = Provider.of<DeliveryRequestProvider>(context);
     final requests = requestProvider.requests
         .where((request) =>
@@ -242,8 +227,8 @@ class _OfferScreenState extends State<OfferScreen>
     if (requests.isEmpty) {
       return buildEmptyState(
           Icons.request_page,
-          "No delivery requests sent",
-          "Requests you've sent to others will appear here"
+          t.no_delivery_requests_sent,
+          t.no_delivery_requests_sent_subtitle
       );
     }
     return Consumer<UserProvider>(builder: (context, userProvider, _) {
@@ -264,11 +249,9 @@ class _OfferScreenState extends State<OfferScreen>
                       Provider.of<ShipmentProvider>(context, listen: false)
                           .getShipment(request.shipmentId);
                 } catch (e) {
-                  print("Error fetching shipment: $e");
                   return const SizedBox.shrink();
                 }
                 if (userData == null) {
-                   print("Error fetching user ${request.receiverId}");
                   return const SizedBox.shrink();
                 }
 

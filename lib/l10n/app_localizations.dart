@@ -1560,6 +1560,864 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Package Image'**
   String get package_image;
+
+  /// No description provided for @error_fetch_requests.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to fetch requests: {error}'**
+  String error_fetch_requests(Object error);
+
+  /// No description provided for @error_loading_conversations.
+  ///
+  /// In en, this message translates to:
+  /// **'Error loading conversations'**
+  String get error_loading_conversations;
+
+  /// No description provided for @no_active_negotiations.
+  ///
+  /// In en, this message translates to:
+  /// **'No active negotiations'**
+  String get no_active_negotiations;
+
+  /// No description provided for @no_active_negotiations_subtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Start negotiating on delivery requests to see them here'**
+  String get no_active_negotiations_subtitle;
+
+  /// No description provided for @no_messages_yet.
+  ///
+  /// In en, this message translates to:
+  /// **'No messages yet'**
+  String get no_messages_yet;
+
+  /// No description provided for @guest.
+  ///
+  /// In en, this message translates to:
+  /// **'Guest'**
+  String get guest;
+
+  /// No description provided for @no_delivery_requests.
+  ///
+  /// In en, this message translates to:
+  /// **'No Delivery requests'**
+  String get no_delivery_requests;
+
+  /// No description provided for @no_delivery_requests_subtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Incoming delivery requests will show up here'**
+  String get no_delivery_requests_subtitle;
+
+  /// No description provided for @no_delivery_requests_sent.
+  ///
+  /// In en, this message translates to:
+  /// **'No delivery requests sent'**
+  String get no_delivery_requests_sent;
+
+  /// No description provided for @no_delivery_requests_sent_subtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Requests you\'ve sent to others will appear here'**
+  String get no_delivery_requests_sent_subtitle;
+
+  /// No description provided for @request_refused_success.
+  ///
+  /// In en, this message translates to:
+  /// **'Request refused successfully'**
+  String get request_refused_success;
+
+  /// No description provided for @request_refused_failed.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to refuse request'**
+  String get request_refused_failed;
+
+  /// No description provided for @request_accepted_success.
+  ///
+  /// In en, this message translates to:
+  /// **'Request accepted successfully'**
+  String get request_accepted_success;
+
+  /// No description provided for @request_accepted_failed.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to accept request'**
+  String get request_accepted_failed;
+
+  /// No description provided for @new_delivery_request.
+  ///
+  /// In en, this message translates to:
+  /// **'New Delivery Request'**
+  String get new_delivery_request;
+
+  /// No description provided for @offered_price.
+  ///
+  /// In en, this message translates to:
+  /// **'Offered Price'**
+  String get offered_price;
+
+  /// No description provided for @request_refused_failed_with_error.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to refuse request {error}'**
+  String request_refused_failed_with_error(Object error);
+
+  /// No description provided for @negotiation_in_progress.
+  ///
+  /// In en, this message translates to:
+  /// **'Negotiation in progress'**
+  String get negotiation_in_progress;
+
+  /// No description provided for @cancelling.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancelling...'**
+  String get cancelling;
+
+  /// No description provided for @cancel_negotiation.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel Negotiation'**
+  String get cancel_negotiation;
+
+  /// No description provided for @driver_registration_confirm_message.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure all information is correct!'**
+  String get driver_registration_confirm_message;
+
+  /// No description provided for @driver_registration_confirm_header.
+  ///
+  /// In en, this message translates to:
+  /// **'Register Request'**
+  String get driver_registration_confirm_header;
+
+  /// No description provided for @confirm.
+  ///
+  /// In en, this message translates to:
+  /// **'confirm'**
+  String get confirm;
+
+  /// No description provided for @driver_mode_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Driver Mode'**
+  String get driver_mode_title;
+
+  /// No description provided for @driver_mode_success_message.
+  ///
+  /// In en, this message translates to:
+  /// **'Your request has been sent Successfully. We will update you after review your documents'**
+  String get driver_mode_success_message;
+
+  /// No description provided for @driver_mode_request_failed.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to send request please try again later'**
+  String get driver_mode_request_failed;
+
+  /// No description provided for @please_fill_all_fields.
+  ///
+  /// In en, this message translates to:
+  /// **'Please fill all fields'**
+  String get please_fill_all_fields;
+
+  /// No description provided for @registration.
+  ///
+  /// In en, this message translates to:
+  /// **'Registration'**
+  String get registration;
+
+  /// No description provided for @request_driver_mode_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Request Driver Mode'**
+  String get request_driver_mode_title;
+
+  /// No description provided for @request_driver_mode_message.
+  ///
+  /// In en, this message translates to:
+  /// **'You have been requested to become a driver. please wait for the admin to review your request. You will be notified once your request is approved.'**
+  String get request_driver_mode_message;
+
+  /// No description provided for @resend_request.
+  ///
+  /// In en, this message translates to:
+  /// **'Resend Request'**
+  String get resend_request;
+
+  /// No description provided for @driver_registration.
+  ///
+  /// In en, this message translates to:
+  /// **'Driver registration'**
+  String get driver_registration;
+
+  /// No description provided for @driver_registration_subtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'You can request to become a driver by filling out the form below.'**
+  String get driver_registration_subtitle;
+
+  /// No description provided for @upload_image.
+  ///
+  /// In en, this message translates to:
+  /// **'Upload Image'**
+  String get upload_image;
+
+  /// No description provided for @id_card_number.
+  ///
+  /// In en, this message translates to:
+  /// **'Id cart number'**
+  String get id_card_number;
+
+  /// No description provided for @enter_national_id.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your National ID'**
+  String get enter_national_id;
+
+  /// No description provided for @vehicle_information.
+  ///
+  /// In en, this message translates to:
+  /// **'vehicle Information'**
+  String get vehicle_information;
+
+  /// No description provided for @registration_plate.
+  ///
+  /// In en, this message translates to:
+  /// **'Rgistration plate'**
+  String get registration_plate;
+
+  /// No description provided for @vehicle_plate_number_hint.
+  ///
+  /// In en, this message translates to:
+  /// **'vehicle plate number'**
+  String get vehicle_plate_number_hint;
+
+  /// No description provided for @driver_number_label.
+  ///
+  /// In en, this message translates to:
+  /// **'Driver number'**
+  String get driver_number_label;
+
+  /// No description provided for @driver_number_hint.
+  ///
+  /// In en, this message translates to:
+  /// **'(e.g. 00125)'**
+  String get driver_number_hint;
+
+  /// No description provided for @vehicle_type_label.
+  ///
+  /// In en, this message translates to:
+  /// **'Vehicle Type'**
+  String get vehicle_type_label;
+
+  /// No description provided for @vehicle_type_hint.
+  ///
+  /// In en, this message translates to:
+  /// **'vehicle type (car, truck, etc.)'**
+  String get vehicle_type_hint;
+
+  /// No description provided for @vehicle_info_note.
+  ///
+  /// In en, this message translates to:
+  /// **'Make sure the vehicle information matches your vehicle registration documents.'**
+  String get vehicle_info_note;
+
+  /// No description provided for @registering.
+  ///
+  /// In en, this message translates to:
+  /// **'Registering...'**
+  String get registering;
+
+  /// No description provided for @register.
+  ///
+  /// In en, this message translates to:
+  /// **'Register'**
+  String get register;
+
+  /// No description provided for @payment_start_journey.
+  ///
+  /// In en, this message translates to:
+  /// **'Start Your Journey'**
+  String get payment_start_journey;
+
+  /// No description provided for @payment_join_drivers.
+  ///
+  /// In en, this message translates to:
+  /// **'Join thousands of drivers earning daily'**
+  String get payment_join_drivers;
+
+  /// No description provided for @payment_how_it_works.
+  ///
+  /// In en, this message translates to:
+  /// **'How it works'**
+  String get payment_how_it_works;
+
+  /// No description provided for @payment_step_1.
+  ///
+  /// In en, this message translates to:
+  /// **'Start your free trial today'**
+  String get payment_step_1;
+
+  /// No description provided for @payment_step_2.
+  ///
+  /// In en, this message translates to:
+  /// **'Deliver and earn for 30 days free'**
+  String get payment_step_2;
+
+  /// No description provided for @payment_step_3.
+  ///
+  /// In en, this message translates to:
+  /// **'After trial, pay \$29.99/month'**
+  String get payment_step_3;
+
+  /// No description provided for @payment_step_4.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel anytime, no commitment'**
+  String get payment_step_4;
+
+  /// No description provided for @payment_free_trial_badge.
+  ///
+  /// In en, this message translates to:
+  /// **'1 MONTH FREE TRIAL'**
+  String get payment_free_trial_badge;
+
+  /// No description provided for @payment_monthly_subscription.
+  ///
+  /// In en, this message translates to:
+  /// **'Monthly Subscription'**
+  String get payment_monthly_subscription;
+
+  /// No description provided for @payment_price.
+  ///
+  /// In en, this message translates to:
+  /// **'\$'**
+  String get payment_price;
+
+  /// No description provided for @payment_price_main.
+  ///
+  /// In en, this message translates to:
+  /// **'29'**
+  String get payment_price_main;
+
+  /// No description provided for @payment_price_decimal.
+  ///
+  /// In en, this message translates to:
+  /// **'.99'**
+  String get payment_price_decimal;
+
+  /// No description provided for @payment_price_period.
+  ///
+  /// In en, this message translates to:
+  /// **'/month'**
+  String get payment_price_period;
+
+  /// No description provided for @payment_first_month_free.
+  ///
+  /// In en, this message translates to:
+  /// **'First month FREE, then \$29.99/mo'**
+  String get payment_first_month_free;
+
+  /// No description provided for @payment_terms_agree.
+  ///
+  /// In en, this message translates to:
+  /// **'I agree to the '**
+  String get payment_terms_agree;
+
+  /// No description provided for @payment_terms_of_service.
+  ///
+  /// In en, this message translates to:
+  /// **'Terms of Service'**
+  String get payment_terms_of_service;
+
+  /// No description provided for @payment_terms_and.
+  ///
+  /// In en, this message translates to:
+  /// **' and '**
+  String get payment_terms_and;
+
+  /// No description provided for @payment_privacy_policy.
+  ///
+  /// In en, this message translates to:
+  /// **'Privacy Policy'**
+  String get payment_privacy_policy;
+
+  /// No description provided for @payment_start_free_trial.
+  ///
+  /// In en, this message translates to:
+  /// **'Start Free Trial'**
+  String get payment_start_free_trial;
+
+  /// No description provided for @payment_secure_stripe.
+  ///
+  /// In en, this message translates to:
+  /// **'Secure payment powered by Stripe'**
+  String get payment_secure_stripe;
+
+  /// No description provided for @payment_subscription_activated.
+  ///
+  /// In en, this message translates to:
+  /// **'Subscription activated!'**
+  String get payment_subscription_activated;
+
+  /// No description provided for @payment_failed.
+  ///
+  /// In en, this message translates to:
+  /// **'Payment failed'**
+  String get payment_failed;
+
+  /// No description provided for @payment_error.
+  ///
+  /// In en, this message translates to:
+  /// **'Payment error'**
+  String get payment_error;
+
+  /// No description provided for @payment_not_signed_in.
+  ///
+  /// In en, this message translates to:
+  /// **'Not signed in'**
+  String get payment_not_signed_in;
+
+  /// No description provided for @payment_function_error.
+  ///
+  /// In en, this message translates to:
+  /// **'Test error'**
+  String get payment_function_error;
+
+  /// No description provided for @payment_test_function.
+  ///
+  /// In en, this message translates to:
+  /// **'Testing function...'**
+  String get payment_test_function;
+
+  /// No description provided for @payment_calling_intent.
+  ///
+  /// In en, this message translates to:
+  /// **'Calling createPaymentIntent...'**
+  String get payment_calling_intent;
+
+  /// No description provided for @payment_user_label.
+  ///
+  /// In en, this message translates to:
+  /// **'User'**
+  String get payment_user_label;
+
+  /// No description provided for @payment_function_returned.
+  ///
+  /// In en, this message translates to:
+  /// **'Function returned'**
+  String get payment_function_returned;
+
+  /// No description provided for @profile_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Profile'**
+  String get profile_title;
+
+  /// No description provided for @profile_shipments_overview.
+  ///
+  /// In en, this message translates to:
+  /// **'Shipments Overview'**
+  String get profile_shipments_overview;
+
+  /// No description provided for @profile_trips_overview.
+  ///
+  /// In en, this message translates to:
+  /// **'Trips Overview'**
+  String get profile_trips_overview;
+
+  /// No description provided for @profile_pending.
+  ///
+  /// In en, this message translates to:
+  /// **'Pending'**
+  String get profile_pending;
+
+  /// No description provided for @profile_ongoing.
+  ///
+  /// In en, this message translates to:
+  /// **'Ongoing'**
+  String get profile_ongoing;
+
+  /// No description provided for @profile_completed.
+  ///
+  /// In en, this message translates to:
+  /// **'Completed'**
+  String get profile_completed;
+
+  /// No description provided for @profile_reviews.
+  ///
+  /// In en, this message translates to:
+  /// **'Reviews'**
+  String get profile_reviews;
+
+  /// No description provided for @profile_no_reviews_yet.
+  ///
+  /// In en, this message translates to:
+  /// **'No Reviews Yet'**
+  String get profile_no_reviews_yet;
+
+  /// No description provided for @profile_joined.
+  ///
+  /// In en, this message translates to:
+  /// **'Joined'**
+  String get profile_joined;
+
+  /// No description provided for @profile_guest_user.
+  ///
+  /// In en, this message translates to:
+  /// **'Guest User'**
+  String get profile_guest_user;
+
+  /// No description provided for @profile_year_singular.
+  ///
+  /// In en, this message translates to:
+  /// **'year'**
+  String get profile_year_singular;
+
+  /// No description provided for @profile_year_plural.
+  ///
+  /// In en, this message translates to:
+  /// **'years'**
+  String get profile_year_plural;
+
+  /// No description provided for @profile_month_singular.
+  ///
+  /// In en, this message translates to:
+  /// **'month'**
+  String get profile_month_singular;
+
+  /// No description provided for @profile_month_plural.
+  ///
+  /// In en, this message translates to:
+  /// **'months'**
+  String get profile_month_plural;
+
+  /// No description provided for @profile_day_singular.
+  ///
+  /// In en, this message translates to:
+  /// **'day'**
+  String get profile_day_singular;
+
+  /// No description provided for @profile_day_plural.
+  ///
+  /// In en, this message translates to:
+  /// **'days'**
+  String get profile_day_plural;
+
+  /// No description provided for @profile_hour_singular.
+  ///
+  /// In en, this message translates to:
+  /// **'hour'**
+  String get profile_hour_singular;
+
+  /// No description provided for @profile_hour_plural.
+  ///
+  /// In en, this message translates to:
+  /// **'hours'**
+  String get profile_hour_plural;
+
+  /// No description provided for @profile_minute_singular.
+  ///
+  /// In en, this message translates to:
+  /// **'minute'**
+  String get profile_minute_singular;
+
+  /// No description provided for @profile_minute_plural.
+  ///
+  /// In en, this message translates to:
+  /// **'minutes'**
+  String get profile_minute_plural;
+
+  /// No description provided for @profile_just_now.
+  ///
+  /// In en, this message translates to:
+  /// **'just now'**
+  String get profile_just_now;
+
+  /// No description provided for @profile_ago.
+  ///
+  /// In en, this message translates to:
+  /// **'ago'**
+  String get profile_ago;
+
+  /// No description provided for @profile_statistics_not_found.
+  ///
+  /// In en, this message translates to:
+  /// **'Statistics not found for user'**
+  String get profile_statistics_not_found;
+
+  /// No description provided for @profile_error_fetching_data.
+  ///
+  /// In en, this message translates to:
+  /// **'Error fetching user data'**
+  String get profile_error_fetching_data;
+
+  /// No description provided for @profile_error_message.
+  ///
+  /// In en, this message translates to:
+  /// **'Error fetching user data: '**
+  String get profile_error_message;
+
+  /// No description provided for @mark_as_delivered_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Mark as Delivered'**
+  String get mark_as_delivered_title;
+
+  /// No description provided for @confirm_delivery_message.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure this item has been delivered successfully?'**
+  String get confirm_delivery_message;
+
+  /// No description provided for @courier_label.
+  ///
+  /// In en, this message translates to:
+  /// **'Courier'**
+  String get courier_label;
+
+  /// No description provided for @price_label_dh.
+  ///
+  /// In en, this message translates to:
+  /// **'Price'**
+  String get price_label_dh;
+
+  /// No description provided for @delivery_complete_rating_info.
+  ///
+  /// In en, this message translates to:
+  /// **'This will complete the delivery and you\'ll be asked to rate the courier.'**
+  String get delivery_complete_rating_info;
+
+  /// No description provided for @not_yet.
+  ///
+  /// In en, this message translates to:
+  /// **'Not Yet'**
+  String get not_yet;
+
+  /// No description provided for @mark_delivered_button.
+  ///
+  /// In en, this message translates to:
+  /// **'Mark Delivered'**
+  String get mark_delivered_button;
+
+  /// No description provided for @cancel_delivery_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel Delivery'**
+  String get cancel_delivery_title;
+
+  /// No description provided for @confirm_cancel_delivery_message.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to cancel this ongoing delivery?'**
+  String get confirm_cancel_delivery_message;
+
+  /// No description provided for @cancel_warning_message.
+  ///
+  /// In en, this message translates to:
+  /// **'Please contact the courier before canceling to avoid any issues.'**
+  String get cancel_warning_message;
+
+  /// No description provided for @keep_active_button.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep Active'**
+  String get keep_active_button;
+
+  /// No description provided for @cancel_delivery_button.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel Delivery'**
+  String get cancel_delivery_button;
+
+  /// No description provided for @your_courier_label.
+  ///
+  /// In en, this message translates to:
+  /// **'Your Courier'**
+  String get your_courier_label;
+
+  /// No description provided for @chat_button.
+  ///
+  /// In en, this message translates to:
+  /// **'Chat'**
+  String get chat_button;
+
+  /// No description provided for @delivered_button.
+  ///
+  /// In en, this message translates to:
+  /// **'Delivered'**
+  String get delivered_button;
+
+  /// No description provided for @courier.
+  ///
+  /// In en, this message translates to:
+  /// **'Your Courier'**
+  String get courier;
+
+  /// No description provided for @review.
+  ///
+  /// In en, this message translates to:
+  /// **'Review'**
+  String get review;
+
+  /// No description provided for @review_submitted_success.
+  ///
+  /// In en, this message translates to:
+  /// **'Review Submitted succesfully!'**
+  String get review_submitted_success;
+
+  /// No description provided for @review_submit_failed.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to submit review'**
+  String get review_submit_failed;
+
+  /// No description provided for @rate_experience_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Rate your experience'**
+  String get rate_experience_title;
+
+  /// No description provided for @rate_experience_subtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Please rate your experience with the user and provide feedback'**
+  String get rate_experience_subtitle;
+
+  /// No description provided for @review_hint_text.
+  ///
+  /// In en, this message translates to:
+  /// **'Share your thoughts'**
+  String get review_hint_text;
+
+  /// No description provided for @submit_review_button.
+  ///
+  /// In en, this message translates to:
+  /// **'Submit Review'**
+  String get submit_review_button;
+
+  /// No description provided for @report_describe_problem.
+  ///
+  /// In en, this message translates to:
+  /// **'Please describe the problem before submitting.'**
+  String get report_describe_problem;
+
+  /// No description provided for @report_submitted_success.
+  ///
+  /// In en, this message translates to:
+  /// **'Problem reported successfully!'**
+  String get report_submitted_success;
+
+  /// No description provided for @report_submit_failed.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to submit report'**
+  String get report_submit_failed;
+
+  /// No description provided for @report_problem_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Report a Problem'**
+  String get report_problem_title;
+
+  /// No description provided for @report_problem_subtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Please describe the issue you encountered with this user'**
+  String get report_problem_subtitle;
+
+  /// No description provided for @report_hint_text.
+  ///
+  /// In en, this message translates to:
+  /// **'Describe the problem...'**
+  String get report_hint_text;
+
+  /// No description provided for @submit_report_button.
+  ///
+  /// In en, this message translates to:
+  /// **'Submit Report'**
+  String get submit_report_button;
+
+  /// No description provided for @waiting_for_response.
+  ///
+  /// In en, this message translates to:
+  /// **'Waiting for response'**
+  String get waiting_for_response;
+
+  /// No description provided for @type_a_message.
+  ///
+  /// In en, this message translates to:
+  /// **'Type a message'**
+  String get type_a_message;
+
+  /// No description provided for @seen.
+  ///
+  /// In en, this message translates to:
+  /// **'Seen'**
+  String get seen;
+
+  /// No description provided for @error_loading_message.
+  ///
+  /// In en, this message translates to:
+  /// **'Error loading messages'**
+  String get error_loading_message;
+
+  /// No description provided for @error_loading_message_text.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to load messages. Please try again later.'**
+  String get error_loading_message_text;
+
+  /// No description provided for @security_delete_account_confirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete your Account?'**
+  String get security_delete_account_confirm;
+
+  /// No description provided for @security_delete_account_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Account'**
+  String get security_delete_account_title;
+
+  /// No description provided for @security_confirm_button.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm'**
+  String get security_confirm_button;
+
+  /// No description provided for @security_delete_success_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Account Deleted Successfully!'**
+  String get security_delete_success_title;
+
+  /// No description provided for @security_delete_success_message.
+  ///
+  /// In en, this message translates to:
+  /// **'Your account and data has been deleted successfully.'**
+  String get security_delete_success_message;
+
+  /// No description provided for @security_profile_settings_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Profile Settings'**
+  String get security_profile_settings_title;
+
+  /// No description provided for @security_delete_account_subtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete your account permanently'**
+  String get security_delete_account_subtitle;
+
+  /// No description provided for @security_change_language_subtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Change your language preference'**
+  String get security_change_language_subtitle;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

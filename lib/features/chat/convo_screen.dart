@@ -60,6 +60,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
     final chatProvider = Provider.of<ChatProvider>(context);
     final chatId =
         getChatId(FirebaseAuth.instance.currentUser!.uid, widget.user['uid']);
+        bool isArabic = Localizations.localeOf(context).languageCode == 'ar';
 
     return Scaffold(
         backgroundColor: AppColors.white,
@@ -113,8 +114,8 @@ class _ConversationScreenState extends State<ConversationScreen> {
                         return  Center(
                             child: buildEmptyState(
                               Icons.error, 
-                              "Error loading messages", 
-                              "Failed to load messages. Please try again later."
+                              AppLocalizations.of(context)!.error_loading_message, 
+                              AppLocalizations.of(context)!.error_loading_message_text
                         ));
                       }
                       // if (!snapshot.hasData || snapshot.data!.isEmpty) {
@@ -172,9 +173,9 @@ class _ConversationScreenState extends State<ConversationScreen> {
                                       ),
                                     ),
                                     if (index == 0 && message.seen && isMe) ...[
-                                      const Text(
-                                        "Seen",
-                                        style: TextStyle(
+                                       Text(
+                                        AppLocalizations.of(context)!.seen,
+                                        style:const TextStyle(
                                             color: AppColors.headingText,
                                             fontSize: 10,
                                             fontWeight: FontWeight.bold),
@@ -204,6 +205,8 @@ class _ConversationScreenState extends State<ConversationScreen> {
                   onChanged: (text) {
                     // Handle text input
                     // print("Text input: $text");
+
+                     
                   },
                   style: const TextStyle(
                     color: AppColors.headingText,
@@ -221,16 +224,16 @@ class _ConversationScreenState extends State<ConversationScreen> {
                               color: AppColors.blue,
                               borderRadius: BorderRadius.circular(30),
                             ),
-                            child: IconButton(
-                                icon: const CustomIcon(
-                                  iconPath: "assets/icon/send.svg",
+                            child:  IconButton(
+                                icon:  CustomIcon(
+                                  iconPath: isArabic ?  "assets/icon/send-left.svg"  :"assets/icon/send.svg",
                                   color: AppColors.white,
-                                  size: 30,
+                                  size: 34,
                                 ),
                                 onPressed: _sendMessage))),
                     filled: true,
                     fillColor: AppColors.blue.withOpacity(0.2),
-                    hintText: 'Message...',
+                    hintText: AppLocalizations.of(context)!.type_a_message,
                     border: const OutlineInputBorder(
                       // borderSide: BorderSide.none, // Removes visible border
                       borderRadius: BorderRadius.all(Radius.circular(

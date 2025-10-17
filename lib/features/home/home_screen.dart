@@ -15,7 +15,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   int selectedIndex = 0;
   UserData? user;
-  String selectedFilter = "Trips";
+  String? selectedFilter;
   int? expandedFaqIndex;
 
   final fromController = TextEditingController();
@@ -25,14 +25,15 @@ class _HomeScreenState extends State<HomeScreen> {
   final typeController = TextEditingController();
   final dateController = TextEditingController();
 
- 
+  List<String> getServiceTypes(BuildContext context) {
+    final t = AppLocalizations.of(context)!;
+    return [
+      t.trips,
+      t.shipments,
+    ];
+  }
 
-  final List<String> serviceTypes = [
-    "Trips",
-    "Shipments",
-  ];
-
-List<Map<String, String>> getFaqs(BuildContext context) {
+  List<Map<String, String>> getFaqs(BuildContext context) {
     final t = AppLocalizations.of(context)!;
 
     return [
@@ -43,9 +44,12 @@ List<Map<String, String>> getFaqs(BuildContext context) {
       {"question": t.faq_q5, "answer": t.faq_a5},
     ];
   }
-  
 
-  
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    selectedFilter = AppLocalizations.of(context)!.trips;
+  }
 
 
   @override
@@ -61,7 +65,7 @@ List<Map<String, String>> getFaqs(BuildContext context) {
       });
       return;
     }
-    
+
     dateController.text = _getCurrentDate();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       try {
@@ -85,97 +89,98 @@ List<Map<String, String>> getFaqs(BuildContext context) {
           AppUtils.showDialog(
               context, 'Error fetching shipments: $e', AppColors.error);
         }
-      } 
+      }
     });
   }
 
   @override
   Widget build(BuildContext context) {
-     return AnnotatedRegion<SystemUiOverlayStyle>(
-      value: SystemUiOverlayStyle.dark.copyWith(
-        statusBarColor: Colors.transparent, //  background transparent
-        statusBarIconBrightness: Brightness.dark, // dark icons (black)
-        statusBarBrightness: Brightness.light,   // iOS
-      ),
-      child: Scaffold(
-      backgroundColor: const Color(0xFFF8FAFC),
-      body: Container(
-        decoration: const BoxDecoration(
-          color: Color(0xFFF8FAFC),
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+        value: SystemUiOverlayStyle.dark.copyWith(
+          statusBarColor: Colors.transparent, //  background transparent
+          statusBarIconBrightness: Brightness.dark, // dark icons (black)
+          statusBarBrightness: Brightness.light, // iOS
         ),
-        child: SafeArea(
-          child: Column(
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                      decoration: const BoxDecoration(
+        child: Scaffold(
+          backgroundColor: const Color(0xFFF8FAFC),
+          body: Container(
+            decoration: const BoxDecoration(
+              color: Color(0xFFF8FAFC),
+            ),
+            child: SafeArea(
+              child: Column(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 16, vertical: 12),
+                    decoration: const BoxDecoration(
                         // color: AppColors.blue,
-                      ),
-                      child: _buildAppBar(),
-                    ),
-                    Expanded(
-                      child: SingleChildScrollView(
-                        physics: const BouncingScrollPhysics(),
-                        padding: const EdgeInsets.symmetric(horizontal: 16),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            const SizedBox(height: 16),
-                            _buildHeroSection(),
-                            const SizedBox(height: 32),
-                            _buildOurServices(),
-                            const SizedBox(height: 32),
-                            _buildFAQSection(),
-                            const SizedBox(height: 32),
-                          ],
                         ),
+                    child: _buildAppBar(),
+                  ),
+                  Expanded(
+                    child: SingleChildScrollView(
+                      physics: const BouncingScrollPhysics(),
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          const SizedBox(height: 16),
+                          _buildHeroSection(),
+                          const SizedBox(height: 32),
+                          _buildOurServices(),
+                          const SizedBox(height: 32),
+                          _buildFAQSection(),
+                          const SizedBox(height: 32),
+                        ],
                       ),
                     ),
-                  ],
-                ),
-        ),
-      ),
-    ));
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ));
   }
 
   Widget _buildHeroSection() {
     final t = AppLocalizations.of(context)!;
     return Column(
       children: [
-         RichText(
-                            textAlign: TextAlign.center,
-                            text: TextSpan(
-                              style: const TextStyle(
-                                fontSize: 40,
-                                fontWeight: FontWeight.bold,
-                                height: 1.2,
-                              ),
-                              children: [
-                                 TextSpan(
-                                  text: "${t.home_title_part1}\n",
-                                  style: const TextStyle(color: Color(0xFF1F2937)),
-                                ),
-                                TextSpan(
-                                  text: t.home_title_part2,
-                                  style: TextStyle(
-                                    foreground: Paint()
-                                      ..shader =  LinearGradient(
-                                        colors: [  
-                                          Theme.of(context).colorScheme.primary,
-                                          Theme.of(context).colorScheme.primary,
-                                        ],
-                                      ).createShader(
-                                         Rect.fromLTWH(0.0, 0.0, 200.0, 70.0),
-                                      ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
+        RichText(
+          textAlign: TextAlign.center,
+          text: TextSpan(
+            style: const TextStyle(
+              fontSize: 40,
+              fontWeight: FontWeight.bold,
+              height: 1.2,
+            ),
+            children: [
+              TextSpan(
+                text: "${t.home_title_part1}\n",
+                style: const TextStyle(color: Color(0xFF1F2937)),
+              ),
+              TextSpan(
+                text: t.home_title_part2,
+                style: TextStyle(
+                  foreground: Paint()
+                    ..shader = LinearGradient(
+                      colors: [
+                        Theme.of(context).colorScheme.primary,
+                        Theme.of(context).colorScheme.primary,
+                      ],
+                    ).createShader(
+                      Rect.fromLTWH(0.0, 0.0, 200.0, 70.0),
+                    ),
+                ),
+              ),
+            ],
+          ),
+        ),
         const SizedBox(height: 8),
-         Text(
+        Text(
           t.intro_description,
-          style:  const TextStyle(
+          style: const TextStyle(
             color: Color(0xFF6B7280),
             fontSize: 16,
             fontWeight: FontWeight.w400,
@@ -188,162 +193,158 @@ List<Map<String, String>> getFaqs(BuildContext context) {
     );
   }
 
-
   void perfumeSearch() async {
-     SearchFilters filters = SearchFilters(
-      from: fromController.text.isEmpty ? null : fromController.text,
-      to: toController.text.isEmpty ? null : toController.text,
-      price: priceController.text.isEmpty ? null : priceController.text,
-      weight: weightController.text.isEmpty ? null : weightController.text,
-      type: selectedFilter
-    );
+    SearchFilters filters = SearchFilters(
+        from: fromController.text.isEmpty ? null : fromController.text,
+        to: toController.text.isEmpty ? null : toController.text,
+        price: priceController.text.isEmpty ? null : priceController.text,
+        weight: weightController.text.isEmpty ? null : weightController.text,
+        type: selectedFilter);
 
     context.push(
-    '/search',
-    extra: filters,
-  );
+      '/search',
+      extra: filters,
+    );
   }
-  
-Widget _buildSearchSection() {
-  final t = AppLocalizations.of(context)!;
-  bool isArabic = Localizations.localeOf(context).languageCode == 'ar';
-  return Container(
-    padding: const EdgeInsets.all(16),
-    decoration: BoxDecoration(
-      color: Colors.white,
-      borderRadius: BorderRadius.circular(12),
-      boxShadow: [
-        BoxShadow(
-          color: Colors.black.withOpacity(0.1),
-          blurRadius: 8,
-          offset: const Offset(0, 4),
-        ),
-      ],
-    ),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Stack(
-          children: [
-            Column(
-              children: [
-                // Origin field
-                TextFieldWithHeader(
-                  controller: fromController,
-                  displayHeader: false,
-                  hintText: t.pickup_location,
-                  iconColor: Theme.of(context).colorScheme.primary,
-                  headerText: "From",
-                  isRequired: false,
-                  validator: Validators.notEmpty,
-                  iconPath: "assets/icon/map-point.svg",
-                ),
-                const SizedBox(height: 24), // Space for the swap button
-                
-                // Destination field
-                TextFieldWithHeader(
-                  controller: toController,
-                   iconColor: Theme.of(context).colorScheme.primary,
-                  displayHeader: false,
-                  isRequired: false,
-                  hintText: t.drop_off_location,
-                  headerText: "To",
-                  validator: Validators.notEmpty,
-                  iconPath: "assets/icon/map-point.svg",
-                ),
-              ],
-            ),
-            
-            // Swap button 
-            Positioned(
-              right: isArabic? null: 12,
-              top: 50, 
-              left: isArabic? 12: null,
-              child: GestureDetector(
-                onTap: () {
-                  final temp = fromController.text;
-                  fromController.text = toController.text;
-                  toController.text = temp;
-                },
-                child: Container(
-                  padding: const EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.tertiary, 
-                    borderRadius: BorderRadius.circular(12),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.1),
-                        blurRadius: 4,
-                        offset: const Offset(0, 2),
-                      ),
-                    ],
+
+  Widget _buildSearchSection() {
+    final t = AppLocalizations.of(context)!;
+    bool isArabic = Localizations.localeOf(context).languageCode == 'ar';
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.1),
+            blurRadius: 8,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Stack(
+            children: [
+              Column(
+                children: [
+                  // Origin field
+                  TextFieldWithHeader(
+                    controller: fromController,
+                    displayHeader: false,
+                    hintText: t.pickup_location,
+                    iconColor: Theme.of(context).colorScheme.primary,
+                    headerText: "From",
+                    isRequired: false,
+                    validator: Validators.notEmpty,
+                    iconPath: "assets/icon/map-point.svg",
                   ),
-                  child: const Icon(
-                    Icons.swap_vert,
+                  const SizedBox(height: 24), // Space for the swap button
+
+                  // Destination field
+                  TextFieldWithHeader(
+                    controller: toController,
+                    iconColor: Theme.of(context).colorScheme.primary,
+                    displayHeader: false,
+                    isRequired: false,
+                    hintText: t.drop_off_location,
+                    headerText: "To",
+                    validator: Validators.notEmpty,
+                    iconPath: "assets/icon/map-point.svg",
+                  ),
+                ],
+              ),
+
+              // Swap button
+              Positioned(
+                right: isArabic ? null : 12,
+                top: 50,
+                left: isArabic ? 12 : null,
+                child: GestureDetector(
+                  onTap: () {
+                    final temp = fromController.text;
+                    fromController.text = toController.text;
+                    toController.text = temp;
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).colorScheme.tertiary,
+                      borderRadius: BorderRadius.circular(12),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.1),
+                          blurRadius: 4,
+                          offset: const Offset(0, 2),
+                        ),
+                      ],
+                    ),
+                    child: const Icon(
+                      Icons.swap_vert,
+                      size: 20,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+
+          // Filter chips
+          _buildServiceTypes(),
+          const SizedBox(height: 16),
+
+          // Date field
+          DateTextField(
+            controller: dateController,
+            backgroundColor: AppColors.cardBackground,
+            onTap: () => _selectDate(context),
+            hintText: t.select_pickup_date,
+            validator: Validators.notEmpty,
+          ),
+          const SizedBox(height: 20),
+
+          // Search button
+          SizedBox(
+            width: double.infinity,
+            child: ElevatedButton(
+              onPressed: () => perfumeSearch(),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Theme.of(context).colorScheme.primary,
+                foregroundColor: Colors.white,
+                padding: const EdgeInsets.symmetric(vertical: 14),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                elevation: 0,
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const CustomIcon(
+                    iconPath: "assets/icon/search.svg",
                     size: 20,
                     color: Colors.white,
                   ),
-                ),
-              ),
-            ),
-          ],
-        ),
-        const SizedBox(height: 16),
-
-        // Filter chips
-        _buildServiceTypes(),
-        const SizedBox(height: 16),
-
-        // Date field
-        DateTextField(
-          controller: dateController,
-          backgroundColor: AppColors.cardBackground,
-          onTap: () => _selectDate(context),
-          hintText: t.select_pickup_date,
-          validator: Validators.notEmpty,
-        ),
-        const SizedBox(height: 20),
-
-        // Search button
-        SizedBox(
-          width: double.infinity,
-          child: ElevatedButton(
-            onPressed: () => perfumeSearch(),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Theme.of(context).colorScheme.primary,
-              foregroundColor: Colors.white,
-              padding: const EdgeInsets.symmetric(vertical: 14),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8),
-              ),
-              elevation: 0,
-            ),
-            child:  Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const CustomIcon(
-                  iconPath: "assets/icon/search.svg",
-                  size: 20,
-                  color: Colors.white,
-                ),
-                const SizedBox(width: 8),
-                Text(
-                  t.search,
-                  style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
+                  const SizedBox(width: 8),
+                  Text(
+                    t.search,
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
-        ),
-      ],
-    ),
-  );
-}
-
-
+        ],
+      ),
+    );
+  }
 
   Widget _buildSearchField({
     required TextEditingController controller,
@@ -353,7 +354,6 @@ Widget _buildSearchSection() {
     return Container(
       decoration: BoxDecoration(
         border: Border.all(color: Colors.grey),
-
         borderRadius: BorderRadius.circular(8),
       ),
       child: TextField(
@@ -383,9 +383,8 @@ Widget _buildSearchSection() {
     );
   }
 
-
-
   Widget _buildServiceTypes() {
+    final serviceTypes = getServiceTypes(context);
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: Row(
@@ -397,7 +396,9 @@ Widget _buildSearchSection() {
               label: Text(
                 filter,
                 style: TextStyle(
-                  color: isSelected ? Colors.white : Theme.of(context).colorScheme.secondary,
+                  color: isSelected
+                      ? Colors.white
+                      : Theme.of(context).colorScheme.secondary,
                   fontSize: 14,
                   fontWeight: FontWeight.w500,
                 ),
@@ -455,11 +456,9 @@ Widget _buildSearchSection() {
     }
   }
 
-
-
   Widget _buildOurServiceCard(String title, String description, String iconPath,
       String backgroundImageUrl) {
-        final t = AppLocalizations.of(context)!;
+    final t = AppLocalizations.of(context)!;
     return Container(
       width: double.infinity,
       height: 400,
@@ -635,9 +634,9 @@ Widget _buildSearchSection() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-         Text(
+        Text(
           t.faq_title,
-          style:const TextStyle(
+          style: const TextStyle(
             color: AppColors.textPrimary,
             fontSize: 24,
             fontWeight: FontWeight.bold,
@@ -653,7 +652,7 @@ Widget _buildSearchSection() {
           itemBuilder: (context, index) {
             final faq = faqs[index];
             final isExpanded = expandedFaqIndex == index;
-            
+
             return Container(
               decoration: BoxDecoration(
                 color: Colors.white,
@@ -724,36 +723,30 @@ Widget _buildSearchSection() {
       ],
     );
   }
- 
- 
- 
- Widget _buildAppBar() {
+
+  Widget _buildAppBar() {
     return Row(
       children: [
-         GestureDetector(
-        onTap: () {
-          context.push(
-              '/profile'); 
-        },
-        child: buildProfileImage(user: user, size: 48),
-         ),
-       const Spacer(),
+        GestureDetector(
+          onTap: () {
+            context.push('/profile');
+          },
+          child: buildProfileImage(user: user, size: 48),
+        ),
+        const Spacer(),
         Row(
           children: [
             buildHeaderIcon(
-              icon: "assets/icon/help.svg",
-              onTap: () => context.push("/help"),
-              color: AppColors.textSecondary
-            ),
+                icon: "assets/icon/help.svg",
+                onTap: () => context.push("/help"),
+                color: AppColors.textSecondary),
             const SizedBox(width: 16),
             const NotificationIcon(),
           ],
         ),
-        
       ],
     );
   }
-
 
   Widget _buildShipmentCard(Shipment shipment, UserData userData) {
     return ShipmentCard(

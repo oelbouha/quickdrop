@@ -30,7 +30,7 @@ class _ReportDialogState extends State<ReportDialog> {
       if (message.isEmpty) {
         AppUtils.showDialog(
           context,
-          'Please describe the problem before submitting.',
+          AppLocalizations.of(context)!.report_describe_problem,
           AppColors.error,
         );
         return;
@@ -40,7 +40,7 @@ class _ReportDialogState extends State<ReportDialog> {
       final user = FirebaseAuth.instance.currentUser;
       if (user == null) {
         AppUtils.showDialog(
-            context, 'Please log in to report a problem', AppColors.error);
+            context, AppLocalizations.of(context)!.login_required, AppColors.error);
         return;
       }
 
@@ -54,11 +54,11 @@ class _ReportDialogState extends State<ReportDialog> {
       await FirebaseFirestore.instance.collection('reports').add(report.toMap());
 
       AppUtils.showDialog(
-          context, "Problem reported successfully!", AppColors.succes);
+          context, AppLocalizations.of(context)!.report_submitted_success, AppColors.succes);
     } catch (e) {
       if (mounted) {
         AppUtils.showDialog(
-            context, "Failed to submit report", AppColors.error);
+            context, AppLocalizations.of(context)!.report_submit_failed, AppColors.error);
       }
     } finally {
       Navigator.pop(context);
@@ -98,22 +98,22 @@ class _ReportDialogState extends State<ReportDialog> {
                 ),
               ),
               const SizedBox(height: 10),
-              const Text(
-                "Report a Problem",
-                style: TextStyle(
+              Text(
+                AppLocalizations.of(context)!.report_problem_title,
+                style: const TextStyle(
                   fontSize: 16,
                   color: AppColors.headingText,
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              const Text(
-                "Please describe the issue you encountered with this user",
-                style: TextStyle(fontSize: 14, color: AppColors.shipmentText),
+              Text(
+                AppLocalizations.of(context)!.report_problem_subtitle,
+                style: const TextStyle(fontSize: 14, color: AppColors.shipmentText),
               ),
               const SizedBox(height: 16),
               CustomTextField(
                 controller: reportController,
-                hintText: "Describe the problem...",
+                hintText: AppLocalizations.of(context)!.report_hint_text,
                 backgroundColor: AppColors.cardBackground,
                 maxLines: 4,
                 validator: Validators.notEmpty,
@@ -125,7 +125,7 @@ class _ReportDialogState extends State<ReportDialog> {
                 ),
                 child: Button(
                   onPressed: _submitReport,
-                  hintText: "Submit Report",
+                  hintText: AppLocalizations.of(context)!.submit_report_button,
                   isLoading: _isLoading,
                   backgroundColor: AppColors.blue700,
                 ),

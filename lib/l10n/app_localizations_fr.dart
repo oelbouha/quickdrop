@@ -745,4 +745,437 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get package_image => 'Image du colis';
+
+  @override
+  String error_fetch_requests(Object error) {
+    return 'Échec de récupération des demandes : $error';
+  }
+
+  @override
+  String get error_loading_conversations => 'Erreur lors du chargement des conversations';
+
+  @override
+  String get no_active_negotiations => 'Aucune négociation active';
+
+  @override
+  String get no_active_negotiations_subtitle => 'Commencez à négocier les demandes de livraison pour les voir ici';
+
+  @override
+  String get no_messages_yet => 'Pas encore de messages';
+
+  @override
+  String get guest => 'Invité';
+
+  @override
+  String get no_delivery_requests => 'Aucune demande de livraison';
+
+  @override
+  String get no_delivery_requests_subtitle => 'Les demandes de livraison entrantes apparaîtront ici';
+
+  @override
+  String get no_delivery_requests_sent => 'Aucune demande de livraison envoyée';
+
+  @override
+  String get no_delivery_requests_sent_subtitle => 'Les demandes que vous avez envoyées aux autres apparaîtront ici';
+
+  @override
+  String get request_refused_success => 'Demande refusée avec succès';
+
+  @override
+  String get request_refused_failed => 'Échec du refus de la demande';
+
+  @override
+  String get request_accepted_success => 'Demande acceptée avec succès';
+
+  @override
+  String get request_accepted_failed => 'Échec de l\'acceptation de la demande';
+
+  @override
+  String get new_delivery_request => 'Nouvelle demande de livraison';
+
+  @override
+  String get offered_price => 'Prix proposé';
+
+  @override
+  String request_refused_failed_with_error(Object error) {
+    return 'Échec du refus de la demande : $error';
+  }
+
+  @override
+  String get negotiation_in_progress => 'Négociation en cours';
+
+  @override
+  String get cancelling => 'Annulation...';
+
+  @override
+  String get cancel_negotiation => 'Annuler la négociation';
+
+  @override
+  String get driver_registration_confirm_message => 'Êtes-vous sûr que toutes les informations sont correctes !';
+
+  @override
+  String get driver_registration_confirm_header => 'Demande d\'inscription';
+
+  @override
+  String get confirm => 'Confirmer';
+
+  @override
+  String get driver_mode_title => 'Mode Conducteur';
+
+  @override
+  String get driver_mode_success_message => 'Votre demande a été envoyée avec succès. Nous vous informerons après vérification de vos documents';
+
+  @override
+  String get driver_mode_request_failed => 'Échec de l\'envoi de la demande, veuillez réessayer plus tard';
+
+  @override
+  String get please_fill_all_fields => 'Veuillez remplir tous les champs';
+
+  @override
+  String get registration => 'Inscription';
+
+  @override
+  String get request_driver_mode_title => 'Demander le mode conducteur';
+
+  @override
+  String get request_driver_mode_message => 'Vous avez été invité à devenir conducteur. Veuillez attendre que l\'administrateur examine votre demande. Vous serez notifié une fois approuvé.';
+
+  @override
+  String get resend_request => 'Renvoyer la demande';
+
+  @override
+  String get driver_registration => 'Inscription conducteur';
+
+  @override
+  String get driver_registration_subtitle => 'Vous pouvez demander à devenir conducteur en remplissant le formulaire ci-dessous.';
+
+  @override
+  String get upload_image => 'Téléverser une image';
+
+  @override
+  String get id_card_number => 'Numéro de carte d\'identité';
+
+  @override
+  String get enter_national_id => 'Entrez votre carte d\'identité nationale';
+
+  @override
+  String get vehicle_information => 'Informations sur le véhicule';
+
+  @override
+  String get registration_plate => 'Plaque d\'immatriculation';
+
+  @override
+  String get vehicle_plate_number_hint => 'Numéro de plaque du véhicule';
+
+  @override
+  String get driver_number_label => 'Numéro du conducteur';
+
+  @override
+  String get driver_number_hint => '(ex. 00125)';
+
+  @override
+  String get vehicle_type_label => 'Type de véhicule';
+
+  @override
+  String get vehicle_type_hint => 'Type de véhicule (voiture, camion, etc.)';
+
+  @override
+  String get vehicle_info_note => 'Assurez-vous que les informations du véhicule correspondent aux documents d\'immatriculation.';
+
+  @override
+  String get registering => 'Inscription en cours...';
+
+  @override
+  String get register => 'S\'inscrire';
+
+  @override
+  String get payment_start_journey => 'Commencez votre voyage';
+
+  @override
+  String get payment_join_drivers => 'Rejoignez des milliers de conducteurs qui gagnent quotidiennement';
+
+  @override
+  String get payment_how_it_works => 'Comment ça marche';
+
+  @override
+  String get payment_step_1 => 'Commencez votre essai gratuit aujourd\'hui';
+
+  @override
+  String get payment_step_2 => 'Livrez et gagnez pendant 30 jours gratuitement';
+
+  @override
+  String get payment_step_3 => 'Après l\'essai, payez 29,99\$/mois';
+
+  @override
+  String get payment_step_4 => 'Annulez à tout moment, sans engagement';
+
+  @override
+  String get payment_free_trial_badge => '1 MOIS D\'ESSAI GRATUIT';
+
+  @override
+  String get payment_monthly_subscription => 'Abonnement mensuel';
+
+  @override
+  String get payment_price => '\$';
+
+  @override
+  String get payment_price_main => '29';
+
+  @override
+  String get payment_price_decimal => '.99';
+
+  @override
+  String get payment_price_period => '/mois';
+
+  @override
+  String get payment_first_month_free => 'Premier mois GRATUIT, puis 29,99\$/mois';
+
+  @override
+  String get payment_terms_agree => 'J\'accepte les ';
+
+  @override
+  String get payment_terms_of_service => 'Conditions d\'utilisation';
+
+  @override
+  String get payment_terms_and => ' et ';
+
+  @override
+  String get payment_privacy_policy => 'Politique de confidentialité';
+
+  @override
+  String get payment_start_free_trial => 'Commencer l\'essai gratuit';
+
+  @override
+  String get payment_secure_stripe => 'Paiement sécurisé via Stripe';
+
+  @override
+  String get payment_subscription_activated => 'Abonnement activé !';
+
+  @override
+  String get payment_failed => 'Paiement échoué';
+
+  @override
+  String get payment_error => 'Erreur de paiement';
+
+  @override
+  String get payment_not_signed_in => 'Non connecté';
+
+  @override
+  String get payment_function_error => 'Erreur de test';
+
+  @override
+  String get payment_test_function => 'Fonction de test...';
+
+  @override
+  String get payment_calling_intent => 'Appel de createPaymentIntent...';
+
+  @override
+  String get payment_user_label => 'Utilisateur';
+
+  @override
+  String get payment_function_returned => 'Fonction retournée';
+
+  @override
+  String get profile_title => 'Profil';
+
+  @override
+  String get profile_shipments_overview => 'Aperçu des livraisons';
+
+  @override
+  String get profile_trips_overview => 'Aperçu des trajets';
+
+  @override
+  String get profile_pending => 'En attente';
+
+  @override
+  String get profile_ongoing => 'En cours';
+
+  @override
+  String get profile_completed => 'Terminé';
+
+  @override
+  String get profile_reviews => 'Avis';
+
+  @override
+  String get profile_no_reviews_yet => 'Aucun avis pour le moment';
+
+  @override
+  String get profile_joined => 'Inscrit';
+
+  @override
+  String get profile_guest_user => 'Utilisateur invité';
+
+  @override
+  String get profile_year_singular => 'an';
+
+  @override
+  String get profile_year_plural => 'ans';
+
+  @override
+  String get profile_month_singular => 'mois';
+
+  @override
+  String get profile_month_plural => 'mois';
+
+  @override
+  String get profile_day_singular => 'jour';
+
+  @override
+  String get profile_day_plural => 'jours';
+
+  @override
+  String get profile_hour_singular => 'heure';
+
+  @override
+  String get profile_hour_plural => 'heures';
+
+  @override
+  String get profile_minute_singular => 'minute';
+
+  @override
+  String get profile_minute_plural => 'minutes';
+
+  @override
+  String get profile_just_now => 'à l\'instant';
+
+  @override
+  String get profile_ago => 'il y a';
+
+  @override
+  String get profile_statistics_not_found => 'Statistiques introuvables pour l\'utilisateur';
+
+  @override
+  String get profile_error_fetching_data => 'Erreur lors de la récupération des données de l\'utilisateur';
+
+  @override
+  String get profile_error_message => 'Erreur lors de la récupération des données de l\'utilisateur : ';
+
+  @override
+  String get mark_as_delivered_title => 'Marquer comme livré';
+
+  @override
+  String get confirm_delivery_message => 'Êtes-vous sûr que cet article a été livré avec succès ?';
+
+  @override
+  String get courier_label => 'Livreur';
+
+  @override
+  String get price_label_dh => 'Prix';
+
+  @override
+  String get delivery_complete_rating_info => 'Cela terminera la livraison et vous serez invité à évaluer le livreur.';
+
+  @override
+  String get not_yet => 'Pas encore';
+
+  @override
+  String get mark_delivered_button => 'Marquer comme livré';
+
+  @override
+  String get cancel_delivery_title => 'Annuler la livraison';
+
+  @override
+  String get confirm_cancel_delivery_message => 'Êtes-vous sûr de vouloir annuler cette livraison en cours ?';
+
+  @override
+  String get cancel_warning_message => 'Veuillez contacter le livreur avant d\'annuler afin d\'éviter tout problème.';
+
+  @override
+  String get keep_active_button => 'Garder actif';
+
+  @override
+  String get cancel_delivery_button => 'Annuler la livraison';
+
+  @override
+  String get your_courier_label => 'Votre livreur';
+
+  @override
+  String get chat_button => 'Discuter';
+
+  @override
+  String get delivered_button => 'Livré';
+
+  @override
+  String get courier => 'Votre livreur';
+
+  @override
+  String get review => 'Avis';
+
+  @override
+  String get review_submitted_success => 'Avis envoyé avec succès !';
+
+  @override
+  String get review_submit_failed => 'Échec de l\'envoi de l\'avis';
+
+  @override
+  String get rate_experience_title => 'Évaluez votre expérience';
+
+  @override
+  String get rate_experience_subtitle => 'Veuillez évaluer votre expérience avec l\'utilisateur et donner votre avis';
+
+  @override
+  String get review_hint_text => 'Partagez vos impressions';
+
+  @override
+  String get submit_review_button => 'Envoyer l\'avis';
+
+  @override
+  String get report_describe_problem => 'Veuillez décrire le problème avant de soumettre.';
+
+  @override
+  String get report_submitted_success => 'Problème signalé avec succès !';
+
+  @override
+  String get report_submit_failed => 'Échec de l\'envoi du signalement';
+
+  @override
+  String get report_problem_title => 'Signaler un problème';
+
+  @override
+  String get report_problem_subtitle => 'Veuillez décrire le problème rencontré avec cet utilisateur';
+
+  @override
+  String get report_hint_text => 'Décrivez le problème...';
+
+  @override
+  String get submit_report_button => 'Soumettre le rapport';
+
+  @override
+  String get waiting_for_response => 'En attente de réponse';
+
+  @override
+  String get type_a_message => 'Tapez un message';
+
+  @override
+  String get seen => 'Vu';
+
+  @override
+  String get error_loading_message => 'Erreur lors du chargement des messages';
+
+  @override
+  String get error_loading_message_text => 'Échec du chargement des messages. Veuillez réessayer plus tard.';
+
+  @override
+  String get security_delete_account_confirm => 'Êtes-vous sûr de vouloir supprimer votre compte ?';
+
+  @override
+  String get security_delete_account_title => 'Supprimer le compte';
+
+  @override
+  String get security_confirm_button => 'Confirmer';
+
+  @override
+  String get security_delete_success_title => 'Compte supprimé avec succès !';
+
+  @override
+  String get security_delete_success_message => 'Votre compte et vos données ont été supprimés avec succès.';
+
+  @override
+  String get security_profile_settings_title => 'Paramètres du profil';
+
+  @override
+  String get security_delete_account_subtitle => 'Supprimez votre compte de façon permanente';
+
+  @override
+  String get security_change_language_subtitle => 'Modifier vos préférences linguistiques';
 }

@@ -79,12 +79,12 @@ class CompletedItemCardState extends State<CompletedItemCard> {
   }
 
   Widget _buildBody() {
+    final t = AppLocalizations.of(context)!;
     return Row(
       children: [
-        
         Expanded(
           child: _buildInfoColumn(
-            label: 'Date',
+            label: t.date,
             value: '${widget.item.date}',
           ),
         ),
@@ -95,7 +95,7 @@ class CompletedItemCardState extends State<CompletedItemCard> {
         ),
         Expanded(
           child: _buildInfoColumn(
-            label: 'Weight',
+            label: t.weight,
             value: '${widget.item.weight}kg',
           ),
         ),
@@ -130,6 +130,7 @@ class CompletedItemCardState extends State<CompletedItemCard> {
 
 
   Widget _buildCourierCard() {
+    final t = AppLocalizations.of(context)!;
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
@@ -152,7 +153,7 @@ class CompletedItemCardState extends State<CompletedItemCard> {
               ),
               const SizedBox(width: 6),
               Text(
-                'Your Courier',
+                t.courier,
                 style: TextStyle(
                   fontSize: 11,
                   color: AppColors.textSecondary,
@@ -199,7 +200,7 @@ class CompletedItemCardState extends State<CompletedItemCard> {
         Expanded(
           child: BuildPrimaryButton(
             onPressed: _submitReview,
-            label: 'Review',
+            label: AppLocalizations.of(context)!.review,
             color: AppColors.rateBackground,
             icon: "assets/icon/star.svg"
           ),

@@ -745,4 +745,437 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get package_image => 'صورة الطرد';
+
+  @override
+  String error_fetch_requests(Object error) {
+    return 'فشل في جلب الطلبات: $error';
+  }
+
+  @override
+  String get error_loading_conversations => 'حدث خطأ أثناء تحميل المحادثات';
+
+  @override
+  String get no_active_negotiations => 'لا توجد مفاوضات نشطة';
+
+  @override
+  String get no_active_negotiations_subtitle => 'ابدأ التفاوض على طلبات التوصيل لرؤيتها هنا';
+
+  @override
+  String get no_messages_yet => 'لا توجد رسائل بعد';
+
+  @override
+  String get guest => 'زائر';
+
+  @override
+  String get no_delivery_requests => 'لا توجد طلبات توصيل';
+
+  @override
+  String get no_delivery_requests_subtitle => 'ستظهر طلبات التوصيل الواردة هنا';
+
+  @override
+  String get no_delivery_requests_sent => 'لم يتم إرسال أي طلبات توصيل';
+
+  @override
+  String get no_delivery_requests_sent_subtitle => 'الطلبات التي أرسلتها للآخرين ستظهر هنا';
+
+  @override
+  String get request_refused_success => 'تم رفض الطلب بنجاح';
+
+  @override
+  String get request_refused_failed => 'فشل رفض الطلب';
+
+  @override
+  String get request_accepted_success => 'تم قبول الطلب بنجاح';
+
+  @override
+  String get request_accepted_failed => 'فشل قبول الطلب';
+
+  @override
+  String get new_delivery_request => 'طلب توصيل جديد';
+
+  @override
+  String get offered_price => 'السعر المعروض';
+
+  @override
+  String request_refused_failed_with_error(Object error) {
+    return 'فشل رفض الطلب: $error';
+  }
+
+  @override
+  String get negotiation_in_progress => 'جاري التفاوض';
+
+  @override
+  String get cancelling => 'جارٍ الإلغاء...';
+
+  @override
+  String get cancel_negotiation => 'إلغاء التفاوض';
+
+  @override
+  String get driver_registration_confirm_message => 'هل أنت متأكد أن جميع المعلومات صحيحة!';
+
+  @override
+  String get driver_registration_confirm_header => 'طلب التسجيل';
+
+  @override
+  String get confirm => 'تأكيد';
+
+  @override
+  String get driver_mode_title => 'وضع السائق';
+
+  @override
+  String get driver_mode_success_message => 'تم إرسال طلبك بنجاح. سنقوم بتحديثك بعد مراجعة مستنداتك';
+
+  @override
+  String get driver_mode_request_failed => 'فشل إرسال الطلب، يرجى المحاولة لاحقًا';
+
+  @override
+  String get please_fill_all_fields => 'يرجى ملء جميع الحقول';
+
+  @override
+  String get registration => 'التسجيل';
+
+  @override
+  String get request_driver_mode_title => 'طلب وضع السائق';
+
+  @override
+  String get request_driver_mode_message => 'تم طلبك لتصبح سائقًا. يرجى الانتظار حتى يقوم المسؤول بمراجعة طلبك. سيتم إعلامك بمجرد الموافقة.';
+
+  @override
+  String get resend_request => 'إعادة إرسال الطلب';
+
+  @override
+  String get driver_registration => 'تسجيل السائق';
+
+  @override
+  String get driver_registration_subtitle => 'يمكنك طلب أن تصبح سائقًا عن طريق ملء النموذج أدناه.';
+
+  @override
+  String get upload_image => 'رفع صورة';
+
+  @override
+  String get id_card_number => 'رقم بطاقة الهوية';
+
+  @override
+  String get enter_national_id => 'أدخل رقم الهوية الوطنية';
+
+  @override
+  String get vehicle_information => 'معلومات المركبة';
+
+  @override
+  String get registration_plate => 'رقم اللوحة';
+
+  @override
+  String get vehicle_plate_number_hint => 'رقم لوحة المركبة';
+
+  @override
+  String get driver_number_label => 'رقم السائق';
+
+  @override
+  String get driver_number_hint => '(مثال: 00125)';
+
+  @override
+  String get vehicle_type_label => 'نوع المركبة';
+
+  @override
+  String get vehicle_type_hint => 'نوع المركبة (سيارة، شاحنة، إلخ)';
+
+  @override
+  String get vehicle_info_note => 'تأكد من أن معلومات المركبة تتطابق مع مستندات تسجيل المركبة.';
+
+  @override
+  String get registering => 'جارٍ التسجيل...';
+
+  @override
+  String get register => 'تسجيل';
+
+  @override
+  String get payment_start_journey => 'ابدأ رحلتك';
+
+  @override
+  String get payment_join_drivers => 'انضم إلى آلاف السائقين الذين يكسبون يوميًا';
+
+  @override
+  String get payment_how_it_works => 'كيف يعمل';
+
+  @override
+  String get payment_step_1 => 'ابدأ تجربتك المجانية اليوم';
+
+  @override
+  String get payment_step_2 => 'قم بالتوصيل وكسب لمدة 30 يومًا مجانًا';
+
+  @override
+  String get payment_step_3 => 'بعد التجربة، ادفع 29.99\$/شهريًا';
+
+  @override
+  String get payment_step_4 => 'يمكنك الإلغاء في أي وقت بدون التزام';
+
+  @override
+  String get payment_free_trial_badge => 'شهر واحد تجربة مجانية';
+
+  @override
+  String get payment_monthly_subscription => 'الاشتراك الشهري';
+
+  @override
+  String get payment_price => '\$';
+
+  @override
+  String get payment_price_main => '29';
+
+  @override
+  String get payment_price_decimal => '.99';
+
+  @override
+  String get payment_price_period => '/شهريًا';
+
+  @override
+  String get payment_first_month_free => 'الشهر الأول مجاني، ثم 29.99\$/شهريًا';
+
+  @override
+  String get payment_terms_agree => 'أوافق على ';
+
+  @override
+  String get payment_terms_of_service => 'شروط الخدمة';
+
+  @override
+  String get payment_terms_and => ' و ';
+
+  @override
+  String get payment_privacy_policy => 'سياسة الخصوصية';
+
+  @override
+  String get payment_start_free_trial => 'ابدأ التجربة المجانية';
+
+  @override
+  String get payment_secure_stripe => 'الدفع الآمن بواسطة Stripe';
+
+  @override
+  String get payment_subscription_activated => 'تم تفعيل الاشتراك!';
+
+  @override
+  String get payment_failed => 'فشل الدفع';
+
+  @override
+  String get payment_error => 'خطأ في الدفع';
+
+  @override
+  String get payment_not_signed_in => 'غير مسجل الدخول';
+
+  @override
+  String get payment_function_error => 'خطأ في الاختبار';
+
+  @override
+  String get payment_test_function => 'جارٍ اختبار الوظيفة...';
+
+  @override
+  String get payment_calling_intent => 'جارٍ استدعاء createPaymentIntent...';
+
+  @override
+  String get payment_user_label => 'المستخدم';
+
+  @override
+  String get payment_function_returned => 'الوظيفة أعادت القيمة';
+
+  @override
+  String get profile_title => 'الملف الشخصي';
+
+  @override
+  String get profile_shipments_overview => 'نظرة عامة على الشحنات';
+
+  @override
+  String get profile_trips_overview => 'نظرة عامة على الرحلات';
+
+  @override
+  String get profile_pending => 'قيد الانتظار';
+
+  @override
+  String get profile_ongoing => 'جاري التنفيذ';
+
+  @override
+  String get profile_completed => 'مكتمل';
+
+  @override
+  String get profile_reviews => 'التقييمات';
+
+  @override
+  String get profile_no_reviews_yet => 'لا توجد تقييمات بعد';
+
+  @override
+  String get profile_joined => 'انضم';
+
+  @override
+  String get profile_guest_user => 'مستخدم زائر';
+
+  @override
+  String get profile_year_singular => 'سنة';
+
+  @override
+  String get profile_year_plural => 'سنوات';
+
+  @override
+  String get profile_month_singular => 'شهر';
+
+  @override
+  String get profile_month_plural => 'أشهر';
+
+  @override
+  String get profile_day_singular => 'يوم';
+
+  @override
+  String get profile_day_plural => 'أيام';
+
+  @override
+  String get profile_hour_singular => 'ساعة';
+
+  @override
+  String get profile_hour_plural => 'ساعات';
+
+  @override
+  String get profile_minute_singular => 'دقيقة';
+
+  @override
+  String get profile_minute_plural => 'دقائق';
+
+  @override
+  String get profile_just_now => 'الآن';
+
+  @override
+  String get profile_ago => 'منذ';
+
+  @override
+  String get profile_statistics_not_found => 'لم يتم العثور على إحصاءات للمستخدم';
+
+  @override
+  String get profile_error_fetching_data => 'خطأ في جلب بيانات المستخدم';
+
+  @override
+  String get profile_error_message => 'خطأ في جلب بيانات المستخدم: ';
+
+  @override
+  String get mark_as_delivered_title => 'تحديد كـ تمّ التسليم';
+
+  @override
+  String get confirm_delivery_message => 'هل أنت متأكد أن هذا الطرد تم تسليمه بنجاح؟';
+
+  @override
+  String get courier_label => 'الموصل';
+
+  @override
+  String get price_label_dh => 'السعر';
+
+  @override
+  String get delivery_complete_rating_info => 'سيتم إنهاء عملية التسليم وسيُطلب منك تقييم الموصل.';
+
+  @override
+  String get not_yet => 'ليس بعد';
+
+  @override
+  String get mark_delivered_button => 'تحديد كـ تمّ التسليم';
+
+  @override
+  String get cancel_delivery_title => 'إلغاء التسليم';
+
+  @override
+  String get confirm_cancel_delivery_message => 'هل أنت متأكد أنك تريد إلغاء عملية التسليم الجارية؟';
+
+  @override
+  String get cancel_warning_message => 'يرجى التواصل مع الموصل قبل الإلغاء لتجنب أي مشاكل.';
+
+  @override
+  String get keep_active_button => 'ابقاء نشطًا';
+
+  @override
+  String get cancel_delivery_button => 'إلغاء التسليم';
+
+  @override
+  String get your_courier_label => 'الموصل الخاص بك';
+
+  @override
+  String get chat_button => 'محادثة';
+
+  @override
+  String get delivered_button => 'تمّ التسليم';
+
+  @override
+  String get courier => 'الموصل الخاص بك';
+
+  @override
+  String get review => 'مراجعة';
+
+  @override
+  String get review_submitted_success => 'تم إرسال التقييم بنجاح!';
+
+  @override
+  String get review_submit_failed => 'فشل في إرسال التقييم';
+
+  @override
+  String get rate_experience_title => 'قيّم تجربتك';
+
+  @override
+  String get rate_experience_subtitle => 'يرجى تقييم تجربتك مع المستخدم وترك ملاحظاتك';
+
+  @override
+  String get review_hint_text => 'شارك أفكارك';
+
+  @override
+  String get submit_review_button => 'إرسال التقييم';
+
+  @override
+  String get report_describe_problem => 'يرجى وصف المشكلة قبل الإرسال.';
+
+  @override
+  String get report_submitted_success => 'تم الإبلاغ عن المشكلة بنجاح!';
+
+  @override
+  String get report_submit_failed => 'فشل في إرسال البلاغ';
+
+  @override
+  String get report_problem_title => 'الإبلاغ عن مشكلة';
+
+  @override
+  String get report_problem_subtitle => 'يرجى وصف المشكلة التي واجهتها مع هذا المستخدم';
+
+  @override
+  String get report_hint_text => 'صف المشكلة...';
+
+  @override
+  String get submit_report_button => 'إرسال البلاغ';
+
+  @override
+  String get waiting_for_response => 'في انتظار الرد';
+
+  @override
+  String get type_a_message => 'اكتب رسالة';
+
+  @override
+  String get seen => 'تمت المشاهدة';
+
+  @override
+  String get error_loading_message => 'حدث خطأ أثناء تحميل الرسائل';
+
+  @override
+  String get error_loading_message_text => 'فشل في تحميل الرسائل. يرجى المحاولة لاحقًا.';
+
+  @override
+  String get security_delete_account_confirm => 'هل أنت متأكد أنك تريد حذف حسابك؟';
+
+  @override
+  String get security_delete_account_title => 'حذف الحساب';
+
+  @override
+  String get security_confirm_button => 'تأكيد';
+
+  @override
+  String get security_delete_success_title => 'تم حذف الحساب بنجاح!';
+
+  @override
+  String get security_delete_success_message => 'تم حذف حسابك وبياناتك بنجاح.';
+
+  @override
+  String get security_profile_settings_title => 'إعدادات الملف الشخصي';
+
+  @override
+  String get security_delete_account_subtitle => 'احذف حسابك نهائيًا';
+
+  @override
+  String get security_change_language_subtitle => 'تغيير تفضيلات اللغة';
 }

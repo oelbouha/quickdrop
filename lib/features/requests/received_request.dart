@@ -56,6 +56,7 @@ class RequestState extends State<Request> with SingleTickerProviderStateMixin {
   }
 
   void _refuseRequest() async {
+    final t = AppLocalizations.of(context)!;
     if (_isRefuseLoading) return;
     
     setState(() {
@@ -67,11 +68,11 @@ class RequestState extends State<Request> with SingleTickerProviderStateMixin {
           .deleteRequest(widget.request.id!);
       
       if (mounted) {
-        AppUtils.showDialog(context, "Request refused successfully", AppColors.succes);
+        AppUtils.showDialog(context, t.request_refused_success, AppColors.succes);
       }
     } catch (e) {
       if (mounted) {
-        AppUtils.showDialog(context, "Failed to refuse request", AppColors.error);
+        AppUtils.showDialog(context, t.request_refused_failed, AppColors.error);
       }
     } finally {
       if (mounted) {
@@ -83,6 +84,7 @@ class RequestState extends State<Request> with SingleTickerProviderStateMixin {
   }
 
   void _acceptRequest() async {
+    final t = AppLocalizations.of(context)!;
     if (_isAcceptLoading) return;
     
     setState(() {
@@ -156,7 +158,7 @@ class RequestState extends State<Request> with SingleTickerProviderStateMixin {
 
         if (mounted) {
           AppUtils.showDialog(
-              context, "Request accepted successfully", AppColors.succes);
+              context, t.request_accepted_success, AppColors.succes);
           await requestProvider.deleteActiveRequestsByShipmentId(
               widget.request.shipmentId, widget.request.id!);
           Provider.of<StatisticsProvider>(context, listen: false)
@@ -171,7 +173,7 @@ class RequestState extends State<Request> with SingleTickerProviderStateMixin {
       });
     } catch (e) {
       if (mounted) {
-        AppUtils.showDialog(context, "Failed to accept request", AppColors.error);
+        AppUtils.showDialog(context, t.request_accepted_failed, AppColors.error);
       }
     } finally {
       if (mounted) {
@@ -227,6 +229,7 @@ class RequestState extends State<Request> with SingleTickerProviderStateMixin {
   }
 
   Widget _buildStatusBanner() {
+    final t = AppLocalizations.of(context)!;
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.symmetric(vertical: 8),
@@ -259,7 +262,7 @@ class RequestState extends State<Request> with SingleTickerProviderStateMixin {
           ),
           const SizedBox(width: 8),
           Text(
-            'New Delivery Request',
+            t.new_delivery_request,
             style: TextStyle(
               color: AppColors.primary,
               fontSize: 13,
@@ -274,11 +277,12 @@ class RequestState extends State<Request> with SingleTickerProviderStateMixin {
 
 
 Widget _buildHeader() {
+    final t = AppLocalizations.of(context)!;
     return Padding(
         padding: const EdgeInsets.all(16),
         child: UserProfileWithRating(
           user: widget.user,
-          header: widget.user.displayName ?? 'Guest',
+          header: widget.user.displayName ?? t.guest,
           avatarSize: 40,
           headerFontSize: 16,
           subHeaderFontSize: 12,
@@ -290,6 +294,7 @@ Widget _buildHeader() {
 
 
   Widget _buildBody() {
+    final t = AppLocalizations.of(context)!;
     return Padding(
         padding: const EdgeInsets.all(16),
       child:  Row(
@@ -309,12 +314,13 @@ Widget _buildHeader() {
           ),
         ),
         const SizedBox(width: 16),
-        Expanded(child: buildPriceCard(price: widget.request.price, label: 'Offered Price')),
+        Expanded(child: buildPriceCard(price: widget.request.price, label: t.offered_price)),
       ],
     ));
   }
 
   Widget _buildFooter() {
+    final t = AppLocalizations.of(context)!;
     return Container(
       padding: const EdgeInsets.all(16),
       child: 
@@ -328,7 +334,7 @@ Widget _buildHeader() {
                     context.push('/negotiation-screen?userId=${widget.user.uid}&shipmentId=${widget.shipment.id}&requestId=${widget.request.id}');
                   },
                   icon: const Icon(Icons.chat_bubble_outline, size: 16),
-                  label: const Text('Negotiate'),
+                  label: Text(t.negotiate),
                   style: OutlinedButton.styleFrom(
                     foregroundColor: AppColors.primary,
                     side: BorderSide(color: AppColors.primary.withValues(alpha: 0.3)),

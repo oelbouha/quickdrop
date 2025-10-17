@@ -72,20 +72,21 @@ class BecomeDriverScreenState extends State<BecomeDriverScreen>
   }
 
   Future<void> requestDriverMode() async {
+    final t = AppLocalizations.of(context)!;
     if (_isLoading) return;
 
 
     if (_isImageLoading) {
-      AppUtils.showDialog(context, "Image is still uploading, please wait", AppColors.error);
+      AppUtils.showDialog(context, t.image_uploading_message, AppColors.error);
       return;
     }
     if (_formKey.currentState!.validate()) {
       // Show confirmation dialog
       final confirmed =  await ConfirmationDialog.show(
         context: context,
-        message: 'Are you sure all information is correct!',
-        header: 'Register Request',
-        buttonHintText: 'confirm',
+        message: t.driver_registration_confirm_message,
+        header: t.driver_registration_confirm_header,
+        buttonHintText: t.confirm,
         buttonColor: AppColors.blue700,
         iconColor: AppColors.blue700,
         iconData: Icons.save,
@@ -116,12 +117,12 @@ class BecomeDriverScreenState extends State<BecomeDriverScreen>
             .requestDriverMode(driver);
 
         await showSuccessAnimation(context,
-          title: "Driver Mode",
-          message: "Your request has been sent Successfully. We will update you after review your documents"
+          title: t.driver_mode_title,
+          message: t.driver_mode_success_message
         );
       } catch (e) {
         if (mounted) {
-          AppUtils.showDialog(context, "Failed to send request please try again later", AppColors.error);
+          AppUtils.showDialog(context, t.driver_mode_request_failed, AppColors.error);
         }
       } finally {
         if (mounted) {
@@ -129,7 +130,7 @@ class BecomeDriverScreenState extends State<BecomeDriverScreen>
         }
       }
     } else {
-      AppUtils.showDialog(context, "Please fill all fields", AppColors.error);
+      AppUtils.showDialog(context, t.please_fill_all_fields, AppColors.error);
     }
   }
 
@@ -146,10 +147,8 @@ Future<void> _pickImage() async {
         _selectedImage = File(pickerFile.path);
          imagePath =  await Provider.of<ShipmentProvider>(context, listen: false)
             .uploadImageToSupabase(File(pickerFile.path));
-          // print("Image uploaded to Supabase: $imagePath");
       setState(() {
         _isImageLoading = false;
-        // print("Image selected: ${_selectedImage!.path}");
       });
     }
   }
@@ -166,11 +165,12 @@ Future<void> _pickImage() async {
 
   @override
   Widget build(BuildContext context) {
+    final t = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
         title:  Text(
-          'Registration',
+          t.registration,
           style: TextStyle(
             color: AppColors.appBarText,
             fontWeight: FontWeight.w600,
@@ -194,6 +194,7 @@ Future<void> _pickImage() async {
   }
 
   Widget _buildUpdateScreen() {
+    final t = AppLocalizations.of(context)!;
     return Form(
       key: _formKey,
       child: Column(
@@ -203,9 +204,8 @@ Future<void> _pickImage() async {
            const SizedBox(height: 24),
            if (_isUserRequestedDriver) ...[buildInfoCard(
               icon: Icons.info_outline,
-              title: "Request Driver Mode",
-              message:
-                  "You have been requested to become a driver. please wait for the admin to review your request. You will be notified once your request is approved.",
+              title: t.request_driver_mode_title,
+              message: t.request_driver_mode_message,
               color: AppColors.succes,
             ),
           if (!_showRegistrationForm) ...[
@@ -217,15 +217,14 @@ Future<void> _pickImage() async {
                   });
                 },
                 style: ElevatedButton.styleFrom(
-                  // color: AppColors.blue,
                   elevation: 0,
                     backgroundColor: AppColors.blue700.withOpacity(0.8),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
                   ),
                 ),
-                child: const Text(
-                  'Resend Request',
+                child: Text(
+                  t.resend_request,
                   style: TextStyle(color: Colors.white),
                 ),
               ),],],
@@ -248,6 +247,7 @@ Future<void> _pickImage() async {
   }
 
   Widget _buildHeaderSection() {
+    final t = AppLocalizations.of(context)!;
     return Container(
       padding: const EdgeInsets.all(18),
       decoration: BoxDecoration(
@@ -282,8 +282,8 @@ Future<void> _pickImage() async {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
-                      "Driver registration",
+                    Text(
+                      t.driver_registration,
                       style: TextStyle(
                         color: AppColors.headingText,
                         fontSize: 24,
@@ -292,7 +292,7 @@ Future<void> _pickImage() async {
                     ),
                     const SizedBox(height: 4),
                     Text(
-                     "You can request to become a driver by filling out the form below.",
+                     t.driver_registration_subtitle,
                       maxLines: 2,
                       style: TextStyle(
                         color: Colors.grey[600],
@@ -312,6 +312,7 @@ Future<void> _pickImage() async {
 
 
  Widget _buildImageInfoSection() {
+    final t = AppLocalizations.of(context)!;
     return Container (
       width: double.infinity,
       padding: const EdgeInsets.all(20),
@@ -345,15 +346,14 @@ Future<void> _pickImage() async {
                 await _pickImage();
               },
               style: ElevatedButton.styleFrom(
-                // color: AppColors.blue,
                 elevation: 0,
                   backgroundColor: AppColors.blue700.withOpacity(0.8),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),
               ),
-              child: const Text(
-                'Upload Image',
+              child: Text(
+                t.upload_image,
                 style: TextStyle(color: Colors.white),
               ),
             ),
@@ -366,8 +366,9 @@ Future<void> _pickImage() async {
 
 
   Widget _buildPersonalInfoSection() {
+    final t = AppLocalizations.of(context)!;
     return _buildSection(
-      title: "Personal Information",
+      title: t.personal_information,
       icon: Icons.badge_outlined,
       children: [
         Row(
@@ -375,8 +376,8 @@ Future<void> _pickImage() async {
             Expanded(
               child: ImprovedTextField(
                 controller: firstNameController,
-                label: 'First Name',
-                hint: 'Enter your first name',
+                label: t.first_name,
+                hint: t.enter_first_name,
                 icon: Icons.person_outline,
                 validator: Validators.name,
               ),
@@ -385,8 +386,8 @@ Future<void> _pickImage() async {
             Expanded(
               child: ImprovedTextField(
                 controller: lastNameController,
-                label: 'Last Name',
-                hint: 'Enter your last name',
+                label: t.last_name,
+                hint: t.enter_last_name,
                 icon: Icons.person_outline,
                 validator: Validators.name,
               ),
@@ -396,8 +397,8 @@ Future<void> _pickImage() async {
         const SizedBox(height: 16),
         ImprovedTextField(
           controller: idNumberController,
-          label: 'Id cart number',
-          hint: 'Enter your National ID',
+          label: t.id_card_number,
+          hint: t.enter_national_id,
           icon: Icons.person,
           keyboardType: TextInputType.emailAddress,
           validator: Validators.notEmpty,
@@ -405,9 +406,8 @@ Future<void> _pickImage() async {
         const SizedBox(height: 16),
         buildInfoCard(
           icon: Icons.info_outline,
-          title: "Important",
-          message:
-              "Make sure this matches the name on your government ID or passport.",
+          title: t.important,
+          message: t.personal_info_note,
           color: Colors.blue,
         ),
       ],
@@ -415,14 +415,15 @@ Future<void> _pickImage() async {
   }
 
   Widget _buildContactInfoSection() {
+    final t = AppLocalizations.of(context)!;
     return _buildSection(
-      title: "Contact Information",
+      title: t.contact_information,
       icon: Icons.contact_mail_outlined,
       children: [
         ImprovedTextField(
           controller: emailController,
-          label: 'Email Address',
-          hint: 'example@gmail.com',
+          label: t.email_address,
+          hint: t.email_hint,
           icon: Icons.email_outlined,
           keyboardType: TextInputType.emailAddress,
           validator: Validators.email,
@@ -430,8 +431,8 @@ Future<void> _pickImage() async {
         const SizedBox(height: 16),
         ImprovedTextField(
           controller: phoneNumberController,
-          label: 'Phone Number',
-          hint: '00 000 00 00',
+          label: t.phone_number,
+          hint: t.phone_hint,
           icon: Icons.phone_outlined,
           keyboardType: TextInputType.phone,
           validator: Validators.phone,
@@ -442,14 +443,15 @@ Future<void> _pickImage() async {
 
 
    Widget _buildCarInfoSection() {
+    final t = AppLocalizations.of(context)!;
     return _buildSection(
-      title: "vehicle Information",
+      title: t.vehicle_information,
       icon: Icons.contact_mail_outlined,
       children: [
         ImprovedTextField(
           controller: vehiclePlateNumberController,
-          label: 'Rgistration plate',
-          hint: 'vehicle plate number ',
+          label: t.registration_plate,
+          hint: t.vehicle_plate_number_hint,
           icon: Icons.car_crash_outlined,
           keyboardType: TextInputType.emailAddress,
           validator: Validators.notEmpty,
@@ -457,8 +459,8 @@ Future<void> _pickImage() async {
         const SizedBox(height: 16),
         ImprovedTextField(
           controller: driverNumberController,
-          label: 'Driver number',
-          hint: '(e.g. 00125)',
+          label: t.driver_number_label,
+          hint: t.driver_number_hint,
           icon: Icons.car_crash_outlined,
           keyboardType: TextInputType.phone,
           validator: Validators.notEmpty,
@@ -466,8 +468,8 @@ Future<void> _pickImage() async {
         const SizedBox(height: 16),
         ImprovedTextField(
           controller: vehicleTypeController,
-          label: 'Vehicle Type',
-          hint: 'vehicle type (car, truck, etc.)',
+          label: t.vehicle_type_label,
+          hint: t.vehicle_type_hint,
           icon: Icons.car_crash_outlined,
           keyboardType: TextInputType.text,
           validator: Validators.notEmpty,
@@ -475,9 +477,8 @@ Future<void> _pickImage() async {
          const SizedBox(height: 16),
         buildInfoCard(
           icon: Icons.info_outline,
-          title: "Important",
-          message:
-              "Make sure the vehicle information matches your vehicle registration documents.",
+          title: t.important,
+          message: t.vehicle_info_note,
           color: Colors.green,
         ),
       ],
@@ -529,6 +530,7 @@ Future<void> _pickImage() async {
   }
 
   Widget _buildSaveButton() {
+    final t = AppLocalizations.of(context)!;
     return Container(
       width: double.infinity,
       height: 56,
@@ -569,8 +571,8 @@ Future<void> _pickImage() async {
                     ),
                   ),
                   const SizedBox(width: 12),
-                  const Text(
-                    'Registering...',
+                  Text(
+                    t.registering,
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 16,
@@ -580,8 +582,8 @@ Future<void> _pickImage() async {
                 ] else ...[
                   Icon(Icons.save, color: Colors.white, size: 20),
                   const SizedBox(width: 8),
-                  const Text(
-                    'Register',
+                  Text(
+                    t.register,
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 16,
@@ -597,4 +599,3 @@ Future<void> _pickImage() async {
     );
   }
 }
-

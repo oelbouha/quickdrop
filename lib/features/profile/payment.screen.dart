@@ -1,4 +1,3 @@
-
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:cloud_functions/cloud_functions.dart' as functions;
@@ -21,7 +20,7 @@ class PaymentScreenState extends State<PaymentScreen> {
 
 Future<void> _testFunction() async {
   try {
-    print('Testing function...');
+    print(AppLocalizations.of(context)!.payment_test_function);
     
     final callable = FirebaseFunctions.instanceFor(region: 'us-central1')
         .httpsCallable('testPayment');
@@ -31,9 +30,9 @@ Future<void> _testFunction() async {
       'amount': 2999,
     });
 
-    print('Test result: ${result.data}');
+    print('${AppLocalizations.of(context)!.payment_function_returned}: ${result.data}');
   } catch (e) {
-    print('Test error: $e');
+    print('${AppLocalizations.of(context)!.payment_function_error}: $e');
   }
 }
 
@@ -44,11 +43,11 @@ Future<void> _startPayment() async {
   try {
     final firebaseUser = FirebaseAuth.instance.currentUser;
     if (firebaseUser == null) {
-      throw Exception("Not signed in");
+      throw Exception(AppLocalizations.of(context)!.payment_not_signed_in);
     }
 
-    print('User: ${firebaseUser.uid}');
-    print('Calling createPaymentIntent...');
+    print('${AppLocalizations.of(context)!.payment_user_label}: ${firebaseUser.uid}');
+    print(AppLocalizations.of(context)!.payment_calling_intent);
 
     final callable = FirebaseFunctions.instanceFor(region: 'us-central1')
         .httpsCallable(
@@ -63,7 +62,7 @@ Future<void> _startPayment() async {
       'currency': 'usd',
     });
 
-    print('Function returned: ${result.data}');
+    print('${AppLocalizations.of(context)!.payment_function_returned}: ${result.data}');
 
     final clientSecret = result.data['clientSecret'];
     
@@ -78,14 +77,14 @@ Future<void> _startPayment() async {
 
     if (mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Subscription activated!")),
+        SnackBar(content: Text(AppLocalizations.of(context)!.payment_subscription_activated)),
       );
     }
   } catch (e) {
-    print("Payment error: $e");
+    print("${AppLocalizations.of(context)!.payment_error}: $e");
     if (mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Payment failed: ${e.toString()}")),
+        SnackBar(content: Text("${AppLocalizations.of(context)!.payment_failed}: ${e.toString()}")),
       );
     }
   } finally {
@@ -132,18 +131,18 @@ Future<void> _startPayment() async {
             ),
           ),
           const SizedBox(height: 24),
-          const Text(
-            'Start Your Journey',
-            style: TextStyle(
+          Text(
+            AppLocalizations.of(context)!.payment_start_journey,
+            style: const TextStyle(
               fontSize: 32,
               fontWeight: FontWeight.bold,
               color: Colors.white,
             ),
           ),
           const SizedBox(height: 8),
-          const Text(
-            'Join thousands of drivers earning daily',
-            style: TextStyle(
+          Text(
+            AppLocalizations.of(context)!.payment_join_drivers,
+            style: const TextStyle(
               fontSize: 16,
               color: Colors.white,
               fontWeight: FontWeight.w300,
@@ -172,7 +171,7 @@ Future<void> _startPayment() async {
                 Icon(Icons.info_outline, color: Colors.blue[700]),
                 const SizedBox(width: 12),
                 Text(
-                  'How it works',
+                  AppLocalizations.of(context)!.payment_how_it_works,
                   style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
@@ -182,10 +181,10 @@ Future<void> _startPayment() async {
               ],
             ),
             const SizedBox(height: 16),
-            _buildStep('1', 'Start your free trial today'),
-            _buildStep('2', 'Deliver and earn for 30 days free'),
-            _buildStep('3', 'After trial, pay \$29.99/month'),
-            _buildStep('4', 'Cancel anytime, no commitment'),
+            _buildStep('1', AppLocalizations.of(context)!.payment_step_1),
+            _buildStep('2', AppLocalizations.of(context)!.payment_step_2),
+            _buildStep('3', AppLocalizations.of(context)!.payment_step_3),
+            _buildStep('4', AppLocalizations.of(context)!.payment_step_4),
           ],
         ),
       ),
@@ -215,12 +214,12 @@ Future<void> _startPayment() async {
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
-          children: const [
-            Icon(Icons.star, color: Colors.white, size: 20),
-            SizedBox(width: 8),
+          children: [
+            const Icon(Icons.star, color: Colors.white, size: 20),
+            const SizedBox(width: 8),
             Text(
-              '1 MONTH FREE TRIAL',
-              style: TextStyle(
+              AppLocalizations.of(context)!.payment_free_trial_badge,
+              style: const TextStyle(
                 color: Colors.white,
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
@@ -261,9 +260,9 @@ Future<void> _startPayment() async {
               ),
               child: Column(
                 children: [
-                  const Text(
-                    'Monthly Subscription',
-                    style: TextStyle(
+                  Text(
+                    AppLocalizations.of(context)!.payment_monthly_subscription,
+                    style: const TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
                     ),
@@ -273,19 +272,19 @@ Future<void> _startPayment() async {
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Padding(
-                        padding: EdgeInsets.only(top: 8),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 8),
                         child: Text(
-                          '\$',
-                          style: TextStyle(
+                          AppLocalizations.of(context)!.payment_price,
+                          style: const TextStyle(
                             fontSize: 28,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
                       ),
-                      const Text(
-                        '29',
-                        style: TextStyle(
+                      Text(
+                        AppLocalizations.of(context)!.payment_price_main,
+                        style: const TextStyle(
                           fontSize: 72,
                           fontWeight: FontWeight.bold,
                           height: 1,
@@ -296,15 +295,15 @@ Future<void> _startPayment() async {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const Text(
-                              '.99',
-                              style: TextStyle(
+                            Text(
+                              AppLocalizations.of(context)!.payment_price_decimal,
+                              style: const TextStyle(
                                 fontSize: 28,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
                             Text(
-                              '/month',
+                              AppLocalizations.of(context)!.payment_price_period,
                               style: TextStyle(
                                 fontSize: 16,
                                 color: Colors.grey[600],
@@ -327,7 +326,7 @@ Future<void> _startPayment() async {
                       border: Border.all(color: Colors.orange[200]!),
                     ),
                     child: Text(
-                      'First month FREE, then \$29.99/mo',
+                      AppLocalizations.of(context)!.payment_first_month_free,
                       style: TextStyle(
                         color: Colors.orange[900],
                         fontSize: 14,
@@ -374,20 +373,20 @@ Future<void> _startPayment() async {
                           color: Colors.grey[700],
                         ),
                         children: [
-                          const TextSpan(
-                            text: 'I agree to the ',
+                          TextSpan(
+                            text: AppLocalizations.of(context)!.payment_terms_agree,
                           ),
                           TextSpan(
-                            text: 'Terms of Service',
+                            text: AppLocalizations.of(context)!.payment_terms_of_service,
                             style: TextStyle(
                               color: Theme.of(context).primaryColor,
                               fontWeight: FontWeight.w600,
                               decoration: TextDecoration.underline,
                             ),
                           ),
-                          const TextSpan(text: ' and '),
+                          TextSpan(text: AppLocalizations.of(context)!.payment_terms_and),
                           TextSpan(
-                            text: 'Privacy Policy',
+                            text: AppLocalizations.of(context)!.payment_privacy_policy,
                             style: TextStyle(
                               color: Theme.of(context).primaryColor,
                               fontWeight: FontWeight.w600,
@@ -477,17 +476,17 @@ Future<void> _startPayment() async {
                     )
                   : Row(
                       mainAxisAlignment: MainAxisAlignment.center,
-                      children: const [
+                      children: [
                         Text(
-                          'Start Free Trial',
-                          style: TextStyle(
+                          AppLocalizations.of(context)!.payment_start_free_trial,
+                          style: const TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
                             color: Colors.white,
                           ),
                         ),
-                        SizedBox(width: 8),
-                        Icon(Icons.arrow_forward, color: Colors.white),
+                        const SizedBox(width: 8),
+                        const Icon(Icons.arrow_forward, color: Colors.white),
                       ],
                     ),
             ),
@@ -505,7 +504,7 @@ Future<void> _startPayment() async {
               Icon(Icons.lock, size: 16, color: Colors.grey[600]),
               const SizedBox(width: 8),
               Text(
-                'Secure payment powered by Stripe',
+                AppLocalizations.of(context)!.payment_secure_stripe,
                 style: TextStyle(
                   fontSize: 13,
                   color: Colors.grey[600],
