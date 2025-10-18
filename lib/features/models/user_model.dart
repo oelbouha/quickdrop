@@ -221,13 +221,10 @@ class UserProvider with ChangeNotifier {
     //   return _users[uid]!;
     // }
     try {
-      final userDoc =
-          await FirebaseFirestore.instance.collection('users').doc(uid).get();
-      print("userDoc: ${userDoc.data()}");
+      final userDoc = await FirebaseFirestore.instance.collection('users').doc(uid).get();
       if (userDoc.exists) {
         final user = UserData.fromMap(userDoc.data()!);
         _users[uid] = user;
-        print("User fetched: ${user.displayName}");
         return user;
       } else {
         throw Exception('User not found');
