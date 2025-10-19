@@ -2,12 +2,13 @@ import 'package:quickdrop_app/features/models/base_transport.dart';
 
 class Trip extends TransportItem {
   final String transportType;
+  List<String>? middleStops;
   Trip({
     String? id,
     String? matchedDeliveryId,
     String? matchedDeliveryUserId,
     String status = 'active',
-
+    this.middleStops,
     required this.transportType,
     required String from,
     required String to,
@@ -33,7 +34,12 @@ class Trip extends TransportItem {
 
   @override
   Map<String, dynamic> toMap() {
-    return super.toMap();
+   final map = super.toMap();
+    map.addAll({
+      'transportType': transportType,
+      'middleStops': middleStops, 
+    });
+    return map;
   }
 
   factory Trip.fromMap(Map<String, dynamic> map, String id) {
@@ -49,6 +55,9 @@ class Trip extends TransportItem {
       matchedDeliveryUserId: map['matchedDeliveryUserId'],
       status: map['status'] ?? 'active',
       transportType: map['transportType'] ?? 'trip',
+      middleStops: map['middleStops'] != null
+          ? List<String>.from(map['middleStops'])
+          : null,
     );
   }
 }

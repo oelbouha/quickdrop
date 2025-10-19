@@ -77,12 +77,12 @@ class ChangeLanguageScreenState extends State<ChangeLanguageScreen> {
                     ? AppColors.primary.withOpacity(0.15)
                     : AppColors.cardBackground,
                 borderRadius: BorderRadius.circular(8),
-                border: Border.all(
-                  color: isSelected
-                      ? AppColors.primary
-                      : AppColors.lessImportant,
-                  width: isSelected ? 2 : 1,
-                ),
+                // border: Border.all(
+                //   color: isSelected
+                //       ? AppColors.primary
+                //       : AppColors.lessImportant,
+                //   width: isSelected ? 2 : 1,
+                // ),
               ),
               child: Padding(
                 padding: const EdgeInsets.symmetric(

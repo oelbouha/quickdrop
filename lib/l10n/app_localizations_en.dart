@@ -1210,4 +1210,43 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get delete_trip_title => 'Delete Trip';
+
+  @override
+  String get middle_stop_hint => 'Enter a city you will stop by';
+
+  @override
+  String get add_stop => 'Add a stop';
+
+  @override
+  String get stop => 'Stop';
+
+  @override
+  String get add_stop_hint => 'You can add optional cities where you’ll stop along the way.';
+
+  @override
+  String get no_result => 'No results';
+
+  @override
+  String get no_result_message => 'No results found for your search criteria';
+
+  @override
+  String get max_weight => 'Max Weight';
+
+  @override
+  String get max_price => 'Max Price';
+
+  @override
+  String get type => 'Type';
+
+  @override
+  String get kg => 'Kg';
+
+  @override
+  String get dirham => 'dh';
+
+  @override
+  String get new_search => 'New Search';
+
+  @override
+  String get applied_filtter => 'Applied Filters';
 }

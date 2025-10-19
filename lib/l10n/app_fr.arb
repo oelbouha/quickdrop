@@ -482,7 +482,26 @@
     "error_fetch_trips": "Échec de la récupération des trajets: {error}",
     "trip_deleted": "Trajet supprimé avec succès",
     "trip_deleted_failed": "Échec de la suppression du trajet",
-    "delete_trip_title": "Supprimer le trajet"
+    "delete_trip_title": "Supprimer le trajet",
+    "middle_stop_hint": "Entrez une ville où vous ferez une halte",
+    "add_stop": "Ajouter une étape",
+    "stop": "Étape",
+    "add_stop_hint": "Vous pouvez ajouter des villes où vous ferez une halte pendant le trajet.",
+    "no_result": "Aucun résultat",
+    "no_result_message": "Aucun résultat trouvé pour vos critères de recherche",
+    "new_search": "Nouvelle recherche",
+    "max_weight": "Poids maximum",
+"max_price": "Prix maximum",
+"type": "Type",
+"kg": "Kg",
+"dirham": "Dh",
+"search": "Rechercher",
+"applied_filtter": "Filtres appliqués"
+
+
+
+
+
 
 
 

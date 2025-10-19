@@ -1,5 +1,6 @@
 import 'dart:io'; // Import File class
 import 'package:quickdrop_app/core/utils/imports.dart';
+import 'package:quickdrop_app/core/widgets/location_textfield.dart';
 export 'package:quickdrop_app/core/widgets/tipWidget.dart';
 
 class AddShipmentScreen extends StatefulWidget {
@@ -880,19 +881,19 @@ class _AddShipmentScreenState extends State<AddShipmentScreen>
             backgroundColor: const Color(0xFFD1FAE5),
           ),
           const SizedBox(height: 24),
-          TextFieldWithHeader(
+          LocationTextField(
               controller: fromController,
               hintText: t.pickup_location,
               headerText: t.from_hint,
-              validator: Validators.notEmpty,
-              iconPath: "assets/icon/map-point.svg"),
+              iconColor: Theme.of(context).colorScheme.primary,
+            ),
           const SizedBox(height: 16),
-          TextFieldWithHeader(
+          LocationTextField(
               controller: toController,
               hintText: t.delivery_location,
               headerText: t.to_hint,
-              validator: Validators.notEmpty,
-              iconPath: "assets/icon/map-point.svg"),
+              iconColor: Theme.of(context).colorScheme.primary,
+            ),
           const SizedBox(height: 20),
           buildInfoCard(
             icon: Icons.location_on,

@@ -63,11 +63,12 @@ import 'package:quickdrop_app/core/widgets/custom_svg.dart';
                   ],
                 ),
               ),
-              // Icon(
-              //   Icons.arrow_forward_ios,
-              //   size: 12,
-              //   color: Colors.black,
-              // ),
+              const Icon(
+                Icons.arrow_forward_ios,
+                size: 16,
+                color: Colors.grey,
+              ),
+             
             ],
           ),
         ),

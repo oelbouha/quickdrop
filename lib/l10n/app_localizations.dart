@@ -2478,6 +2478,84 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Delete Trip'**
   String get delete_trip_title;
+
+  /// No description provided for @middle_stop_hint.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a city you will stop by'**
+  String get middle_stop_hint;
+
+  /// No description provided for @add_stop.
+  ///
+  /// In en, this message translates to:
+  /// **'Add a stop'**
+  String get add_stop;
+
+  /// No description provided for @stop.
+  ///
+  /// In en, this message translates to:
+  /// **'Stop'**
+  String get stop;
+
+  /// No description provided for @add_stop_hint.
+  ///
+  /// In en, this message translates to:
+  /// **'You can add optional cities where you’ll stop along the way.'**
+  String get add_stop_hint;
+
+  /// No description provided for @no_result.
+  ///
+  /// In en, this message translates to:
+  /// **'No results'**
+  String get no_result;
+
+  /// No description provided for @no_result_message.
+  ///
+  /// In en, this message translates to:
+  /// **'No results found for your search criteria'**
+  String get no_result_message;
+
+  /// No description provided for @max_weight.
+  ///
+  /// In en, this message translates to:
+  /// **'Max Weight'**
+  String get max_weight;
+
+  /// No description provided for @max_price.
+  ///
+  /// In en, this message translates to:
+  /// **'Max Price'**
+  String get max_price;
+
+  /// No description provided for @type.
+  ///
+  /// In en, this message translates to:
+  /// **'Type'**
+  String get type;
+
+  /// No description provided for @kg.
+  ///
+  /// In en, this message translates to:
+  /// **'Kg'**
+  String get kg;
+
+  /// No description provided for @dirham.
+  ///
+  /// In en, this message translates to:
+  /// **'dh'**
+  String get dirham;
+
+  /// No description provided for @new_search.
+  ///
+  /// In en, this message translates to:
+  /// **'New Search'**
+  String get new_search;
+
+  /// No description provided for @applied_filtter.
+  ///
+  /// In en, this message translates to:
+  /// **'Applied Filters'**
+  String get applied_filtter;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

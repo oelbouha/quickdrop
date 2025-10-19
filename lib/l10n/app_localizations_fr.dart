@@ -1210,4 +1210,43 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get delete_trip_title => 'Supprimer le trajet';
+
+  @override
+  String get middle_stop_hint => 'Entrez une ville où vous ferez une halte';
+
+  @override
+  String get add_stop => 'Ajouter une étape';
+
+  @override
+  String get stop => 'Étape';
+
+  @override
+  String get add_stop_hint => 'Vous pouvez ajouter des villes où vous ferez une halte pendant le trajet.';
+
+  @override
+  String get no_result => 'Aucun résultat';
+
+  @override
+  String get no_result_message => 'Aucun résultat trouvé pour vos critères de recherche';
+
+  @override
+  String get max_weight => 'Poids maximum';
+
+  @override
+  String get max_price => 'Prix maximum';
+
+  @override
+  String get type => 'Type';
+
+  @override
+  String get kg => 'Kg';
+
+  @override
+  String get dirham => 'Dh';
+
+  @override
+  String get new_search => 'Nouvelle recherche';
+
+  @override
+  String get applied_filtter => 'Filtres appliqués';
 }

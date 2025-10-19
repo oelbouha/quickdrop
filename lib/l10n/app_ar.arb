@@ -481,7 +481,27 @@
     "error_fetch_trips": "فشل في جلب الرحلات: {error}",
     "trip_deleted": "تم حذف الرحلة بنجاح",
     "trip_deleted_failed": "فشل حذف الرحلة",
-    "delete_trip_title": "حذف الرحلة"
+    "delete_trip_title": "حذف الرحلة",
+    "middle_stop_hint": "أدخل المدينة التي ستتوقف فيها",
+    "add_stop": "إضافة محطة",
+    "stop": "محطة",
+    "add_stop_hint": "يمكنك إضافة المدن التي ستتوقف فيها أثناء الرحلة (اختياري).",
+    "no_result": "لا توجد نتائج",
+    "no_result_message": "لم يتم العثور على نتائج تطابق معايير البحث الخاصة بك",
+    "new_search": "بحث جديد",
+    "max_weight": "الوزن الأقصى",
+    "max_price": "السعر الأقصى",
+    "type": "النوع",
+    "kg": "كلغ",
+    "dirham": "درهم",
+    "search": "بحث",
+    "applied_filtter": "الفلاتر المطبقة"
+
+
+
+
+
+
 
 
 

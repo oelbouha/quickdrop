@@ -24,11 +24,18 @@ class AppUtils {
         content: Row(
           children: [
             // Error icon
-            const Icon(
-              Icons.error_outline,
-              color: Colors.white,
+            if (backgroundColor == AppColors.succes)
+             Icon(
+              Icons.check_circle,
+              color: backgroundColor,
               size: 24,
             ),
+            if (backgroundColor == AppColors.error)
+              Icon(
+                Icons.error,
+                color: backgroundColor,
+                size: 24,
+              ),
             const SizedBox(width: 12),
             // Message
             Expanded(
@@ -58,7 +65,7 @@ class AppUtils {
             ),
           ],
         ),
-        backgroundColor: backgroundColor,
+        backgroundColor: AppColors.dark.withValues(alpha: 0.8),
         behavior: SnackBarBehavior.floating,
         margin: const EdgeInsets.only(top: 60, left: 16, right: 16, bottom: 16),
         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 10),

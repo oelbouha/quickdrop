@@ -1210,4 +1210,43 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get delete_trip_title => 'حذف الرحلة';
+
+  @override
+  String get middle_stop_hint => 'أدخل المدينة التي ستتوقف فيها';
+
+  @override
+  String get add_stop => 'إضافة محطة';
+
+  @override
+  String get stop => 'محطة';
+
+  @override
+  String get add_stop_hint => 'يمكنك إضافة المدن التي ستتوقف فيها أثناء الرحلة (اختياري).';
+
+  @override
+  String get no_result => 'لا توجد نتائج';
+
+  @override
+  String get no_result_message => 'لم يتم العثور على نتائج تطابق معايير البحث الخاصة بك';
+
+  @override
+  String get max_weight => 'الوزن الأقصى';
+
+  @override
+  String get max_price => 'السعر الأقصى';
+
+  @override
+  String get type => 'النوع';
+
+  @override
+  String get kg => 'كلغ';
+
+  @override
+  String get dirham => 'درهم';
+
+  @override
+  String get new_search => 'بحث جديد';
+
+  @override
+  String get applied_filtter => 'الفلاتر المطبقة';
 }

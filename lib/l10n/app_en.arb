@@ -498,7 +498,23 @@
     "error_fetch_trips": "Failed to fetch Trips: {error}",
     "trip_deleted": "Shipment deleted succusfully",
     "trip_deleted_failed":"Failed to delete shipment",
-    "delete_trip_title" : "Delete Trip"
+    "delete_trip_title" : "Delete Trip",
+    "middle_stop_hint": "Enter a city you will stop by",
+    "add_stop": "Add a stop",
+    "stop": "Stop",
+    "add_stop_hint": "You can add optional cities where you’ll stop along the way.",
+    "no_result": "No results",
+    "no_result_message": "No results found for your search criteria",
+    "max_weight": "Max Weight",
+    "max_price": "Max Price",
+    "type": "Type",
+    "kg" :"Kg",
+    "dirham" : "dh",
+    "new_search" : "New Search",
+    "search" : "Search",
+    "applied_filtter" : "Applied Filters"
+
+
 
 
 

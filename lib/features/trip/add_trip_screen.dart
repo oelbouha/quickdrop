@@ -1,4 +1,5 @@
 import 'package:quickdrop_app/core/utils/imports.dart';
+import 'package:quickdrop_app/core/widgets/location_textfield.dart';
 
 class AddTripScreen extends StatefulWidget {
   final Trip? existingTrip;
@@ -18,6 +19,8 @@ class _AddTripScreenState extends State<AddTripScreen>
     final dateController = TextEditingController();
     final weightController = TextEditingController();
     final priceController = TextEditingController();
+    List<TextEditingController> middleStopControllers = [];
+
 
     final transportTypeController = TextEditingController();
 
@@ -196,8 +199,8 @@ class _AddTripScreenState extends State<AddTripScreen>
       transportTypeController.text = widget.existingTrip?.transportType ?? 'Car';
     } else {
       weightController.text = "1";
-      fromController.text = "cassa";
-      toController.text = "martil";
+      // fromController.text = "cassa";
+      // toController.text = "martil";
       transportTypeController.text = "Car";
     }
   }
@@ -634,19 +637,71 @@ class _AddTripScreenState extends State<AddTripScreen>
             backgroundColor: const Color(0xFFD1FAE5),
           ),
           const SizedBox(height: 24),
-          TextFieldWithHeader(
+          LocationTextField(
               controller: fromController,
-              hintText: loc.from_hint,
-              headerText: loc.pickup_location,
-              validator: Validators.notEmpty,
-              iconPath: "assets/icon/map-point.svg"),
+              hintText: loc.pickup_location,
+              headerText: loc.from_hint,
+              iconColor: Theme.of(context).colorScheme.primary,
+            ),
           const SizedBox(height: 16),
-          TextFieldWithHeader(
+
+            // MIDDLE STOPS (dynamically added)
+    ...List.generate(middleStopControllers.length, (index) {
+      return Padding(
+        padding: const EdgeInsets.only(bottom: 16),
+        child: LocationTextField(
+          controller: middleStopControllers[index],
+          hintText: loc.middle_stop_hint, 
+          headerText: "${loc.stop} ${index + 1}", 
+          iconColor: Theme.of(context).colorScheme.secondary,
+        ),
+      );
+    }),
+
+  TextButton.icon(
+  onPressed: () {
+    setState(() {
+      middleStopControllers.add(TextEditingController());
+    });
+  },
+  icon: const Icon(Icons.add_location_alt_outlined, color: Colors.green),
+  label: Text(
+    loc.add_stop,
+    style: const TextStyle(color: Colors.green),
+  ),
+),
+const SizedBox(height: 8),
+Container(
+  decoration: BoxDecoration(
+    color: const Color(0xFFE0F2F1),
+    borderRadius: BorderRadius.circular(8),
+  ),
+  padding: const EdgeInsets.all(8),
+  child: Row(
+    children: [
+      const Icon(Icons.info_outline, size: 18, color: Colors.teal),
+      const SizedBox(width: 8),
+      Expanded(
+        child: Text(
+          loc.add_stop_hint,
+          style: const TextStyle(fontSize: 13, color: Colors.teal),
+        ),
+      ),
+    ],
+  ),
+),
+
+
+
+    const SizedBox(height: 16),
+
+         
+          LocationTextField(
               controller: toController,
-              hintText: loc.to_hint,
-              headerText: loc.delivery_location,
-              validator: Validators.notEmpty,
-              iconPath: "assets/icon/map-point.svg"),
+              hintText: loc.delivery_location,
+              headerText: loc.to_hint,
+              iconColor: Theme.of(context).colorScheme.primary,
+            ),
           const SizedBox(height: 20),
           buildInfoCard(
             icon: Icons.location_on,
