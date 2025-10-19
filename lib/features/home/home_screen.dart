@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:quickdrop_app/core/utils/imports.dart';
 import 'package:quickdrop_app/core/widgets/build_header_icon.dart';
 import 'package:quickdrop_app/core/widgets/home_page_skeleton.dart';
+import 'package:quickdrop_app/core/widgets/location_textfield.dart';
 import 'package:quickdrop_app/features/home/search_page.dart';
 import 'package:quickdrop_app/core/widgets/profile_image.dart';
 
@@ -194,12 +195,14 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void perfumeSearch() async {
+    final serviceTypes = getServiceTypes(context);
     SearchFilters filters = SearchFilters(
         from: fromController.text.isEmpty ? null : fromController.text,
         to: toController.text.isEmpty ? null : toController.text,
         price: priceController.text.isEmpty ? null : priceController.text,
         weight: weightController.text.isEmpty ? null : weightController.text,
-        type: selectedFilter);
+        type:  serviceTypes[0] ==  selectedFilter ? "Trip" : "Shipment"
+      );
 
     context.push(
       '/search',
@@ -231,29 +234,27 @@ class _HomeScreenState extends State<HomeScreen> {
               Column(
                 children: [
                   // Origin field
-                  TextFieldWithHeader(
+                  LocationTextField(
                     controller: fromController,
-                    displayHeader: false,
                     hintText: t.pickup_location,
+                    headerText: t.from_hint,
                     iconColor: Theme.of(context).colorScheme.primary,
-                    headerText: "From",
+                    displayHeader: false,
                     isRequired: false,
-                    validator: Validators.notEmpty,
-                    iconPath: "assets/icon/map-point.svg",
                   ),
+                 
                   const SizedBox(height: 24), // Space for the swap button
 
                   // Destination field
-                  TextFieldWithHeader(
+                   LocationTextField(
                     controller: toController,
+                    hintText: t.drop_off_location,
+                    headerText: t.to_hint,
                     iconColor: Theme.of(context).colorScheme.primary,
                     displayHeader: false,
                     isRequired: false,
-                    hintText: t.drop_off_location,
-                    headerText: "To",
-                    validator: Validators.notEmpty,
-                    iconPath: "assets/icon/map-point.svg",
                   ),
+                  
                 ],
               ),
 

@@ -286,8 +286,8 @@ class SearchFilterScreenState extends State<SearchFilterScreen>
           Navigator.of(context).pop();
         },
       ),
-      title: const Text(
-        'Search',
+      title:  Text(
+        AppLocalizations.of(context)!.search,
         style: TextStyle(
           color: Colors.black,
           fontSize: 20,
@@ -385,7 +385,6 @@ class SearchResultsScreenState extends State<SearchResultsScreen>
   List<Shipment> _filterShipments(List<Shipment> shipments) {
     return shipments.where((shipment) {
       // Filter by 'from' location
-      print("from ${shipment.from}");
       if (widget.filters.from != null && widget.filters.from!.isNotEmpty) {
         if (!shipment.from
             .toLowerCase()
@@ -442,7 +441,14 @@ class SearchResultsScreenState extends State<SearchResultsScreen>
 
       // Filter by 'to' location
       if (widget.filters.to != null && widget.filters.to!.isNotEmpty) {
-        if (!trip.to.toLowerCase().contains(widget.filters.to!.toLowerCase())) {
+        final destination = trip.to.toLowerCase();
+        final searchDestination = widget.filters.to!.toLowerCase();
+        final middleStops =
+            trip.middleStops?.map((stop) => stop.toLowerCase()).toList() ?? [];
+        final matchesDestination = destination.contains(searchDestination) ||
+            middleStops.any((stop) => stop.contains(searchDestination));
+
+        if (!matchesDestination) {
           return false;
         }
       }
@@ -479,16 +485,19 @@ class SearchResultsScreenState extends State<SearchResultsScreen>
     });
 
     // Simulate network delay
-    await Future.delayed(const Duration(milliseconds: 400));
+    // await Future.delayed(const Duration(milliseconds: 100));
 
-    final shipmentProvider = Provider.of<ShipmentProvider>(context, listen: false);
+    final shipmentProvider =
+        Provider.of<ShipmentProvider>(context, listen: false);
     final tripProvider = Provider.of<TripProvider>(context, listen: false);
 
     await shipmentProvider.fetchShipments();
     await tripProvider.fetchTrips();
 
-    final userIds = shipmentProvider.shipments.map((r) => r.userId).toSet().toList();
-    final tripUserIds = tripProvider.trips.map((r) => r.userId).toSet().toList();
+    final userIds =
+        shipmentProvider.shipments.map((r) => r.userId).toSet().toList();
+    final tripUserIds =
+        tripProvider.trips.map((r) => r.userId).toSet().toList();
 
     await Provider.of<UserProvider>(context, listen: false)
         .fetchUsersData(userIds);
@@ -515,22 +524,23 @@ class SearchResultsScreenState extends State<SearchResultsScreen>
   }
 
   Widget _buildFilterSummary() {
+    final t = AppLocalizations.of(context)!;
     List<String> appliedFilters = [];
 
     if (widget.filters.from != null && widget.filters.from!.isNotEmpty) {
-      appliedFilters.add('From: ${widget.filters.from}');
+      appliedFilters.add('${t.from_hint}: ${widget.filters.from}');
     }
     if (widget.filters.to != null && widget.filters.to!.isNotEmpty) {
-      appliedFilters.add('To: ${widget.filters.to}');
+      appliedFilters.add('${t.to_hint}: ${widget.filters.to}');
     }
     if (widget.filters.weight != null && widget.filters.weight!.isNotEmpty) {
-      appliedFilters.add('Max Weight: ${widget.filters.weight} kg');
+      appliedFilters.add('${t.max_weight}: ${widget.filters.weight} ${t.kg}');
     }
     if (widget.filters.price != null && widget.filters.price!.isNotEmpty) {
-      appliedFilters.add('Max Price: ${widget.filters.price} dh');
+      appliedFilters.add('${t.max_price}: ${widget.filters.price} ${t.dirham}');
     }
     if (widget.filters.type != null && widget.filters.type!.isNotEmpty) {
-      appliedFilters.add('Type: ${widget.filters.type}');
+      appliedFilters.add('${t.type}: ${widget.filters.type == 'Shipment' ? t.shipments : t.trips}');
     }
 
     if (appliedFilters.isEmpty) return const SizedBox.shrink();
@@ -547,9 +557,9 @@ class SearchResultsScreenState extends State<SearchResultsScreen>
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            'Applied Filters:',
-            style: TextStyle(
+           Text(
+            '${AppLocalizations.of(context)!.applied_filtter}:',
+            style: const TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.bold,
               color: AppColors.blue700,
@@ -574,8 +584,8 @@ class SearchResultsScreenState extends State<SearchResultsScreen>
         return activeShipments.isEmpty
             ? buildEmptyState(
                 Icons.add_box,
-                "No Shipments Found",
-                "No results found for your search criteria",
+                AppLocalizations.of(context)!.no_result,
+                AppLocalizations.of(context)!.no_result_message,
               )
             : Container(
                 margin: const EdgeInsets.symmetric(horizontal: 16),
@@ -588,7 +598,7 @@ class SearchResultsScreenState extends State<SearchResultsScreen>
                       Padding(
                         padding: const EdgeInsets.only(bottom: 16.0),
                         child: Text(
-                          'Shipments (${activeShipments.length})',
+                          '${AppLocalizations.of(context)!.shipments} (${activeShipments.length})',
                           style: const TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
@@ -632,8 +642,11 @@ class SearchResultsScreenState extends State<SearchResultsScreen>
     return Consumer2<TripProvider, UserProvider>(
       builder: (context, tripProvider, userProvider, child) {
         return activeTrips.isEmpty
-            ? buildEmptyState(Icons.trip_origin, "No Trips Found",
-                "No trip found for your fillter")
+            ? buildEmptyState(
+                Icons.add_box,
+                AppLocalizations.of(context)!.no_result,
+                AppLocalizations.of(context)!.no_result_message,
+              )
             : Container(
                 margin: const EdgeInsets.symmetric(horizontal: 16),
                 child: Column(
@@ -645,7 +658,7 @@ class SearchResultsScreenState extends State<SearchResultsScreen>
                       Padding(
                         padding: const EdgeInsets.only(bottom: 16.0),
                         child: Text(
-                          'Trips (${activeTrips.length})',
+                          '${AppLocalizations.of(context)!.trips} (${activeTrips.length})',
                           style: const TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
@@ -702,8 +715,8 @@ class SearchResultsScreenState extends State<SearchResultsScreen>
           alignment: Alignment.center,
           child: buildEmptyState(
             Icons.add_box,
-            "No results",
-            "No results found for your search criteria",
+            AppLocalizations.of(context)!.no_result,
+            AppLocalizations.of(context)!.no_result_message,
           ));
     }
 
@@ -732,9 +745,9 @@ class SearchResultsScreenState extends State<SearchResultsScreen>
           Navigator.of(context).pop();
         },
       ),
-      title: const Text(
-        'Search',
-        style: TextStyle(
+      title:  Text(
+        AppLocalizations.of(context)!.search,
+        style:  const TextStyle(
           color: Colors.black,
           fontSize: 20,
           fontWeight: FontWeight.bold,
@@ -766,7 +779,7 @@ class SearchResultsScreenState extends State<SearchResultsScreen>
         },
         backgroundColor: AppColors.blue700,
         foregroundColor: Colors.white,
-        label: const Text('New Search'),
+        label:  Text(AppLocalizations.of(context)!.new_search),
         icon: const Icon(Icons.search),
       ),
     );
