@@ -1249,4 +1249,16 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get applied_filtter => 'Applied Filters';
+
+  @override
+  String get update_failed => 'Failed to update shipment';
+
+  @override
+  String get in_progress => 'In progress';
+
+  @override
+  String get stops => 'Stops';
+
+  @override
+  String get more => 'More';
 }

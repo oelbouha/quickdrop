@@ -76,9 +76,10 @@ class OngoingItemCardState extends State<OngoingItemCard> {
             .decrementField(widget.item.userId, "ongoingTrips");
       }
     } catch (e) {
-      if (mounted)
-        AppUtils.showDialog(
-            context, "Failed to update shipment", AppColors.error);
+      if (mounted) {
+          AppUtils.showDialog(
+              context, AppLocalizations.of(context)!.update_failed, AppColors.error);
+        }
     }
   }
 
@@ -215,131 +216,9 @@ class OngoingItemCardState extends State<OngoingItemCard> {
     );
   }
 
-  void _showCancelConfirmation() {
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16),
-          ),
-          title: Row(
-            children: [
-              Container(
-                padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  color: AppColors.error.withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: const Icon(
-                  Icons.cancel_outlined,
-                  size: 20,
-                  color: AppColors.error,
-                ),
-              ),
-              const SizedBox(width: 12),
-              Text(
-                AppLocalizations.of(context)!.cancel_delivery_title,
-                style: const TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ],
-          ),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                AppLocalizations.of(context)!.confirm_cancel_delivery_message,
-                style: const TextStyle(
-                  fontSize: 14,
-                  color: AppColors.textSecondary,
-                ),
-              ),
-              const SizedBox(height: 12),
-              Container(
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  color: AppColors.error.withOpacity(0.05),
-                  borderRadius: BorderRadius.circular(8),
-                  border: Border.all(
-                    color: AppColors.error.withOpacity(0.2),
-                    width: 1,
-                  ),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      '${widget.item.from} → ${widget.item.to}',
-                      style: const TextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      '${AppLocalizations.of(context)!.courier_label}: ${widget.user.displayName ?? AppLocalizations.of(context)!.guest_user}',
-                      style: const TextStyle(
-                        fontSize: 11,
-                        color: AppColors.textSecondary,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 12),
-              Text(
-                AppLocalizations.of(context)!.cancel_warning_message,
-                style: const TextStyle(
-                  fontSize: 12,
-                  color: AppColors.error,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-            ],
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(),
-              style: TextButton.styleFrom(
-                foregroundColor: AppColors.textSecondary,
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-              ),
-              child: Text(
-                AppLocalizations.of(context)!.keep_active_button,
-                style: const TextStyle(fontWeight: FontWeight.w600),
-              ),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-                // Add your cancel logic here
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.error,
-                foregroundColor: Colors.white,
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
-                ),
-              ),
-              child: Text(
-                AppLocalizations.of(context)!.cancel_delivery_button,
-                style: const TextStyle(fontWeight: FontWeight.w600),
-              ),
-            ),
-          ],
-        );
-      },
-    );
-  }
 
+ 
+ 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -389,6 +268,9 @@ class OngoingItemCardState extends State<OngoingItemCard> {
       ),
     );
   }
+
+
+
 
   Widget _buildBody() {
     final t = AppLocalizations.of(context)!;

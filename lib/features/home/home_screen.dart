@@ -201,7 +201,8 @@ class _HomeScreenState extends State<HomeScreen> {
         to: toController.text.isEmpty ? null : toController.text,
         price: priceController.text.isEmpty ? null : priceController.text,
         weight: weightController.text.isEmpty ? null : weightController.text,
-        type:  serviceTypes[0] ==  selectedFilter ? "Trip" : "Shipment"
+        type:  serviceTypes[0] ==  selectedFilter ? "Trip" : "Shipment",
+        date: dateController.text.isEmpty ? null : dateController.text
       );
 
     context.push(
@@ -282,8 +283,8 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                       ],
                     ),
-                    child: const Icon(
-                      Icons.swap_vert,
+                    child: const CustomIcon(
+                      iconPath: "assets/icon/switch-vertical.svg",
                       size: 20,
                       color: Colors.white,
                     ),
@@ -304,7 +305,7 @@ class _HomeScreenState extends State<HomeScreen> {
             backgroundColor: AppColors.cardBackground,
             onTap: () => _selectDate(context),
             hintText: t.select_pickup_date,
-            validator: Validators.notEmpty,
+            validator: Validators.notEmpty, 
           ),
           const SizedBox(height: 20),
 
@@ -438,7 +439,7 @@ class _HomeScreenState extends State<HomeScreen> {
       builder: (context, child) {
         return Theme(
           data: Theme.of(context).copyWith(
-            colorScheme: ColorScheme.light(
+            colorScheme: const ColorScheme.light(
               primary: AppColors.blue700,
               onPrimary: Colors.white,
               surface: Colors.white,
@@ -453,6 +454,7 @@ class _HomeScreenState extends State<HomeScreen> {
     if (pickedDate != null) {
       setState(() {
         dateController.text = "${pickedDate.toLocal()}".split(' ')[0];
+
       });
     }
   }

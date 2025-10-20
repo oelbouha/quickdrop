@@ -512,7 +512,11 @@
     "dirham" : "dh",
     "new_search" : "New Search",
     "search" : "Search",
-    "applied_filtter" : "Applied Filters"
+    "applied_filtter" : "Applied Filters",
+    "update_failed" : "Failed to update shipment",
+    "in_progress" : "In progress",
+    "stops": "Stops",
+    "more" : "More"
 
 
 

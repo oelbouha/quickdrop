@@ -1249,4 +1249,16 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get applied_filtter => 'الفلاتر المطبقة';
+
+  @override
+  String get update_failed => 'فشل في تحديث الشحنة';
+
+  @override
+  String get in_progress => 'قيد التقدم';
+
+  @override
+  String get stops => 'محطات';
+
+  @override
+  String get more => 'المزيد';
 }

@@ -8,6 +8,7 @@ class ActiveItemCard extends StatefulWidget {
   final VoidCallback onPressed; // Delete callback
   final VoidCallback onEditPressed;
   final VoidCallback onViewPressed;
+  
 
   const ActiveItemCard({
     super.key,
@@ -22,12 +23,13 @@ class ActiveItemCard extends StatefulWidget {
 }
 
 class _ActiveItemCardState extends State<ActiveItemCard> {
+  bool _expandedStops = false;
+  
   @override
   Widget build(BuildContext context) {
-    
     return Container(
-      decoration: BoxDecoration(
-       color: AppColors.cardBackground,
+        decoration: BoxDecoration(
+          color: AppColors.cardBackground,
           borderRadius: BorderRadius.circular(AppTheme.cardRadius),
           boxShadow: [
             BoxShadow(
@@ -47,34 +49,31 @@ class _ActiveItemCardState extends State<ActiveItemCard> {
             color: AppColors.cardBackground.withOpacity(0.1),
             width: 0.5,
           ),
-      ),
-      child: Column(
+        ),
+        child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Padding(
-              padding: const EdgeInsets.all(16),
-              child: Column( 
-                children: [
+                padding: const EdgeInsets.all(16),
+                child: Column(children: [
                   BuildHeader(
                       from: widget.item.from,
                       to: widget.item.to,
                       id: widget.item.id,
-                      price: widget.item.price
-                    ),
+                      price: widget.item.price),
                   const SizedBox(height: 16),
                   _buildBody(),
-              ])),
+                ])),
+            _buildMiddleStops(),
             _buildFooter(),
           ],
         ));
   }
 
   Widget _buildBody() {
-
     final t = AppLocalizations.of(context)!;
     return Row(
       children: [
-        
         Expanded(
           child: _buildInfoColumn(
             label: t.date,
@@ -123,64 +122,205 @@ class _ActiveItemCardState extends State<ActiveItemCard> {
   Widget _buildFooter() {
     final t = AppLocalizations.of(context)!;
     return Padding(
-      padding: const EdgeInsets.only(
-        left: 16,
-        right: 16,
-        top: 8,
-        bottom: 12
+        padding: const EdgeInsets.only(left: 16, right: 16, top: 8, bottom: 12),
+        child: Row(
+          children: [
+            Expanded(
+              child: BuildPrimaryButton(
+                  onPressed: widget.onViewPressed,
+                  label: t.view_details,
+                  color: Theme.of(context).colorScheme.secondary,
+                  icon: "assets/icon/eye.svg"),
+            ),
+            const SizedBox(width: 12),
+            SecondaryButton(
+              icon: "assets/icon/edit.svg",
+              onPressed: widget.onEditPressed,
+              iconColor: Theme.of(context).colorScheme.primary,
+            ),
+            const SizedBox(width: 12),
+            SecondaryButton(
+              icon: "assets/icon/trash-bin.svg",
+              onPressed: widget.onPressed,
+              iconColor: AppColors.error,
+            ),
+          ],
+        ));
+  }
+
+
+
+
+Widget _buildMiddleStops() {
+  if (widget.item is! Trip) {
+    return const SizedBox.shrink();
+  }
+
+  final trip = widget.item as Trip;
+  if (trip.middleStops == null || trip.middleStops!.isEmpty) {
+    return const SizedBox.shrink();
+  }
+
+  final hasMultipleStops = trip.middleStops!.length > 1;
+
+  return Container(
+    margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+    padding: const EdgeInsets.all(12),
+    decoration: BoxDecoration(
+      color: const Color(0xFFF9FAFB),
+      borderRadius: BorderRadius.circular(12),
+      border: Border.all(
+        color: AppColors.blue.withOpacity(0.1),
+        width: 0.5,
       ),
-      child:  Row(
+    ),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Expanded(
-           child: BuildPrimaryButton(
-            onPressed: widget.onViewPressed,
-            label: t.view_details,
-            color: Theme.of(context).colorScheme.secondary,
-            icon: "assets/icon/eye.svg"
-          ),
+        Row(
+          children: [
+            const CustomIcon(
+              iconPath: "assets/icon/location.svg",
+              size: 16,
+              color: AppColors.blue,
+            ),
+            const SizedBox(width: 8),
+            Text(
+              '${AppLocalizations.of(context)!.stops} (${trip.middleStops!.length})',
+              style: const TextStyle(
+                fontSize: 13,
+                fontWeight: FontWeight.w600,
+                color: Color(0xFF111827),
+              ),
+            ),
+          ],
         ),
-        const SizedBox(width: 12),
-        SecondaryButton(
-          icon: "assets/icon/edit.svg",
-          onPressed: widget.onEditPressed,
-          iconColor: Theme.of(context).colorScheme.primary,
-          
-        ),
-        const SizedBox(width: 12),
-        SecondaryButton(
-          icon: "assets/icon/trash-bin.svg",
-          onPressed: widget.onPressed,
-          iconColor: AppColors.error,
+        const SizedBox(height: 10),
+        Column(
+          children: [
+            // First Stop
+            Row(
+              children: [
+                Container(
+                  width: 6,
+                  height: 6,
+                  decoration: BoxDecoration(
+                    color: AppColors.blue,
+                    shape: BoxShape.circle,
+                  ),
+                ),
+                const SizedBox(width: 10),
+                Flexible(
+                  child: Text(
+                    trip.middleStops![0],
+                    style: const TextStyle(
+                      fontSize: 12,
+                      color: Color(0xFF374151),
+                    ),
+                  ),
+                ),
+                if (hasMultipleStops)
+                  GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        _expandedStops = !_expandedStops;
+                      });
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.only(left: 8),
+                      child: CustomIcon(
+                        iconPath: _expandedStops
+                            ? "assets/icon/chevron-up.svg"
+                            : "assets/icon/chevron-down.svg",
+                        size: 18,
+                        color: AppColors.blue,
+                      ),
+                    ),
+                  ),
+              ],
+            ),
+            // Additional Stops (Expanded)
+            if (hasMultipleStops && _expandedStops) ...[
+              const SizedBox(height: 12),
+              ...List.generate(
+                trip.middleStops!.length - 1,
+                (index) {
+                  final actualIndex = index + 1;
+                  final stop = trip.middleStops![actualIndex];
+                  final isLast = actualIndex == trip.middleStops!.length - 1;
+
+                  return Column(
+                    children: [
+                      Row(
+                        children: [
+                          Container(
+                            width: 6,
+                            height: 6,
+                            decoration: BoxDecoration(
+                              color: AppColors.blue,
+                              shape: BoxShape.circle,
+                            ),
+                          ),
+                          const SizedBox(width: 10),
+                          Flexible(
+                            child: Text(
+                              stop,
+                              style: const TextStyle(
+                                fontSize: 12,
+                                color: Color(0xFF374151),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      if (!isLast)
+                        Padding(
+                          padding: const EdgeInsets.only(
+                            left: 2,
+                            top: 6,
+                            bottom: 6,
+                          ),
+                          child: Container(
+                            width: 2,
+                            height: 16,
+                            color: AppColors.blue.withOpacity(0.2),
+                          ),
+                        ),
+                      if (!isLast)
+                        const SizedBox(height: 12),
+                    ],
+                  );
+                },
+              ),
+            ] else if (hasMultipleStops) ...[
+              const SizedBox(height: 4),
+              Row(
+                children: [
+                  Container(
+                    width: 2,
+                    height: 8,
+                    color: AppColors.blue.withOpacity(0.2),
+                    margin: const EdgeInsets.only(left: 2),
+                  ),
+                  const SizedBox(width: 10),
+                  Text(
+                    '+${trip.middleStops!.length - 1} ${AppLocalizations.of(context)!.more}',
+                    style: TextStyle(
+                      fontSize: 11,
+                      color: AppColors.blue,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ],
         ),
       ],
-    ));
-  }
-
-
-
-  Widget _buildSecondaryButton({
-    required IconData icon,
-    required VoidCallback onPressed,
-  }) {
-    return Material(
-      color: Colors.transparent,
-      child: InkWell(
-        onTap: onPressed,
-        borderRadius: BorderRadius.circular(12),
-        child: Container(
-          padding: const EdgeInsets.all(12),
-          decoration: BoxDecoration(
-            color: const Color(0xFFF3F4F6),
-            borderRadius: BorderRadius.circular(12),
-          ),
-          child: Icon(
-            icon,
-            size: 16,
-            color: const Color(0xFF6B7280),
-          ),
-        ),
-      ),
-    );
-  }
+    ),
+  );
 }
 
+
+
+}

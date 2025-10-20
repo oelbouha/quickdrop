@@ -2556,6 +2556,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Applied Filters'**
   String get applied_filtter;
+
+  /// No description provided for @update_failed.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to update shipment'**
+  String get update_failed;
+
+  /// No description provided for @in_progress.
+  ///
+  /// In en, this message translates to:
+  /// **'In progress'**
+  String get in_progress;
+
+  /// No description provided for @stops.
+  ///
+  /// In en, this message translates to:
+  /// **'Stops'**
+  String get stops;
+
+  /// No description provided for @more.
+  ///
+  /// In en, this message translates to:
+  /// **'More'**
+  String get more;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

@@ -496,7 +496,11 @@
 "kg": "Kg",
 "dirham": "Dh",
 "search": "Rechercher",
-"applied_filtter": "Filtres appliqués"
+"applied_filtter": "Filtres appliqués",
+ "update_failed": "Échec de la mise à jour de l'expédition",
+  "in_progress": "En cours",
+  "stops": "Arrêts",
+  "more": "Plus"
 
 
 

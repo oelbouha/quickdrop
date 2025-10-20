@@ -1249,4 +1249,16 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get applied_filtter => 'Filtres appliqués';
+
+  @override
+  String get update_failed => 'Échec de la mise à jour de l\'expédition';
+
+  @override
+  String get in_progress => 'En cours';
+
+  @override
+  String get stops => 'Arrêts';
+
+  @override
+  String get more => 'Plus';
 }

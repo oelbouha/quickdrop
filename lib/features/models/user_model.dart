@@ -31,6 +31,7 @@ class UserData {
   String driverStatus;
   String subscriptionStatus;
   String? subscriptionEndsAt;
+  bool isEmailVerified ;
 
   UserData({
     required this.uid,
@@ -50,6 +51,7 @@ class UserData {
     this.status = "customer",
     this.driverStatus = "pending",
     this.subscriptionStatus = "inactive",
+    this.isEmailVerified = false,
   });
   Map<String, dynamic> toMap() {
     return {
@@ -70,6 +72,7 @@ class UserData {
       'driverStatus': driverStatus,
       'subscriptionStatus': subscriptionStatus,
       'subscriptionEndsAt' : subscriptionEndsAt,
+      'isEmailVerified': isEmailVerified
     };
   }
 
@@ -91,6 +94,7 @@ class UserData {
         driverStatus: map['driverStatus'],
         subscriptionStatus: map['subscriptionStatus'],
         subscriptionEndsAt : map["subscriptionEndsAt"],
+        isEmailVerified : map["isEmailVerified"] ?? false,
         createdAt: map["createdAt"]);
   }
 }

@@ -133,6 +133,7 @@ class _AddTripScreenState extends State<AddTripScreen>
           userId: user.uid,
           price: priceController.text,
           transportType: transportTypeController.text,
+          middleStops: middleStopControllers.map((controller) => controller.text).where((text) => text.isNotEmpty).toList(),
           );
 
       try {

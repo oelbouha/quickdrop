@@ -89,7 +89,7 @@ class BottomNavScreen extends StatelessWidget {
         ),
         BottomNavigationBarItem(
           icon: _buildIconWithBackground(
-            iconPath: "assets/icon/chat-round.svg",
+            iconPath: "assets/icon/message.svg",
             isSelected: _calculateIndex(context) == 4,
             context: context
           ),

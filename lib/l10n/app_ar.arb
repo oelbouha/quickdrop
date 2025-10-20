@@ -495,7 +495,11 @@
     "kg": "كلغ",
     "dirham": "درهم",
     "search": "بحث",
-    "applied_filtter": "الفلاتر المطبقة"
+    "applied_filtter": "الفلاتر المطبقة",
+    "update_failed": "فشل في تحديث الشحنة",
+    "in_progress": "قيد التقدم",
+    "stops": "محطات",
+    "more": "المزيد"
 
 
 
