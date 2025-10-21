@@ -165,19 +165,20 @@ class UserProfileWithRating extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final t = AppLocalizations.of(context)!;
     return FutureBuilder<double>(
       future: Provider.of<ReviewProvider>(context, listen: false).getUserAverageRating(user!.uid),
       builder: (context, snapshot) {
         String ratingText;
         if (snapshot.connectionState == ConnectionState.waiting) {
-          ratingText = "Loading...";
+          ratingText = t.loading;
         } else if (snapshot.hasError) {
-          ratingText = "⭐ No rating";
+          ratingText = t.noRating;
         } else {
           double rating = snapshot.data ?? 0.0;
           ratingText = rating > 0 
-              ? "⭐ ${rating.toStringAsFixed(1)} rating"
-              : "⭐ No rating yet";
+              ? t.rating(rating.toStringAsFixed(1))
+              : t.noRatingYet;
         }
 
       return  Row(

@@ -11,7 +11,7 @@ class FirebaseService {
       final userData = UserData(
         uid: user.uid,
         email: user.email,
-        displayName: user.displayName ?? 'User_${user.uid.substring(0, 6)}', // Default displayName if null
+        displayName: user.displayName ?? 'User_${user.uid.substring(0, 6)}', 
         photoUrl: user.photoURL,
       );
 

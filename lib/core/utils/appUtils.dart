@@ -14,24 +14,6 @@ class AppUtils {
   //       });
   // }
 
-  static bool isValidDate(String input) {
-    try {
-      print('Validating date: $input');
-      final parsed = DateTime.tryParse(input);
-      if (parsed == null) return false; // not a valid date format
-
-      // Check if date is within allowed range
-      final now = DateTime.now();
-      final today = DateTime(now.year, now.month, now.day);
-      final maxDate = today.add(const Duration(days: 365));
-
-      final selected = DateTime(parsed.year, parsed.month, parsed.day);
-      return !selected.isBefore(today) && !selected.isAfter(maxDate);
-    } catch (e) {
-      return false;
-    }
-  }
-
 
   static void showDialog(
       BuildContext context, String message, Color? backgroundColor ) {
