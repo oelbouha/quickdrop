@@ -2580,6 +2580,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'More'**
   String get more;
+
+  /// No description provided for @loading.
+  ///
+  /// In en, this message translates to:
+  /// **'Loading...'**
+  String get loading;
+
+  /// No description provided for @noRating.
+  ///
+  /// In en, this message translates to:
+  /// **'⭐ No rating'**
+  String get noRating;
+
+  /// No description provided for @noRatingYet.
+  ///
+  /// In en, this message translates to:
+  /// **'⭐ No rating yet'**
+  String get noRatingYet;
+
+  /// No description provided for @rating.
+  ///
+  /// In en, this message translates to:
+  /// **'⭐ {rating} rating'**
+  String rating(Object rating);
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

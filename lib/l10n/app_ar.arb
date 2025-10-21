@@ -499,7 +499,11 @@
     "update_failed": "فشل في تحديث الشحنة",
     "in_progress": "قيد التقدم",
     "stops": "محطات",
-    "more": "المزيد"
+    "more": "المزيد",
+    "loading": "جاري التحميل...",
+"noRating": "⭐ لا يوجد تقييم",
+"noRatingYet": "⭐ لا يوجد تقييم بعد",
+"rating": "⭐ تقييم {rating}"
 
 
 

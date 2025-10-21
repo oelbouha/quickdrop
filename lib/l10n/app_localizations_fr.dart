@@ -1261,4 +1261,18 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get more => 'Plus';
+
+  @override
+  String get loading => 'Chargement...';
+
+  @override
+  String get noRating => '⭐ Aucune note';
+
+  @override
+  String get noRatingYet => '⭐ Pas encore de note';
+
+  @override
+  String rating(Object rating) {
+    return '⭐ Note de $rating';
+  }
 }

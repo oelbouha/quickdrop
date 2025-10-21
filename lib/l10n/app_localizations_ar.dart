@@ -1261,4 +1261,18 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get more => 'المزيد';
+
+  @override
+  String get loading => 'جاري التحميل...';
+
+  @override
+  String get noRating => '⭐ لا يوجد تقييم';
+
+  @override
+  String get noRatingYet => '⭐ لا يوجد تقييم بعد';
+
+  @override
+  String rating(Object rating) {
+    return '⭐ تقييم $rating';
+  }
 }

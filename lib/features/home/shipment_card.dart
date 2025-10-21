@@ -118,17 +118,7 @@ class ShipmentCardState extends State<ShipmentCard>
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // "New" status text
-        // Text(
-        //   "New",
-        //   style: TextStyle(
-        //     color: const Color(0xFF6A7681), 
-        //     fontSize: 14,
-        //     fontWeight: FontWeight.w400,
-        //   ),
-        // ),
-        const SizedBox(height: 4),
-        // Sender name
+
         UserProfileWithRating(
             user: widget.userData,
             header: widget.userData.displayName ?? 'Guest',
@@ -137,18 +127,79 @@ class ShipmentCardState extends State<ShipmentCard>
             onPressed: () => {}
                 // {context.push('/profile/statistics?userId=${widget.user.uid}')},
           ),
-        const SizedBox(height: 4),
-        Text(
-          "From: ${widget.shipment.from} To: ${widget.shipment.to}",
-          style: const TextStyle(
-            color: Color(0xFF6A7681), 
-            fontSize: 14,
-            fontWeight: FontWeight.w400,
-          ),
-        ),
+        const SizedBox(height: 16),
+       _buildRoute(),
       ],
     );
   }
+
+
+
+TextSpan _textSpan(String text, Color color) => TextSpan(
+      text: text,
+      style: TextStyle(
+        fontSize: 13,
+        color: color,
+        height: 1.4,
+        fontWeight: FontWeight.w500,
+      ),
+    );
+
+TextSpan _arrowSpan(String arrow) => TextSpan(
+      text: arrow,
+      style: const TextStyle(
+        fontSize: 13,
+        color: Colors.orange,
+        height: 1.4,
+        fontWeight: FontWeight.w400,
+      ),
+    );
+
+Widget _buildRoute() {
+  final t = AppLocalizations.of(context)!;
+  final isRTL = Directionality.of(context) == TextDirection.rtl;
+
+
+  final arrow = isRTL ? ' ← ' : ' → ';
+
+  List<InlineSpan> routeSpans = [];
+
+  // === LTR (English/French) ===
+  if (!isRTL) {
+    // FROM city
+    routeSpans.add(_textSpan(widget.shipment.from, const Color(0xFF6A7681)));
+
+    routeSpans.add(_arrowSpan(arrow));
+
+    // TO city
+    routeSpans.add(_textSpan(widget.shipment.to, const Color(0xFF6A7681)));
+  }
+
+  // === RTL (Arabic) ===
+  else {
+    // FROM city
+    routeSpans.add(_textSpan(widget.shipment.from, const Color(0xFF6A7681)));
+
+    // ← Arrow
+    routeSpans.add(_arrowSpan(arrow));
+
+    // TO city
+    routeSpans.add(_textSpan(widget.shipment.to, const Color(0xFF6A7681)));
+  }
+
+  return Container(
+    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+    decoration: BoxDecoration(
+      color: const Color(0xFFF9FAFB),
+      borderRadius: BorderRadius.circular(8),
+      border: Border.all(color: Colors.grey[200]!, width: 1),
+    ),
+    child: RichText(
+      textDirection: isRTL ? TextDirection.rtl : TextDirection.ltr,
+      text: TextSpan(children: routeSpans),
+    ),
+  );
+}
 
   Widget _buildPriceButton() {
     return Container(
@@ -240,7 +291,5 @@ class ShipmentCardState extends State<ShipmentCard>
       
     );
   }
-
-
 
 }

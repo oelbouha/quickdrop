@@ -500,7 +500,11 @@
  "update_failed": "Échec de la mise à jour de l'expédition",
   "in_progress": "En cours",
   "stops": "Arrêts",
-  "more": "Plus"
+  "more": "Plus",
+  "loading": "Chargement...",
+"noRating": "⭐ Aucune note",
+"noRatingYet": "⭐ Pas encore de note",
+"rating": "⭐ Note de {rating}"
 
 
 

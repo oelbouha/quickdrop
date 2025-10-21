@@ -1,205 +1,286 @@
-import 'package:flutter/material.dart';
-import 'package:quickdrop_app/theme/colors.dart';
-import 'package:quickdrop_app/theme/AppTheme.dart';
-// import 'package:quickdrop_app/core/widgets/custom_svg.dart';
-import 'package:quickdrop_app/core/widgets/button.dart';
-import 'package:quickdrop_app/core/widgets/destination.dart';
-import 'package:quickdrop_app/core/widgets/item_details.dart';
+import 'package:quickdrop_app/features/models/base_transport.dart';
 import 'package:quickdrop_app/core/utils/imports.dart';
+import 'package:quickdrop_app/features/models/statictics_model.dart';
 
 class TripCard extends StatefulWidget {
-  final Trip trip;
+  final Trip shipment;
   final UserData userData;
-  const TripCard({super.key, required this.trip, required this.userData});
+  final VoidCallback onPressed;
+
+  const TripCard({
+    super.key,
+    required this.shipment,
+    required this.userData,
+    required this.onPressed,
+  });
 
   @override
   TripCardState createState() => TripCardState();
 }
 
 class TripCardState extends State<TripCard> {
+  late StatisticsModel? stats;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      final fetchedStats =
+          await Provider.of<StatisticsProvider>(context, listen: false)
+              .getStatictics(widget.shipment.userId);
+
+      if (mounted) {
+        setState(() {
+          stats = fetchedStats;
+        });
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: widget.onPressed,
+      child: Container(
+        decoration: BoxDecoration(
+           color: Colors.white,
+          borderRadius: BorderRadius.circular(12),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.05),
+              blurRadius: 4,
+              offset: const Offset(0, 2),
+              spreadRadius: 0,
+            ),
+          ],
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _buildSenderProfile(),
+              const SizedBox(height: 16),
+              _buildRoute(),
+              const SizedBox(height: 16),
+              _buildDetails(),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSenderProfile() {
+    return Row(
+      children: [
+        UserProfileWithRating(
+          user: widget.userData,
+          header: widget.userData.displayName ?? 'Guest',
+          avatarSize: 44,
+          headerFontSize: 14,
+          onPressed: () =>
+              context.push('/profile/statistics?userId=${widget.userData.uid}'),
+        )
+      ],
+    );
+  }
+
+  Widget _buildRoute() {
+  final t = AppLocalizations.of(context)!;
+  final isRTL = Directionality.of(context) == TextDirection.rtl;
+
+  List<String> stops = widget.shipment.middleStops ?? [];
+  bool hasManyStops = stops.length > 3;
+  List<String> displayStops = hasManyStops ? stops.sublist(0, 2) : stops;
+
+  // Arrows adapt based on text direction
+  final arrow = isRTL ? ' ← ' : ' → ';
+
+  List<InlineSpan> routeSpans = [];
+
+  // === LTR (English/French) ===
+  if (!isRTL) {
+    // FROM city
+    routeSpans.add(_textSpan(widget.shipment.from, const Color(0xFF6A7681)));
+
+    // MIDDLE stops
+    for (int i = 0; i < displayStops.length; i++) {
+      routeSpans.add(_arrowSpan(arrow));
+      routeSpans.add(_textSpan(displayStops[i], Colors.orange));
+    }
+
+    // +N more
+    if (hasManyStops) {
+      routeSpans.add(_textSpan(' +${stops.length - 2} ${t.more}', Colors.orange));
+    }
+
+    // → Arrow to destination
+    routeSpans.add(_arrowSpan(arrow));
+
+    // TO city
+    routeSpans.add(_textSpan(widget.shipment.to, const Color(0xFF6A7681)));
+  }
+
+  // === RTL (Arabic) ===
+  else {
+    // FROM city
+    routeSpans.add(_textSpan(widget.shipment.from, const Color(0xFF6A7681)));
+
+    // ← Arrow
+    routeSpans.add(_arrowSpan(arrow));
+
+    // MIDDLE stops
+    for (int i = 0; i < displayStops.length; i++) {
+      routeSpans.add(_textSpan(displayStops[i], Colors.orange));
+      routeSpans.add(_arrowSpan(arrow));
+    }
+
+    if (hasManyStops) {
+      routeSpans.add(_textSpan('+${stops.length - 2} ${t.more} ', Colors.orange));
+      routeSpans.add(_arrowSpan(arrow));
+    }
+
+    // TO city
+    routeSpans.add(_textSpan(widget.shipment.to, const Color(0xFF6A7681)));
+  }
+
+  return Container(
+    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+    decoration: BoxDecoration(
+      color: const Color(0xFFF9FAFB),
+      borderRadius: BorderRadius.circular(8),
+      border: Border.all(color: Colors.grey[200]!, width: 1),
+    ),
+    child: RichText(
+      textDirection: isRTL ? TextDirection.rtl : TextDirection.ltr,
+      text: TextSpan(children: routeSpans),
+    ),
+  );
+}
+
+TextSpan _textSpan(String text, Color color) => TextSpan(
+      text: text,
+      style: TextStyle(
+        fontSize: 13,
+        color: color,
+        height: 1.4,
+        fontWeight: FontWeight.w500,
+      ),
+    );
+
+TextSpan _arrowSpan(String arrow) => TextSpan(
+      text: arrow,
+      style: const TextStyle(
+        fontSize: 13,
+        color: Colors.orange,
+        height: 1.4,
+        fontWeight: FontWeight.w400,
+      ),
+    );
+
+
+
+  Widget _buildDetails() {
+    final t = AppLocalizations.of(context)!;
     return Container(
-      // padding: const EdgeInsets.all(10),
-      height: AppTheme.imageHeight,
+      padding: const EdgeInsets.only(top: 12),
       decoration: BoxDecoration(
-        color: AppColors.cardBackground,
-        borderRadius: BorderRadius.circular(AppTheme.cardRadius),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.1),
-            spreadRadius: 0.2,
-            blurRadius: 2,
-            offset: Offset(0, 1),
+        border: Border(
+          top: BorderSide(
+            color: Colors.grey[200]!,
+            width: 1,
+          ),
+        ),
+      ),
+      child: Row(
+        children: [
+          // Available Weight
+          Expanded(
+            child: Row(
+              children: [
+                Icon(
+                  Icons.fitness_center,
+                  size: 16,
+                  color: Colors.grey[400],
+                ),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        t.available_weight,
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: Colors.grey[500],
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      const SizedBox(height: 3),
+                      Text(
+                        '${widget.shipment.weight ?? '0'} ${t.kg}',
+                        style: const TextStyle(
+                          fontSize: 13,
+                          fontWeight: FontWeight.w600,
+                          color: Color(0xFF121416),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(width: 24),
+          // Pickup Date
+          Expanded(
+            child: Row(
+              children: [
+                Icon(
+                  Icons.calendar_today,
+                  size: 16,
+                  color: Colors.grey[400],
+                ),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        t.pickup_date,
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: Colors.grey[500],
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      const SizedBox(height: 3),
+                      Text(
+                        _formatDate(widget.shipment.date != null
+                            ? DateTime.tryParse(widget.shipment.date!)
+                            : null),
+                        style: const TextStyle(
+                          fontSize: 13,
+                          fontWeight: FontWeight.w600,
+                          color: Color(0xFF121416),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ),
         ],
       ),
-      child: _buildListingDetails(),
     );
   }
 
-  Widget _buildUserRating() {
-    return const Row(children: [
-      Icon(
-        Icons.person,
-        color: AppColors.lessImportant,
-        size: 6,
-      ),
-      Text("4.5 ", style: TextStyle(color: AppColors.headingText, fontSize: 8)),
-      Icon(
-        Icons.star,
-        color: AppColors.lessImportant,
-        size: 6,
-      ),
-      Text(" 126 trips",
-          style: TextStyle(color: AppColors.headingText, fontSize: 8)),
-    ]);
-  }
-
-  Widget _buildUserProfile() {
-    return  Row(
-      children: [
-        CircleAvatar(
-          radius: 14,
-          backgroundImage: NetworkImage(widget.userData.photoUrl  ?? AppTheme.defaultProfileImage) as ImageProvider,
-        ),
-        const SizedBox(width: 10),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              widget.userData.displayName ?? "unknown user",
-              style: const TextStyle(
-                  fontSize: 12,
-                  fontWeight: FontWeight.bold,
-                  color: AppColors.headingText),
-            ),
-            // _buildUserRating(),
-          ],
-        ),
-      ],
-    );
-  }
-
-  Widget _buildPrice() {
-    return  Row(
-      crossAxisAlignment: CrossAxisAlignment.end,
-      mainAxisAlignment: MainAxisAlignment.end,
-      children: [
-        const Text("From ",
-            style: TextStyle(color: AppColors.lessImportant, fontSize: 12)),
-        Text('${widget.trip.price}dh',
-            style: const TextStyle(
-                color: AppColors.blue,
-                fontSize: 14,
-                fontWeight: FontWeight.bold)),
-      ],
-    );
-  }
-
- Widget _buildDestination() {
-    return Row(
-      // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        _buildFromDestination(),
-        const SizedBox(
-          width: 5,
-        ),
-         const CustomIcon(
-            iconPath: "assets/icon/arrow-up-right.svg",
-            size: 14,
-            color: AppColors.lessImportant),
-        // Spacer(),
-         const SizedBox(
-          width: 5,
-        ),
-        _buildToDestination(),
-        
-      ],
-    );
-  }
-
-  Widget _buildFromDestination() {
-    return Row(
-      children: [
-           const Icon(
-                  Icons.circle,
-                  size: 12,
-                  color: AppColors.blue,
-                ),
-        const SizedBox(width: 5,),
-        Text(
-            truncateText(widget.trip.from),
-            style: const TextStyle(
-                color: AppColors.headingText,
-                fontSize: 14,
-                fontWeight: FontWeight.bold
-                )
-          ),
-      ],
-    );
-  }
-
-
-  Widget _buildToDestination() {
-    return Row(
-      children: [
-         const Icon(
-                  Icons.circle,
-                  size: 12,
-                  color: AppColors.succes,
-                ),
-        const SizedBox(
-          width: 5,
-        ),
-        Text(truncateText(widget.trip.to),
-            style: const TextStyle(
-                color: AppColors.headingText,
-                fontSize: 14,
-                fontWeight: FontWeight.bold)),
-      ],
-    );
-  }
-
-  Widget _buildListingDetails() {
-    return Padding(
-            padding: const EdgeInsets.all(10),
-            child: Column(
-              // crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                _buildUserProfile(),
-                const SizedBox(height: AppTheme.cardGap),
-                _buildDestination(),
-                const SizedBox(height: AppTheme.cardGap),
-                ItemDetail(
-                  iconPath: "assets/icon/calendar.svg",
-                  title: "Delivery by: ",
-                  value: '${widget.trip.date}',
-                ),
-                const SizedBox(height: AppTheme.cardGap),
-                ItemDetail(
-                  iconPath: "assets/icon/weight.svg",
-                  title: "Available weight  ",
-                  value: widget.trip.weight + " kg",
-                ),
-                Spacer(),
-                _buildPrice(),
-              ],
-            ));
-  }
-
-  Widget _sendRequestButton() {
-    return CustomButton(
-      text: 'Request',
-      onPressed: () {
-        // Your contact logic here
-      },
-      textColor: Colors.white,
-      height: 34,
-      backgroundColor: AppColors.blue,
-      borderRadius: AppTheme.requestButtonRaduis,
-      horizontalPadding: 6,
-      fontsize: 12,
-    );
+  String _formatDate(DateTime? date) {
+    if (date == null) return 'N/A';
+    final month = date.month > 9 ? date.month : '0${date.month}';
+    final day = date.day > 9 ? date.day : '0${date.day}';
+    return '$month/$day';
   }
 }

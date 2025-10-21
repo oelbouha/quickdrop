@@ -356,7 +356,6 @@ class SearchResultsScreenState extends State<SearchResultsScreen>
   List<Trip> activeTrips = [];
 
   late AnimationController _animationController;
-  late Animation<double> _fadeAnimation;
 
   @override
   void initState() {
@@ -365,13 +364,7 @@ class SearchResultsScreenState extends State<SearchResultsScreen>
       duration: const Duration(milliseconds: 1200),
       vsync: this,
     );
-    _fadeAnimation = Tween<double>(
-      begin: 0.0,
-      end: 1.0,
-    ).animate(CurvedAnimation(
-      parent: _animationController,
-      curve: Curves.easeInOut,
-    ));
+    
     _animationController.forward();
     _performSearch();
   }
@@ -476,15 +469,15 @@ class SearchResultsScreenState extends State<SearchResultsScreen>
       }
 
       // Filter by date
-      if (widget.filters.date != null && widget.filters.date!.isNotEmpty) {
-        final filterDate = DateTime.tryParse(widget.filters.date!);
-        final tripDate = DateTime.tryParse(trip.date);
-        if (filterDate != null &&
-            tripDate != null &&
-            tripDate.isBefore(filterDate)) {
-          return false;
-        }
-      }
+      // if (widget.filters.date != null && widget.filters.date!.isNotEmpty) {
+      //   final filterDate = DateTime.tryParse(widget.filters.date!);
+      //   final tripDate = DateTime.tryParse(trip.date);
+      //   if (filterDate != null &&
+      //       tripDate != null &&
+      //       tripDate.isBefore(filterDate)) {
+      //     return false;
+      //   }
+      // }
 
       return true;
     }).toList();
@@ -494,9 +487,7 @@ class SearchResultsScreenState extends State<SearchResultsScreen>
     setState(() {
       _isLoading = true;
     });
-
-    // Simulate network delay
-    // await Future.delayed(const Duration(milliseconds: 100));
+    // Fetch shipments and trips from providers
 
     final shipmentProvider =
         Provider.of<ShipmentProvider>(context, listen: false);
@@ -552,6 +543,9 @@ class SearchResultsScreenState extends State<SearchResultsScreen>
     }
     if (widget.filters.type != null && widget.filters.type!.isNotEmpty) {
       appliedFilters.add('${t.type}: ${widget.filters.type == 'Shipment' ? t.shipments : t.trips}');
+    }
+    if (widget.filters.date != null && widget.filters.date!.isNotEmpty) {
+      appliedFilters.add('${t.date}: ${widget.filters.date}');
     }
 
     if (appliedFilters.isEmpty) return const SizedBox.shrink();
@@ -688,7 +682,7 @@ class SearchResultsScreenState extends State<SearchResultsScreen>
                         }
                         return Column(
                           children: [
-                            ShipmentCard(
+                            TripCard(
                               shipment: trip,
                               userData: userData,
                               onPressed: () {

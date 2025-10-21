@@ -516,7 +516,11 @@
     "update_failed" : "Failed to update shipment",
     "in_progress" : "In progress",
     "stops": "Stops",
-    "more" : "More"
+    "more" : "More",
+    "loading": "Loading...",
+"noRating": "⭐ No rating",
+"noRatingYet": "⭐ No rating yet",
+"rating": "⭐ {rating} rating"
 
 
 
