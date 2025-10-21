@@ -2604,6 +2604,114 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'⭐ {rating} rating'**
   String rating(Object rating);
+
+  /// No description provided for @email_not_verified.
+  ///
+  /// In en, this message translates to:
+  /// **'Email not verified'**
+  String get email_not_verified;
+
+  /// No description provided for @please_verify_email.
+  ///
+  /// In en, this message translates to:
+  /// **'Please verify your email address to access all features'**
+  String get please_verify_email;
+
+  /// No description provided for @send_verification_email.
+  ///
+  /// In en, this message translates to:
+  /// **'Send verification email'**
+  String get send_verification_email;
+
+  /// No description provided for @verification_email_sent.
+  ///
+  /// In en, this message translates to:
+  /// **'Verification email sent! Please check your inbox'**
+  String get verification_email_sent;
+
+  /// No description provided for @error_sending_verification.
+  ///
+  /// In en, this message translates to:
+  /// **'Error sending verification email. Please try again'**
+  String get error_sending_verification;
+
+  /// No description provided for @email_verification_note.
+  ///
+  /// In en, this message translates to:
+  /// **'We\'ll send important updates and notifications to your email address'**
+  String get email_verification_note;
+
+  /// No description provided for @verify_check_email_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Check your email'**
+  String get verify_check_email_title;
+
+  /// No description provided for @verify_sent_link_message.
+  ///
+  /// In en, this message translates to:
+  /// **'We\'ve sent a verification link to'**
+  String get verify_sent_link_message;
+
+  /// No description provided for @verify_your_email_placeholder.
+  ///
+  /// In en, this message translates to:
+  /// **'Your email'**
+  String get verify_your_email_placeholder;
+
+  /// No description provided for @verify_next_steps_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Next steps'**
+  String get verify_next_steps_title;
+
+  /// No description provided for @verify_step_1.
+  ///
+  /// In en, this message translates to:
+  /// **'1. Check your email inbox'**
+  String get verify_step_1;
+
+  /// No description provided for @verify_step_2.
+  ///
+  /// In en, this message translates to:
+  /// **'2. Click the verification link'**
+  String get verify_step_2;
+
+  /// No description provided for @verify_step_3.
+  ///
+  /// In en, this message translates to:
+  /// **'3. Return here and click \"I\'ve verified\"'**
+  String get verify_step_3;
+
+  /// No description provided for @verify_button_verified.
+  ///
+  /// In en, this message translates to:
+  /// **'I\'ve verified my email'**
+  String get verify_button_verified;
+
+  /// No description provided for @verify_dialog_please_verify_first.
+  ///
+  /// In en, this message translates to:
+  /// **'Please verify your email first.'**
+  String get verify_dialog_please_verify_first;
+
+  /// No description provided for @verify_button_resend.
+  ///
+  /// In en, this message translates to:
+  /// **'Resend verification link'**
+  String get verify_button_resend;
+
+  /// No description provided for @verify_dialog_email_resent.
+  ///
+  /// In en, this message translates to:
+  /// **'A new email has been sent.'**
+  String get verify_dialog_email_resent;
+
+  /// No description provided for @verify_didnt_receive.
+  ///
+  /// In en, this message translates to:
+  /// **'Didn\'t receive the email? Check your spam folder or contact support'**
+  String get verify_didnt_receive;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

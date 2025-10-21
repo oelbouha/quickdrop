@@ -3,7 +3,6 @@ import 'package:quickdrop_app/core/utils/imports.dart';
 import 'package:quickdrop_app/core/widgets/profile_image.dart';
 import 'package:quickdrop_app/features/profile/payment.screen.dart';
 
-
 class BecomeDriverScreen extends StatefulWidget {
   const BecomeDriverScreen({Key? key}) : super(key: key);
 
@@ -27,8 +26,6 @@ class BecomeDriverScreenState extends State<BecomeDriverScreen>
   final vehicleTypeController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
 
- 
-
   File? _selectedImage;
   String? imagePath;
   bool _isImageLoading = false;
@@ -40,19 +37,18 @@ class BecomeDriverScreenState extends State<BecomeDriverScreen>
   void initState() {
     super.initState();
 
-    WidgetsBinding.instance.addPostFrameCallback((_)  async{
-      _isUserRequestedDriver = await Provider.of<UserProvider>(context, listen: false)
-          .doesUserRequestDriverMode(user!.uid);
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      _isUserRequestedDriver =
+          await Provider.of<UserProvider>(context, listen: false)
+              .doesUserRequestDriverMode(user!.uid);
       setState(() {
         _isLoadingData = false;
         _showRegistrationForm = !_isUserRequestedDriver;
       });
     });
-    
 
     user = Provider.of<UserProvider>(context, listen: false).user;
     _initializeFields();
-
   }
 
   void _initializeFields() {
@@ -75,14 +71,24 @@ class BecomeDriverScreenState extends State<BecomeDriverScreen>
     final t = AppLocalizations.of(context)!;
     if (_isLoading) return;
 
-
     if (_isImageLoading) {
       AppUtils.showDialog(context, t.image_uploading_message, AppColors.error);
       return;
     }
+
+     final user = FirebaseAuth.instance.currentUser;
+      if (user != null && !user.emailVerified) {
+        AppUtils.showDialog(
+            context,
+            t.please_verify_email,
+            AppColors.error,
+          );
+        return;
+      }
+      
     if (_formKey.currentState!.validate()) {
       // Show confirmation dialog
-      final confirmed =  await ConfirmationDialog.show(
+      final confirmed = await ConfirmationDialog.show(
         context: context,
         message: t.driver_registration_confirm_message,
         header: t.driver_registration_confirm_header,
@@ -117,12 +123,11 @@ class BecomeDriverScreenState extends State<BecomeDriverScreen>
             .requestDriverMode(driver);
 
         await showSuccessAnimation(context,
-          title: t.driver_mode_title,
-          message: t.driver_mode_success_message
-        );
+            title: t.driver_mode_title, message: t.driver_mode_success_message);
       } catch (e) {
         if (mounted) {
-          AppUtils.showDialog(context, t.driver_mode_request_failed, AppColors.error);
+          AppUtils.showDialog(
+              context, t.driver_mode_request_failed, AppColors.error);
         }
       } finally {
         if (mounted) {
@@ -134,8 +139,7 @@ class BecomeDriverScreenState extends State<BecomeDriverScreen>
     }
   }
 
-
-Future<void> _pickImage() async {
+  Future<void> _pickImage() async {
     final ImagePicker picker = ImagePicker();
     final XFile? pickerFile =
         await picker.pickImage(source: ImageSource.gallery);
@@ -144,9 +148,9 @@ Future<void> _pickImage() async {
       setState(() {
         _isImageLoading = true;
       });
-        _selectedImage = File(pickerFile.path);
-         imagePath =  await Provider.of<ShipmentProvider>(context, listen: false)
-            .uploadImageToSupabase(File(pickerFile.path));
+      _selectedImage = File(pickerFile.path);
+      imagePath = await Provider.of<ShipmentProvider>(context, listen: false)
+          .uploadImageToSupabase(File(pickerFile.path));
       setState(() {
         _isImageLoading = false;
       });
@@ -154,9 +158,9 @@ Future<void> _pickImage() async {
   }
 
   bool _isDriverShouldPay() {
-    return true;
+    // return true;
     final user = Provider.of<UserProvider>(context, listen: false).user;
-    
+
     if (user?.subscriptionStatus == "inactive" && user?.status == "driver") {
       return true;
     }
@@ -169,9 +173,9 @@ Future<void> _pickImage() async {
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
-        title:  Text(
+        title: Text(
           t.registration,
-          style: TextStyle(
+          style: const TextStyle(
             color: AppColors.appBarText,
             fontWeight: FontWeight.w600,
           ),
@@ -180,16 +184,17 @@ Future<void> _pickImage() async {
         elevation: 0,
         centerTitle: true,
       ),
-      body: _isLoadingData 
-      ? loadingAnimation()
-      : SingleChildScrollView(
-          physics: const BouncingScrollPhysics(),
-          child: Padding(
-            padding: const EdgeInsets.all(AppTheme.homeScreenPadding),
-            child: _isDriverShouldPay() ? PaymentScreen() : _buildUpdateScreen(),
-          ),
-        
-      ),
+      body: _isLoadingData
+          ? loadingAnimation()
+          : SingleChildScrollView(
+              physics: const BouncingScrollPhysics(),
+              child: Padding(
+                padding: const EdgeInsets.all(AppTheme.homeScreenPadding),
+                child: _isDriverShouldPay()
+                    ? PaymentScreen()
+                    : _buildUpdateScreen(),
+              ),
+            ),
     );
   }
 
@@ -201,33 +206,36 @@ Future<void> _pickImage() async {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           _buildHeaderSection(),
-           const SizedBox(height: 24),
-           if (_isUserRequestedDriver) ...[buildInfoCard(
+          const SizedBox(height: 24),
+          if (_isUserRequestedDriver) ...[
+            buildInfoCard(
               icon: Icons.info_outline,
               title: t.request_driver_mode_title,
               message: t.request_driver_mode_message,
               color: AppColors.succes,
             ),
-          if (!_showRegistrationForm) ...[
-            const SizedBox(height: 24),
-            ElevatedButton(
-                onPressed: ()  {
+            if (!_showRegistrationForm) ...[
+              const SizedBox(height: 24),
+              ElevatedButton(
+                onPressed: () {
                   setState(() {
                     _showRegistrationForm = true;
                   });
                 },
                 style: ElevatedButton.styleFrom(
                   elevation: 0,
-                    backgroundColor: AppColors.blue700.withOpacity(0.8),
+                  backgroundColor: AppColors.blue700.withOpacity(0.8),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
                   ),
                 ),
                 child: Text(
                   t.resend_request,
-                  style: TextStyle(color: Colors.white),
+                  style: const TextStyle(color: Colors.white),
                 ),
-              ),],],
+              ),
+            ],
+          ],
           if (_showRegistrationForm) ...[
             const SizedBox(height: 32),
             _buildImageInfoSection(),
@@ -252,7 +260,10 @@ Future<void> _pickImage() async {
       padding: const EdgeInsets.all(18),
       decoration: BoxDecoration(
         gradient: LinearGradient(
-          colors: [AppColors.blue.withOpacity(0.1), AppColors.purple600.withOpacity(0.1)],
+          colors: [
+            AppColors.blue.withOpacity(0.1),
+            AppColors.purple600.withOpacity(0.1)
+          ],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
@@ -262,7 +273,6 @@ Future<void> _pickImage() async {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          
           Row(
             children: [
               Container(
@@ -292,7 +302,7 @@ Future<void> _pickImage() async {
                     ),
                     const SizedBox(height: 4),
                     Text(
-                     t.driver_registration_subtitle,
+                      t.driver_registration_subtitle,
                       maxLines: 2,
                       style: TextStyle(
                         color: Colors.grey[600],
@@ -309,11 +319,9 @@ Future<void> _pickImage() async {
     );
   }
 
-
-
- Widget _buildImageInfoSection() {
+  Widget _buildImageInfoSection() {
     final t = AppLocalizations.of(context)!;
-    return Container (
+    return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
@@ -327,43 +335,40 @@ Future<void> _pickImage() async {
           ),
         ],
       ),
-      child:Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            buildProfileImage(
-              user: user,
-              onTap: () async {
-                // Show image picker
-                await _pickImage();
-              },
-              size: 110,
-            ),
-            const SizedBox(width: 32),
-            ElevatedButton(
-              onPressed: () async {
-                // Show image picker
-                await _pickImage();
-              },
-              style: ElevatedButton.styleFrom(
-                elevation: 0,
-                  backgroundColor: AppColors.blue700.withOpacity(0.8),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-              ),
-              child: Text(
-                t.upload_image,
-                style: TextStyle(color: Colors.white),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          buildProfileImage(
+            user: user,
+            onTap: () async {
+              // Show image picker
+              await _pickImage();
+            },
+            size: 110,
+          ),
+          const SizedBox(width: 32),
+          ElevatedButton(
+            onPressed: () async {
+              // Show image picker
+              await _pickImage();
+            },
+            style: ElevatedButton.styleFrom(
+              elevation: 0,
+              backgroundColor: AppColors.blue700.withOpacity(0.8),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
               ),
             ),
-          ],
-        ),
-      
+            child: Text(
+              t.upload_image,
+              style: TextStyle(color: Colors.white),
+            ),
+          ),
+        ],
+      ),
     );
   }
-
-
 
   Widget _buildPersonalInfoSection() {
     final t = AppLocalizations.of(context)!;
@@ -416,6 +421,9 @@ Future<void> _pickImage() async {
 
   Widget _buildContactInfoSection() {
     final t = AppLocalizations.of(context)!;
+    final user = FirebaseAuth.instance.currentUser;
+    final isEmailVerified = user?.emailVerified ?? false;
+
     return _buildSection(
       title: t.contact_information,
       icon: Icons.contact_mail_outlined,
@@ -429,6 +437,67 @@ Future<void> _pickImage() async {
           validator: Validators.email,
         ),
         const SizedBox(height: 16),
+
+        // Email verification warning
+        if (!isEmailVerified) ...[
+          Container(
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: Colors.orange.shade50,
+              borderRadius: BorderRadius.circular(8),
+              border: Border.all(color: Colors.orange.shade200),
+            ),
+            child: Row(
+              children: [
+                Icon(
+                  Icons.warning_amber_rounded,
+                  color: Colors.orange.shade700,
+                  size: 24,
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        t.email_not_verified,
+                        style: TextStyle(
+                          color: Colors.orange.shade900,
+                          fontWeight: FontWeight.w600,
+                          fontSize: 14,
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        t.please_verify_email,
+                        style: TextStyle(
+                          color: Colors.orange.shade800,
+                          fontSize: 13,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 12),
+          ElevatedButton.icon(
+            onPressed: _sendVerificationEmail,
+            icon: const Icon(Icons.mail_outline),
+            label: Text(t.send_verification_email),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.orange,
+              foregroundColor: Colors.white,
+              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
+            ),
+          ),
+          const SizedBox(height: 16),
+        ],
+
         ImprovedTextField(
           controller: phoneNumberController,
           label: t.phone_number,
@@ -437,12 +506,46 @@ Future<void> _pickImage() async {
           keyboardType: TextInputType.phone,
           validator: Validators.phone,
         ),
+        const SizedBox(height: 16),
+        Text(
+          t.email_verification_note,
+          style: TextStyle(
+            color: Colors.grey[600],
+            fontSize: 14,
+          ),
+        ),
       ],
     );
   }
 
+  Future<void> _sendVerificationEmail() async {
+    final t = AppLocalizations.of(context)!;
+    try {
+      final user = FirebaseAuth.instance.currentUser;
+      if (user != null && !user.emailVerified) {
+        await user.sendEmailVerification();
 
-   Widget _buildCarInfoSection() {
+        if (mounted) {
+         AppUtils.showDialog(
+            context,
+            t.verification_email_sent,
+            AppColors.succes,
+          );
+        context.push("/verify-email");
+        }
+      }
+    } catch (e) {
+      if (mounted) {
+        AppUtils.showDialog(
+            context,
+            t.error_sending_verification,
+            AppColors.error,
+          );
+      }
+    }
+  }
+
+  Widget _buildCarInfoSection() {
     final t = AppLocalizations.of(context)!;
     return _buildSection(
       title: t.vehicle_information,
@@ -474,7 +577,7 @@ Future<void> _pickImage() async {
           keyboardType: TextInputType.text,
           validator: Validators.notEmpty,
         ),
-         const SizedBox(height: 16),
+        const SizedBox(height: 16),
         buildInfoCard(
           icon: Icons.info_outline,
           title: t.important,
@@ -484,8 +587,6 @@ Future<void> _pickImage() async {
       ],
     );
   }
-
-
 
   Widget _buildSection({
     required String title,

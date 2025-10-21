@@ -1275,4 +1275,58 @@ class AppLocalizationsEn extends AppLocalizations {
   String rating(Object rating) {
     return '⭐ $rating rating';
   }
+
+  @override
+  String get email_not_verified => 'Email not verified';
+
+  @override
+  String get please_verify_email => 'Please verify your email address to access all features';
+
+  @override
+  String get send_verification_email => 'Send verification email';
+
+  @override
+  String get verification_email_sent => 'Verification email sent! Please check your inbox';
+
+  @override
+  String get error_sending_verification => 'Error sending verification email. Please try again';
+
+  @override
+  String get email_verification_note => 'We\'ll send important updates and notifications to your email address';
+
+  @override
+  String get verify_check_email_title => 'Check your email';
+
+  @override
+  String get verify_sent_link_message => 'We\'ve sent a verification link to';
+
+  @override
+  String get verify_your_email_placeholder => 'Your email';
+
+  @override
+  String get verify_next_steps_title => 'Next steps';
+
+  @override
+  String get verify_step_1 => '1. Check your email inbox';
+
+  @override
+  String get verify_step_2 => '2. Click the verification link';
+
+  @override
+  String get verify_step_3 => '3. Return here and click \"I\'ve verified\"';
+
+  @override
+  String get verify_button_verified => 'I\'ve verified my email';
+
+  @override
+  String get verify_dialog_please_verify_first => 'Please verify your email first.';
+
+  @override
+  String get verify_button_resend => 'Resend verification link';
+
+  @override
+  String get verify_dialog_email_resent => 'A new email has been sent.';
+
+  @override
+  String get verify_didnt_receive => 'Didn\'t receive the email? Check your spam folder or contact support';
 }

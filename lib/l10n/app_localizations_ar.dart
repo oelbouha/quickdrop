@@ -1275,4 +1275,58 @@ class AppLocalizationsAr extends AppLocalizations {
   String rating(Object rating) {
     return '⭐ تقييم $rating';
   }
+
+  @override
+  String get email_not_verified => 'البريد الإلكتروني غير مؤكد';
+
+  @override
+  String get please_verify_email => 'يرجى تأكيد عنوان بريدك الإلكتروني للوصول إلى جميع الميزات';
+
+  @override
+  String get send_verification_email => 'إرسال بريد التحقق';
+
+  @override
+  String get verification_email_sent => 'تم إرسال بريد التحقق! يرجى التحقق من صندوق الوارد';
+
+  @override
+  String get error_sending_verification => 'خطأ في إرسال بريد التحقق. يرجى المحاولة مرة أخرى';
+
+  @override
+  String get email_verification_note => 'سنرسل التحديثات والإشعارات المهمة إلى عنوان بريدك الإلكتروني';
+
+  @override
+  String get verify_check_email_title => 'تحقق من بريدك الإلكتروني';
+
+  @override
+  String get verify_sent_link_message => 'لقد أرسلنا رابط التحقق إلى';
+
+  @override
+  String get verify_your_email_placeholder => 'بريدك الإلكتروني';
+
+  @override
+  String get verify_next_steps_title => 'الخطوات التالية';
+
+  @override
+  String get verify_step_1 => '1. تحقق من صندوق الوارد في بريدك الإلكتروني';
+
+  @override
+  String get verify_step_2 => '2. اضغط على رابط التحقق';
+
+  @override
+  String get verify_step_3 => '3. عد إلى هنا واضغط على « تم التحقق »';
+
+  @override
+  String get verify_button_verified => 'تم التحقق من بريدي الإلكتروني';
+
+  @override
+  String get verify_dialog_please_verify_first => 'يرجى التحقق من بريدك الإلكتروني أولاً.';
+
+  @override
+  String get verify_button_resend => 'إعادة إرسال رابط التحقق';
+
+  @override
+  String get verify_dialog_email_resent => 'تم إرسال بريد إلكتروني جديد.';
+
+  @override
+  String get verify_didnt_receive => 'لم يصلك البريد الإلكتروني؟ تحقق من مجلد الرسائل غير المرغوب فيها أو تواصل مع الدعم';
 }

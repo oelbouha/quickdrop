@@ -503,7 +503,29 @@
     "loading": "جاري التحميل...",
 "noRating": "⭐ لا يوجد تقييم",
 "noRatingYet": "⭐ لا يوجد تقييم بعد",
-"rating": "⭐ تقييم {rating}"
+"rating": "⭐ تقييم {rating}",
+"email_not_verified": "البريد الإلكتروني غير مؤكد",
+"please_verify_email": "يرجى تأكيد عنوان بريدك الإلكتروني للوصول إلى جميع الميزات",
+"send_verification_email": "إرسال بريد التحقق",
+"verification_email_sent": "تم إرسال بريد التحقق! يرجى التحقق من صندوق الوارد",
+"error_sending_verification": "خطأ في إرسال بريد التحقق. يرجى المحاولة مرة أخرى",
+"email_verification_note": "سنرسل التحديثات والإشعارات المهمة إلى عنوان بريدك الإلكتروني",
+
+
+  "verify_check_email_title": "تحقق من بريدك الإلكتروني",
+  "verify_sent_link_message": "لقد أرسلنا رابط التحقق إلى",
+  "verify_your_email_placeholder": "بريدك الإلكتروني",
+  "verify_next_steps_title": "الخطوات التالية",
+  "verify_step_1": "1. تحقق من صندوق الوارد في بريدك الإلكتروني",
+  "verify_step_2": "2. اضغط على رابط التحقق",
+  "verify_step_3": "3. عد إلى هنا واضغط على « تم التحقق »",
+  "verify_button_verified": "تم التحقق من بريدي الإلكتروني",
+  "verify_dialog_please_verify_first": "يرجى التحقق من بريدك الإلكتروني أولاً.",
+  "verify_button_resend": "إعادة إرسال رابط التحقق",
+  "verify_dialog_email_resent": "تم إرسال بريد إلكتروني جديد.",
+  "verify_didnt_receive": "لم يصلك البريد الإلكتروني؟ تحقق من مجلد الرسائل غير المرغوب فيها أو تواصل مع الدعم"
+
+
 
 
 

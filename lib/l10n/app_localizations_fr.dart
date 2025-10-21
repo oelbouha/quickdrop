@@ -1275,4 +1275,58 @@ class AppLocalizationsFr extends AppLocalizations {
   String rating(Object rating) {
     return '⭐ Note de $rating';
   }
+
+  @override
+  String get email_not_verified => 'Email non vérifié';
+
+  @override
+  String get please_verify_email => 'Veuillez vérifier votre adresse email pour accéder à toutes les fonctionnalités';
+
+  @override
+  String get send_verification_email => 'Envoyer l\'email de vérification';
+
+  @override
+  String get verification_email_sent => 'Email de vérification envoyé ! Veuillez vérifier votre boîte de réception';
+
+  @override
+  String get error_sending_verification => 'Erreur lors de l\'envoi de l\'email de vérification. Veuillez réessayer';
+
+  @override
+  String get email_verification_note => 'Nous enverrons les mises à jour importantes et les notifications à votre adresse email';
+
+  @override
+  String get verify_check_email_title => 'Vérifiez votre e-mail';
+
+  @override
+  String get verify_sent_link_message => 'Nous avons envoyé un lien de vérification à';
+
+  @override
+  String get verify_your_email_placeholder => 'Votre e-mail';
+
+  @override
+  String get verify_next_steps_title => 'Étapes suivantes';
+
+  @override
+  String get verify_step_1 => '1. Vérifiez votre boîte de réception';
+
+  @override
+  String get verify_step_2 => '2. Cliquez sur le lien de vérification';
+
+  @override
+  String get verify_step_3 => '3. Revenez ici et cliquez sur « J’ai vérifié »';
+
+  @override
+  String get verify_button_verified => 'J’ai vérifié mon e-mail';
+
+  @override
+  String get verify_dialog_please_verify_first => 'Veuillez d’abord vérifier votre e-mail.';
+
+  @override
+  String get verify_button_resend => 'Renvoyer le lien de vérification';
+
+  @override
+  String get verify_dialog_email_resent => 'Un nouvel e-mail a été envoyé.';
+
+  @override
+  String get verify_didnt_receive => 'Vous n’avez pas reçu l’e-mail ? Vérifiez votre dossier spam ou contactez le support';
 }
