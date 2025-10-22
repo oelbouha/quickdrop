@@ -45,13 +45,7 @@ class _ImprovedTextFieldState extends State<ImprovedTextField> {
         TextFormField(
           controller: widget.controller,
           keyboardType: widget.keyboardType,
-          validator: (value) {
-            final result = widget.validator?.call(value);
-            setState(() {
-              _hasError = result != null;
-            });
-            return result;
-          },
+          validator: widget.validator,
           onChanged: (value) {
             if (_hasError) {
               setState(() {

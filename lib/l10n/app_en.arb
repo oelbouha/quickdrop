@@ -540,7 +540,16 @@
   "verify_dialog_please_verify_first": "Please verify your email first.",
   "verify_button_resend": "Resend verification link",
   "verify_dialog_email_resent": "A new email has been sent.",
-  "verify_didnt_receive": "Didn't receive the email? Check your spam folder or contact support"
+  "verify_didnt_receive": "Didn't receive the email? Check your spam folder or contact support",
+  "reauth_required_message": "For security reasons, please log in again before changing your email.",
+  "reauth_required_message": "For security reasons, please log in again before changing your email address.",
+"invalid_email_message": "The email address you entered is not valid. Please check and try again.",
+"email_in_use_message": "This email address is already in use by another account.",
+"update_error_message": "An error occurred while updating your information. Please try again.",
+"verification_email_sent": "A verification link has been sent to your new email address. Please check your inbox.",
+"no_changes_detected": "No changes detected."
+
+
 
 
 

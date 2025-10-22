@@ -372,7 +372,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get update_success_message => 'تم تحديث معلومات حسابك بنجاح.';
 
   @override
-  String get update_error_message => 'فشل في تحديث معلومات الملف الشخصي';
+  String get update_error_message => 'حدث خطأ أثناء تحديث معلوماتك. يرجى المحاولة مرة أخرى.';
 
   @override
   String get image_uploading_message => 'الصورة لا تزال قيد التحميل، يرجى الانتظار';
@@ -1286,7 +1286,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get send_verification_email => 'إرسال بريد التحقق';
 
   @override
-  String get verification_email_sent => 'تم إرسال بريد التحقق! يرجى التحقق من صندوق الوارد';
+  String get verification_email_sent => 'تم إرسال رابط التحقق إلى بريدك الإلكتروني الجديد. يرجى التحقق من صندوق الوارد.';
 
   @override
   String get error_sending_verification => 'خطأ في إرسال بريد التحقق. يرجى المحاولة مرة أخرى';
@@ -1329,4 +1329,16 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get verify_didnt_receive => 'لم يصلك البريد الإلكتروني؟ تحقق من مجلد الرسائل غير المرغوب فيها أو تواصل مع الدعم';
+
+  @override
+  String get reauth_required_message => 'لأسباب أمنية، يرجى تسجيل الدخول مرة أخرى قبل تغيير عنوان البريد الإلكتروني.';
+
+  @override
+  String get invalid_email_message => 'عنوان البريد الإلكتروني الذي أدخلته غير صالح. يرجى التحقق والمحاولة مرة أخرى.';
+
+  @override
+  String get email_in_use_message => 'عنوان البريد الإلكتروني هذا مستخدم بالفعل من قبل حساب آخر.';
+
+  @override
+  String get no_changes_detected => 'لم يتم اكتشاف أي تغييرات.';
 }

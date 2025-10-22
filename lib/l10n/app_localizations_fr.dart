@@ -372,7 +372,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get update_success_message => 'Les informations de votre compte ont été mises à jour avec succès.';
 
   @override
-  String get update_error_message => 'Échec de la mise à jour des informations du profil';
+  String get update_error_message => 'Une erreur s’est produite lors de la mise à jour de vos informations. Veuillez réessayer.';
 
   @override
   String get image_uploading_message => 'L\'image est encore en cours de téléchargement, veuillez patienter';
@@ -1286,7 +1286,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get send_verification_email => 'Envoyer l\'email de vérification';
 
   @override
-  String get verification_email_sent => 'Email de vérification envoyé ! Veuillez vérifier votre boîte de réception';
+  String get verification_email_sent => 'Un lien de vérification a été envoyé à votre nouvelle adresse e-mail. Veuillez vérifier votre boîte de réception.';
 
   @override
   String get error_sending_verification => 'Erreur lors de l\'envoi de l\'email de vérification. Veuillez réessayer';
@@ -1329,4 +1329,16 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get verify_didnt_receive => 'Vous n’avez pas reçu l’e-mail ? Vérifiez votre dossier spam ou contactez le support';
+
+  @override
+  String get reauth_required_message => 'Pour des raisons de sécurité, veuillez vous reconnecter avant de modifier votre adresse e-mail.';
+
+  @override
+  String get invalid_email_message => 'L’adresse e-mail que vous avez saisie n’est pas valide. Veuillez vérifier et réessayer.';
+
+  @override
+  String get email_in_use_message => 'Cette adresse e-mail est déjà utilisée par un autre compte.';
+
+  @override
+  String get no_changes_detected => 'Aucun changement détecté.';
 }

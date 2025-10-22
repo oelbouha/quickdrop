@@ -1,5 +1,8 @@
 import 'package:quickdrop_app/core/utils/imports.dart';
+import 'package:quickdrop_app/features/profile/change_contact_info_screen.dart';
 import 'package:quickdrop_app/features/profile/change_language_screen.dart';
+import 'package:quickdrop_app/features/profile/change_personal_info_screen.dart';
+import 'package:quickdrop_app/features/profile/change_profile_image_screen.dart';
 import 'package:quickdrop_app/features/profile/payment.screen.dart';
 import 'package:quickdrop_app/features/requests/negotiation_screen.dart';
 import 'package:quickdrop_app/features/home/home_screen.dart';
@@ -173,6 +176,33 @@ class AppRouter {
                 const ChangeLanguageScreen(),
               );
           }),
+           GoRoute(
+            path: '/change-image',
+            name: 'change-image',
+            pageBuilder: (context, state) {
+              return buildCustomTransitionPage(
+                context,
+                const ChangeProfileImageScreen(),
+              );
+          }),
+          GoRoute(
+            path: '/change-personal-info',
+            name: 'change-personal-info',
+            pageBuilder: (context, state) {
+              return buildCustomTransitionPage(
+                context,
+                const ChangePersonalInfoScreen(),
+              );
+          }),
+          GoRoute(
+            path: '/change-contact-info',
+            name: 'change-contact-info',
+            pageBuilder: (context, state) {
+              return buildCustomTransitionPage(
+                context,
+                const ChangeContactInfoScreen(),
+              );
+          }),
         GoRoute(
             path: '/verify-number',
             name: 'verify-number',
@@ -180,7 +210,6 @@ class AppRouter {
               final phoneNumber = state.uri.queryParameters['phoneNumber'];
               final verificationId =
                   state.uri.queryParameters['verificationId'];
-              print("Route param received: ${state.uri.queryParameters}");
 
               // print("phoneNumber: $phoneNumber");
               return buildCustomTransitionPage(
@@ -372,15 +401,12 @@ class AppRouter {
                     ));
               }
             }),
-        // Route: read extra and build the results screen
         GoRoute(
-          // name: 'searchResults', // optional if you prefer pushNamed
           path: '/search',
           pageBuilder: (context, state) {
             final filters = (state.extra is SearchFilters)
                 ? state.extra as SearchFilters
                 : const SearchFilters();
-            print(filters);
             return buildCustomTransitionPage(
                 context,
                 SearchResultsScreen(filters: filters)
@@ -417,8 +443,6 @@ class AppRouter {
                       errorMessage: "Trip ID or User ID is missing.",
                     ));
               }
-              print(
-                  "Fetching trip details for tripId: $tripId, userId: $userId");
               return buildCustomTransitionPage(
                   context,
                   ListingTripLoader(

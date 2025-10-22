@@ -372,7 +372,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get update_success_message => 'Your account information has been updated successfully.';
 
   @override
-  String get update_error_message => 'Failed to update profile information';
+  String get update_error_message => 'An error occurred while updating your information. Please try again.';
 
   @override
   String get image_uploading_message => 'Image is still uploading, please wait';
@@ -1286,7 +1286,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get send_verification_email => 'Send verification email';
 
   @override
-  String get verification_email_sent => 'Verification email sent! Please check your inbox';
+  String get verification_email_sent => 'A verification link has been sent to your new email address. Please check your inbox.';
 
   @override
   String get error_sending_verification => 'Error sending verification email. Please try again';
@@ -1329,4 +1329,16 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get verify_didnt_receive => 'Didn\'t receive the email? Check your spam folder or contact support';
+
+  @override
+  String get reauth_required_message => 'For security reasons, please log in again before changing your email address.';
+
+  @override
+  String get invalid_email_message => 'The email address you entered is not valid. Please check and try again.';
+
+  @override
+  String get email_in_use_message => 'This email address is already in use by another account.';
+
+  @override
+  String get no_changes_detected => 'No changes detected.';
 }

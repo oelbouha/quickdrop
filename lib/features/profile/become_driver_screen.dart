@@ -436,6 +436,7 @@ class BecomeDriverScreenState extends State<BecomeDriverScreen>
           keyboardType: TextInputType.emailAddress,
           validator: Validators.email,
         ),
+
         const SizedBox(height: 16),
 
         // Email verification warning
@@ -534,7 +535,20 @@ class BecomeDriverScreenState extends State<BecomeDriverScreen>
         context.push("/verify-email");
         }
       }
-    } catch (e) {
+    } on FirebaseAuthException catch (e) {
+    String message = t.update_error_message;
+
+    if (e.code == 'requires-recent-login') {
+      message = t.reauth_required_message;
+    } else if (e.code == 'invalid-email') {
+      message = t.invalid_email_message;
+    } else if (e.code == 'email-already-in-use') {
+      message = t.email_in_use_message;
+    }
+
+    AppUtils.showDialog(context, message, AppColors.error);
+  }  
+    catch (e) {
       if (mounted) {
         AppUtils.showDialog(
             context,

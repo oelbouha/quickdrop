@@ -8,6 +8,10 @@ export 'package:quickdrop_app/theme/colors.dart';
 export 'package:quickdrop_app/theme/AppTheme.dart';
 export 'package:quickdrop_app/theme/error_page.dart';
 
+
+
+export 'package:quickdrop_app/core/widgets/save_button.dart';
+export 'package:quickdrop_app/core/widgets/build_section.dart';
 export 'package:quickdrop_app/core/widgets/completed_item_card.dart';
 export 'package:quickdrop_app/core/widgets/ongoing_item_card.dart';
 export 'package:quickdrop_app/core/widgets/active_item_card.dart';

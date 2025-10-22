@@ -826,7 +826,7 @@ abstract class AppLocalizations {
   /// No description provided for @update_error_message.
   ///
   /// In en, this message translates to:
-  /// **'Failed to update profile information'**
+  /// **'An error occurred while updating your information. Please try again.'**
   String get update_error_message;
 
   /// No description provided for @image_uploading_message.
@@ -2626,7 +2626,7 @@ abstract class AppLocalizations {
   /// No description provided for @verification_email_sent.
   ///
   /// In en, this message translates to:
-  /// **'Verification email sent! Please check your inbox'**
+  /// **'A verification link has been sent to your new email address. Please check your inbox.'**
   String get verification_email_sent;
 
   /// No description provided for @error_sending_verification.
@@ -2712,6 +2712,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Didn\'t receive the email? Check your spam folder or contact support'**
   String get verify_didnt_receive;
+
+  /// No description provided for @reauth_required_message.
+  ///
+  /// In en, this message translates to:
+  /// **'For security reasons, please log in again before changing your email address.'**
+  String get reauth_required_message;
+
+  /// No description provided for @invalid_email_message.
+  ///
+  /// In en, this message translates to:
+  /// **'The email address you entered is not valid. Please check and try again.'**
+  String get invalid_email_message;
+
+  /// No description provided for @email_in_use_message.
+  ///
+  /// In en, this message translates to:
+  /// **'This email address is already in use by another account.'**
+  String get email_in_use_message;
+
+  /// No description provided for @no_changes_detected.
+  ///
+  /// In en, this message translates to:
+  /// **'No changes detected.'**
+  String get no_changes_detected;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

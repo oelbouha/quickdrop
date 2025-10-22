@@ -317,12 +317,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
           iconPath: "assets/icon/notification.svg",
           onTap: () => _showComingSoon("notifications"),
         ),
-        settingsCard(
-          title: t.payment_methods,
-          subtitle: t.manage_payments,
-          iconPath: "assets/icon/money.svg",
-          onTap: () => _showComingSoon("Payment"),
-        ),
+        // settingsCard(
+        //   title: t.payment_methods,
+        //   subtitle: t.manage_payments,
+        //   iconPath: "assets/icon/money.svg",
+        //   onTap: () => _showComingSoon("Payment"),
+        // ),
       ],
     );
   }
