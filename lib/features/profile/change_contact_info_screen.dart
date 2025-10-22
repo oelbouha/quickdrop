@@ -78,6 +78,9 @@ Future<void> updateInfo() async {
           .doc(currentUser.uid)
           .update({'email': newEmail});
 
+
+      context.push("/verify-email?email=${newEmail}");
+
       if (mounted) {
         AppUtils.showDialog(context, t.verification_email_sent, AppColors.success);
       }

@@ -52,7 +52,7 @@ class BecomeDriverScreenState extends State<BecomeDriverScreen>
   }
 
   void _initializeFields() {
-    emailController.text = user?.email ?? "";
+    emailController.text = FirebaseAuth.instance.currentUser?.email ?? "";
     firstNameController.text = user?.firstName ?? "";
     lastNameController.text = user?.lastName ?? "";
     phoneNumberController.text = user?.phoneNumber ?? "";
@@ -76,16 +76,16 @@ class BecomeDriverScreenState extends State<BecomeDriverScreen>
       return;
     }
 
-     final user = FirebaseAuth.instance.currentUser;
-      if (user != null && !user.emailVerified) {
-        AppUtils.showDialog(
-            context,
-            t.please_verify_email,
-            AppColors.error,
-          );
-        return;
-      }
-      
+    final user = FirebaseAuth.instance.currentUser;
+    if (user != null && !user.emailVerified) {
+      AppUtils.showDialog(
+        context,
+        t.please_verify_email,
+        AppColors.error,
+      );
+      return;
+    }
+
     if (_formKey.currentState!.validate()) {
       // Show confirmation dialog
       final confirmed = await ConfirmationDialog.show(
@@ -527,34 +527,33 @@ class BecomeDriverScreenState extends State<BecomeDriverScreen>
         await user.sendEmailVerification();
 
         if (mounted) {
-         AppUtils.showDialog(
+          AppUtils.showDialog(
             context,
             t.verification_email_sent,
             AppColors.succes,
           );
-        context.push("/verify-email");
+          context.push("/verify-email?email=${FirebaseAuth.instance.currentUser?.email}");
         }
       }
     } on FirebaseAuthException catch (e) {
-    String message = t.update_error_message;
+      String message = t.update_error_message;
 
-    if (e.code == 'requires-recent-login') {
-      message = t.reauth_required_message;
-    } else if (e.code == 'invalid-email') {
-      message = t.invalid_email_message;
-    } else if (e.code == 'email-already-in-use') {
-      message = t.email_in_use_message;
-    }
+      if (e.code == 'requires-recent-login') {
+        message = t.reauth_required_message;
+      } else if (e.code == 'invalid-email') {
+        message = t.invalid_email_message;
+      } else if (e.code == 'email-already-in-use') {
+        message = t.email_in_use_message;
+      }
 
-    AppUtils.showDialog(context, message, AppColors.error);
-  }  
-    catch (e) {
+      AppUtils.showDialog(context, message, AppColors.error);
+    } catch (e) {
       if (mounted) {
         AppUtils.showDialog(
-            context,
-            t.error_sending_verification,
-            AppColors.error,
-          );
+          context,
+          t.error_sending_verification,
+          AppColors.error,
+        );
       }
     }
   }

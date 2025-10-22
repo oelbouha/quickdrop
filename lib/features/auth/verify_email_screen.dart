@@ -2,7 +2,11 @@ import 'package:quickdrop_app/core/utils/imports.dart';
 import 'package:go_router/go_router.dart';
 
 class VerifyEmailScreen extends StatefulWidget {
-  const VerifyEmailScreen({super.key});
+  final String email;
+  const VerifyEmailScreen({
+    super.key,
+    required this.email,
+  });
 
   @override
   _VerifyEmailScreenState createState() => _VerifyEmailScreenState();
@@ -16,6 +20,9 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
     return Scaffold(
       appBar: AppBar(
         systemOverlayStyle: SystemUiOverlayStyle.dark,
+        backgroundColor: Theme.of(context).primaryColor,
+        centerTitle: true,
+        iconTheme: const IconThemeData(color: AppColors.appBarIcons),
       ),
       backgroundColor: AppColors.cardBackground,
       body: Padding(
@@ -50,7 +57,7 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
               ),
               const SizedBox(height: 20),
               Text(
-                FirebaseAuth.instance.currentUser?.email ?? t.verify_your_email_placeholder,
+                widget.email ,
                 style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                 textAlign: TextAlign.center,
               ),

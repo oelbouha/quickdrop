@@ -50,8 +50,6 @@ class AppRouter {
       redirect: (context, state) {
         final user = FirebaseAuth.instance.currentUser;
         final currentPath = state.uri.path;
-        final isEmailVerified =
-            FirebaseAuth.instance.currentUser?.emailVerified;
         final isLoggingIn = currentPath == '/';
         final publicRoutes = {
           '/',
@@ -59,29 +57,21 @@ class AppRouter {
           '/login',
           '/forgot-password',
           '/create-account',
-          '/verify-number'
-              '/privacy-policy',
+          '/verify-number',
+          '/privacy-policy',
           '/terms-of-service',
         };
-        // return '/create-account';
-        // Debugging prints
-        // print("isLoggingIn: $isLoggingIn");
-        // print("currentPath: $currentPath");
-        // print("user: $user");
-        // print("isEmailVerified: $isEmailVerified");
-        // return '/verify-number';
+
+
         if (user != null && currentPath == '/create-account' ||
             currentPath == "/verify-number") {
           return null;
         }
+
         if (publicRoutes.contains(currentPath)) {
           return null;
         }
 
-        // if (user != null && isEmailVerified == false) {
-        //   Provider.of<UserProvider>(context, listen: false).fetchUser(user.uid);
-        //   return '/verify-email';
-        // }
         if (user != null && currentPath == '/') {
           Provider.of<UserProvider>(context, listen: false).fetchUser(user.uid);
           return '/home';
@@ -175,8 +165,8 @@ class AppRouter {
                 context,
                 const ChangeLanguageScreen(),
               );
-          }),
-           GoRoute(
+            }),
+        GoRoute(
             path: '/change-image',
             name: 'change-image',
             pageBuilder: (context, state) {
@@ -184,8 +174,8 @@ class AppRouter {
                 context,
                 const ChangeProfileImageScreen(),
               );
-          }),
-          GoRoute(
+            }),
+        GoRoute(
             path: '/change-personal-info',
             name: 'change-personal-info',
             pageBuilder: (context, state) {
@@ -193,8 +183,8 @@ class AppRouter {
                 context,
                 const ChangePersonalInfoScreen(),
               );
-          }),
-          GoRoute(
+            }),
+        GoRoute(
             path: '/change-contact-info',
             name: 'change-contact-info',
             pageBuilder: (context, state) {
@@ -202,7 +192,7 @@ class AppRouter {
                 context,
                 const ChangeContactInfoScreen(),
               );
-          }),
+            }),
         GoRoute(
             path: '/verify-number',
             name: 'verify-number',
@@ -224,13 +214,17 @@ class AppRouter {
           builder: (context, state) => const ChatScreen(),
         ),
         GoRoute(
-          name: "verify-email",
-          path: "/verify-email",
-          pageBuilder: (context, state) => buildCustomTransitionPage(
-            context,
-            const VerifyEmailScreen(),
-          ),
-        ),
+            name: "verify-email",
+            path: "/verify-email",
+            pageBuilder: (context, state) {
+              final String? email = state.uri.queryParameters['email'];
+
+              return buildCustomTransitionPage(
+                  context,
+                  VerifyEmailScreen(
+                    email: email ?? "Your Email",
+                  ));
+            }),
         // GoRoute(
         //   name: "verify-phone",
         //   path: "/verify-phone",
@@ -271,7 +265,7 @@ class AppRouter {
             const BecomeDriverScreen(),
           ),
         ),
-         GoRoute(
+        GoRoute(
           name: "Payment",
           path: "/Payment",
           pageBuilder: (context, state) => buildCustomTransitionPage(
@@ -408,9 +402,7 @@ class AppRouter {
                 ? state.extra as SearchFilters
                 : const SearchFilters();
             return buildCustomTransitionPage(
-                context,
-                SearchResultsScreen(filters: filters)
-            );  
+                context, SearchResultsScreen(filters: filters));
           },
         ),
 
