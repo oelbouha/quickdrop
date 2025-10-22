@@ -1341,4 +1341,52 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get no_changes_detected => 'Aucun changement détecté.';
+
+  @override
+  String get car => 'Voiture';
+
+  @override
+  String get motorcycle => 'Moto';
+
+  @override
+  String get truck => 'Camion';
+
+  @override
+  String get van => 'Fourgonnette';
+
+  @override
+  String get bicycle => 'Vélo';
+
+  @override
+  String get scooter => 'Scooter';
+
+  @override
+  String get box => 'Boîte';
+
+  @override
+  String get envelope => 'Enveloppe';
+
+  @override
+  String get bag => 'Sac';
+
+  @override
+  String get pallet => 'Palette';
+
+  @override
+  String get accessories => 'Accessoires';
+
+  @override
+  String get crate => 'Caisse';
+
+  @override
+  String get tube => 'Tube';
+
+  @override
+  String get furniture => 'Meubles';
+
+  @override
+  String get electronics => 'Électronique';
+
+  @override
+  String get clothing => 'Vêtements';
 }

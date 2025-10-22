@@ -2736,6 +2736,102 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'No changes detected.'**
   String get no_changes_detected;
+
+  /// No description provided for @car.
+  ///
+  /// In en, this message translates to:
+  /// **'Car'**
+  String get car;
+
+  /// No description provided for @motorcycle.
+  ///
+  /// In en, this message translates to:
+  /// **'Motorcycle'**
+  String get motorcycle;
+
+  /// No description provided for @truck.
+  ///
+  /// In en, this message translates to:
+  /// **'Truck'**
+  String get truck;
+
+  /// No description provided for @van.
+  ///
+  /// In en, this message translates to:
+  /// **'Van'**
+  String get van;
+
+  /// No description provided for @bicycle.
+  ///
+  /// In en, this message translates to:
+  /// **'Bicycle'**
+  String get bicycle;
+
+  /// No description provided for @scooter.
+  ///
+  /// In en, this message translates to:
+  /// **'Scooter'**
+  String get scooter;
+
+  /// No description provided for @box.
+  ///
+  /// In en, this message translates to:
+  /// **'Box'**
+  String get box;
+
+  /// No description provided for @envelope.
+  ///
+  /// In en, this message translates to:
+  /// **'Envelope'**
+  String get envelope;
+
+  /// No description provided for @bag.
+  ///
+  /// In en, this message translates to:
+  /// **'Bag'**
+  String get bag;
+
+  /// No description provided for @pallet.
+  ///
+  /// In en, this message translates to:
+  /// **'Pallet'**
+  String get pallet;
+
+  /// No description provided for @accessories.
+  ///
+  /// In en, this message translates to:
+  /// **'Accessories'**
+  String get accessories;
+
+  /// No description provided for @crate.
+  ///
+  /// In en, this message translates to:
+  /// **'Crate'**
+  String get crate;
+
+  /// No description provided for @tube.
+  ///
+  /// In en, this message translates to:
+  /// **'Tube'**
+  String get tube;
+
+  /// No description provided for @furniture.
+  ///
+  /// In en, this message translates to:
+  /// **'Furniture'**
+  String get furniture;
+
+  /// No description provided for @electronics.
+  ///
+  /// In en, this message translates to:
+  /// **'Electronics'**
+  String get electronics;
+
+  /// No description provided for @clothing.
+  ///
+  /// In en, this message translates to:
+  /// **'Clothing'**
+  String get clothing;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

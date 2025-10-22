@@ -547,7 +547,23 @@
 "email_in_use_message": "This email address is already in use by another account.",
 "update_error_message": "An error occurred while updating your information. Please try again.",
 "verification_email_sent": "A verification link has been sent to your new email address. Please check your inbox.",
-"no_changes_detected": "No changes detected."
+"no_changes_detected": "No changes detected.",
+ "car": "Car",
+  "motorcycle": "Motorcycle",
+  "truck": "Truck",
+  "van": "Van",
+  "bicycle": "Bicycle",
+  "scooter": "Scooter",
+   "box": "Box",
+  "envelope": "Envelope",
+  "bag": "Bag",
+  "pallet": "Pallet",
+  "accessories": "Accessories",
+  "crate": "Crate",
+  "tube": "Tube",
+  "furniture": "Furniture",
+  "electronics": "Electronics",
+  "clothing": "Clothing"
 
 
 

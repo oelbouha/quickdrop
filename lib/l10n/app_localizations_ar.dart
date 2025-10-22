@@ -1341,4 +1341,52 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get no_changes_detected => 'لم يتم اكتشاف أي تغييرات.';
+
+  @override
+  String get car => 'سيارة';
+
+  @override
+  String get motorcycle => 'دراجة نارية';
+
+  @override
+  String get truck => 'شاحنة';
+
+  @override
+  String get van => 'شاحنة صغيرة';
+
+  @override
+  String get bicycle => 'دراجة هوائية';
+
+  @override
+  String get scooter => 'سكوتر';
+
+  @override
+  String get box => 'صندوق';
+
+  @override
+  String get envelope => 'ظرف';
+
+  @override
+  String get bag => 'كيس';
+
+  @override
+  String get pallet => 'منصة';
+
+  @override
+  String get accessories => 'ملحقات';
+
+  @override
+  String get crate => 'صندوق خشبي';
+
+  @override
+  String get tube => 'أسطوانة';
+
+  @override
+  String get furniture => 'أثاث';
+
+  @override
+  String get electronics => 'إلكترونيات';
+
+  @override
+  String get clothing => 'ملابس';
 }

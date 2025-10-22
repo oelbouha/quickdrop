@@ -851,8 +851,8 @@ class _AddShipmentScreenState extends State<AddShipmentScreen>
             onTypeSelected: (type) {
               typeController.text = type;
             },
-            initialSelection: "Box",
-            types: const ["Box", "Envelope", "Bag", "Pallet", "Accessories"],
+            initialSelection: t.box,
+            types:  [t.box, t.envelope, t.bag, t.accessories, t.clothing, t.electronics, t.furniture, ],
             selectedColor: AppColors.blue600,
             unselectedColor: AppColors.textSecondary,
           ),

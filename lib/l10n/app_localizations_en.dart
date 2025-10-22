@@ -1341,4 +1341,52 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get no_changes_detected => 'No changes detected.';
+
+  @override
+  String get car => 'Car';
+
+  @override
+  String get motorcycle => 'Motorcycle';
+
+  @override
+  String get truck => 'Truck';
+
+  @override
+  String get van => 'Van';
+
+  @override
+  String get bicycle => 'Bicycle';
+
+  @override
+  String get scooter => 'Scooter';
+
+  @override
+  String get box => 'Box';
+
+  @override
+  String get envelope => 'Envelope';
+
+  @override
+  String get bag => 'Bag';
+
+  @override
+  String get pallet => 'Pallet';
+
+  @override
+  String get accessories => 'Accessories';
+
+  @override
+  String get crate => 'Crate';
+
+  @override
+  String get tube => 'Tube';
+
+  @override
+  String get furniture => 'Furniture';
+
+  @override
+  String get electronics => 'Electronics';
+
+  @override
+  String get clothing => 'Clothing';
 }

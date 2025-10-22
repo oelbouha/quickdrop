@@ -744,8 +744,8 @@ Container(
             onTypeSelected: (type) {
               transportTypeController.text = type;
             },
-            initialSelection: "Car",
-            types: const ["Car", "Airplane", "Truck", "Motorcycle"],
+            initialSelection: loc.car,
+            types:  [loc.car, loc.truck, loc.motorcycle, loc.van, loc.scooter],
             selectedColor: AppColors.blue600,
             unselectedColor: AppColors.textSecondary,
           ),
