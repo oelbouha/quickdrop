@@ -68,10 +68,13 @@ Future<void> updateInfo() async {
 
     if (currentUser == null) throw Exception("User not logged in");
 
-    //  If email is different request verification
+
     if (currentUser.email != newEmail) {
       // This sends a verification email to the new address.
       await currentUser.verifyBeforeUpdateEmail(newEmail);
+
+      print("Current user: ${currentUser?.email}");
+
 
       await FirebaseFirestore.instance
           .collection('users')
@@ -79,10 +82,10 @@ Future<void> updateInfo() async {
           .update({'email': newEmail});
 
 
-      context.push("/verify-email?email=${newEmail}");
 
       if (mounted) {
         AppUtils.showDialog(context, t.verification_email_sent, AppColors.success);
+        context.push("/verify-email?email=${newEmail}");
       }
     } else {
       AppUtils.showDialog(context, t.no_changes_detected, AppColors.warning);

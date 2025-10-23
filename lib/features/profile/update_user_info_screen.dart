@@ -187,7 +187,7 @@ class UpdateUserInfoScreenState extends State<UpdateUserInfoScreen>
         settingsCard(
           title: AppLocalizations.of(context)!.profile_image,
           subtitle: AppLocalizations.of(context)!.profile_image,
-          iconPath: "assets/icon/photo.svg",
+          iconPath: "assets/icon/camera-add.svg",
           onTap: () => {context.push('/change-image')},
         ),
          settingsCard(

@@ -336,7 +336,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           title: t.get_help,
           subtitle: t.contact_support,
           iconPath: "assets/icon/suport.svg",
-          onTap: () => _showComingSoon("Contact support"),
+          onTap: () => {context.push("/help")},
         ),
       ],
     );
