@@ -18,6 +18,12 @@ class _OfferScreenState extends State<OfferScreen>
   bool _isLoading = true;
   late TabController _tabController;
 
+
+
+  void _deleteOldRequests() async {
+    final user = FirebaseAuth.instance.currentUser;
+    
+  }
   @override
   void initState() {
     super.initState();
@@ -34,6 +40,7 @@ class _OfferScreenState extends State<OfferScreen>
                 Provider.of<DeliveryRequestProvider>(context, listen: false);
 
             await deliveryProvider.fetchRequests(user.uid);
+            await deliveryProvider.cleanUpOldRequests();
 
             final userIds = deliveryProvider.requests
                 .expand((r) => [r.senderId, r.receiverId])
