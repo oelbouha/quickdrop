@@ -19,7 +19,6 @@ class NotificationProvider with ChangeNotifier {
           .toList();
       notifyListeners();
     } catch (e) {
-      print("failed to get notifications");
       rethrow;
     }
   }
@@ -44,7 +43,6 @@ class NotificationProvider with ChangeNotifier {
       final docRef = await _firestore
           .collection('notifications')
           .add(notification.toMap());
-      // Assign Firestore-generated ID
       final newRequest = notification.copyWith(id: docRef.id);
 
       _notifications.add(newRequest);

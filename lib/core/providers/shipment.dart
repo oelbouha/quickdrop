@@ -1,11 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:quickdrop_app/core/utils/imports.dart';
-import 'package:quickdrop_app/features/models/shipment_model.dart';
-import 'package:flutter/material.dart';
-import 'package:quickdrop_app/core/utils/delivery_status.dart';
 import 'dart:io'; 
 import 'package:firebase_storage/firebase_storage.dart';
-
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class ShipmentProvider with ChangeNotifier {
@@ -165,22 +161,8 @@ class ShipmentProvider with ChangeNotifier {
     }
   }
 
-  // Future<Shipment?> fetchShipmentById(String documentId) async {
-  //   try {
-  //     final shipment = getShipment(documentId);
-  //     print("documentId: $documentId" "shipment: $shipment.packageName");
-  //       return shipment;
-  //     // return null;
-  //   } catch (e) {
-  //     print("Error fetching shipment: $e");
-  //     final snapshot = await _firestore.collection('shipments').doc(documentId).get();
-  //     if (snapshot.exists) {
-  //       return Shipment.fromMap(snapshot.data()!, snapshot.id);
-  //     }
-  //     // rethrow;
-  //     return null;
-  //   }
-  // }
+ 
+ 
 
  Future<String?> uploadImageToSupabase(File image) async {
   try {
@@ -201,7 +183,7 @@ class ShipmentProvider with ChangeNotifier {
     
     return publicUrl;
   } catch (e) {
-    print('Image upload error: $e');
+    
     return null;
   }
 }

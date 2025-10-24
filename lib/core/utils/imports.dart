@@ -73,7 +73,7 @@ export 'package:quickdrop_app/core/widgets/textFeild.dart';
 export 'package:quickdrop_app/core/widgets/numberField.dart';
 export 'package:quickdrop_app/core/widgets/login_button.dart';
 export 'package:quickdrop_app/core/widgets/dateField.dart';
-export 'package:quickdrop_app/core/widgets/image_upload.dart';
+export 'package:quickdrop_app/core/widgets/Image_preview_picker.dart';
 export 'package:image_picker/image_picker.dart';
 export 'package:quickdrop_app/core/utils/appUtils.dart';
 export 'package:quickdrop_app/core/utils/validator.dart';

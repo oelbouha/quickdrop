@@ -2832,6 +2832,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Clothing'**
   String get clothing;
+
+  /// No description provided for @verify_relogin_message.
+  ///
+  /// In en, this message translates to:
+  /// **'After clicking the link in your email, please log out and sign in again with your new email address to complete the update.'**
+  String get verify_relogin_message;
+
+  /// No description provided for @choose_from_gallery.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose from Gallery'**
+  String get choose_from_gallery;
+
+  /// No description provided for @take_a_picture.
+  ///
+  /// In en, this message translates to:
+  /// **'Take a Picture'**
+  String get take_a_picture;
+
+  /// No description provided for @upload_photo.
+  ///
+  /// In en, this message translates to:
+  /// **'Upload photo'**
+  String get upload_photo;
+
+  /// No description provided for @photo_format_hint.
+  ///
+  /// In en, this message translates to:
+  /// **'JPG, PNG up to 5 MB'**
+  String get photo_format_hint;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

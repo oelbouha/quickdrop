@@ -8,24 +8,29 @@ import 'package:quickdrop_app/features/models/trip_model.dart';
 class DeliveryRequestProvider with ChangeNotifier {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   List<DeliveryRequest> _requests = [];
-  Map<String, Map<String, dynamic>> _userData = {};
-
+  
   List<DeliveryRequest> get requests => _requests;
 
   List<DeliveryRequest> get activeRequests =>
       _requests.where((item) => item.status == DeliveryStatus.active).toList();
 
-  DeliveryRequest? getRequest(String id) {
-      try {
-          final request = _requests.firstWhere((item) => item.id == id);
-          return request;
-      }
-      catch (e) {
 
-          return null;
+
+  Future<void> cleanUpOldRequests() async {
+    try {
+
+      final now = DateTime.now();
+      final oldRequests = _requests.where((request) {
+        final requestDate = DateTime.parse(request.date);
+         return now.difference(requestDate).inHours > 24 && request.status == DeliveryStatus.active;
+      }).toList();
+
+      for (var request in oldRequests) {
+        await deleteRequest(request.id!);
       }
-      // return _requests.firstWhere((item) => item.id == id,
-      //   orElse: () => throw ("DeliveryRequest not found"));
+    } catch (e) {
+      print('Error cleaning up old requests: $e');
+    }
   }
 
   Future<DeliveryRequest?> fetchRequestById(String requestId) async {

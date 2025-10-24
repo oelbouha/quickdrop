@@ -1,7 +1,9 @@
 
 import 'dart:io';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:quickdrop_app/core/widgets/image_picker_bottom_sheet.dart';
 import 'package:quickdrop_app/core/widgets/profile_image.dart';
 import 'package:quickdrop_app/features/profile/settings_card.dart';
 import 'package:quickdrop_app/core/utils/imports.dart';
@@ -27,6 +29,9 @@ class ChangeProfileImageScreenState extends State<ChangeProfileImageScreen> {
   void initState() {
     super.initState();
     user = Provider.of<UserProvider>(context, listen: false).user;
+    if (user == null) {
+      Navigator.of(context).pop();
+    }
   }
 
 
@@ -55,6 +60,9 @@ class ChangeProfileImageScreenState extends State<ChangeProfileImageScreen> {
 
       try {
         final user = Provider.of<UserProvider>(context, listen: false).user;
+        
+        imagePath =  await Provider.of<ShipmentProvider>(context, listen: false)
+            .uploadImageToSupabase(File(_selectedImage!.path));
 
         UserData updatedUser = UserData(
           uid: user!.uid,
@@ -123,22 +131,14 @@ class ChangeProfileImageScreenState extends State<ChangeProfileImageScreen> {
 
 
 Future<void> _pickImage() async {
-    final ImagePicker picker = ImagePicker();
-    final XFile? pickerFile =
-        await picker.pickImage(source: ImageSource.gallery);
-
-    if (pickerFile != null) {
-      setState(() {
-        _isImageLoading = true;
-      });
-        _selectedImage = File(pickerFile.path);
-         imagePath =  await Provider.of<ShipmentProvider>(context, listen: false)
-            .uploadImageToSupabase(File(pickerFile.path));
-      setState(() {
-        _isImageLoading = false;
-      });
-    }
+  final pickedFile = await ImagePickerHelper.pickImage(context: context);
+   if (pickedFile != null) {
+    setState(() {
+      _selectedImage = pickedFile;
+    });
   }
+}
+
 
  
  Widget _buildImageInfoSection() {
@@ -150,8 +150,7 @@ Future<void> _pickImage() async {
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            buildProfileImage(
-              user: user,
+            _buildProfileImage(
               onTap: () async {
               
                 await _pickImage();
@@ -198,4 +197,76 @@ Future<void> _pickImage() async {
   }
 
 
+
+
+Widget _buildProfileImage({
+  VoidCallback? onTap,
+  double size = 50,
+}) {
+  return GestureDetector(
+    onTap: onTap,
+    child: ClipRRect(
+      borderRadius: BorderRadius.circular(500),
+      child: Container(
+        width: size,
+        height: size,
+        decoration: BoxDecoration(
+            color: AppColors.blueStart.withValues(alpha: 0.1),
+            // borderRadius: BorderRadius.circular(500),
+
+              shape: BoxShape.circle,
+              border: Border.all(color: AppColors.blue, width: 2),
+          ),
+        child: _selectedImage != null ? ClipRRect(
+                          // borderRadius: BorderRadius.circular(21),
+                        child: Image.file(
+                            File(_selectedImage!.path), // path to local file
+                            fit: BoxFit.cover,
+                            width: double.infinity,
+                            height: 150,
+                          )
+                        )
+         : user!.photoUrl != null ? CachedNetworkImage(
+              imageUrl: user!.photoUrl!,
+              fit: BoxFit.cover,
+              placeholder: (context, url) => Container(
+                  decoration: BoxDecoration(
+                    color: AppColors.blueStart.withValues(alpha: 0.1),
+                    borderRadius: BorderRadius.circular(100),
+                  ),
+                  child: const Center(
+                      child: CircularProgressIndicator(
+                          color: AppColors.blue700, strokeWidth: 2))),
+              errorWidget: (context, error, stackTrace) {
+                  return Container(
+                    decoration: BoxDecoration(
+                      color: AppColors.blueStart.withValues(alpha: 0.1),
+                      borderRadius: BorderRadius.circular(100),
+                    ),
+                    child: Icon(
+                      Icons.person,
+                      color: AppColors.blueStart,
+                      size: size * 0.6,
+                    ),
+                  );
+                },
+            ) : Container(
+                    decoration: BoxDecoration(
+                      color: AppColors.blueStart.withValues(alpha: 0.1),
+                      borderRadius: BorderRadius.circular(100),
+                    ),
+                    child: CustomIcon(
+                        iconPath: "assets/icon/camera-add.svg",
+                        size: size * 0.6,
+                        color: AppColors.lessImportant,
+                      ),
+                  )
+      ),
+    ),
+  );
 }
+
+
+
+}
+

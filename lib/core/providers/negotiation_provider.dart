@@ -37,7 +37,6 @@ class NegotiationProvider with ChangeNotifier {
       }, SetOptions(merge: true));
       notifyListeners();
     } catch (e) {
-      print('Error adding message: $e');
       rethrow;
     }
   }
@@ -205,7 +204,6 @@ class NegotiationProvider with ChangeNotifier {
       _requests.removeWhere((request) => request.id == documentId);
       notifyListeners();
     } catch (e) {
-      print('Error deleting negotiation: $e');
       rethrow;
     }
   }

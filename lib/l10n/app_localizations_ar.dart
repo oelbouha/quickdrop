@@ -1373,7 +1373,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get pallet => 'منصة';
 
   @override
-  String get accessories => 'ملحقات';
+  String get accessories => 'مستلزمات';
 
   @override
   String get crate => 'صندوق خشبي';
@@ -1389,4 +1389,19 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get clothing => 'ملابس';
+
+  @override
+  String get verify_relogin_message => 'بعد النقر على الرابط في بريدك الإلكتروني، يرجى تسجيل الخروج ثم تسجيل الدخول مرة أخرى باستخدام عنوان بريدك الإلكتروني الجديد لإتمام التحديث.';
+
+  @override
+  String get choose_from_gallery => 'اختر من المعرض';
+
+  @override
+  String get take_a_picture => 'التقط صورة';
+
+  @override
+  String get upload_photo => 'تحميل الصورة';
+
+  @override
+  String get photo_format_hint => 'الصور بصيغ JPG أو PNG، بحجم لا يتجاوز 5 ميغابايت';
 }

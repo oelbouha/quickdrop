@@ -1389,4 +1389,19 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get clothing => 'Clothing';
+
+  @override
+  String get verify_relogin_message => 'After clicking the link in your email, please log out and sign in again with your new email address to complete the update.';
+
+  @override
+  String get choose_from_gallery => 'Choose from Gallery';
+
+  @override
+  String get take_a_picture => 'Take a Picture';
+
+  @override
+  String get upload_photo => 'Upload photo';
+
+  @override
+  String get photo_format_hint => 'JPG, PNG up to 5 MB';
 }

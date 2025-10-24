@@ -1,5 +1,6 @@
 import 'dart:io'; // Import File class
 import 'package:quickdrop_app/core/utils/imports.dart';
+import 'package:quickdrop_app/core/widgets/image_picker_bottom_sheet.dart';
 import 'package:quickdrop_app/core/widgets/location_textfield.dart';
 export 'package:quickdrop_app/core/widgets/tipWidget.dart';
 
@@ -643,22 +644,18 @@ class _AddShipmentScreenState extends State<AddShipmentScreen>
   }
 
   Future<void> _pickImage() async {
-        final t = AppLocalizations.of(context)!;
-
+    final t = AppLocalizations.of(context)!;
     if (_isImageLoading) return;
     setState(() {
       _isImageLoading = true;
     });
-    final ImagePicker picker = ImagePicker();
-    final XFile? pickerFile =
-        await picker.pickImage(source: ImageSource.gallery);
 
-    if (pickerFile != null) {
-      _selectedImage = File(pickerFile.path);
+     final pickedFile = await ImagePickerHelper.pickImage(context: context);
+    if (pickedFile != null) {
+      _selectedImage = File(pickedFile.path);
       setState(() {
         imagePath = _selectedImage!.path;
         _isImageLoading = false;
-        // print("Image selected: ${_selectedImage!.path}");
       });
     } else {
       setState(() {
@@ -921,7 +918,7 @@ class _AddShipmentScreenState extends State<AddShipmentScreen>
           const SizedBox(height: 24),
           TextWithRequiredIcon(text: t.package_image),
           const SizedBox(height: 8),
-          ImageUpload(
+          ImagePreviewPicker(
             onPressed: _pickImage,
             imagePath: _selectedImage?.path,
             backgroundColor: AppColors.cardBackground,

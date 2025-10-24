@@ -39,7 +39,6 @@ class ReviewProvider with ChangeNotifier {
     _reviews = snapshot.docs
         .map((doc) => ReviewModel.fromMap(doc.data(), doc.id))
         .toList();
-    // print("reviews $snapshot");
     notifyListeners();
   }
 

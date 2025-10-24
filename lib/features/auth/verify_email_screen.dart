@@ -13,6 +13,40 @@ class VerifyEmailScreen extends StatefulWidget {
 }
 
 class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
+
+  bool _isLoading = false;
+
+
+  void _resendEmailVerification() async {
+    final t = AppLocalizations.of(context)!;
+    if (_isLoading) return;
+
+    setState(() => _isLoading = true);
+
+    try {
+      final user = FirebaseAuth.instance.currentUser;
+      // if (user != null && !user.emailVerified) {
+        await user?.verifyBeforeUpdateEmail(widget.email);
+        AppUtils.showDialog(
+          context,
+          t.verify_dialog_email_resent,
+          AppColors.success,
+        );
+      // }
+    } catch (e) {
+      AppUtils.showDialog(
+        context,
+        t.error_sending_verification,
+        AppColors.error,
+      );
+    } finally {
+      if (mounted) {
+        setState(() => _isLoading = false);
+      }
+    }
+  }
+
+
   @override
   Widget build(BuildContext context) {
     final t = AppLocalizations.of(context)!;
@@ -20,9 +54,9 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
     return Scaffold(
       appBar: AppBar(
         systemOverlayStyle: SystemUiOverlayStyle.dark,
-        backgroundColor: Theme.of(context).primaryColor,
+        // backgroundColor: Theme.of(context).primaryColor,
         centerTitle: true,
-        iconTheme: const IconThemeData(color: AppColors.appBarIcons),
+        iconTheme: const IconThemeData(color: AppColors.dark),
       ),
       backgroundColor: AppColors.cardBackground,
       body: Padding(
@@ -36,7 +70,7 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
                 width: 50,
                 height: 50,
                 decoration: const BoxDecoration(
-                  color: AppColors.requestButton,
+                  color: AppColors.blue,
                   borderRadius: BorderRadius.all(Radius.circular(30)),
                 ),
                 child: const Icon(
@@ -61,7 +95,7 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
                 style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                 textAlign: TextAlign.center,
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 24),
               Container(
                 width: double.infinity,
                 padding: const EdgeInsets.all(AppTheme.addShipmentPadding),
@@ -84,44 +118,35 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
                     ),
                     Text(t.verify_step_1),
                     Text(t.verify_step_2),
-                    Text(t.verify_step_3),
+                    Text(t.verify_relogin_message),
                   ],
                 ),
               ),
-              const SizedBox(height: 20),
-              LoginButton(
-                hintText: t.verify_button_verified,
-                onPressed: () async {
-                  await FirebaseAuth.instance.currentUser?.reload();
-                  User? user = FirebaseAuth.instance.currentUser;
+              // const SizedBox(height: 20),
+              // LoginButton(
+              //   hintText: t.verify_button_verified,
+              //   onPressed: () async {
+              //     await FirebaseAuth.instance.currentUser?.reload();
+              //     User? user = FirebaseAuth.instance.currentUser;
 
-                  if (user != null && user.emailVerified) {
-                    context.pop();
-                  } else {
-                    AppUtils.showDialog(
-                      context,
-                      t.verify_dialog_please_verify_first,
-                      AppColors.error,
-                    );
-                  }
-                },
-                isLoading: false,
-                radius: 12,
-              ),
-              const SizedBox(height: 16),
+              //     if (user != null && user.emailVerified) {
+              //       context.pop();
+              //     } else {
+              //       AppUtils.showDialog(
+              //         context,
+              //         t.verify_dialog_please_verify_first,
+              //         AppColors.error,
+              //       );
+              //     }
+              //   },
+              //   isLoading: false,
+              //   radius: 12,
+              // ),
+              const SizedBox(height: 24),
               LoginButton(
                 hintText: t.verify_button_resend,
-                onPressed: () async {
-                  await FirebaseAuth.instance.currentUser?.reload();
-                  User? user = FirebaseAuth.instance.currentUser;
-                  await user?.sendEmailVerification();
-                  AppUtils.showDialog(
-                    context,
-                    t.verify_dialog_email_resent,
-                    AppColors.succes,
-                  );
-                },
-                isLoading: false,
+                onPressed: _resendEmailVerification,
+                isLoading: _isLoading,
                 radius: 12,
                 backgroundColor: AppColors.dark,
               ),
@@ -131,7 +156,7 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
                 style: const TextStyle(color: AppColors.shipmentText, fontSize: 12),
                 textAlign: TextAlign.center,
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 24),
             ],
           ),
         ),

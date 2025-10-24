@@ -34,7 +34,6 @@ class ChatProvider with ChangeNotifier {
       }, SetOptions(merge: true));
       notifyListeners();
     } catch (e) {
-      print('Error adding message: $e');
       rethrow;
     }
   }
