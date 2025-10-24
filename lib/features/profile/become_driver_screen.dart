@@ -52,7 +52,7 @@ class BecomeDriverScreenState extends State<BecomeDriverScreen>
   }
 
   void _initializeFields() {
-    emailController.text = FirebaseAuth.instance.currentUser?.email ?? "";
+    emailController.text = user?.email ?? "";
     firstNameController.text = user?.firstName ?? "";
     lastNameController.text = user?.lastName ?? "";
     phoneNumberController.text = user?.phoneNumber ?? "";
@@ -422,7 +422,7 @@ class BecomeDriverScreenState extends State<BecomeDriverScreen>
   Widget _buildContactInfoSection() {
     final t = AppLocalizations.of(context)!;
     final user = FirebaseAuth.instance.currentUser;
-    final isEmailVerified = user?.emailVerified ?? false;
+    final isEmailVerified = true;
 
     return _buildSection(
       title: t.contact_information,

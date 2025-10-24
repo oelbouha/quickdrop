@@ -1,5 +1,3 @@
-
-
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -11,29 +9,34 @@ class ChangePersonalInfoScreen extends StatefulWidget {
   const ChangePersonalInfoScreen({Key? key}) : super(key: key);
 
   @override
-  State<ChangePersonalInfoScreen> createState() => ChangePersonalInfoScreenState();
+  State<ChangePersonalInfoScreen> createState() =>
+      ChangePersonalInfoScreenState();
 }
 
 class ChangePersonalInfoScreenState extends State<ChangePersonalInfoScreen> {
   bool _isLoading = false;
   UserData? user;
 
+  String? _oldName;
+  String? _oldLastName;
+
   final firstNameController = TextEditingController();
   final lastNameController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
 
- @override
+  @override
   void initState() {
     super.initState();
 
     user = Provider.of<UserProvider>(context, listen: false).user;
     _initializeFields();
-
   }
 
   void _initializeFields() {
     firstNameController.text = user?.firstName ?? "";
     lastNameController.text = user?.lastName ?? "";
+    _oldName = user?.firstName ?? "";
+    _oldLastName = user?.lastName ?? "";
   }
 
   @override
@@ -43,60 +46,65 @@ class ChangePersonalInfoScreenState extends State<ChangePersonalInfoScreen> {
     super.dispose();
   }
 
-
   Future<void> updateInfo() async {
     final t = AppLocalizations.of(context)!;
     if (_isLoading) return;
 
-
-
-      
-      final confirmed =  await ConfirmationDialog.show(
-        context: context,
-        message: t.save_changes_message,
-        header: t.save_changes,
-        buttonHintText: t.save_button_text,
-        buttonColor: AppColors.blue700,
-        iconColor: AppColors.blue700,
-        iconData: Icons.save,
+    if (_formKey.currentState!.validate() == false) {
+      return;
+    }
+    if (_oldLastName == lastNameController.text.trim() &&
+        _oldName == firstNameController.text.trim()) {
+      AppUtils.showDialog(
+        context,
+        t.no_changes_detected,
+        AppColors.error,
       );
-      if (!confirmed) return;
+      return;
+    }
 
-      setState(() => _isLoading = true);
-
-      try {
-        final user = Provider.of<UserProvider>(context, listen: false).user;
-
-         UserData updatedUser = UserData(
-          uid: user!.uid,
-          displayName:
-              '${firstNameController.text.trim()} ${lastNameController.text.trim()}',
-          firstName: firstNameController.text.trim(),
-          lastName: lastNameController.text.trim(),
-        );
-
-        await Provider.of<UserProvider>(context, listen: false)
-            .updateUserInfo(updatedUser);
-   
-
-        if (mounted) {
-          await showSuccessAnimation(context,
-            title: t.update_success_title,
-            message: t.update_success_message
-          );
-        }
-      } catch (e) {
-        if (mounted) {
-          AppUtils.showDialog(context, t.update_error_message, AppColors.error);
-        }
-      } finally {
-        if (mounted) {
-          setState(() => _isLoading = false);
-        }
-      }
+    final confirmed = await ConfirmationDialog.show(
+      context: context,
+      message: t.save_changes_message,
+      header: t.save_changes,
+      buttonHintText: t.save_button_text,
+      buttonColor: AppColors.blue700,
+      iconColor: AppColors.blue700,
+      iconData: Icons.save,
+    );
     
+    if (!confirmed) return;
+
+    setState(() => _isLoading = true);
+
+    try {
+      final user = Provider.of<UserProvider>(context, listen: false).user;
+
+      UserData updatedUser = UserData(
+        uid: user!.uid,
+        displayName:
+            '${firstNameController.text.trim()} ${lastNameController.text.trim()}',
+        firstName: firstNameController.text.trim(),
+        lastName: lastNameController.text.trim(),
+      );
+
+      await Provider.of<UserProvider>(context, listen: false)
+          .updateUserInfo(updatedUser);
+
+      if (mounted) {
+        await showSuccessAnimation(context,
+            title: t.update_success_title, message: t.update_success_message);
+      }
+    } catch (e) {
+      if (mounted) {
+        AppUtils.showDialog(context, t.update_error_message, AppColors.error);
+      }
+    } finally {
+      if (mounted) {
+        setState(() => _isLoading = false);
+      }
+    }
   }
- 
 
   @override
   Widget build(BuildContext context) {
@@ -115,19 +123,16 @@ class ChangePersonalInfoScreenState extends State<ChangePersonalInfoScreen> {
         centerTitle: true,
       ),
       body: _isLoading
-    ? loadingAnimation()
-    : SingleChildScrollView(
-        physics: const BouncingScrollPhysics(),
-        padding: const EdgeInsets.all(AppTheme.homeScreenPadding),
-        child: _buildUpdateScreen(),
-      ),
+          ? loadingAnimation()
+          : SingleChildScrollView(
+              physics: const BouncingScrollPhysics(),
+              padding: const EdgeInsets.all(AppTheme.homeScreenPadding),
+              child: _buildUpdateScreen(),
+            ),
     );
   }
 
-
-
   Widget _buildHeaderSection() {
-
     final t = AppLocalizations.of(context)!;
     return Container(
       padding: const EdgeInsets.all(18),
@@ -162,16 +167,17 @@ class ChangePersonalInfoScreenState extends State<ChangePersonalInfoScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                     Text(
+                    Text(
                       t.update_profile,
-                      style:const TextStyle(
+                      style: const TextStyle(
                         color: AppColors.headingText,
                         fontSize: 24,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
                     const SizedBox(height: 4),
-                    Text(t.update_profile_subtitle,
+                    Text(
+                      t.update_profile_subtitle,
                       style: TextStyle(
                         color: Colors.grey[600],
                         fontSize: 14,
@@ -187,11 +193,7 @@ class ChangePersonalInfoScreenState extends State<ChangePersonalInfoScreen> {
     );
   }
 
-
-
-
-
- Widget _buildUpdateScreen() {
+  Widget _buildUpdateScreen() {
     return Form(
       key: _formKey,
       child: Column(
@@ -209,8 +211,6 @@ class ChangePersonalInfoScreenState extends State<ChangePersonalInfoScreen> {
       ),
     );
   }
-
-
 
   Widget _buildPersonalInfoSection() {
     final t = AppLocalizations.of(context)!;
@@ -245,15 +245,10 @@ class ChangePersonalInfoScreenState extends State<ChangePersonalInfoScreen> {
         buildInfoCard(
           icon: Icons.info_outline,
           title: t.important,
-          message:t.personal_info_note,
+          message: t.personal_info_note,
           color: Colors.blue,
         ),
       ],
     );
   }
-
-
-
-
-
 }
