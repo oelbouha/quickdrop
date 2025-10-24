@@ -1,12 +1,13 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:quickdrop_app/l10n/app_localizations.dart';
 import 'package:quickdrop_app/theme/colors.dart';
 import 'package:quickdrop_app/theme/AppTheme.dart';
 import 'package:quickdrop_app/core/widgets/custom_svg.dart';
 import 'package:dotted_border/dotted_border.dart';
 
-class ImageUpload extends StatelessWidget {
+class ImagePreviewPicker extends StatelessWidget {
   final TextEditingController controller;
   final String hintText;
   final Color backgroundColor;
@@ -15,7 +16,7 @@ class ImageUpload extends StatelessWidget {
   final String? imagePath;
   final VoidCallback onPressed;
 
-  const ImageUpload({
+  const ImagePreviewPicker({
     super.key,
     required this.controller,
     this.imagePath,
@@ -28,6 +29,7 @@ class ImageUpload extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final t = AppLocalizations.of(context)!;
     return GestureDetector(
         onTap: onPressed,
         child: DottedBorder(
@@ -57,21 +59,21 @@ class ImageUpload extends StatelessWidget {
                           )
                         )
                   
-                  : const Column(
+                  :  Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      CustomIcon(
+                      const CustomIcon(
                         iconPath: "assets/icon/camera-add.svg",
                         size: 30,
                         color: AppColors.lessImportant,
                       ),
-                      Text("upload photo ",
-                          style: TextStyle(
+                      Text(t.upload_photo,
+                          style:const TextStyle(
                               fontSize: 20, color: AppColors.lessImportant)),
                       Text(
-                        "JPG, PNG up to 5 MB",
-                        style: TextStyle(
+                        t.photo_format_hint,
+                        style:  const TextStyle(
                             fontSize: 12, color: AppColors.lessImportant),
                       ),
                     ]))));
