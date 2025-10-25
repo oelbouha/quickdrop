@@ -123,7 +123,7 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
                 ),
               ),
               // const SizedBox(height: 20),
-              // LoginButton(
+              // PrimaryButton(
               //   hintText: t.verify_button_verified,
               //   onPressed: () async {
               //     await FirebaseAuth.instance.currentUser?.reload();
@@ -143,7 +143,7 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
               //   radius: 12,
               // ),
               const SizedBox(height: 24),
-              LoginButton(
+              PrimaryButton(
                 hintText: t.verify_button_resend,
                 onPressed: _resendEmailVerification,
                 isLoading: _isLoading,

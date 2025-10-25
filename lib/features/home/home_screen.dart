@@ -1,10 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:quickdrop_app/core/utils/imports.dart';
-import 'package:quickdrop_app/core/widgets/build_header_icon.dart';
-import 'package:quickdrop_app/core/widgets/home_page_skeleton.dart';
+import 'package:quickdrop_app/core/widgets/notification_icon.dart';
 import 'package:quickdrop_app/core/widgets/location_textfield.dart';
 import 'package:quickdrop_app/features/home/search_page.dart';
-import 'package:quickdrop_app/core/widgets/profile_image.dart';
+import 'package:quickdrop_app/core/widgets/profile_avatar.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -34,6 +33,8 @@ class _HomeScreenState extends State<HomeScreen> {
     ];
   }
 
+
+
   List<Map<String, String>> getFaqs(BuildContext context) {
     final t = AppLocalizations.of(context)!;
 
@@ -46,6 +47,8 @@ class _HomeScreenState extends State<HomeScreen> {
     ];
   }
 
+
+
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
@@ -53,10 +56,13 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
 
+
   @override
   void initState() {
     super.initState();
+
     typeController.text = "Shipment";
+
     user = Provider.of<UserProvider>(context, listen: false).user;
     if (user == null) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -68,8 +74,9 @@ class _HomeScreenState extends State<HomeScreen> {
     }
 
     dateController.text = _getCurrentDate();
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
-      try {
+
+    // WidgetsBinding.instance.addPostFrameCallback((_) async {
+    //   try {
         // final shipmentProvider =
         //     Provider.of<ShipmentProvider>(context, listen: false);
         // final tripProvider = Provider.of<TripProvider>(context, listen: false);
@@ -85,13 +92,14 @@ class _HomeScreenState extends State<HomeScreen> {
         //     .fetchUsersData(userIds);
         // await Provider.of<UserProvider>(context, listen: false)
         //     .fetchUsersData(tripUserIds);
-      } catch (e) {
-        if (mounted) {
-          AppUtils.showDialog(
-              context, 'Error fetching shipments: $e', AppColors.error);
-        }
-      }
-    });
+
+
+      // } catch (e) {
+      //   if (mounted) {
+      //     AppUtils.showDialog(context, 'Error fetching shipments: $e', AppColors.error);
+      //   }
+      // }
+    // });
   }
 
   @override
@@ -195,7 +203,9 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void perfumeSearch() async {
+
     final serviceTypes = getServiceTypes(context);
+
     SearchFilters filters = SearchFilters(
         from: fromController.text.isEmpty ? null : fromController.text,
         to: toController.text.isEmpty ? null : toController.text,
@@ -234,7 +244,7 @@ class _HomeScreenState extends State<HomeScreen> {
             children: [
               Column(
                 children: [
-                  // Origin field
+
                   LocationTextField(
                     controller: fromController,
                     hintText: t.pickup_location,
@@ -244,10 +254,10 @@ class _HomeScreenState extends State<HomeScreen> {
                     isRequired: false,
                   ),
                  
-                  const SizedBox(height: 24), // Space for the swap button
+                  const SizedBox(height: 24), 
 
                   // Destination field
-                   LocationTextField(
+                  LocationTextField(
                     controller: toController,
                     hintText: t.drop_off_location,
                     headerText: t.to_hint,
@@ -293,6 +303,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ],
           ),
+
           const SizedBox(height: 16),
 
           // Filter chips
@@ -307,6 +318,7 @@ class _HomeScreenState extends State<HomeScreen> {
             hintText: t.select_pickup_date,
             validator: Validators.notEmpty, 
           ),
+
           const SizedBox(height: 20),
 
           // Search button
@@ -385,6 +397,8 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+
+
   Widget _buildServiceTypes() {
     final serviceTypes = getServiceTypes(context);
     return SingleChildScrollView(
@@ -425,10 +439,12 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+
   String _getCurrentDate() {
     final date = DateTime.now();
     return "${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}";
   }
+
 
   Future<void> _selectDate(BuildContext context) async {
     DateTime? pickedDate = await showDatePicker(
@@ -458,6 +474,7 @@ class _HomeScreenState extends State<HomeScreen> {
       });
     }
   }
+
 
   Widget _buildOurServiceCard(String title, String description, String iconPath,
       String backgroundImageUrl) {
@@ -734,7 +751,7 @@ class _HomeScreenState extends State<HomeScreen> {
           onTap: () {
             context.push('/profile');
           },
-          child: buildProfileImage(user: user, size: 48),
+          child: ProfileAvatar(user: user, size: 48),
         ),
         const Spacer(),
         Row(
@@ -757,7 +774,7 @@ class _HomeScreenState extends State<HomeScreen> {
       userData: userData,
       onPressed: () {
         context.push(
-            '/shipment-details?shipmentId=${shipment.id}&userId=${shipment.userId}&viewOnly=false');
+          '/shipment-details?shipmentId=${shipment.id}&userId=${shipment.userId}&viewOnly=false');
       },
     );
   }
@@ -772,7 +789,10 @@ class _HomeScreenState extends State<HomeScreen> {
       },
     );
   }
+
+
 }
+
 
 Widget searchTextField({
   required String hintText,

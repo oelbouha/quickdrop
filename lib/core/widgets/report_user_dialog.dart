@@ -5,19 +5,19 @@ import 'package:quickdrop_app/features/models/review_model.dart';
 import 'package:flutter/services.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class ReportDialog extends StatefulWidget {
+class ReportUserDialog extends StatefulWidget {
   final UserData recieverUser;
 
-  const ReportDialog({
+  const ReportUserDialog({
     super.key,
     required this.recieverUser,
   });
 
   @override
-  State<ReportDialog> createState() => _ReportDialogState();
+  State<ReportUserDialog> createState() => _ReportUserDialogState();
 }
 
-class _ReportDialogState extends State<ReportDialog> {
+class _ReportUserDialogState extends State<ReportUserDialog> {
   final reportController = TextEditingController();
   final String iconPath = "assets/icon/report.svg";
   bool _isLoading = false;
@@ -111,12 +111,13 @@ class _ReportDialogState extends State<ReportDialog> {
                 style: const TextStyle(fontSize: 14, color: AppColors.shipmentText),
               ),
               const SizedBox(height: 16),
-              CustomTextField(
+              AppTextField(
                 controller: reportController,
                 hintText: AppLocalizations.of(context)!.report_hint_text,
-                backgroundColor: AppColors.cardBackground,
+                // backgroundColor: AppColors.cardBackground,
                 maxLines: 4,
                 validator: Validators.notEmpty,
+                displayLabel: false,
               ),
               const SizedBox(height: 16),
               Container(

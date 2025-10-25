@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:quickdrop_app/core/widgets/build_header_icon.dart';
+import 'package:quickdrop_app/core/widgets/notification_icon.dart';
 import 'package:quickdrop_app/theme/colors.dart';
 
-class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
+class MainAppBar extends StatelessWidget implements PreferredSizeWidget {
   final TabController tabController;
   final List tabs;
   final String? title;
 
-  const CustomAppBar({
+  const MainAppBar({
     super.key,
     required this.tabController,
     required this.tabs,

@@ -4,7 +4,7 @@ import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:quickdrop_app/core/widgets/image_picker_bottom_sheet.dart';
-import 'package:quickdrop_app/core/widgets/profile_image.dart';
+import 'package:quickdrop_app/core/widgets/profile_avatar.dart';
 import 'package:quickdrop_app/features/profile/settings_card.dart';
 import 'package:quickdrop_app/core/utils/imports.dart';
 
@@ -143,7 +143,7 @@ Future<void> _pickImage() async {
  
  Widget _buildImageInfoSection() {
   final t = AppLocalizations.of(context)!;
-    return buildSection(
+    return ProfileSectionCard(
       title: t.profile_image,
       icon: Icons.image,
       children: [
@@ -185,7 +185,7 @@ Future<void> _pickImage() async {
         //   size: 110,
         // ),
         const SizedBox(height: 16),
-        buildInfoCard(
+        StatusCard(
           icon: Icons.info_outline,
           title: t.important,
           message: t.profile_image_note,

@@ -32,6 +32,8 @@ class Trip extends TransportItem {
   @override
   String getTransportType() => "trip";
 
+  
+
   @override
   Map<String, dynamic> toMap() {
    final map = super.toMap();

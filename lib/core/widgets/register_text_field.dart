@@ -1,7 +1,6 @@
 
 import 'package:quickdrop_app/core/utils/imports.dart';
 
-
 class ImprovedTextField extends StatefulWidget {
   final TextEditingController controller;
   final String label;

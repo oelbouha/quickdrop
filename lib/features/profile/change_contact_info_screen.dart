@@ -3,7 +3,7 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:quickdrop_app/core/widgets/profile_image.dart';
+import 'package:quickdrop_app/core/widgets/profile_avatar.dart';
 import 'package:quickdrop_app/features/profile/settings_card.dart';
 import 'package:quickdrop_app/core/utils/imports.dart';
 
@@ -222,22 +222,22 @@ Future<void> updateInfo() async {
 
   Widget _buildContactInfoSection() {
     final t = AppLocalizations.of(context)!;
-    return buildSection(
+    return ProfileSectionCard(
       title: t.contact_information,
       icon: Icons.contact_mail_outlined,
       children: [
-        TextFieldWithHeader(
+        AppTextField(
           controller: emailController,
-          headerText: t.email_address,
+          label: t.email_address,
           hintText: t.email_hint,
          iconPath: "assets/icon/email.svg",
           keyboardType: TextInputType.emailAddress,
           validator: Validators.email,
         ),
         // const SizedBox(height: 16),
-        // TextFieldWithHeader(
+        // AppTextField(
         //   controller: phoneNumberController,
-        //   headerText: t.phone_number,
+        //   label: t.phone_number,
         //   hintText: t.phone_hint,
         //   iconPath: "assets/icon/phone.svg",
         //   keyboardType: TextInputType.phone,

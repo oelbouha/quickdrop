@@ -552,7 +552,14 @@
     "choose_from_gallery": "Choisir depuis la galerie",
   "take_a_picture": "Prendre une photo",
   "upload_photo": "Télécharger une photo",
-"photo_format_hint": "JPG, PNG jusqu'à 5 Mo"
+"photo_format_hint": "JPG, PNG jusqu'à 5 Mo",
+"no_active_shipments_available": "Aucun envoi actif disponible",
+"choose_a_shipment": "Choisissez un envoi",
+"please_select_shipment": "Veuillez sélectionner un envoi",
+"request_already_sent": "Vous avez déjà envoyé une demande pour cet envoi. Veuillez attendre que le propriétaire l'accepte ou la rejette.",
+"trip_owner_cannot_request": "Le propriétaire du trajet ne peut pas envoyer une demande pour son propre envoi."
+
+
 
 
 

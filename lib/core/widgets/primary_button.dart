@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:quickdrop_app/core/widgets/loading.dart';
+import 'package:quickdrop_app/core/widgets/loading_skeleton.dart';
 import 'package:quickdrop_app/theme/colors.dart';
 import 'package:quickdrop_app/theme/AppTheme.dart';
 
 /// Main login/signup button
-class LoginButton extends StatelessWidget {
+class PrimaryButton extends StatelessWidget {
   final String hintText;
   final VoidCallback onPressed;
   final bool isLoading;
@@ -12,7 +12,7 @@ class LoginButton extends StatelessWidget {
   final double radius;
   final Color textColor;
 
-  const LoginButton({
+  const PrimaryButton({
     super.key,
     required this.hintText,
     required this.onPressed,

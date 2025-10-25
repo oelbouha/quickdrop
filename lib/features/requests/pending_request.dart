@@ -1,5 +1,5 @@
 import 'package:quickdrop_app/core/utils/imports.dart';
-import 'package:quickdrop_app/core/widgets/destination.dart';
+import 'package:quickdrop_app/core/widgets/route_indicator.dart';
 
 class PendingRequest extends StatefulWidget {
   final DeliveryRequest request;
@@ -138,7 +138,7 @@ class DeliveryRequestState extends State<PendingRequest> {
               color: AppColors.primary.withValues(alpha: 0.1),
             ),
           ),
-          child: Destination(
+          child: RouteIndicator(
             from: widget.shipment.from,
             to: widget.shipment.to,
           ),

@@ -2,7 +2,7 @@ import 'dart:io'; // Import File class
 import 'package:quickdrop_app/core/utils/imports.dart';
 import 'package:quickdrop_app/core/widgets/image_picker_bottom_sheet.dart';
 import 'package:quickdrop_app/core/widgets/location_textfield.dart';
-export 'package:quickdrop_app/core/widgets/tipWidget.dart';
+export 'package:quickdrop_app/core/widgets/status_card.dart';
 
 class AddShipmentScreen extends StatefulWidget {
   final Shipment? existingShipment;
@@ -728,32 +728,32 @@ class _AddShipmentScreenState extends State<AddShipmentScreen>
             backgroundColor: AppColors.blue700.withOpacity(0.1),
           ),
           const SizedBox(height: 24),
-          TextFieldWithHeader(
+          AppTextField(
             controller: packageNameController,
-            headerText: t.package_name_label,
+            label: t.package_name_label,
             hintText: t.package_name_hint,
             obsecureText: false,
             keyboardType: TextInputType.text,
             validator: Validators.notEmpty,
           ),
           const SizedBox(height: 16),
-          TextFieldWithHeader(
+          AppTextField(
             controller: descriptionController,
             hintText: t.package_description_hint,
-            headerText: t.package_description_label,
+            label: t.package_description_label,
             maxLines: 3,
             validator: Validators.notEmpty,
           ),
           const SizedBox(height: 16),
-          TextFieldWithHeader(
+          AppTextField(
             controller: priceController,
             hintText: t.delivery_price_hint,
-            headerText: t.delivery_price_label,
+            label: t.delivery_price_label,
             validator: Validators.isNumber,
             keyboardType: TextInputType.number,
           ),
           const SizedBox(height: 20),
-          buildInfoCard(
+          StatusCard(
             icon: Icons.info_outline,
             title: t.pricing_tip_title,
             message:t.pricing_tip_message,
@@ -780,20 +780,20 @@ class _AddShipmentScreenState extends State<AddShipmentScreen>
           Row(
             children: [
               Expanded(
-                child: TextFieldWithHeader(
+                child: AppTextField(
                   controller: weightController,
                   hintText: t.weight_hint,
-                  headerText: t.weight_label,
+                  label: t.weight_label,
                   keyboardType: TextInputType.number,
                   validator: Validators.isNumber,
                 ),
               ),
               const SizedBox(width: 12),
               Expanded(
-                child: TextFieldWithHeader(
+                child: AppTextField(
                   controller: packageQuantityController,
                   hintText: t.quantity_hint,
-                  headerText: t.quantity_label,
+                  label: t.quantity_label,
                   keyboardType: TextInputType.number,
                   validator: Validators.notEmpty,
                 ),
@@ -813,7 +813,7 @@ class _AddShipmentScreenState extends State<AddShipmentScreen>
           // Row(
           //   children: [
           //     Expanded(
-          //       child: TextFieldWithHeader(
+          //       child: AppTextField(
           //         controller: lengthController,
           //         hintText: "0",
           //         headerText: "Length",
@@ -823,7 +823,7 @@ class _AddShipmentScreenState extends State<AddShipmentScreen>
           //     ),
           //     const SizedBox(width: 8),
           //     Expanded(
-          //       child: TextFieldWithHeader(
+          //       child: AppTextField(
           //         controller: widthController,
           //         hintText: "0",
           //         headerText: "Width",
@@ -833,7 +833,7 @@ class _AddShipmentScreenState extends State<AddShipmentScreen>
           //     ),
           //     const SizedBox(width: 8),
           //     Expanded(
-          //       child: TextFieldWithHeader(
+          //       child: AppTextField(
           //         controller: heightController,
           //         hintText: "0",
           //         headerText: "Height",
@@ -843,7 +843,7 @@ class _AddShipmentScreenState extends State<AddShipmentScreen>
           //     ),
           //   ],
           // ),
-          TextWithRequiredIcon(text: t.package_type_label),
+          RequiredFieldLabel(text: t.package_type_label),
           TypeSelectorWidget(
             onTypeSelected: (type) {
               typeController.text = type;
@@ -854,7 +854,7 @@ class _AddShipmentScreenState extends State<AddShipmentScreen>
             unselectedColor: AppColors.textSecondary,
           ),
           const SizedBox(height: 20),
-          buildInfoCard(
+          StatusCard(
             icon: Icons.scale_outlined,
             title: t.dimensions_tip_title,
             message:t.dimensions_tip_message,            
@@ -892,7 +892,7 @@ class _AddShipmentScreenState extends State<AddShipmentScreen>
               iconColor: Theme.of(context).colorScheme.primary,
             ),
           const SizedBox(height: 20),
-          buildInfoCard(
+          StatusCard(
             icon: Icons.location_on,
             title: t.location_tip_title,
             message: t.location_tip_message,           
@@ -916,7 +916,7 @@ class _AddShipmentScreenState extends State<AddShipmentScreen>
             backgroundColor: const Color(0xFFFEF3C7),
           ),
           const SizedBox(height: 24),
-          TextWithRequiredIcon(text: t.package_image),
+          RequiredFieldLabel(text: t.package_image),
           const SizedBox(height: 8),
           ImagePreviewPicker(
             onPressed: _pickImage,
@@ -927,7 +927,7 @@ class _AddShipmentScreenState extends State<AddShipmentScreen>
             isLoading: _isImageLoading,
           ),
           const SizedBox(height: 20),
-          TextWithRequiredIcon(text: t.pickup_date),
+          RequiredFieldLabel(text: t.pickup_date),
           const SizedBox(height: 8),
           DateTextField(
             controller: dateController,
@@ -937,7 +937,7 @@ class _AddShipmentScreenState extends State<AddShipmentScreen>
             validator: Validators.notEmpty,
           ),
           const SizedBox(height: 20),
-          buildInfoCard(
+          StatusCard(
             icon: Icons.schedule,
             title: t.timing_tip_title,
             message:t.timing_tip_message,            

@@ -1,7 +1,5 @@
-import 'package:flutter/material.dart';
-import 'package:quickdrop_app/core/widgets/actionButton.dart';
+
 import 'package:quickdrop_app/core/utils/imports.dart';
-import 'package:quickdrop_app/features/models/base_transport.dart';
 
 class ActiveItemCard extends StatefulWidget {
   final TransportItem item;

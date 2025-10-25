@@ -13,6 +13,8 @@ class Shipment extends TransportItem {
   @override
   String getTransportType() => "shipment";
   
+
+  
   Shipment({
     String? id,
     String? matchedDeliveryId,

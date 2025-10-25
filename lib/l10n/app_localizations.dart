@@ -2862,6 +2862,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'JPG, PNG up to 5 MB'**
   String get photo_format_hint;
+
+  /// No description provided for @no_active_shipments_available.
+  ///
+  /// In en, this message translates to:
+  /// **'No active shipments available'**
+  String get no_active_shipments_available;
+
+  /// No description provided for @choose_a_shipment.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a shipment'**
+  String get choose_a_shipment;
+
+  /// No description provided for @please_select_shipment.
+  ///
+  /// In en, this message translates to:
+  /// **'Please select a shipment'**
+  String get please_select_shipment;
+
+  /// No description provided for @request_already_sent.
+  ///
+  /// In en, this message translates to:
+  /// **'You have already sent a request for this shipment. Please wait for the owner to accept or reject it.'**
+  String get request_already_sent;
+
+  /// No description provided for @trip_owner_cannot_request.
+  ///
+  /// In en, this message translates to:
+  /// **'Trip owner cannot send a request for their own shipment.'**
+  String get trip_owner_cannot_request;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

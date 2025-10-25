@@ -2,7 +2,7 @@ import 'dart:io';
 import 'package:quickdrop_app/core/widgets/iconTextField.dart';
 import 'package:quickdrop_app/features/profile/settings_card.dart';
 import 'package:quickdrop_app/core/utils/imports.dart';
-import 'package:quickdrop_app/core/widgets/profile_image.dart';
+import 'package:quickdrop_app/core/widgets/profile_avatar.dart';
 
 
 class UpdateUserInfoScreen extends StatefulWidget {

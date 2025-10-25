@@ -180,7 +180,7 @@ class _ShipmentScreenState extends State<ShipmentScreen>
     final t = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: AppColors.background,
-      appBar: CustomAppBar(
+      appBar: MainAppBar(
         tabController: _tabController,
         tabs:  [
           t.active,
@@ -383,7 +383,7 @@ class _ShipmentScreenState extends State<ShipmentScreen>
                             showDialog(
                               context: context,
                               builder: (context) {
-                                return ReviewDialog(
+                                return ReviewUserDialog(
                                   recieverUser: userData,
                                 );
                               },

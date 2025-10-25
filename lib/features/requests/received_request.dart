@@ -1,9 +1,9 @@
 // import 'package:quickdrop_app/core/widgets/button.dart';
-import 'package:quickdrop_app/core/widgets/destination.dart';
+import 'package:quickdrop_app/core/widgets/route_indicator.dart';
 import 'package:quickdrop_app/core/utils/imports.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:quickdrop_app/core/utils/imports.dart';
-import 'package:quickdrop_app/core/widgets/destination.dart';
+import 'package:quickdrop_app/core/widgets/route_indicator.dart';
 
   
 
@@ -308,7 +308,7 @@ Widget _buildHeader() {
               color: AppColors.primary.withValues(alpha: 0.1),
             ),
           ),
-          child: Destination(
+          child: RouteIndicator(
             from: widget.shipment.from,
             to: widget.shipment.to,
           ),

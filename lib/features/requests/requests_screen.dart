@@ -82,7 +82,7 @@ class _OfferScreenState extends State<OfferScreen>
     final t = AppLocalizations.of(context)!;
     return Scaffold(
         backgroundColor: AppColors.background,
-        appBar: CustomAppBar(
+        appBar: MainAppBar(
           tabController: _tabController,
           tabs:  [
             t.send,

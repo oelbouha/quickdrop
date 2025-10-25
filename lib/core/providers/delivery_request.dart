@@ -175,15 +175,15 @@ class DeliveryRequestProvider with ChangeNotifier {
 
 
 
-  Future<void> sendRequest(Trip trip, Shipment shipment) async {
+  Future<void> sendRequest(Trip trip, Shipment shipment, String senderId , String receiverId) async {
     try {
       if (trip.userId == shipment.userId) {
-        throw Exception("Trip owner cannot send request for their own shipment");
+        throw Exception("owner_is_the_same");
       }
 
       final request = DeliveryRequest(
-        senderId: trip.userId,
-        receiverId: shipment.userId,
+        senderId: senderId,
+        receiverId: receiverId,
         date: DateTime.now().toIso8601String(),
         status: DeliveryStatus.active,
         price: shipment.price,
@@ -198,13 +198,15 @@ class DeliveryRequestProvider with ChangeNotifier {
           .doc(request.id)
           .get();
       if (doc.exists) {
-        throw ("You have already sent a request for this shipment. please wait for the owner to accept or reject it.");
+        throw ("already_exists");
       }
       await addRequest(request);
     } catch (e) {
       rethrow;
     }
   }
+
+
   Future<void> addRequest(DeliveryRequest request) async {
     try {
           await _firestore.collection('requests').doc(request.id).set(

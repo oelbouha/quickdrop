@@ -2,7 +2,7 @@
 import 'package:quickdrop_app/core/widgets/gestureDetector.dart';
 import 'package:quickdrop_app/core/utils/imports.dart';
 
-Widget textWithLink({
+Widget TextWithLinkButton({
   required String text,
   required String textLink,
   required String navigatTo,

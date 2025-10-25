@@ -1404,4 +1404,19 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get photo_format_hint => 'الصور بصيغ JPG أو PNG، بحجم لا يتجاوز 5 ميغابايت';
+
+  @override
+  String get no_active_shipments_available => 'لا توجد شحنات نشطة متاحة';
+
+  @override
+  String get choose_a_shipment => 'اختر شحنة';
+
+  @override
+  String get please_select_shipment => 'يرجى اختيار شحنة';
+
+  @override
+  String get request_already_sent => 'لقد أرسلت طلبًا بالفعل لهذا الشحن. يرجى الانتظار حتى يقبل المالك الطلب أو يرفضه.';
+
+  @override
+  String get trip_owner_cannot_request => 'لا يمكن لصاحب الرحلة إرسال طلب لشحنه الخاص.';
 }

@@ -4,7 +4,7 @@
 
   import 'package:quickdrop_app/core/utils/imports.dart';
 
-Widget buildSection({
+Widget ProfileSectionCard({
     required String title,
     required IconData icon,
     required List<Widget> children,

@@ -1,7 +1,7 @@
 
 import 'package:quickdrop_app/core/utils/imports.dart';
 
-  Widget buildInfoCard({
+  Widget StatusCard({
     required IconData icon,
     required String title,
     required String message,

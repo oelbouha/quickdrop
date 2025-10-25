@@ -5,19 +5,19 @@ import 'package:intl/intl.dart';
 import 'package:quickdrop_app/features/models/review_model.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
-class ReviewDialog extends StatefulWidget {
+class ReviewUserDialog extends StatefulWidget {
   final UserData recieverUser;
 
-  const ReviewDialog({
+  const ReviewUserDialog({
     super.key,
     required this.recieverUser,
   });
 
   @override
-  State<ReviewDialog> createState() => _ReviewDialogState();
+  State<ReviewUserDialog> createState() => _ReviewUserDialogState();
 }
 
-class _ReviewDialogState extends State<ReviewDialog> {
+class _ReviewUserDialogState extends State<ReviewUserDialog> {
   double _rating = 5;
   final reviewController = TextEditingController();
   final String iconPath = "assets/icon/star.svg";
@@ -120,12 +120,13 @@ class _ReviewDialogState extends State<ReviewDialog> {
               },
             ),
             const SizedBox(height: 16),
-            CustomTextField(
+            AppTextField(
               controller: reviewController,
               hintText: AppLocalizations.of(context)!.review_hint_text,
-              backgroundColor: AppColors.cardBackground,
+              // backgroundColor: AppColors.cardBackground,
               maxLines: 3,
               validator: Validators.notEmpty,
+              displayLabel: false,
             ),
             // const SizedBox(height: 16),
             Container(

@@ -1,6 +1,6 @@
 import 'dart:io';
 import 'package:quickdrop_app/core/utils/imports.dart';
-import 'package:quickdrop_app/core/widgets/profile_image.dart';
+import 'package:quickdrop_app/core/widgets/profile_avatar.dart';
 import 'package:quickdrop_app/features/profile/payment.screen.dart';
 
 class BecomeDriverScreen extends StatefulWidget {
@@ -208,7 +208,7 @@ class BecomeDriverScreenState extends State<BecomeDriverScreen>
           _buildHeaderSection(),
           const SizedBox(height: 24),
           if (_isUserRequestedDriver) ...[
-            buildInfoCard(
+            StatusCard(
               icon: Icons.info_outline,
               title: t.request_driver_mode_title,
               message: t.request_driver_mode_message,
@@ -339,7 +339,7 @@ class BecomeDriverScreenState extends State<BecomeDriverScreen>
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          buildProfileImage(
+          ProfileAvatar(
             user: user,
             onTap: () async {
               // Show image picker
@@ -409,7 +409,7 @@ class BecomeDriverScreenState extends State<BecomeDriverScreen>
           validator: Validators.notEmpty,
         ),
         const SizedBox(height: 16),
-        buildInfoCard(
+        StatusCard(
           icon: Icons.info_outline,
           title: t.important,
           message: t.personal_info_note,
@@ -591,7 +591,7 @@ class BecomeDriverScreenState extends State<BecomeDriverScreen>
           validator: Validators.notEmpty,
         ),
         const SizedBox(height: 16),
-        buildInfoCard(
+        StatusCard(
           icon: Icons.info_outline,
           title: t.important,
           message: t.vehicle_info_note,

@@ -4,7 +4,7 @@ import 'package:quickdrop_app/core/utils/imports.dart';
 
 import 'package:intl_phone_field/intl_phone_field.dart';
 
-Widget PhoneNumber({
+Widget PhoneNumberInput({
   required TextEditingController controller,
 }) {
 return  IntlPhoneField(

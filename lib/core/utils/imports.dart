@@ -1,5 +1,4 @@
 export 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 export 'package:flutter/services.dart'; 
 
 export 'package:quickdrop_app/l10n/app_localizations.dart';
@@ -11,21 +10,19 @@ export 'package:quickdrop_app/theme/error_page.dart';
 
 
 export 'package:quickdrop_app/core/widgets/save_button.dart';
-export 'package:quickdrop_app/core/widgets/build_section.dart';
-export 'package:quickdrop_app/core/widgets/completed_item_card.dart';
-export 'package:quickdrop_app/core/widgets/ongoing_item_card.dart';
-export 'package:quickdrop_app/core/widgets/active_item_card.dart';
-export 'package:quickdrop_app/core/widgets/custom_tab_bar.dart';
-export 'package:quickdrop_app/core/widgets/textWithRequiredIcon.dart';
-export 'package:quickdrop_app/core/widgets/textFieldWithoutHeader.dart';
-export 'package:quickdrop_app/core/widgets/textWithLink.dart';
-export 'package:quickdrop_app/core/widgets/appBarText.dart';
-export 'package:quickdrop_app/core/widgets/phone_number.dart';
-export 'package:quickdrop_app/core/widgets/tipWidget.dart';
-export 'package:quickdrop_app/core/widgets/typeSelectorWidget.dart';
+export 'package:quickdrop_app/core/widgets/profile_section_card.dart';
+export 'package:quickdrop_app/core/widgets/completed_transport_item_card.dart';
+export 'package:quickdrop_app/core/widgets/ongoing_trasnport_item_card.dart';
+export 'package:quickdrop_app/core/widgets/active_transport_item_card.dart';
+export 'package:quickdrop_app/core/widgets/main_app_bar.dart';
+export 'package:quickdrop_app/core/widgets/required_field_label.dart';
+export 'package:quickdrop_app/core/widgets/text_with_link_button.dart';
+export 'package:quickdrop_app/core/widgets/phone_number_input.dart';
+export 'package:quickdrop_app/core/widgets/status_card.dart';
+export 'package:quickdrop_app/core/widgets/type_selector_widget.dart';
 export 'package:quickdrop_app/core/widgets/profile_statistics_skeleton.dart';
 export 'package:quickdrop_app/core/widgets/empty_message.dart';
-export 'package:quickdrop_app/core/widgets/loading.dart';
+export 'package:quickdrop_app/core/widgets/loading_skeleton.dart';
 export 'package:quickdrop_app/core/widgets/buildPriceContainer.dart';
 
 export 'package:quickdrop_app/core/widgets/register_text_field.dart';
@@ -69,10 +66,8 @@ export 'package:quickdrop_app/core/providers/review_provider.dart';
 export 'package:quickdrop_app/core/widgets/shipment_card_action_button.dart';
 export 'package:quickdrop_app/core/widgets/shipment_card_info_ship.dart';
 export 'package:quickdrop_app/core/widgets/shipment_card_header.dart';
-export 'package:quickdrop_app/core/widgets/textFeild.dart';
-export 'package:quickdrop_app/core/widgets/numberField.dart';
-export 'package:quickdrop_app/core/widgets/login_button.dart';
-export 'package:quickdrop_app/core/widgets/dateField.dart';
+export 'package:quickdrop_app/core/widgets/primary_button.dart';
+export 'package:quickdrop_app/core/widgets/date_input_field.dart';
 export 'package:quickdrop_app/core/widgets/Image_preview_picker.dart';
 export 'package:image_picker/image_picker.dart';
 export 'package:quickdrop_app/core/utils/appUtils.dart';
@@ -80,10 +75,9 @@ export 'package:quickdrop_app/core/utils/validator.dart';
 export 'package:quickdrop_app/core/utils/firebase_service.dart';
 export 'package:quickdrop_app/core/widgets/floatingActionButton.dart';
 export 'package:quickdrop_app/core/widgets/confirmation_dialog.dart';
-export 'package:quickdrop_app/core/widgets/textFieldWithHeader.dart';
-export 'package:quickdrop_app/core/widgets/show_succes.dart';
+export 'package:quickdrop_app/core/widgets/App_text_field.dart';
+export 'package:quickdrop_app/core/widgets/show_succes_dialog.dart';
 
-export 'package:quickdrop_app/core/widgets/item_details.dart';
 
 
 export 'package:quickdrop_app/routes/routes.dart';
@@ -93,7 +87,7 @@ export 'package:quickdrop_app/core/utils/delivery_status.dart';
 export 'package:loading_animation_widget/loading_animation_widget.dart';
 
 
-import 'package:flutter/services.dart';
-import 'package:flutter/gestures.dart';
+export 'package:flutter/services.dart';
+export 'package:flutter/gestures.dart';
 
 export 'package:go_router/go_router.dart';

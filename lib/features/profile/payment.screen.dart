@@ -1,8 +1,5 @@
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
-import 'package:cloud_functions/cloud_functions.dart' as functions;
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:intl/intl.dart';
 import 'package:quickdrop_app/core/utils/imports.dart';
 
 
@@ -18,24 +15,6 @@ class PaymentScreenState extends State<PaymentScreen> {
   bool _agreeToTerms = false;
 
 
-Future<void> _testFunction() async {
-  try {
-    print(AppLocalizations.of(context)!.payment_test_function);
-    
-    final callable = FirebaseFunctions.instanceFor(region: 'us-central1')
-        .httpsCallable('testPayment');
-    
-    final result = await callable.call({
-      'test': 'data',
-      'amount': 2999,
-    });
-
-    print('${AppLocalizations.of(context)!.payment_function_returned}: ${result.data}');
-  } catch (e) {
-    print('${AppLocalizations.of(context)!.payment_function_error}: $e');
-  }
-}
-
 
 Future<void> _startPayment() async {
   setState(() => _isLoading = true);
@@ -46,8 +25,6 @@ Future<void> _startPayment() async {
       throw Exception(AppLocalizations.of(context)!.payment_not_signed_in);
     }
 
-    print('${AppLocalizations.of(context)!.payment_user_label}: ${firebaseUser.uid}');
-    print(AppLocalizations.of(context)!.payment_calling_intent);
 
     final callable = FirebaseFunctions.instanceFor(region: 'us-central1')
         .httpsCallable(
@@ -81,7 +58,6 @@ Future<void> _startPayment() async {
       );
     }
   } catch (e) {
-    print("${AppLocalizations.of(context)!.payment_error}: $e");
     if (mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text("${AppLocalizations.of(context)!.payment_failed}: ${e.toString()}")),

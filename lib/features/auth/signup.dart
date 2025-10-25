@@ -187,11 +187,11 @@ class _SignupState extends State<Signup> {
         const SizedBox(
           height: 8,
         ),
-        PhoneNumber(controller: phoneNumberController),
+        PhoneNumberInput(controller: phoneNumberController),
         const SizedBox(
           height: 24,
         ),
-        LoginButton(
+        PrimaryButton(
           hintText: t.cntinue,
           onPressed: _signupUserWithPhoneNumber,
           isLoading: _isEmailLoading,
@@ -240,7 +240,7 @@ class _SignupState extends State<Signup> {
         const SizedBox(
           height: 24,
         ),
-        textWithLink(
+        TextWithLinkButton(
             text: t.already_have_account,
             textLink: t.login,
             navigatTo: '/login',

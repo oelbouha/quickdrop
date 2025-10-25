@@ -1404,4 +1404,19 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get photo_format_hint => 'JPG, PNG up to 5 MB';
+
+  @override
+  String get no_active_shipments_available => 'No active shipments available';
+
+  @override
+  String get choose_a_shipment => 'Choose a shipment';
+
+  @override
+  String get please_select_shipment => 'Please select a shipment';
+
+  @override
+  String get request_already_sent => 'You have already sent a request for this shipment. Please wait for the owner to accept or reject it.';
+
+  @override
+  String get trip_owner_cannot_request => 'Trip owner cannot send a request for their own shipment.';
 }

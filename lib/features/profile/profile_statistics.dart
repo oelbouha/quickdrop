@@ -2,7 +2,7 @@ import 'package:quickdrop_app/core/utils/imports.dart';
 import 'package:quickdrop_app/features/models/statictics_model.dart';
 import 'package:quickdrop_app/features/profile/review_card.dart';
 import 'package:quickdrop_app/features/models/review_model.dart';
-import 'package:quickdrop_app/core/widgets/profile_image.dart';
+import 'package:quickdrop_app/core/widgets/profile_avatar.dart';
 
 import 'package:intl/intl.dart';
 
@@ -479,7 +479,7 @@ Widget _buildUserStats() {
           children: [
             Column(
               children: [
-                buildProfileImage(user: widget.user, size: 120),
+                ProfileAvatar(user: widget.user, size: 120),
                 const SizedBox(height: 12),
                 Text(
                   widget.user.displayName ?? AppLocalizations.of(context)!.profile_guest_user,

@@ -1,9 +1,7 @@
-import 'package:quickdrop_app/core/widgets/actionButton.dart';
-import 'package:quickdrop_app/core/widgets/destination.dart';
+
 import 'package:quickdrop_app/core/utils/imports.dart';
-import 'package:quickdrop_app/features/models/base_transport.dart';
-export 'package:quickdrop_app/core/widgets/user_profile.dart';
-export 'package:quickdrop_app/core/widgets/review.dart';
+export 'package:quickdrop_app/core/widgets/user_profile_avatar.dart';
+export 'package:quickdrop_app/core/widgets/review_user_dialog.dart';
 
 class CompletedItemCard extends StatefulWidget {
  final TransportItem item;
@@ -32,7 +30,7 @@ class CompletedItemCardState extends State<CompletedItemCard> {
     showDialog(
       context: context,
       builder: (context) {
-        return ReviewDialog(
+        return ReviewUserDialog(
           recieverUser: widget.user,
         );
       },

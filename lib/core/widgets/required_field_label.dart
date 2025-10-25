@@ -1,7 +1,7 @@
 
 import 'package:quickdrop_app/core/utils/imports.dart';
 
-Widget TextWithRequiredIcon({
+Widget RequiredFieldLabel({
   required String text
 }) {
   return Column(children: [ Row(

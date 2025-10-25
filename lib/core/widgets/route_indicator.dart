@@ -4,14 +4,14 @@ import 'package:quickdrop_app/core/widgets/custom_svg.dart';
 import 'package:quickdrop_app/core/utils/appUtils.dart';
 
 
-class Destination extends StatelessWidget {
+class RouteIndicator extends StatelessWidget {
   final String from;
   final String to;
   final double fontSize;
   final Color color;
   final double iconSize;
 
-  const Destination({
+  const RouteIndicator({
     super.key,
     required this.from,
     required this.to,
@@ -77,7 +77,7 @@ class Destination extends StatelessWidget {
 }
 
 
-  Widget _buildFromDestination() {
+  Widget _buildFromRouteIndicator() {
     return Row(
       children: [
            const Icon(
@@ -99,7 +99,7 @@ class Destination extends StatelessWidget {
   }
 
 
-  Widget _buildToDestination() {
+  Widget _buildToRouteIndicator() {
     return Row(
       children: [
          const Icon(

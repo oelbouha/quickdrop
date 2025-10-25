@@ -1,13 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:go_router/go_router.dart';
-// import 'package:quickdrop_app/core/widgets/custom_svg.dart';
-import 'package:quickdrop_app/core/widgets/destination.dart';
-import 'package:quickdrop_app/core/widgets/button.dart';
-import 'package:quickdrop_app/core/widgets/item_details.dart';
-import 'package:quickdrop_app/features/chat/convo_screen.dart';
 import 'package:quickdrop_app/core/utils/imports.dart';
 import 'package:quickdrop_app/core/providers/negotiation_provider.dart';
-import 'package:quickdrop_app/features/models/negotiation_model.dart';
 
 
 class NegotiationCard extends StatefulWidget {

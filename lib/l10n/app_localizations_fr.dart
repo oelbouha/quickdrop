@@ -1404,4 +1404,19 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get photo_format_hint => 'JPG, PNG jusqu\'à 5 Mo';
+
+  @override
+  String get no_active_shipments_available => 'Aucun envoi actif disponible';
+
+  @override
+  String get choose_a_shipment => 'Choisissez un envoi';
+
+  @override
+  String get please_select_shipment => 'Veuillez sélectionner un envoi';
+
+  @override
+  String get request_already_sent => 'Vous avez déjà envoyé une demande pour cet envoi. Veuillez attendre que le propriétaire l\'accepte ou la rejette.';
+
+  @override
+  String get trip_owner_cannot_request => 'Le propriétaire du trajet ne peut pas envoyer une demande pour son propre envoi.';
 }

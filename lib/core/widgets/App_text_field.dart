@@ -3,12 +3,12 @@ import 'package:quickdrop_app/theme/colors.dart';
 import 'package:quickdrop_app/theme/AppTheme.dart';
 import 'package:quickdrop_app/core/widgets/custom_svg.dart';
 
-class TextFieldWithHeader extends StatelessWidget {
+class AppTextField extends StatelessWidget {
   final TextEditingController controller;
   final String hintText;
-  final String headerText;
+  final String label;
   final bool obsecureText;
-  final bool displayHeader;
+  final bool displayLabel;
   final bool isRequired;
   final String? iconPath;
   final IconData? prefixIcon;
@@ -19,7 +19,7 @@ class TextFieldWithHeader extends StatelessWidget {
   final void Function(String)? onChanged;
   int maxLines;
 
-  TextFieldWithHeader({
+  AppTextField({
     super.key,
     required this.controller,
     required this.hintText,
@@ -27,9 +27,9 @@ class TextFieldWithHeader extends StatelessWidget {
     this.prefixIcon,
     this.iconColor = AppColors.lessImportant,
     this.suffixText,
-    this.headerText = "",
+    this.label = "",
     this.obsecureText = false,
-    this.displayHeader = true,
+    this.displayLabel = true,
     this.keyboardType = TextInputType.text,
     this.validator,
     this.maxLines = 1,
@@ -44,7 +44,7 @@ class TextFieldWithHeader extends StatelessWidget {
       width: AppTheme.textFieldBorderWidth,
     );
 
-     final BorderSide focusedBorderSide = BorderSide(
+     final BorderSide focusedBorderSide =  BorderSide(
       color:  AppColors.blue,
       width: 2,
     );
@@ -54,16 +54,16 @@ class TextFieldWithHeader extends StatelessWidget {
         Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            if (displayHeader)
+            if (displayLabel)
             Text(
-              headerText,
+              label,
               style: const TextStyle(
                 color: AppColors.headingText,
                 fontSize: 14,
                 fontWeight: FontWeight.w600,
               ),
             ),
-            if (isRequired)
+            if (isRequired && displayLabel)
               const Text(
                 ' *',
                 style: TextStyle(
@@ -74,7 +74,7 @@ class TextFieldWithHeader extends StatelessWidget {
               ),
           ],
         ),
-        if (displayHeader) const SizedBox(height: 8),
+        if (displayLabel) const SizedBox(height: 8),
         TextFormField(
           
                   maxLines: maxLines,

@@ -102,7 +102,7 @@ class _TripScreenState extends State<TripScreen>
     final t = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: AppColors.background,
-      appBar: CustomAppBar(
+      appBar: MainAppBar(
         tabController: _tabController,
         tabs: [
           t.active,
@@ -370,7 +370,7 @@ class _TripScreenState extends State<TripScreen>
                             showDialog(
                               context: context,
                               builder: (context) {
-                                return ReviewDialog(
+                                return ReviewUserDialog(
                                   recieverUser: userData,
                                 );
                               },

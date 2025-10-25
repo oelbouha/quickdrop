@@ -1,6 +1,6 @@
 import 'package:quickdrop_app/core/widgets/iconTextField.dart';
 import 'package:quickdrop_app/core/widgets/auth_button.dart';
-import 'package:quickdrop_app/core/widgets/passwordTextField.dart';
+import 'package:quickdrop_app/core/widgets/password_text_field.dart';
 import 'package:quickdrop_app/core/utils/imports.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -260,7 +260,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
             radius: 60,
           ),
           const SizedBox(height: 24),
-          LoginButton(
+          PrimaryButton(
             hintText: t.login,
             onPressed: _signInUserWithEmail,
             isLoading: _isEmailLoading,
@@ -300,7 +300,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
             radius: 60,
           ),
           const SizedBox(height: 24),
-          textWithLink(
+          TextWithLinkButton(
             text: t.dont_have_accout,
             textLink: t.signup,
             navigatTo: '/signup',

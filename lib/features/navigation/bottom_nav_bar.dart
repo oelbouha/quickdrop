@@ -27,7 +27,7 @@ class BottomNavScreen extends StatelessWidget {
     return Scaffold(
         body: child,
         bottomNavigationBar: Container(
-  decoration:  BoxDecoration(
+  decoration: const  BoxDecoration(
     border: Border(
       top:  BorderSide(
         color: Colors.grey, // Color of the top border

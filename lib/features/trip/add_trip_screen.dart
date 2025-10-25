@@ -300,23 +300,23 @@ class _AddTripScreenState extends State<AddTripScreen>
             backgroundColor: AppColors.blue700.withOpacity(0.1),
           ),
           const SizedBox(height: 16),
-          TextFieldWithHeader(
+          AppTextField(
             controller: priceController,
             hintText: "0.00",
-            headerText: loc.delivery_price,
+            label: loc.delivery_price,
             validator: Validators.isNumber,
             keyboardType: TextInputType.number,
           ),
           const SizedBox(height: 16),
-          TextFieldWithHeader(
+          AppTextField(
             controller: weightController,
             hintText: "0.00",
-            headerText: loc.available_weight,
+            label: loc.available_weight,
             validator: Validators.isNumber,
             keyboardType: TextInputType.number,
           ),
           const SizedBox(height: 20),
-          buildInfoCard(
+          StatusCard(
             icon: Icons.info_outline,
             title: loc.pricing_tip_title,
             message:  loc.pricing_tip_message,    
@@ -704,7 +704,7 @@ Container(
               iconColor: Theme.of(context).colorScheme.primary,
             ),
           const SizedBox(height: 20),
-          buildInfoCard(
+          StatusCard(
             icon: Icons.location_on,
             title: loc.location_tip_title,
             message:loc.location_tip_message,
@@ -728,7 +728,7 @@ Container(
             backgroundColor: const Color(0xFFFEF3C7),
           ),
           const SizedBox(height: 20),
-          TextWithRequiredIcon(text: loc.pickup_date),
+          RequiredFieldLabel(text: loc.pickup_date),
           const SizedBox(height: 8),
           DateTextField(
             controller: dateController,
@@ -739,7 +739,7 @@ Container(
           ),
           const SizedBox(height: 20),
           
-          TextWithRequiredIcon(text: loc.transport_type),
+          RequiredFieldLabel(text: loc.transport_type),
           TypeSelectorWidget(
             onTypeSelected: (type) {
               transportTypeController.text = type;
@@ -750,7 +750,7 @@ Container(
             unselectedColor: AppColors.textSecondary,
           ),
           const SizedBox(height: 20),
-          buildInfoCard(
+          StatusCard(
             icon: Icons.schedule,
             title: loc.timing_tip_title,
             message: loc.timing_tip_message,

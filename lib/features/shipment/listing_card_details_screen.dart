@@ -1,7 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:quickdrop_app/core/providers/notification_provider.dart';
 import 'package:quickdrop_app/core/utils/imports.dart';
-import 'package:quickdrop_app/core/widgets/destination.dart';
+import 'package:quickdrop_app/core/widgets/route_indicator.dart';
+import 'package:collection/collection.dart';
 
 import 'package:quickdrop_app/features/models/notification_model.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
@@ -107,7 +108,7 @@ class _ListingTripLoaderState extends State<ListingTripLoader> {
         }
 
         final (userData, shipmentData) = snapshot.data!;
-        
+
         return ListingCardDetails(
           user: userData,
           shipment: shipmentData,
@@ -142,6 +143,10 @@ class _ListingCardDetailsState extends State<ListingCardDetails> {
   Shipment? _selectedShipment;
   Trip? _selectedTrip;
   bool _isMenuOpen = false;
+  bool _isTrip = false;
+
+  Shipment? _targetShipment;
+  Trip? _targetTrip;
 
   @override
   void initState() {
@@ -154,6 +159,7 @@ class _ListingCardDetailsState extends State<ListingCardDetails> {
     // _isTrip = widget.shipment is Trip;
     if (widget.shipment is Trip) {
       _selectedTrip = widget.shipment as Trip?;
+      _isTrip = true;
     }
     WidgetsBinding.instance.addPostFrameCallback((_) async {});
     // print("is trip ${_isTrip}");
@@ -233,7 +239,6 @@ class _ListingCardDetailsState extends State<ListingCardDetails> {
                 const SizedBox(height: 150),
               ],
             ),
-            
           ),
         ],
       ),
@@ -263,7 +268,7 @@ class _ListingCardDetailsState extends State<ListingCardDetails> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-           Text(
+          Text(
             t.package_details,
             style: TextStyle(
               color: AppColors.headingText,
@@ -275,7 +280,7 @@ class _ListingCardDetailsState extends State<ListingCardDetails> {
           _buildDetailItem(
             icon: "assets/icon/delivery.svg",
             title: t.route,
-            child: Destination(
+            child: RouteIndicator(
               from: widget.shipment.from,
               to: widget.shipment.to,
               fontSize: 16,
@@ -295,7 +300,8 @@ class _ListingCardDetailsState extends State<ListingCardDetails> {
           ),
           _buildDetailItem(
             icon: "assets/icon/weight.svg",
-            title: _selectedShipment == null ? t.available_weight : t.weight_label,
+            title:
+                _selectedShipment == null ? t.available_weight : t.weight_label,
             child: Text(
               '${widget.shipment.weight} kg',
               style: const TextStyle(
@@ -308,8 +314,9 @@ class _ListingCardDetailsState extends State<ListingCardDetails> {
             icon: _selectedShipment != null
                 ? "assets/icon/package.svg"
                 : "assets/icon/car.svg",
-            title:
-                _selectedShipment != null ? t.package_type_label : "Transport type",
+            title: _selectedShipment != null
+                ? t.package_type_label
+                : "Transport type",
             child: Text(
               '${_selectedShipment == null ? _selectedTrip!.transportType : _selectedShipment!.type}',
               style: const TextStyle(
@@ -370,10 +377,14 @@ class _ListingCardDetailsState extends State<ListingCardDetails> {
 
   Widget _buildPriceAndAction() {
     final t = AppLocalizations.of(context)!;
-    if (widget.viewOnly || _selectedShipment == null ||
-        _selectedShipment?.userId == FirebaseAuth.instance.currentUser?.uid) {
+    final userId = FirebaseAuth.instance.currentUser?.uid;
+
+    if (widget.viewOnly ||
+        _selectedShipment?.userId == userId ||
+        _selectedTrip?.userId == userId) {
       return Container();
     }
+
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16),
       padding: const EdgeInsets.all(20),
@@ -395,7 +406,7 @@ class _ListingCardDetailsState extends State<ListingCardDetails> {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                 Text(
+                Text(
                   t.starting_from,
                   style: TextStyle(
                     fontSize: 12,
@@ -419,7 +430,7 @@ class _ListingCardDetailsState extends State<ListingCardDetails> {
                     ),
                     const SizedBox(width: 4),
                     Text(
-                      "dh",
+                      t.dirham,
                       style: TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.w600,
@@ -530,7 +541,7 @@ class _ListingCardDetailsState extends State<ListingCardDetails> {
                   fontSize: 26,
                   color: AppColors.headingText,
                   fontWeight: FontWeight.bold)),
-           Text(t.package_description_hint,
+          Text(t.package_description_hint,
               style: TextStyle(
                   color: AppColors.headingText,
                   fontWeight: FontWeight.bold,
@@ -620,9 +631,9 @@ class _ListingCardDetailsState extends State<ListingCardDetails> {
       },
     );
   }
-// Replace the _sendDeliveryRequest method with this version:
 
-  void _sendDeliveryRequest(Trip? trip, [StateSetter? setModalState]) async {
+  void _sendDeliveryRequest(Trip? trip, Shipment? shipment,
+      [StateSetter? setModalState]) async {
     final t = AppLocalizations.of(context)!;
     if (_isLoading) return;
 
@@ -631,14 +642,14 @@ class _ListingCardDetailsState extends State<ListingCardDetails> {
           context, t.please_complete_all_fields, AppColors.error);
       return;
     }
-    if (trip == null) {
-      AppUtils.showDialog(context, t.please_select_trip, AppColors.error);
-      return;
-    }
-    if (trip.id == null) {
-      AppUtils.showDialog(context, t.selected_trip_invalid, AppColors.error);
-      return;
-    }
+    // if (trip == null) {
+    //   AppUtils.showDialog(context, t.please_select_trip, AppColors.error);
+    //   return;
+    // }
+    // if (trip.id == null) {
+    //   AppUtils.showDialog(context, t.selected_trip_invalid, AppColors.error);
+    //   return;
+    // }
 
     // Helper function to update loading state
     void updateLoadingState(bool isLoading) {
@@ -658,60 +669,69 @@ class _ListingCardDetailsState extends State<ListingCardDetails> {
       final user = FirebaseAuth.instance.currentUser;
       if (user == null) {
         updateLoadingState(false);
-        AppUtils.showDialog(
-            context, t.login_required, AppColors.error);
+        AppUtils.showDialog(context, t.login_required, AppColors.error);
         return;
       }
 
-      await Provider.of<DeliveryRequestProvider>(context, listen: false)
-          .sendRequest(trip, widget.shipment as Shipment);
+      if (trip != null) {
+        await Provider.of<DeliveryRequestProvider>(context, listen: false)
+            .sendRequest(trip, widget.shipment as Shipment, trip.userId,
+                widget.shipment.userId);
+      } else {
+        await Provider.of<DeliveryRequestProvider>(context, listen: false)
+            .sendRequest(_selectedTrip!, shipment!, shipment.userId,
+                _selectedTrip!.userId);
+      }
 
       // Stop loading
       updateLoadingState(false);
 
       if (mounted) {
-        // Clear form and reset state
         priceController.clear();
         noteController.clear();
-        setState(() {
-          _selectedTrip = null;
-        });
+        // setState(() {
+        //   _selectedTrip = null;
+        // });
 
         // Show success message
-        AppUtils.showDialog(
-            context, t.request_sent_success, AppColors.succes);
-        Navigator.pop(context);
-
-        // Close the bottom sheet after a short delay
-        // Future.delayed(const Duration(milliseconds: 1000), () {
-        //   if (mounted) {
-        //   }
-        // });
+        AppUtils.showDialog(context, t.request_sent_success, AppColors.succes);
       }
     } catch (e) {
       updateLoadingState(false);
-      if (mounted) {
-        AppUtils.showDialog(context, e.toString(), AppColors.error);
+      final errorMessage = e.toString();
+      if (errorMessage.contains("already_exists")) {
+        AppUtils.showDialog(context, t.request_already_sent, AppColors.error);
+      }
+      else if (errorMessage.contains("owner_is_the_same")) {
+        AppUtils.showDialog(
+            context, t.trip_owner_cannot_request, AppColors.error);
+      } else {
+        AppUtils.showDialog(
+            context, t.driver_mode_request_failed, AppColors.error);
       }
     } finally {
-      // Ensure loading state is reset even if an error occurs
       updateLoadingState(false);
       Navigator.pop(context);
     }
   }
 
-// Also update the _buildRequesBody method to use StatefulBuilder:
-
   Widget _buildRequesBody() {
     final t = AppLocalizations.of(context)!;
-    return Consumer<TripProvider>(builder: (context, tripProvider, child) {
+    return Consumer2<TripProvider, ShipmentProvider>(
+        builder: (context, tripProvider, shipmentProvider, child) {
       final user = FirebaseAuth.instance.currentUser;
       if (user == null) {
-        return  Center(child: Text(t.login_required));
+        return Center(child: Text(t.login_required));
       }
 
       final activeTrips = tripProvider.trips
           .where((trip) => trip.userId == user.uid && trip.status == "active")
+          .toList();
+
+      shipmentProvider.fetchShipmentsByUserId(user.uid);
+      final activeShipments = shipmentProvider.shipments
+          .where((shipment) =>
+              shipment.userId == user.uid && shipment.status == "active")
           .toList();
 
       return StatefulBuilder(
@@ -735,64 +755,60 @@ class _ListingCardDetailsState extends State<ListingCardDetails> {
                       ),
                     ),
                   ),
-                   Text(
-                    t.choose_a_trip,
-                    style:
-                        TextStyle(color: AppColors.headingText, fontSize: 16),
+                  Text(
+                    _isTrip ? t.choose_a_shipment : t.choose_a_trip,
+                    style: const TextStyle(
+                        color: AppColors.headingText, fontSize: 16),
                   ),
                   const SizedBox(height: 10),
-                  activeTrips.isEmpty
-                      ?  Text(
-                          t.no_active_trips_available,
-                          style:
-                              const TextStyle(color: AppColors.error, fontSize: 14),
+                  activeTrips.isEmpty && activeShipments.isEmpty
+                      ? Text(
+                          _isTrip
+                              ? t.no_active_trips_available
+                              : t.no_active_shipments_available,
+                          style: const TextStyle(
+                              color: AppColors.error, fontSize: 14),
                         )
-                      : DropdownButtonFormField<Trip>(
-                          decoration: InputDecoration(
-                              filled: true,
-                              fillColor: AppColors.background,
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10),
-                                borderSide: const BorderSide(
-                                    color: AppColors.lessImportant),
-                              )),
-                          dropdownColor: AppColors.background,
-                          hint:  Text(
-                            t.choose_a_trip,
-                            style:const TextStyle(color: AppColors.headingText),
-                          ),
-                          items: activeTrips.map((trip) {
-                            return DropdownMenuItem<Trip>(
-                              value: trip,
-                              child: Text(
-                                "${trip.from} ${t.to_hint} ${trip.to} - ${trip.date}",
-                                style: const TextStyle(
-                                    color: AppColors.headingText),
-                              ),
-                            );
-                          }).toList(),
-                          onChanged: (Trip? trip) {
-                            setState(() {
-                              _selectedTrip = trip;
-                            });
-                          },
-                          validator: (value) =>
-                              value == null ? t.please_select_trip : null,
-                        ),
+                      : _isTrip == false
+                          ? TripDropdownField(
+                              trips: activeTrips,
+                              selectedTripId: _selectedTrip?.id,
+                              hintText: t.choose_a_trip,
+                              onChanged: (trip) {
+                                setModalState(() {
+                                  _targetTrip = trip;
+                                });
+                              },
+                              validator: (value) =>
+                                  value == null ? t.please_select_trip : null,
+                            )
+                          : ShipmentDropdownField(
+                              shipments: activeShipments,
+                              selectedShipmentId: _selectedShipment?.id,
+                              hintText: t.choose_a_shipment,
+                              onChanged: (shipment) {
+                                setModalState(() {
+                                  _targetShipment = shipment;
+                                });
+                              },
+                              validator: (value) => value == null
+                                  ? t.please_select_shipment
+                                  : null,
+                            ),
                   const SizedBox(height: 20),
-                  TextFieldWithHeader(
+                  AppTextField(
                     controller: noteController,
                     hintText: t.add_a_note,
-                    headerText: t.note,
+                    label: t.note,
                     keyboardType: TextInputType.text,
                     isRequired: false,
                     maxLines: 2,
                   ),
                   const SizedBox(height: 10),
-                  TextFieldWithHeader(
+                  AppTextField(
                     controller: priceController,
                     hintText: t.delivery_price_hint,
-                    headerText: t.delivery_price_label,
+                    label: t.delivery_price_label,
                     validator: Validators.isNumber,
                     keyboardType: TextInputType.number,
                   ),
@@ -801,7 +817,8 @@ class _ListingCardDetailsState extends State<ListingCardDetails> {
                       hintText: t.send_request,
                       isLoading: _isLoading,
                       onPressed: () {
-                        _sendDeliveryRequest(_selectedTrip, setModalState);
+                        _sendDeliveryRequest(
+                            _targetTrip, _targetShipment, setModalState);
                       }),
                   const SizedBox(height: 10),
                 ],
@@ -809,5 +826,115 @@ class _ListingCardDetailsState extends State<ListingCardDetails> {
             ));
       });
     });
+  }
+}
+
+class ShipmentDropdownField extends StatelessWidget {
+  final List<Shipment> shipments;
+  final String? selectedShipmentId;
+  final String hintText;
+  final ValueChanged<Shipment?> onChanged;
+  final String? Function(Shipment?)? validator;
+
+  const ShipmentDropdownField({
+    super.key,
+    required this.shipments,
+    required this.selectedShipmentId,
+    required this.hintText,
+    required this.onChanged,
+    this.validator,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final t = AppLocalizations.of(context)!;
+    return DropdownButtonFormField<String>(
+      value: selectedShipmentId,
+      decoration: InputDecoration(
+        filled: true,
+        fillColor: AppColors.background,
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10),
+          borderSide: const BorderSide(color: AppColors.lessImportant),
+        ),
+      ),
+      dropdownColor: AppColors.background,
+      hint: Text(
+        hintText,
+        style: const TextStyle(color: AppColors.headingText),
+      ),
+      items: shipments.map((shipment) {
+        return DropdownMenuItem<String>(
+          value: shipment.id,
+          child: Text(
+            "${shipment.from} ${t.to_hint} ${shipment.to}",
+            style: const TextStyle(color: AppColors.headingText),
+          ),
+        );
+      }).toList(),
+      onChanged: (id) {
+        final selected = shipments.firstWhere((s) => s.id == id);
+        onChanged(selected);
+      },
+      validator: (id) {
+        final shipment = shipments.firstWhereOrNull((s) => s.id == id);
+        return validator?.call(shipment);
+      },
+    );
+  }
+}
+
+class TripDropdownField extends StatelessWidget {
+  final List<Trip> trips;
+  final String? selectedTripId;
+  final String hintText;
+  final ValueChanged<Trip?> onChanged;
+  final String? Function(Trip?)? validator;
+
+  const TripDropdownField({
+    super.key,
+    required this.trips,
+    required this.selectedTripId,
+    required this.hintText,
+    required this.onChanged,
+    this.validator,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final t = AppLocalizations.of(context)!;
+    return DropdownButtonFormField<String>(
+      value: selectedTripId,
+      decoration: InputDecoration(
+        filled: true,
+        fillColor: AppColors.background,
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10),
+          borderSide: const BorderSide(color: AppColors.lessImportant),
+        ),
+      ),
+      dropdownColor: AppColors.background,
+      hint: Text(
+        hintText,
+        style: const TextStyle(color: AppColors.headingText),
+      ),
+      items: trips.map((trip) {
+        return DropdownMenuItem<String>(
+          value: trip.id,
+          child: Text(
+            "${trip.from} ${t.to_hint} ${trip.to}",
+            style: const TextStyle(color: AppColors.headingText),
+          ),
+        );
+      }).toList(),
+      onChanged: (id) {
+        final selected = trips.firstWhere((t) => t.id == id);
+        onChanged(selected);
+      },
+      validator: (id) {
+        final trip = trips.firstWhereOrNull((t) => t.id == id);
+        return validator?.call(trip);
+      },
+    );
   }
 }

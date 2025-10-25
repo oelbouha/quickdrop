@@ -1,4 +1,4 @@
-import 'package:quickdrop_app/core/widgets/profile_image.dart';
+import 'package:quickdrop_app/core/widgets/profile_avatar.dart';
 import 'package:quickdrop_app/features/profile/settings_card.dart';
 import 'package:quickdrop_app/core/utils/imports.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
@@ -159,7 +159,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ),
           child: Row(
             children: [
-              buildProfileImage(user: user, size: 56),
+              ProfileAvatar(user: user, size: 56),
               const SizedBox(width: 16),
               Column(
                   mainAxisAlignment: MainAxisAlignment.start,

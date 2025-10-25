@@ -1,7 +1,7 @@
 import 'package:provider/provider.dart';
 import 'package:quickdrop_app/core/utils/imports.dart';
 import 'package:go_router/go_router.dart';
-import 'package:quickdrop_app/core/widgets/passwordTextField.dart';
+import 'package:quickdrop_app/core/widgets/password_text_field.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/gestures.dart';
 
@@ -114,9 +114,9 @@ class _SingupPageState extends State<SignUpScreen> {
             const SizedBox(
               height: 24,
             ),
-            TextFieldWithHeader(
+            AppTextField(
               controller: firstNameController,
-              headerText: t.full_name,
+              label: t.full_name,
               hintText: t.first_name,
               obsecureText: false,
               iconPath: "assets/icon/user.svg",
@@ -124,17 +124,17 @@ class _SingupPageState extends State<SignUpScreen> {
               validator: Validators.name,
             ),
             const SizedBox(height: 8),
-            TextFieldWithHeader(
+            AppTextField(
               controller: lastNameController,
               hintText: t.last_name,
-              displayHeader: false,
+              displayLabel: false,
               iconPath: "assets/icon/user.svg",
               isRequired: false,
               validator: Validators.name,
             ),
             const SizedBox(height: 8),
             
-             buildInfoCard(
+             StatusCard(
               icon: Icons.info_outline,
               title: t.important_note,
               message: t.signup_note,
@@ -142,11 +142,11 @@ class _SingupPageState extends State<SignUpScreen> {
             ),
             // TipWidget(message: "Make sure this matches the name on your government ID or passport."),
             // const SizedBox(height: 15),
-            // TextFieldWithHeader(
+            // AppTextField(
             //   controller: birthdayController,
             //   hintText: 'Birthday',
             //   isRequired: false,
-            //   headerText: 'Date of Birth',
+            //   label: 'Date of Birth',
             //   obsecureText: false,
             //   iconPath: "assets/icon/email.svg",
             //   keyboardType: TextInputType.datetime,
@@ -160,11 +160,11 @@ class _SingupPageState extends State<SignUpScreen> {
             //   color: Colors.blue,
             // ),
             const SizedBox(height: 24),
-            TextFieldWithHeader(
+            AppTextField(
               controller: emailController,
               hintText: 'example@gmail.com',
               isRequired: false,
-              headerText: t.email,
+              label: t.email,
               obsecureText: false,
               iconPath: "assets/icon/email.svg",
               validator: Validators.email,
@@ -229,7 +229,7 @@ class _SingupPageState extends State<SignUpScreen> {
             const SizedBox(
               height: 24,
             ),
-            LoginButton(
+            PrimaryButton(
                 hintText: t.cntinue,
                 radius: 30  ,
                 backgroundColor: AppColors.dark,

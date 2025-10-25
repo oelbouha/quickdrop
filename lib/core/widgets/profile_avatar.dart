@@ -3,7 +3,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 
 
 
-Widget buildProfileImage({
+Widget ProfileAvatar({
   required UserData? user,
   VoidCallback? onTap,
   double size = 50,

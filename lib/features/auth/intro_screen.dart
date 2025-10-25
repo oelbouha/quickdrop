@@ -198,7 +198,7 @@ class _IntroScreenState extends State<IntroScreen> with TickerProviderStateMixin
                 Column(
                   children: [
                    
-                   LoginButton(
+                   PrimaryButton(
                       hintText: t.login,
                       backgroundColor: Theme.of(context).colorScheme.primary,
                       textColor: Theme.of(context).colorScheme.onPrimary,
@@ -209,7 +209,7 @@ class _IntroScreenState extends State<IntroScreen> with TickerProviderStateMixin
                       radius: 60,
                     ),
                     const SizedBox(height: 12),
-                    LoginButton(
+                    PrimaryButton(
                       hintText: t.signup,
                       onPressed: () {
                         context.pushNamed('signup');
