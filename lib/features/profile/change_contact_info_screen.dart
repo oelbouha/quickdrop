@@ -208,9 +208,12 @@ Future<void> updateInfo() async {
           const SizedBox(height: 32),
           _buildContactInfoSection(),
           const SizedBox(height: 24),
-          SaveButton(
+          IconTextButton(
+            iconPath: "assets/icon/save.svg",
             isLoading: _isLoading,
             onPressed: updateInfo,
+            hint: AppLocalizations.of(context)!.save_button_text,
+            loadingText: AppLocalizations.of(context)!.saving,
           ),
         ],
       ),

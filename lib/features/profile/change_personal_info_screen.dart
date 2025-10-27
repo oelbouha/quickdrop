@@ -203,9 +203,12 @@ class ChangePersonalInfoScreenState extends State<ChangePersonalInfoScreen> {
           const SizedBox(height: 32),
           _buildPersonalInfoSection(),
           const SizedBox(height: 24),
-          SaveButton(
+          IconTextButton(
             isLoading: _isLoading,
             onPressed: updateInfo,
+            iconPath: "assets/icon/save.svg",
+             hint: AppLocalizations.of(context)!.save_button_text,
+            loadingText: AppLocalizations.of(context)!.saving,
           ),
         ],
       ),
@@ -221,21 +224,21 @@ class ChangePersonalInfoScreenState extends State<ChangePersonalInfoScreen> {
         Row(
           children: [
             Expanded(
-              child: ImprovedTextField(
+              child: AppTextField(
                 controller: firstNameController,
                 label: t.first_name,
-                hint: t.enter_first_name,
-                icon: Icons.person_outline,
+                hintText: t.enter_first_name,
+                iconPath: "assets/icon/user.svg",
                 validator: Validators.name,
               ),
             ),
             const SizedBox(width: 12),
             Expanded(
-              child: ImprovedTextField(
+              child: AppTextField(
                 controller: lastNameController,
                 label: t.last_name,
-                hint: t.enter_last_name,
-                icon: Icons.person_outline,
+                hintText: t.enter_last_name,
+                iconPath: "assets/icon/user.svg",
                 validator: Validators.name,
               ),
             ),

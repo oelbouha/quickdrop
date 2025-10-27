@@ -117,9 +117,12 @@ class ChangeProfileImageScreenState extends State<ChangeProfileImageScreen> {
           children: [
               _buildImageInfoSection(),
                const SizedBox(height: 24),
-              SaveButton(
+              IconTextButton(
                 isLoading: _isLoading,
                 onPressed: updateInfo,
+                iconPath: "assets/icon/save.svg",
+                hint: AppLocalizations.of(context)!.save_button_text,
+                loadingText: AppLocalizations.of(context)!.saving,
               ),
           ],
         ) 

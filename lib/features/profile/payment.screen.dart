@@ -1,7 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:quickdrop_app/core/utils/imports.dart';
-
 
 class PaymentScreen extends StatefulWidget {
   const PaymentScreen({Key? key}) : super(key: key);
@@ -14,63 +14,69 @@ class PaymentScreenState extends State<PaymentScreen> {
   bool _isLoading = false;
   bool _agreeToTerms = false;
 
+  Future<void> _startPayment() async {
+    setState(() => _isLoading = true);
 
+    try {
+      final firebaseUser = FirebaseAuth.instance.currentUser;
+      if (firebaseUser == null) {
+        throw Exception(AppLocalizations.of(context)!.payment_not_signed_in);
+      }
 
-Future<void> _startPayment() async {
-  setState(() => _isLoading = true);
+      final callable =
+          FirebaseFunctions.instanceFor(region: 'us-central1').httpsCallable(
+        'createPaymentIntent',
+        options: HttpsCallableOptions(
+          timeout:
+              const Duration(seconds: 120), // Increase timeout to 2 minutes
+        ),
+      );
 
-  try {
-    final firebaseUser = FirebaseAuth.instance.currentUser;
-    if (firebaseUser == null) {
-      throw Exception(AppLocalizations.of(context)!.payment_not_signed_in);
-    }
+      final result = await callable.call(<String, dynamic>{
+        'amount': 500,
+        'currency': 'usd',
+      });
 
+      print(
+          '${AppLocalizations.of(context)!.payment_function_returned}: ${result.data}');
 
-    final callable = FirebaseFunctions.instanceFor(region: 'us-central1')
-        .httpsCallable(
-          'createPaymentIntent',
-          options: HttpsCallableOptions(
-            timeout: const Duration(seconds: 120), // Increase timeout to 2 minutes
-          ),
+      final clientSecret = result.data['clientSecret'];
+
+      await Stripe.instance.initPaymentSheet(
+        paymentSheetParameters: SetupPaymentSheetParameters(
+          merchantDisplayName: 'QuickDrop',
+          paymentIntentClientSecret: clientSecret,
+        ),
+      );
+
+      await Stripe.instance.presentPaymentSheet();
+
+      final userProvider = Provider.of<UserProvider>(context, listen: false);
+      userProvider.updatePaymentDate(userProvider.user!.uid);
+
+      if (mounted) {
+        AppUtils.showDialog(
+            context,
+            AppLocalizations.of(context)!.payment_subscription_activated,
+            AppColors.success);
+      }
+    } catch (e) {
+      print('${AppLocalizations.of(context)!.payment_error}: ${e.toString()}');
+
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+              content: Text(
+                  "${AppLocalizations.of(context)!.payment_failed}: ${e.toString()}")),
         );
-    
-    final result = await callable.call(<String, dynamic>{
-      'amount': 2999,
-      'currency': 'usd',
-    });
-
-    print('${AppLocalizations.of(context)!.payment_function_returned}: ${result.data}');
-
-    final clientSecret = result.data['clientSecret'];
-    
-    await Stripe.instance.initPaymentSheet(
-      paymentSheetParameters: SetupPaymentSheetParameters(
-        merchantDisplayName: 'QuickDrop',
-        paymentIntentClientSecret: clientSecret,
-      ),
-    );
-
-    await Stripe.instance.presentPaymentSheet();
-
-    if (mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(AppLocalizations.of(context)!.payment_subscription_activated)),
-      );
-    }
-  } catch (e) {
-    if (mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("${AppLocalizations.of(context)!.payment_failed}: ${e.toString()}")),
-      );
-    }
-  } finally {
-    if (mounted) {
-      setState(() => _isLoading = false);
+      }
+    } finally {
+      if (mounted) {
+        setState(() => _isLoading = false);
+      }
     }
   }
-}
 
- 
   Widget _buildHeroSection() {
     return Container(
       width: double.infinity,
@@ -209,175 +215,177 @@ Future<void> _startPayment() async {
   }
 
   Widget _buildPriceCard() {
-    return  Container(
-        width: double.infinity,
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(24),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.08),
-              blurRadius: 30,
-              offset: const Offset(0, 10),
-            ),
-          ],
-        ),
-        child: Column(
-          children: [
-            // Price Section
-            Container(
-              padding: const EdgeInsets.all(32),
-              decoration: BoxDecoration(
-                color: Colors.grey[50],
-                borderRadius: const BorderRadius.only(
-                  topLeft: Radius.circular(24),
-                  topRight: Radius.circular(24),
-                ),
+    return Container(
+      width: double.infinity,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(24),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.08),
+            blurRadius: 30,
+            offset: const Offset(0, 10),
+          ),
+        ],
+      ),
+      child: Column(
+        children: [
+          // Price Section
+          Container(
+            padding: const EdgeInsets.all(32),
+            decoration: BoxDecoration(
+              color: Colors.grey[50],
+              borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(24),
+                topRight: Radius.circular(24),
               ),
-              child: Column(
-                children: [
-                  Text(
-                    AppLocalizations.of(context)!.payment_monthly_subscription,
-                    style: const TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                    ),
+            ),
+            child: Column(
+              children: [
+                Text(
+                  AppLocalizations.of(context)!.payment_monthly_subscription,
+                  style: const TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
                   ),
-                  const SizedBox(height: 16),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(top: 8),
-                        child: Text(
-                          AppLocalizations.of(context)!.payment_price,
-                          style: const TextStyle(
-                            fontSize: 28,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                      Text(
-                        AppLocalizations.of(context)!.payment_price_main,
+                ),
+                const SizedBox(height: 16),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(top: 8),
+                      child: Text(
+                        AppLocalizations.of(context)!.payment_price,
                         style: const TextStyle(
-                          fontSize: 72,
+                          fontSize: 28,
                           fontWeight: FontWeight.bold,
-                          height: 1,
                         ),
                       ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 8),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              AppLocalizations.of(context)!.payment_price_decimal,
-                              style: const TextStyle(
-                                fontSize: 28,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            Text(
-                              AppLocalizations.of(context)!.payment_price_period,
-                              style: TextStyle(
-                                fontSize: 16,
-                                color: Colors.grey[600],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 8),
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 16,
-                      vertical: 8,
                     ),
-                    decoration: BoxDecoration(
-                      color: Colors.orange[50],
-                      borderRadius: BorderRadius.circular(20),
-                      border: Border.all(color: Colors.orange[200]!),
-                    ),
-                    child: Text(
-                      AppLocalizations.of(context)!.payment_first_month_free,
-                      style: TextStyle(
-                        color: Colors.orange[900],
-                        fontSize: 14,
-                        fontWeight: FontWeight.w600,
+                    Text(
+                      AppLocalizations.of(context)!.payment_price_main,
+                      style: const TextStyle(
+                        fontSize: 72,
+                        fontWeight: FontWeight.bold,
+                        height: 1,
                       ),
                     ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-    );
-  }
-
-
-
-  Widget _buildTermsCheckbox() {
-    return Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Checkbox(
-                value: _agreeToTerms,
-                onChanged: (value) {
-                  setState(() => _agreeToTerms = value ?? false);
-                },
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(4),
-                ),
-              ),
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.only(top: 12),
-                  child: GestureDetector(
-                    onTap: () {
-                      setState(() => _agreeToTerms = !_agreeToTerms);
-                    },
-                    child: RichText(
-                      text: TextSpan(
-                        style: TextStyle(
-                          fontSize: 14,
-                          color: Colors.grey[700],
-                        ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 8),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          TextSpan(
-                            text: AppLocalizations.of(context)!.payment_terms_agree,
-                          ),
-                          TextSpan(
-                            text: AppLocalizations.of(context)!.payment_terms_of_service,
-                            style: TextStyle(
-                              color: Theme.of(context).primaryColor,
-                              fontWeight: FontWeight.w600,
-                              decoration: TextDecoration.underline,
+                          Text(
+                            AppLocalizations.of(context)!.payment_price_decimal,
+                            style: const TextStyle(
+                              fontSize: 28,
+                              fontWeight: FontWeight.bold,
                             ),
                           ),
-                          TextSpan(text: AppLocalizations.of(context)!.payment_terms_and),
-                          TextSpan(
-                            text: AppLocalizations.of(context)!.payment_privacy_policy,
+                          Text(
+                            AppLocalizations.of(context)!.payment_price_period,
                             style: TextStyle(
-                              color: Theme.of(context).primaryColor,
-                              fontWeight: FontWeight.w600,
-                              decoration: TextDecoration.underline,
+                              fontSize: 16,
+                              color: Colors.grey[600],
                             ),
                           ),
                         ],
                       ),
                     ),
+                  ],
+                ),
+                // const SizedBox(height: 8),
+                // Container(
+                //   padding: const EdgeInsets.symmetric(
+                //     horizontal: 16,
+                //     vertical: 8,
+                //   ),
+                //   decoration: BoxDecoration(
+                //     color: Colors.orange[50],
+                //     borderRadius: BorderRadius.circular(20),
+                //     border: Border.all(color: Colors.orange[200]!),
+                //   ),
+                //   child: Text(
+                //     AppLocalizations.of(context)!.payment_first_month_free,
+                //     style: TextStyle(
+                //       color: Colors.orange[900],
+                //       fontSize: 14,
+                //       fontWeight: FontWeight.w600,
+                //     ),
+                //   ),
+                // ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildTermsCheckbox() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Checkbox(
+            value: _agreeToTerms,
+            onChanged: (value) {
+              setState(() => _agreeToTerms = value ?? false);
+            },
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(4),
+            ),
+          ),
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.only(top: 12),
+              child: GestureDetector(
+                onTap: () {
+                  setState(() => _agreeToTerms = !_agreeToTerms);
+                },
+                child: RichText(
+                  text: TextSpan(
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: Colors.grey[700],
+                    ),
+                    children: [
+                      TextSpan(
+                        text: AppLocalizations.of(context)!.payment_terms_agree,
+                      ),
+                      TextSpan(
+                        text: AppLocalizations.of(context)!
+                            .payment_terms_of_service,
+                        style: TextStyle(
+                          color: Theme.of(context).primaryColor,
+                          fontWeight: FontWeight.w600,
+                          decoration: TextDecoration.underline,
+                        ),
+                      ),
+                      TextSpan(
+                          text:
+                              AppLocalizations.of(context)!.payment_terms_and),
+                      TextSpan(
+                        text: AppLocalizations.of(context)!
+                            .payment_privacy_policy,
+                        style: TextStyle(
+                          color: Theme.of(context).primaryColor,
+                          fontWeight: FontWeight.w600,
+                          decoration: TextDecoration.underline,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ),
-            ],
+            ),
           ),
-        );
+        ],
+      ),
+    );
   }
 
   @override
@@ -385,9 +393,9 @@ Future<void> _startPayment() async {
     return Column(
       children: [
         _buildHeroSection(),
-        
-        _buildFreeTrialBadge(),
-        // Pricing Card
+
+        // _buildFreeTrialBadge(),
+        // // Pricing Card
         _buildPriceCard(),
         const SizedBox(height: 24),
 
@@ -454,7 +462,7 @@ Future<void> _startPayment() async {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          AppLocalizations.of(context)!.payment_start_free_trial,
+                          AppLocalizations.of(context)!.pay,
                           style: const TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
@@ -493,9 +501,6 @@ Future<void> _startPayment() async {
         const SizedBox(height: 32),
       ],
     );
-
-
-
   }
 
   Widget _buildFeature({

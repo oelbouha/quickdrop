@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:quickdrop_app/core/utils/imports.dart';
 import 'package:quickdrop_app/core/widgets/profile_avatar.dart';
 import 'package:quickdrop_app/features/profile/payment.screen.dart';
@@ -14,7 +15,6 @@ class BecomeDriverScreenState extends State<BecomeDriverScreen>
     with TickerProviderStateMixin {
   bool _isLoading = false;
   bool _isLoadingData = true;
-  bool _isUserRequestedDriver = false;
 
   final firstNameController = TextEditingController();
   final lastNameController = TextEditingController();
@@ -38,12 +38,11 @@ class BecomeDriverScreenState extends State<BecomeDriverScreen>
     super.initState();
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      _isUserRequestedDriver =
-          await Provider.of<UserProvider>(context, listen: false)
-              .doesUserRequestDriverMode(user!.uid);
+       final userProvider = Provider.of<UserProvider>(context, listen: false);
+        await userProvider.loadDriverData(user!.uid);
       setState(() {
+          // _showRegistrationForm = !userProvider.isUserRequestedDriver;
         _isLoadingData = false;
-        _showRegistrationForm = !_isUserRequestedDriver;
       });
     });
 
@@ -117,11 +116,17 @@ class BecomeDriverScreenState extends State<BecomeDriverScreen>
           carModel: vehicleTypeController.text.trim(),
           driverNumber: driverNumberController.text.trim(),
           createdAt: DateTime.now().toIso8601String(),
+          driverStatus: "pending",
         );
 
         await Provider.of<UserProvider>(context, listen: false)
             .requestDriverMode(driver);
+        
+        await FirebaseFirestore.instance.collection('users').doc(user.uid).update({
+          'driverStatus': 'pending',
+        });
 
+         
         await showSuccessAnimation(context,
             title: t.driver_mode_title, message: t.driver_mode_success_message);
       } catch (e) {
@@ -160,8 +165,15 @@ class BecomeDriverScreenState extends State<BecomeDriverScreen>
   bool _isDriverShouldPay() {
     // return true;
     final user = Provider.of<UserProvider>(context, listen: false).user;
-
-    if (user?.subscriptionStatus == "inactive" && user?.status == "driver") {
+    // final subscriptionEndAt = user?.subscriptionEndsAt;
+    // final now = DateTime.now();
+    // if (subscriptionEndAt != null) {
+    //   final endDate = DateTime.parse(subscriptionEndAt);
+    //   if (now.isAfter(endDate)) {
+    //     return true;
+    //   }
+    // }
+    if (user?.subscriptionStatus == "inactive" ) {
       return true;
     }
     return false;
@@ -184,22 +196,45 @@ class BecomeDriverScreenState extends State<BecomeDriverScreen>
         elevation: 0,
         centerTitle: true,
       ),
-      body: _isLoadingData
-          ? loadingAnimation()
-          : SingleChildScrollView(
-              physics: const BouncingScrollPhysics(),
-              child: Padding(
-                padding: const EdgeInsets.all(AppTheme.homeScreenPadding),
-                child: _isDriverShouldPay()
-                    ? PaymentScreen()
-                    : _buildUpdateScreen(),
-              ),
+      body: Consumer<UserProvider>(
+        builder: (context, userProvider, child) {
+          if (userProvider.driverRequestStatus == null) {
+            return loadingAnimation();
+          }
+         
+          return SingleChildScrollView(
+            physics: const BouncingScrollPhysics(),
+            child: Padding(
+              padding: const EdgeInsets.all(AppTheme.homeScreenPadding),
+              child: userProvider.driverRequestStatus == "accepted" 
+                  ? _buildAcceptedScreen()
+                  : _buildUpdateScreen(userProvider.isUserRequestedDriver),
             ),
+          );
+        },
+      ),
     );
   }
 
-  Widget _buildUpdateScreen() {
+  Widget _buildAcceptedScreen() {
     final t = AppLocalizations.of(context)!;
+    final driverShouldPay = _isDriverShouldPay();
+    
+    if (driverShouldPay) {
+      return const PaymentScreen();
+    }
+
+    return StatusCard(
+      icon: Icons.info_outline,
+      title: "You are a driver now!",
+      message: "you can send request to others as a driver.",
+      color: AppColors.succes,
+    );
+  }
+
+  Widget _buildUpdateScreen(bool isUserRequestedDriver) {
+    final t = AppLocalizations.of(context)!;
+    print("isUserRequestedDriver: $isUserRequestedDriver");
     return Form(
       key: _formKey,
       child: Column(
@@ -207,36 +242,36 @@ class BecomeDriverScreenState extends State<BecomeDriverScreen>
         children: [
           _buildHeaderSection(),
           const SizedBox(height: 24),
-          if (_isUserRequestedDriver) ...[
+          if (isUserRequestedDriver) ...[
             StatusCard(
               icon: Icons.info_outline,
               title: t.request_driver_mode_title,
               message: t.request_driver_mode_message,
               color: AppColors.succes,
             ),
-            if (!_showRegistrationForm) ...[
-              const SizedBox(height: 24),
-              ElevatedButton(
-                onPressed: () {
-                  setState(() {
-                    _showRegistrationForm = true;
-                  });
-                },
-                style: ElevatedButton.styleFrom(
-                  elevation: 0,
-                  backgroundColor: AppColors.blue700.withOpacity(0.8),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                ),
-                child: Text(
-                  t.resend_request,
-                  style: const TextStyle(color: Colors.white),
-                ),
-              ),
-            ],
+            // if (!_showRegistrationForm) ...[
+            //   const SizedBox(height: 24),
+            //   ElevatedButton(
+            //     onPressed: () {
+            //       setState(() {
+            //         _showRegistrationForm = !_showRegistrationForm;
+            //       });
+            //     },
+            //     style: ElevatedButton.styleFrom(
+            //       elevation: 0,
+            //       backgroundColor: AppColors.blue700.withOpacity(0.8),
+            //       shape: RoundedRectangleBorder(
+            //         borderRadius: BorderRadius.circular(12),
+            //       ),
+            //     ),
+            //     child: Text(
+            //       t.resend_request,
+            //       style: const TextStyle(color: Colors.white),
+            //     ),
+            //   ),
+            // ],
           ],
-          if (_showRegistrationForm) ...[
+          // if (_showRegistrationForm) ...[
             const SizedBox(height: 32),
             _buildImageInfoSection(),
             const SizedBox(height: 24),
@@ -248,7 +283,7 @@ class BecomeDriverScreenState extends State<BecomeDriverScreen>
             const SizedBox(height: 32),
             _buildSaveButton(),
             const SizedBox(height: 20),
-          ]
+          // ]
         ],
       ),
     );
@@ -379,32 +414,32 @@ class BecomeDriverScreenState extends State<BecomeDriverScreen>
         Row(
           children: [
             Expanded(
-              child: ImprovedTextField(
+              child: AppTextField(
                 controller: firstNameController,
                 label: t.first_name,
-                hint: t.enter_first_name,
-                icon: Icons.person_outline,
+                hintText: t.enter_first_name,
+                iconPath: "assets/icon/user.svg",
                 validator: Validators.name,
               ),
             ),
             const SizedBox(width: 12),
             Expanded(
-              child: ImprovedTextField(
+              child: AppTextField(
                 controller: lastNameController,
                 label: t.last_name,
-                hint: t.enter_last_name,
-                icon: Icons.person_outline,
+                hintText: t.enter_last_name,
+                iconPath: "assets/icon/user.svg",
                 validator: Validators.name,
               ),
             ),
           ],
         ),
         const SizedBox(height: 16),
-        ImprovedTextField(
+        AppTextField(
           controller: idNumberController,
           label: t.id_card_number,
-          hint: t.enter_national_id,
-          icon: Icons.person,
+          hintText: t.enter_national_id,
+          iconPath: "assets/icon/id-card.svg",
           keyboardType: TextInputType.emailAddress,
           validator: Validators.notEmpty,
         ),
@@ -428,11 +463,11 @@ class BecomeDriverScreenState extends State<BecomeDriverScreen>
       title: t.contact_information,
       icon: Icons.contact_mail_outlined,
       children: [
-        ImprovedTextField(
+        AppTextField(
           controller: emailController,
           label: t.email_address,
-          hint: t.email_hint,
-          icon: Icons.email_outlined,
+          hintText: t.email_hint,
+          iconPath: "assets/icon/email.svg",
           keyboardType: TextInputType.emailAddress,
           validator: Validators.email,
         ),
@@ -499,11 +534,11 @@ class BecomeDriverScreenState extends State<BecomeDriverScreen>
           const SizedBox(height: 16),
         ],
 
-        ImprovedTextField(
+        AppTextField(
           controller: phoneNumberController,
           label: t.phone_number,
-          hint: t.phone_hint,
-          icon: Icons.phone_outlined,
+          hintText: t.phone_hint,
+          iconPath: "assets/icon/phone.svg",
           keyboardType: TextInputType.phone,
           validator: Validators.phone,
         ),
@@ -532,7 +567,8 @@ class BecomeDriverScreenState extends State<BecomeDriverScreen>
             t.verification_email_sent,
             AppColors.succes,
           );
-          context.push("/verify-email?email=${FirebaseAuth.instance.currentUser?.email}");
+          context.push(
+              "/verify-email?email=${FirebaseAuth.instance.currentUser?.email}");
         }
       }
     } on FirebaseAuthException catch (e) {
@@ -564,29 +600,29 @@ class BecomeDriverScreenState extends State<BecomeDriverScreen>
       title: t.vehicle_information,
       icon: Icons.contact_mail_outlined,
       children: [
-        ImprovedTextField(
+        AppTextField(
           controller: vehiclePlateNumberController,
           label: t.registration_plate,
-          hint: t.vehicle_plate_number_hint,
-          icon: Icons.car_crash_outlined,
+          hintText: t.vehicle_plate_number_hint,
+          iconPath: "assets/icon/car.svg",
           keyboardType: TextInputType.emailAddress,
           validator: Validators.notEmpty,
         ),
         const SizedBox(height: 16),
-        ImprovedTextField(
+        AppTextField(
           controller: driverNumberController,
           label: t.driver_number_label,
-          hint: t.driver_number_hint,
-          icon: Icons.car_crash_outlined,
+          hintText: t.driver_number_hint,
+          iconPath: "assets/icon/car.svg",
           keyboardType: TextInputType.phone,
           validator: Validators.notEmpty,
         ),
         const SizedBox(height: 16),
-        ImprovedTextField(
+        AppTextField(
           controller: vehicleTypeController,
           label: t.vehicle_type_label,
-          hint: t.vehicle_type_hint,
-          icon: Icons.car_crash_outlined,
+          hintText: t.vehicle_type_hint,
+          iconPath: "assets/icon/car.svg",
           keyboardType: TextInputType.text,
           validator: Validators.notEmpty,
         ),
