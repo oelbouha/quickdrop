@@ -1,0 +1,37 @@
+import 'package:quickdrop_app/core/utils/imports.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+class SplashRedirect extends StatefulWidget {
+  const SplashRedirect({super.key});
+
+  @override
+  State<SplashRedirect> createState() => _SplashRedirectState();
+}
+
+class _SplashRedirectState extends State<SplashRedirect> {
+  @override
+  void initState() {
+    super.initState();
+    _checkRoute();
+  }
+
+  Future<void> _checkRoute() async {
+    final prefs = await SharedPreferences.getInstance();
+    final seen = prefs.getBool('onboarding_seen') ?? false;
+    final user = FirebaseAuth.instance.currentUser;
+
+    await Future.delayed(const Duration(milliseconds: 100));
+
+    if (!seen) {
+      context.go('/onboarding');
+      return;
+    }
+    context.go('/intro');
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        backgroundColor: AppColors.background, body: loadingAnimation());
+  }
+}
