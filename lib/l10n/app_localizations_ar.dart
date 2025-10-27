@@ -1419,4 +1419,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get trip_owner_cannot_request => 'لا يمكن لصاحب الرحلة إرسال طلب لشحنه الخاص.';
+
+  @override
+  String get driver_cannot_create_trip_message => 'لا يمكنك إنشاء رحلة في الوقت الحالي. يرجى التأكد من أن حساب السائق الخاص بك نشط ومُوثَّق.';
 }

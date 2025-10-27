@@ -557,11 +557,8 @@
 "choose_a_shipment": "Choisissez un envoi",
 "please_select_shipment": "Veuillez sélectionner un envoi",
 "request_already_sent": "Vous avez déjà envoyé une demande pour cet envoi. Veuillez attendre que le propriétaire l'accepte ou la rejette.",
-"trip_owner_cannot_request": "Le propriétaire du trajet ne peut pas envoyer une demande pour son propre envoi."
-
-
-
-
+"trip_owner_cannot_request": "Le propriétaire du trajet ne peut pas envoyer une demande pour son propre envoi.",
+"driver_cannot_create_trip_message" : "Vous ne pouvez pas créer de trajet pour le moment. Veuillez vérifier que votre compte chauffeur est actif et vérifié."
 
 
 

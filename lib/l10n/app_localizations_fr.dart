@@ -1419,4 +1419,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get trip_owner_cannot_request => 'Le propriétaire du trajet ne peut pas envoyer une demande pour son propre envoi.';
+
+  @override
+  String get driver_cannot_create_trip_message => 'Vous ne pouvez pas créer de trajet pour le moment. Veuillez vérifier que votre compte chauffeur est actif et vérifié.';
 }

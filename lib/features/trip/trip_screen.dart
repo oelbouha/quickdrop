@@ -146,7 +146,15 @@ class _TripScreenState extends State<TripScreen>
             }),
       floatingActionButton: FloatButton(
         expanded: _isExpanded,
-        onTap: () => {context.push("/add-trip")},
+        onTap: () => {
+           Provider.of<UserProvider>(context, listen: false).canDriverMakeActions()
+              ? context.push("/add-trip")
+              : AppUtils.showDialog(
+                  context,
+                  AppLocalizations.of(context)!
+                      .driver_cannot_create_trip_message,
+                  AppColors.error)
+          },
         hintText: "Add trip",
         iconPath: "assets/icon/add.svg",
       ),

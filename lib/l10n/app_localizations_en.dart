@@ -1419,4 +1419,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get trip_owner_cannot_request => 'Trip owner cannot send a request for their own shipment.';
+
+  @override
+  String get driver_cannot_create_trip_message => 'You cannot create a trip right now. Please make sure your driver account is active and verified.';
 }

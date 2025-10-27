@@ -66,7 +66,7 @@ class AppUtils {
             ),
           ],
         ),
-        backgroundColor: AppColors.dark.withValues(alpha: 0.8),
+        backgroundColor: AppColors.dark.withValues(alpha: 0.9),
         behavior: SnackBarBehavior.floating,
         margin: const EdgeInsets.only(top: 60, left: 16, right: 16, bottom: 16),
         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 10),

@@ -2892,6 +2892,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Trip owner cannot send a request for their own shipment.'**
   String get trip_owner_cannot_request;
+
+  /// No description provided for @driver_cannot_create_trip_message.
+  ///
+  /// In en, this message translates to:
+  /// **'You cannot create a trip right now. Please make sure your driver account is active and verified.'**
+  String get driver_cannot_create_trip_message;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

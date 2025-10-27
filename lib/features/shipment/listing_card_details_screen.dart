@@ -635,6 +635,16 @@ class _ListingCardDetailsState extends State<ListingCardDetails> {
   void _sendDeliveryRequest(Trip? trip, Shipment? shipment,
       [StateSetter? setModalState]) async {
     final t = AppLocalizations.of(context)!;
+
+    final canDrive = Provider.of<UserProvider>(context, listen: false)
+        .canDriverMakeActions();
+    if (!canDrive) {
+      context.pop();
+      AppUtils.showDialog(
+          context, t.driver_cannot_create_trip_message, AppColors.error);
+      return;
+    }
+
     if (_isLoading) return;
 
     if (!_formKey.currentState!.validate()) {
@@ -701,8 +711,7 @@ class _ListingCardDetailsState extends State<ListingCardDetails> {
       final errorMessage = e.toString();
       if (errorMessage.contains("already_exists")) {
         AppUtils.showDialog(context, t.request_already_sent, AppColors.error);
-      }
-      else if (errorMessage.contains("owner_is_the_same")) {
+      } else if (errorMessage.contains("owner_is_the_same")) {
         AppUtils.showDialog(
             context, t.trip_owner_cannot_request, AppColors.error);
       } else {

@@ -87,6 +87,15 @@ class RequestState extends State<Request> with SingleTickerProviderStateMixin {
     final t = AppLocalizations.of(context)!;
     if (_isAcceptLoading) return;
     
+    final canDrive = Provider.of<UserProvider>(context, listen: false)
+        .canDriverMakeActions();
+    if (!canDrive) {
+      context.pop();
+      AppUtils.showDialog(
+          context, t.driver_cannot_create_trip_message, AppColors.error);
+      return;
+    }
+
     setState(() {
       _isAcceptLoading = true;
     });
@@ -331,7 +340,12 @@ Widget _buildHeader() {
                 width: 200,
                 child: OutlinedButton.icon(
                   onPressed: () {
-                    context.push('/negotiation-screen?userId=${widget.user.uid}&shipmentId=${widget.shipment.id}&requestId=${widget.request.id}');
+                    Provider.of<UserProvider>(context, listen: false).canDriverMakeActions()
+                        ? context.push('/negotiation-screen?userId=${widget.user.uid}&shipmentId=${widget.shipment.id}&requestId=${widget.request.id}')
+                        : AppUtils.showDialog(
+                            context,
+                            t.driver_cannot_create_trip_message,
+                            AppColors.error);
                   },
                   icon: const Icon(Icons.chat_bubble_outline, size: 16),
                   label: Text(t.negotiate),

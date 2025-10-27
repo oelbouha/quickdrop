@@ -122,8 +122,10 @@ class UserProvider with ChangeNotifier {
 
   bool canDriverMakeActions() {
     if (_user == null) return false;
+    print("Subscription status: ${_user!.subscriptionStatus}");
     return _user!.subscriptionStatus == 'active';
   }
+
   Future<void> loadDriverData(String uid) async {
     _driverRequestStatus = await getUserRequestDriver(uid);
     _isUserRequestedDriver = await doesUserRequestDriverMode(uid);

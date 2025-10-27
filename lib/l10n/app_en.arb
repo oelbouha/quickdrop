@@ -565,15 +565,16 @@
   "electronics": "Electronics",
   "clothing": "Clothing",
   "verify_relogin_message" : "After clicking the link in your email, please log out and sign in again with your new email address to complete the update.",
-    "choose_from_gallery": "Choose from Gallery",
+  "choose_from_gallery": "Choose from Gallery",
   "take_a_picture": "Take a Picture",
   "upload_photo": "Upload photo",
-"photo_format_hint": "JPG, PNG up to 5 MB",
-"no_active_shipments_available": "No active shipments available",
-"choose_a_shipment": "Choose a shipment",
-"please_select_shipment": "Please select a shipment",
-"request_already_sent": "You have already sent a request for this shipment. Please wait for the owner to accept or reject it.",
-"trip_owner_cannot_request": "Trip owner cannot send a request for their own shipment."
+  "photo_format_hint": "JPG, PNG up to 5 MB",
+  "no_active_shipments_available": "No active shipments available",
+  "choose_a_shipment": "Choose a shipment",
+  "please_select_shipment": "Please select a shipment",
+  "request_already_sent": "You have already sent a request for this shipment. Please wait for the owner to accept or reject it.",
+  "trip_owner_cannot_request": "Trip owner cannot send a request for their own shipment.",
+  "driver_cannot_create_trip_message" : "You cannot create a trip right now. Please make sure your driver account is active and verified."
 
 
 
