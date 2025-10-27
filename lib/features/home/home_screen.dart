@@ -245,10 +245,10 @@ class _HomeScreenState extends State<HomeScreen> {
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.1),
-            blurRadius: 8,
-            offset: const Offset(0, 4),
-          ),
+              color: Theme.of(context).colorScheme.primary.withOpacity(0.2),
+              blurRadius: 20,
+              offset: Offset(0, 10),
+            ),
         ],
       ),
       child: Column(

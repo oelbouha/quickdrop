@@ -574,9 +574,20 @@
   "please_select_shipment": "Please select a shipment",
   "request_already_sent": "You have already sent a request for this shipment. Please wait for the owner to accept or reject it.",
   "trip_owner_cannot_request": "Trip owner cannot send a request for their own shipment.",
-  "driver_cannot_create_trip_message" : "You cannot create a trip right now. Please make sure your driver account is active and verified."
+  "driver_cannot_create_trip_message" : "You cannot create a trip right now. Please make sure your driver account is active and verified.",
 
-
+  "onboarding_terms_text": "By continuing, you agree to our Terms of Service",
+  "onboarding_skip": "Skip",
+  "onboarding_next": "Next",
+  "onboarding_get_started": "Get Started",
+  "onboarding_1_title": "Welcome to QuickDrop",
+  "onboarding_1_body": "Send and receive packages easily with our peer-to-peer delivery system — faster, cheaper, and more personal.",
+  "onboarding_2_title": "Community-Powered Delivery",
+  "onboarding_2_body": "Connect with trusted travelers going your way. They carry your packages safely while earning extra income.",
+  "onboarding_3_title": "Create Shipments & Trips",
+  "onboarding_3_body": "Register once and unlock everything. Create shipment requests or post your travel routes. Negotiate prices and find the perfect match.",
+  "onboarding_4_title": "Earn While You Travel",
+  "onboarding_4_body": "Deliver packages along your route and get paid instantly. QuickDrop turns every trip into an opportunity."
 
 
 

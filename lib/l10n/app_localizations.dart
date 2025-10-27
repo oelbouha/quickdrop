@@ -2898,6 +2898,78 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'You cannot create a trip right now. Please make sure your driver account is active and verified.'**
   String get driver_cannot_create_trip_message;
+
+  /// No description provided for @onboarding_terms_text.
+  ///
+  /// In en, this message translates to:
+  /// **'By continuing, you agree to our Terms of Service'**
+  String get onboarding_terms_text;
+
+  /// No description provided for @onboarding_skip.
+  ///
+  /// In en, this message translates to:
+  /// **'Skip'**
+  String get onboarding_skip;
+
+  /// No description provided for @onboarding_next.
+  ///
+  /// In en, this message translates to:
+  /// **'Next'**
+  String get onboarding_next;
+
+  /// No description provided for @onboarding_get_started.
+  ///
+  /// In en, this message translates to:
+  /// **'Get Started'**
+  String get onboarding_get_started;
+
+  /// No description provided for @onboarding_1_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Welcome to QuickDrop'**
+  String get onboarding_1_title;
+
+  /// No description provided for @onboarding_1_body.
+  ///
+  /// In en, this message translates to:
+  /// **'Send and receive packages easily with our peer-to-peer delivery system — faster, cheaper, and more personal.'**
+  String get onboarding_1_body;
+
+  /// No description provided for @onboarding_2_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Community-Powered Delivery'**
+  String get onboarding_2_title;
+
+  /// No description provided for @onboarding_2_body.
+  ///
+  /// In en, this message translates to:
+  /// **'Connect with trusted travelers going your way. They carry your packages safely while earning extra income.'**
+  String get onboarding_2_body;
+
+  /// No description provided for @onboarding_3_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Create Shipments & Trips'**
+  String get onboarding_3_title;
+
+  /// No description provided for @onboarding_3_body.
+  ///
+  /// In en, this message translates to:
+  /// **'Register once and unlock everything. Create shipment requests or post your travel routes. Negotiate prices and find the perfect match.'**
+  String get onboarding_3_body;
+
+  /// No description provided for @onboarding_4_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Earn While You Travel'**
+  String get onboarding_4_title;
+
+  /// No description provided for @onboarding_4_body.
+  ///
+  /// In en, this message translates to:
+  /// **'Deliver packages along your route and get paid instantly. QuickDrop turns every trip into an opportunity.'**
+  String get onboarding_4_body;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

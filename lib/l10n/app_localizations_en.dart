@@ -1422,4 +1422,40 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get driver_cannot_create_trip_message => 'You cannot create a trip right now. Please make sure your driver account is active and verified.';
+
+  @override
+  String get onboarding_terms_text => 'By continuing, you agree to our Terms of Service';
+
+  @override
+  String get onboarding_skip => 'Skip';
+
+  @override
+  String get onboarding_next => 'Next';
+
+  @override
+  String get onboarding_get_started => 'Get Started';
+
+  @override
+  String get onboarding_1_title => 'Welcome to QuickDrop';
+
+  @override
+  String get onboarding_1_body => 'Send and receive packages easily with our peer-to-peer delivery system — faster, cheaper, and more personal.';
+
+  @override
+  String get onboarding_2_title => 'Community-Powered Delivery';
+
+  @override
+  String get onboarding_2_body => 'Connect with trusted travelers going your way. They carry your packages safely while earning extra income.';
+
+  @override
+  String get onboarding_3_title => 'Create Shipments & Trips';
+
+  @override
+  String get onboarding_3_body => 'Register once and unlock everything. Create shipment requests or post your travel routes. Negotiate prices and find the perfect match.';
+
+  @override
+  String get onboarding_4_title => 'Earn While You Travel';
+
+  @override
+  String get onboarding_4_body => 'Deliver packages along your route and get paid instantly. QuickDrop turns every trip into an opportunity.';
 }

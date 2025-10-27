@@ -1422,4 +1422,40 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get driver_cannot_create_trip_message => 'Vous ne pouvez pas créer de trajet pour le moment. Veuillez vérifier que votre compte chauffeur est actif et vérifié.';
+
+  @override
+  String get onboarding_terms_text => 'En continuant, vous acceptez nos Conditions d\'utilisation';
+
+  @override
+  String get onboarding_skip => 'Passer';
+
+  @override
+  String get onboarding_next => 'Suivant';
+
+  @override
+  String get onboarding_get_started => 'Commencer';
+
+  @override
+  String get onboarding_1_title => 'Bienvenue sur QuickDrop';
+
+  @override
+  String get onboarding_1_body => 'Envoyez et recevez des colis facilement avec notre système de livraison entre particuliers — plus rapide, moins cher et plus personnel.';
+
+  @override
+  String get onboarding_2_title => 'Livraison Communautaire';
+
+  @override
+  String get onboarding_2_body => 'Connectez-vous avec des voyageurs de confiance qui vont dans votre direction. Ils transportent vos colis en toute sécurité tout en gagnant un revenu supplémentaire.';
+
+  @override
+  String get onboarding_3_title => 'Créer des Envois et Trajets';
+
+  @override
+  String get onboarding_3_body => 'Inscrivez-vous une fois et débloquez tout. Créez des demandes d\'envoi ou publiez vos itinéraires de voyage. Négociez les prix et trouvez la correspondance parfaite.';
+
+  @override
+  String get onboarding_4_title => 'Gagnez en Voyageant';
+
+  @override
+  String get onboarding_4_body => 'Livrez des colis sur votre trajet et soyez payé instantanément. QuickDrop transforme chaque voyage en opportunité.';
 }

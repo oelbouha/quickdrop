@@ -347,7 +347,7 @@ Widget _buildHeader() {
                             t.driver_cannot_create_trip_message,
                             AppColors.error);
                   },
-                  icon: const Icon(Icons.chat_bubble_outline, size: 16),
+                  icon: const CustomIcon(iconPath: "assets/icon/check.svg", size: 16),
                   label: Text(t.negotiate),
                   style: OutlinedButton.styleFrom(
                     foregroundColor: AppColors.primary,

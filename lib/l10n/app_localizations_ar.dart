@@ -1422,4 +1422,40 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get driver_cannot_create_trip_message => 'لا يمكنك إنشاء رحلة في الوقت الحالي. يرجى التأكد من أن حساب السائق الخاص بك نشط ومُوثَّق.';
+
+  @override
+  String get onboarding_terms_text => 'بالمتابعة، فإنك توافق على شروط الخدمة الخاصة بنا';
+
+  @override
+  String get onboarding_skip => 'تخطي';
+
+  @override
+  String get onboarding_next => 'التالي';
+
+  @override
+  String get onboarding_get_started => 'ابدأ الآن';
+
+  @override
+  String get onboarding_1_title => 'مرحباً بك في QuickDrop';
+
+  @override
+  String get onboarding_1_body => 'أرسل واستقبل الطرود بسهولة من خلال نظام التوصيل من نظير إلى نظير - أسرع وأرخص وأكثر خصوصية.';
+
+  @override
+  String get onboarding_2_title => 'التوصيل المجتمعي';
+
+  @override
+  String get onboarding_2_body => 'تواصل مع مسافرين موثوقين يسلكون طريقك. ينقلون طرودك بأمان بينما يكسبون دخلاً إضافياً.';
+
+  @override
+  String get onboarding_3_title => 'إنشاء الشحنات والرحلات';
+
+  @override
+  String get onboarding_3_body => 'سجل مرة واحدة وافتح كل شيء. أنشئ طلبات الشحن أو انشر مسارات سفرك. تفاوض على الأسعار واعثر على التطابق المثالي.';
+
+  @override
+  String get onboarding_4_title => 'اكسب أثناء سفرك';
+
+  @override
+  String get onboarding_4_body => 'وصّل الطرود على طول مسارك واحصل على الأموال فوراً. QuickDrop يحول كل رحلة إلى فرصة.';
 }
