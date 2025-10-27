@@ -234,7 +234,7 @@ class BecomeDriverScreenState extends State<BecomeDriverScreen>
 
   Widget _buildUpdateScreen(bool isUserRequestedDriver) {
     final t = AppLocalizations.of(context)!;
-    print("isUserRequestedDriver: $isUserRequestedDriver");
+    // print("isUserRequestedDriver: $isUserRequestedDriver");
     return Form(
       key: _formKey,
       child: Column(
