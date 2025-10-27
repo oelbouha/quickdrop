@@ -7,11 +7,11 @@ import 'package:intl/intl.dart';
 import 'package:quickdrop_app/core/utils/imports.dart';
 import 'package:quickdrop_app/features/models/statictics_model.dart';
 
-
 enum UserRole { customer, driver }
-enum DriverStatus { pending, approved, rejected }
-enum SubscriptionStatus { inactive, active }
 
+enum DriverStatus { pending, approved, rejected }
+
+enum SubscriptionStatus { inactive, active }
 
 class UserData {
   final String uid;
@@ -46,9 +46,9 @@ class UserData {
     this.carPlateNumber,
     this.carModel,
     this.driverNumber,
-    this.subscriptionEndsAt ,
+    this.subscriptionEndsAt,
     this.status = "customer",
-    this.driverStatus = "pending",
+    this.driverStatus = "inactive",
     this.subscriptionStatus = "inactive",
   });
   Map<String, dynamic> toMap() {
@@ -69,7 +69,7 @@ class UserData {
       'fcmToken': fcmToken,
       'driverStatus': driverStatus,
       'subscriptionStatus': subscriptionStatus,
-      'subscriptionEndsAt' : subscriptionEndsAt,
+      'subscriptionEndsAt': subscriptionEndsAt,
     };
   }
 
@@ -90,12 +90,19 @@ class UserData {
         driverNumber: map['driverNumber'],
         driverStatus: map['driverStatus'],
         subscriptionStatus: map['subscriptionStatus'],
-        subscriptionEndsAt : map["subscriptionEndsAt"],
+        subscriptionEndsAt: map["subscriptionEndsAt"],
         createdAt: map["createdAt"]);
   }
 }
 
 class UserProvider with ChangeNotifier {
+  String? _driverRequestStatus;
+  bool _isUserRequestedDriver = false;
+
+  String? get driverRequestStatus => _driverRequestStatus;
+
+  bool get isUserRequestedDriver => _isUserRequestedDriver;
+
   UserData? _user;
   final Map<String, UserData> _users = {};
 
@@ -113,22 +120,106 @@ class UserProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  bool canDriverMakeActions() {
+    if (_user == null) return false;
+    return _user!.subscriptionStatus == 'active';
+  }
+  Future<void> loadDriverData(String uid) async {
+    _driverRequestStatus = await getUserRequestDriver(uid);
+    _isUserRequestedDriver = await doesUserRequestDriverMode(uid);
+    notifyListeners();
+  }
+
+  Future<void> updateDriverStatusInDb(String uid, String newStatus) async {
+    await FirebaseFirestore.instance.collection('users').doc(uid).update({
+      'driverStatus': newStatus,
+    });
+    await loadDriverData(uid);
+  }
+
   void updateUserFcmToken(String token, String userId) {
     FirebaseFirestore.instance.collection('users').doc(userId).set({
       'fcmToken': token,
     }, SetOptions(merge: true));
   }
 
+  Future<String> getSubscriptionDate(String uid) async {
+    try {
+      final doc = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(uid)
+          .get();
+      if (doc.exists) {
+        final date = doc.data()?['subscriptionEndsAt'];
+        return date ?? "";
+      }
+      return "";
+    } catch (e) {
+      return "";
+    }
+  }
+
   Future<bool> doesUserRequestDriverMode(String uid) async {
     try {
       final doc = await FirebaseFirestore.instance
-          .collection('driverRequests')
+          .collection('users')
           .doc(uid)
           .get();
-      return doc.exists;
+      if (doc.exists) {
+        final status = doc.data()?['driverStatus'];
+        print("Driver request status: $status");
+        if (status == 'pending') {
+          return true;
+        }
+      }
+      return false;
     } catch (e) {
       // print("Error checking driver request: $e");
       return false;
+    }
+  }
+
+  Future<void> updatePaymentDate(String userId) async {
+    try {
+      await FirebaseFirestore.instance.collection('users').doc(userId).update({
+        'subscriptionStatus': 'active',
+        'subscriptionEndsAt':
+            DateTime.now().add(const Duration(days: 30)).toIso8601String(),
+      });
+      _user?.subscriptionStatus = 'active';
+      notifyListeners();
+    } catch (e) {
+      // print("Error updating payment date: $e");
+      rethrow;
+    }
+  }
+
+  Future<void> updateSubscriptionStatus(String newStatus) async {
+    try {
+      if (_user == null) return;
+      await FirebaseFirestore.instance.collection('users').doc(_user!.uid).update({
+        'subscriptionStatus': newStatus,
+      });
+      _user!.subscriptionStatus = newStatus;
+      notifyListeners();
+    } catch (e) {
+      // print("Error updating subscription status: $e");
+      rethrow;
+    }
+  }
+
+  Future<String?> getUserRequestDriver(String uid) async {
+    try {
+      final doc = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(uid)
+          .get();
+      if (doc.exists) {
+        final status = doc.data()?['driverStatus'];
+        return status ?? null;
+      }
+    } catch (e) {
+      return null;
     }
   }
 
@@ -221,7 +312,8 @@ class UserProvider with ChangeNotifier {
     //   return _users[uid]!;
     // }
     try {
-      final userDoc = await FirebaseFirestore.instance.collection('users').doc(uid).get();
+      final userDoc =
+          await FirebaseFirestore.instance.collection('users').doc(uid).get();
       if (userDoc.exists) {
         final user = UserData.fromMap(userDoc.data()!);
         _users[uid] = user;

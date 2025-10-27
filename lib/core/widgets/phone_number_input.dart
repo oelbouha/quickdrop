@@ -1,5 +1,5 @@
 
-import 'package:quickdrop_app/core/widgets/gestureDetector.dart';
+import 'package:quickdrop_app/core/widgets/gesture_detector.dart';
 import 'package:quickdrop_app/core/utils/imports.dart';
 
 import 'package:intl_phone_field/intl_phone_field.dart';

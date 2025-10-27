@@ -898,16 +898,16 @@ class AppLocalizationsEn extends AppLocalizations {
   String get payment_how_it_works => 'How it works';
 
   @override
-  String get payment_step_1 => 'Start your free trial today';
+  String get payment_step_1 => 'Subscribe for this month and start earning';
 
   @override
-  String get payment_step_2 => 'Deliver and earn for 30 days free';
+  String get payment_step_2 => 'Work when you want, earn as you like';
 
   @override
-  String get payment_step_3 => 'After trial, pay \$29.99/month';
+  String get payment_step_3 => 'Only \$2.00 per month to stay active';
 
   @override
-  String get payment_step_4 => 'Cancel anytime, no commitment';
+  String get payment_step_4 => 'Renew monthly, no commitments';
 
   @override
   String get payment_free_trial_badge => '1 MONTH FREE TRIAL';
@@ -919,16 +919,16 @@ class AppLocalizationsEn extends AppLocalizations {
   String get payment_price => '\$';
 
   @override
-  String get payment_price_main => '29';
+  String get payment_price_main => '2';
 
   @override
-  String get payment_price_decimal => '.99';
+  String get payment_price_decimal => '.00';
 
   @override
   String get payment_price_period => '/month';
 
   @override
-  String get payment_first_month_free => 'First month FREE, then \$29.99/mo';
+  String get payment_first_month_free => 'First month FREE, then \$2.00/mo';
 
   @override
   String get payment_terms_agree => 'I agree to the ';
@@ -943,7 +943,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get payment_privacy_policy => 'Privacy Policy';
 
   @override
-  String get payment_start_free_trial => 'Start Free Trial';
+  String get pay => 'Pay';
 
   @override
   String get payment_secure_stripe => 'Secure payment powered by Stripe';

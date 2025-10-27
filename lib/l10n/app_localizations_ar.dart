@@ -898,16 +898,16 @@ class AppLocalizationsAr extends AppLocalizations {
   String get payment_how_it_works => 'كيف يعمل';
 
   @override
-  String get payment_step_1 => 'ابدأ تجربتك المجانية اليوم';
+  String get payment_step_1 => 'اشترك هذا الشهر وابدأ في تحقيق الأرباح';
 
   @override
-  String get payment_step_2 => 'قم بالتوصيل وكسب لمدة 30 يومًا مجانًا';
+  String get payment_step_2 => 'خدم وقت ما بغيتي وربح كيف ما بغيتي';
 
   @override
-  String get payment_step_3 => 'بعد التجربة، ادفع 29.99\$/شهريًا';
+  String get payment_step_3 => 'غير 2 دولار فالشهر باش تبقى خدام';
 
   @override
-  String get payment_step_4 => 'يمكنك الإلغاء في أي وقت بدون التزام';
+  String get payment_step_4 => 'جدد كل شهر بلا التزام';
 
   @override
   String get payment_free_trial_badge => 'شهر واحد تجربة مجانية';
@@ -919,16 +919,16 @@ class AppLocalizationsAr extends AppLocalizations {
   String get payment_price => '\$';
 
   @override
-  String get payment_price_main => '29';
+  String get payment_price_main => '2';
 
   @override
-  String get payment_price_decimal => '.99';
+  String get payment_price_decimal => '.00';
 
   @override
   String get payment_price_period => '/شهريًا';
 
   @override
-  String get payment_first_month_free => 'الشهر الأول مجاني، ثم 29.99\$/شهريًا';
+  String get payment_first_month_free => 'الشهر الأول مجاني، ثم 2.00\$/شهريًا';
 
   @override
   String get payment_terms_agree => 'أوافق على ';
@@ -943,7 +943,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get payment_privacy_policy => 'سياسة الخصوصية';
 
   @override
-  String get payment_start_free_trial => 'ابدأ التجربة المجانية';
+  String get pay => 'أدفع';
 
   @override
   String get payment_secure_stripe => 'الدفع الآمن بواسطة Stripe';

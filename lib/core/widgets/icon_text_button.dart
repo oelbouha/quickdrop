@@ -1,37 +1,41 @@
 import 'package:quickdrop_app/core/utils/imports.dart';
 
-class SaveButton extends StatefulWidget {
+class IconTextButton extends StatefulWidget {
    final VoidCallback onPressed;
    final bool isLoading;
+   final String iconPath;
+   final String hint;
+   final double radius;
+   final String loadingText;
+   final Color backgroundColor;
 
-  const SaveButton({
+  const IconTextButton({
     Key? key, 
     required this.onPressed,
     required this.isLoading,
+    required this.iconPath,
+    required this.hint,
+    this.radius = 8,
+    this.backgroundColor = AppColors.blue,
+    this.loadingText = 'Saving...',
     }) : super(key: key);
 
   @override
-  State<SaveButton> createState() => _SaveButtonState();
+  State<IconTextButton> createState() => _IconTextButtonState();
 }
 
-class _SaveButtonState extends State<SaveButton> {
+class _IconTextButtonState extends State<IconTextButton> {
   
 
 
-  Widget buildSaveButton() {
-    final t = AppLocalizations.of(context)!;
+  Widget buildIconTextButton() {
     return Container(
       width: double.infinity,
       height: 56,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(16),
-        gradient: LinearGradient(
-          colors: widget.isLoading
-              ? [Colors.grey, Colors.grey]
-              : [AppColors.blue, AppColors.blue.withOpacity(0.8)],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
+        
+        color: widget.backgroundColor,
         boxShadow: [
           BoxShadow(
             color: AppColors.blue700.withOpacity(0.3),
@@ -44,7 +48,7 @@ class _SaveButtonState extends State<SaveButton> {
         color: Colors.transparent,
         child: InkWell(
           onTap: widget.isLoading ? null : widget.onPressed,
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(widget.radius),
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 24),
             child: Row(
@@ -61,7 +65,7 @@ class _SaveButtonState extends State<SaveButton> {
                   ),
                   const SizedBox(width: 12),
                   Text(
-                    t.saving,
+                    widget.loadingText,
                     style: const TextStyle(
                       color: Colors.white,
                       fontSize: 16,
@@ -69,10 +73,10 @@ class _SaveButtonState extends State<SaveButton> {
                     ),
                   ),
                 ] else ...[
-                  const Icon(Icons.save, color: Colors.white, size: 20),
+                   CustomIcon(iconPath: widget.iconPath, color: Colors.white, size: 20),
                   const SizedBox(width: 8),
                   Text(
-                    t.save_changes,
+                    widget.hint,
                     style: const TextStyle(
                       color: Colors.white,
                       fontSize: 16,
@@ -90,6 +94,6 @@ class _SaveButtonState extends State<SaveButton> {
   
   @override
   Widget build(BuildContext context) {
-    return buildSaveButton();
+    return buildIconTextButton();
   }
 }

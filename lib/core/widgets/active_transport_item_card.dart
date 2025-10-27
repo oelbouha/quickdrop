@@ -6,7 +6,6 @@ class ActiveItemCard extends StatefulWidget {
   final VoidCallback onPressed; // Delete callback
   final VoidCallback onEditPressed;
   final VoidCallback onViewPressed;
-  
 
   const ActiveItemCard({
     super.key,
@@ -22,7 +21,7 @@ class ActiveItemCard extends StatefulWidget {
 
 class _ActiveItemCardState extends State<ActiveItemCard> {
   bool _expandedStops = false;
-  
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -146,179 +145,172 @@ class _ActiveItemCardState extends State<ActiveItemCard> {
         ));
   }
 
+  Widget _buildMiddleStops() {
+    if (widget.item is! Trip) {
+      return const SizedBox.shrink();
+    }
 
+    final trip = widget.item as Trip;
+    if (trip.middleStops == null || trip.middleStops!.isEmpty) {
+      return const SizedBox.shrink();
+    }
 
+    final hasMultipleStops = trip.middleStops!.length > 1;
 
-Widget _buildMiddleStops() {
-  if (widget.item is! Trip) {
-    return const SizedBox.shrink();
-  }
-
-  final trip = widget.item as Trip;
-  if (trip.middleStops == null || trip.middleStops!.isEmpty) {
-    return const SizedBox.shrink();
-  }
-
-  final hasMultipleStops = trip.middleStops!.length > 1;
-
-  return Container(
-    margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-    padding: const EdgeInsets.all(12),
-    decoration: BoxDecoration(
-      color: const Color(0xFFF9FAFB),
-      borderRadius: BorderRadius.circular(12),
-      border: Border.all(
-        color: AppColors.blue.withOpacity(0.1),
-        width: 0.5,
-      ),
-    ),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          children: [
-            const CustomIcon(
-              iconPath: "assets/icon/location.svg",
-              size: 16,
-              color: AppColors.blue,
-            ),
-            const SizedBox(width: 8),
-            Text(
-              '${AppLocalizations.of(context)!.stops} (${trip.middleStops!.length})',
-              style: const TextStyle(
-                fontSize: 13,
-                fontWeight: FontWeight.w600,
-                color: Color(0xFF111827),
-              ),
-            ),
-          ],
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: const Color(0xFFF9FAFB),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(
+          color: AppColors.blue.withOpacity(0.1),
+          width: 0.5,
         ),
-        const SizedBox(height: 10),
-        Column(
-          children: [
-            // First Stop
-            Row(
-              children: [
-                Container(
-                  width: 6,
-                  height: 6,
-                  decoration: BoxDecoration(
-                    color: AppColors.blue,
-                    shape: BoxShape.circle,
-                  ),
-                ),
-                const SizedBox(width: 10),
-                Flexible(
-                  child: Text(
-                    trip.middleStops![0],
-                    style: const TextStyle(
-                      fontSize: 12,
-                      color: Color(0xFF374151),
-                    ),
-                  ),
-                ),
-                if (hasMultipleStops)
-                  GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        _expandedStops = !_expandedStops;
-                      });
-                    },
-                    child: Container(
-                      padding: const EdgeInsets.only(left: 8),
-                      child: CustomIcon(
-                        iconPath: _expandedStops
-                            ? "assets/icon/chevron-up.svg"
-                            : "assets/icon/chevron-down.svg",
-                        size: 18,
-                        color: AppColors.blue,
-                      ),
-                    ),
-                  ),
-              ],
-            ),
-            // Additional Stops (Expanded)
-            if (hasMultipleStops && _expandedStops) ...[
-              const SizedBox(height: 12),
-              ...List.generate(
-                trip.middleStops!.length - 1,
-                (index) {
-                  final actualIndex = index + 1;
-                  final stop = trip.middleStops![actualIndex];
-                  final isLast = actualIndex == trip.middleStops!.length - 1;
-
-                  return Column(
-                    children: [
-                      Row(
-                        children: [
-                          Container(
-                            width: 6,
-                            height: 6,
-                            decoration: BoxDecoration(
-                              color: AppColors.blue,
-                              shape: BoxShape.circle,
-                            ),
-                          ),
-                          const SizedBox(width: 10),
-                          Flexible(
-                            child: Text(
-                              stop,
-                              style: const TextStyle(
-                                fontSize: 12,
-                                color: Color(0xFF374151),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      if (!isLast)
-                        Padding(
-                          padding: const EdgeInsets.only(
-                            left: 2,
-                            top: 6,
-                            bottom: 6,
-                          ),
-                          child: Container(
-                            width: 2,
-                            height: 16,
-                            color: AppColors.blue.withOpacity(0.2),
-                          ),
-                        ),
-                      if (!isLast)
-                        const SizedBox(height: 12),
-                    ],
-                  );
-                },
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              const CustomIcon(
+                iconPath: "assets/icon/location.svg",
+                size: 16,
+                color: AppColors.blue,
               ),
-            ] else if (hasMultipleStops) ...[
-              const SizedBox(height: 4),
+              const SizedBox(width: 8),
+              Text(
+                '${AppLocalizations.of(context)!.stops} (${trip.middleStops!.length})',
+                style: const TextStyle(
+                  fontSize: 13,
+                  fontWeight: FontWeight.w600,
+                  color: Color(0xFF111827),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 10),
+          Column(
+            children: [
+              // First Stop
               Row(
                 children: [
                   Container(
-                    width: 2,
-                    height: 8,
-                    color: AppColors.blue.withOpacity(0.2),
-                    margin: const EdgeInsets.only(left: 2),
-                  ),
-                  const SizedBox(width: 10),
-                  Text(
-                    '+${trip.middleStops!.length - 1} ${AppLocalizations.of(context)!.more}',
-                    style: TextStyle(
-                      fontSize: 11,
+                    width: 6,
+                    height: 6,
+                    decoration: BoxDecoration(
                       color: AppColors.blue,
-                      fontWeight: FontWeight.w500,
+                      shape: BoxShape.circle,
                     ),
                   ),
+                  const SizedBox(width: 10),
+                  Flexible(
+                    child: Text(
+                      trip.middleStops![0],
+                      style: const TextStyle(
+                        fontSize: 12,
+                        color: Color(0xFF374151),
+                      ),
+                    ),
+                  ),
+                  if (hasMultipleStops)
+                    GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          _expandedStops = !_expandedStops;
+                        });
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.only(left: 8),
+                        child: CustomIcon(
+                          iconPath: _expandedStops
+                              ? "assets/icon/chevron-up.svg"
+                              : "assets/icon/chevron-down.svg",
+                          size: 18,
+                          color: AppColors.blue,
+                        ),
+                      ),
+                    ),
                 ],
               ),
+              // Additional Stops (Expanded)
+              if (hasMultipleStops && _expandedStops) ...[
+                const SizedBox(height: 12),
+                ...List.generate(
+                  trip.middleStops!.length - 1,
+                  (index) {
+                    final actualIndex = index + 1;
+                    final stop = trip.middleStops![actualIndex];
+                    final isLast = actualIndex == trip.middleStops!.length - 1;
+
+                    return Column(
+                      children: [
+                        Row(
+                          children: [
+                            Container(
+                              width: 6,
+                              height: 6,
+                              decoration: BoxDecoration(
+                                color: AppColors.blue,
+                                shape: BoxShape.circle,
+                              ),
+                            ),
+                            const SizedBox(width: 10),
+                            Flexible(
+                              child: Text(
+                                stop,
+                                style: const TextStyle(
+                                  fontSize: 12,
+                                  color: Color(0xFF374151),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        if (!isLast)
+                          Padding(
+                            padding: const EdgeInsets.only(
+                              left: 2,
+                              top: 6,
+                              bottom: 6,
+                            ),
+                            child: Container(
+                              width: 2,
+                              height: 16,
+                              color: AppColors.blue.withOpacity(0.2),
+                            ),
+                          ),
+                        if (!isLast) const SizedBox(height: 12),
+                      ],
+                    );
+                  },
+                ),
+              ] else if (hasMultipleStops) ...[
+                const SizedBox(height: 4),
+                Row(
+                  children: [
+                    Container(
+                      width: 2,
+                      height: 8,
+                      color: AppColors.blue.withOpacity(0.2),
+                      margin: const EdgeInsets.only(left: 2),
+                    ),
+                    const SizedBox(width: 10),
+                    Text(
+                      '+${trip.middleStops!.length - 1} ${AppLocalizations.of(context)!.more}',
+                      style: TextStyle(
+                        fontSize: 11,
+                        color: AppColors.blue,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
             ],
-          ],
-        ),
-      ],
-    ),
-  );
-}
-
-
-
+          ),
+        ],
+      ),
+    );
+  }
 }

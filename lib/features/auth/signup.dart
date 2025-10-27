@@ -1,7 +1,7 @@
-import 'package:quickdrop_app/core/widgets/iconTextField.dart';
+import 'package:quickdrop_app/core/widgets/login_text_field.dart';
 import 'package:quickdrop_app/features/auth/signup_screen.dart';
 import 'package:quickdrop_app/core/widgets/auth_button.dart';
-import 'package:quickdrop_app/core/widgets/gestureDetector.dart';
+import 'package:quickdrop_app/core/widgets/gesture_detector.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:quickdrop_app/core/utils/imports.dart';
 import 'package:quickdrop_app/features/models/statictics_model.dart';

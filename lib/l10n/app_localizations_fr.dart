@@ -898,16 +898,16 @@ class AppLocalizationsFr extends AppLocalizations {
   String get payment_how_it_works => 'Comment ça marche';
 
   @override
-  String get payment_step_1 => 'Commencez votre essai gratuit aujourd\'hui';
+  String get payment_step_1 => 'Abonnez-vous pour ce mois et commencez à gagner';
 
   @override
-  String get payment_step_2 => 'Livrez et gagnez pendant 30 jours gratuitement';
+  String get payment_step_2 => 'Travaillez quand vous voulez, gagnez comme vous voulez';
 
   @override
-  String get payment_step_3 => 'Après l\'essai, payez 29,99\$/mois';
+  String get payment_step_3 => 'Seulement 2,00 \$ par mois pour rester actif';
 
   @override
-  String get payment_step_4 => 'Annulez à tout moment, sans engagement';
+  String get payment_step_4 => 'Renouvelez chaque mois, sans engagement';
 
   @override
   String get payment_free_trial_badge => '1 MOIS D\'ESSAI GRATUIT';
@@ -919,16 +919,16 @@ class AppLocalizationsFr extends AppLocalizations {
   String get payment_price => '\$';
 
   @override
-  String get payment_price_main => '29';
+  String get payment_price_main => '2';
 
   @override
-  String get payment_price_decimal => '.99';
+  String get payment_price_decimal => '.00';
 
   @override
   String get payment_price_period => '/mois';
 
   @override
-  String get payment_first_month_free => 'Premier mois GRATUIT, puis 29,99\$/mois';
+  String get payment_first_month_free => 'Premier mois GRATUIT, puis 2.00\$/mois';
 
   @override
   String get payment_terms_agree => 'J\'accepte les ';
@@ -943,7 +943,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get payment_privacy_policy => 'Politique de confidentialité';
 
   @override
-  String get payment_start_free_trial => 'Commencer l\'essai gratuit';
+  String get pay => 'Payer';
 
   @override
   String get payment_secure_stripe => 'Paiement sécurisé via Stripe';

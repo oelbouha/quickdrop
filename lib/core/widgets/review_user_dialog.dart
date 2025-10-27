@@ -128,17 +128,15 @@ class _ReviewUserDialogState extends State<ReviewUserDialog> {
               validator: Validators.notEmpty,
               displayLabel: false,
             ),
-            // const SizedBox(height: 16),
-            Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Button(
-                  onPressed: _submitReview,
-                  hintText: AppLocalizations.of(context)!.submit_review_button,
-                  isLoading: false,
-                  backgroundColor: AppColors.blue700,
-                ))
+            const SizedBox(height: 16),
+            IconTextButton(
+              iconPath: "assets/icon/submit.svg",
+              isLoading: _isLoading,
+              onPressed: _submitReview,
+              hint: AppLocalizations.of(context)!.submit_review_button,
+              loadingText: AppLocalizations.of(context)!.saving,
+            ),
+           
           ],
         ),
       ),)

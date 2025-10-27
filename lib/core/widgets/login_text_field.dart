@@ -4,7 +4,7 @@ import 'package:quickdrop_app/theme/AppTheme.dart';
 import 'package:quickdrop_app/core/widgets/custom_svg.dart';
 
 
-class IconTextField extends StatefulWidget {
+class LoginTextField extends StatefulWidget {
   final TextEditingController controller;
   final String hintText;
   final bool obsecureText;
@@ -15,7 +15,7 @@ class IconTextField extends StatefulWidget {
   final String? Function(String?)? validator;
   final void Function(String)? onChanged;
 
-  const IconTextField({
+  const LoginTextField({
     super.key,
     required this.controller,
     required this.hintText,
@@ -30,10 +30,10 @@ class IconTextField extends StatefulWidget {
   });
 
   @override
-  State<IconTextField> createState() => _IconTextFieldState();
+  State<LoginTextField> createState() => LoginTextFieldState();
 }
 
-class _IconTextFieldState extends State<IconTextField> {
+class LoginTextFieldState extends State<LoginTextField> {
   bool hasText = false;
 
   @override

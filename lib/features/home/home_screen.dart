@@ -75,7 +75,21 @@ class _HomeScreenState extends State<HomeScreen> {
 
     dateController.text = _getCurrentDate();
 
-    // WidgetsBinding.instance.addPostFrameCallback((_) async {
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+
+      try {
+        final user = Provider.of<UserProvider>(context, listen: false).user;
+          final subscriptionEndAt = user?.subscriptionEndsAt;
+        final now = DateTime.now();
+        if (subscriptionEndAt != null) {
+          final endDate = DateTime.parse(subscriptionEndAt);
+          if (now.isAfter(endDate)) {
+            Provider.of<UserProvider>(context, listen: false).updateSubscriptionStatus("inactive");
+          }
+        }
+      } catch(e) {
+        print("Error checking subscription status: $e");
+      }
     //   try {
         // final shipmentProvider =
         //     Provider.of<ShipmentProvider>(context, listen: false);
@@ -99,7 +113,7 @@ class _HomeScreenState extends State<HomeScreen> {
       //     AppUtils.showDialog(context, 'Error fetching shipments: $e', AppColors.error);
       //   }
       // }
-    // });
+    });
   }
 
   @override
@@ -322,40 +336,15 @@ class _HomeScreenState extends State<HomeScreen> {
           const SizedBox(height: 20),
 
           // Search button
-          SizedBox(
-            width: double.infinity,
-            child: ElevatedButton(
-              onPressed: () => perfumeSearch(),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Theme.of(context).colorScheme.primary,
-                foregroundColor: Colors.white,
-                padding: const EdgeInsets.symmetric(vertical: 14),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                elevation: 0,
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const CustomIcon(
-                    iconPath: "assets/icon/search.svg",
-                    size: 20,
-                    color: Colors.white,
-                  ),
-                  const SizedBox(width: 8),
-                  Text(
-                    t.search,
-                    style: const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ],
-              ),
-            ),
+          IconTextButton(
+            iconPath: "assets/icon/search.svg",
+            hint: t.search,
+            isLoading: false,
+            onPressed: () => perfumeSearch(),
+            backgroundColor: Theme.of(context).colorScheme.primary,
+            loadingText: t.saving,
           ),
-        ],
+          ],
       ),
     );
   }

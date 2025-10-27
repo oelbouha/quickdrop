@@ -120,17 +120,14 @@ class _ReportUserDialogState extends State<ReportUserDialog> {
                 displayLabel: false,
               ),
               const SizedBox(height: 16),
-              Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Button(
-                  onPressed: _submitReport,
-                  hintText: AppLocalizations.of(context)!.submit_report_button,
-                  isLoading: _isLoading,
-                  backgroundColor: AppColors.blue700,
-                ),
-              )
+              IconTextButton(
+                iconPath: "assets/icon/submit.svg",
+                isLoading: _isLoading,
+                onPressed: _submitReport,
+                hint: AppLocalizations.of(context)!.submit_report_button,
+                loadingText: AppLocalizations.of(context)!.saving,
+              ),
+            
             ],
           ),
         ),

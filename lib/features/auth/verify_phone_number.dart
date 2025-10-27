@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:quickdrop_app/core/widgets/gestureDetector.dart';
+import 'package:quickdrop_app/core/widgets/gesture_detector.dart';
 import 'package:quickdrop_app/core/utils/imports.dart';
 import 'package:go_router/go_router.dart';
 

@@ -1858,25 +1858,25 @@ abstract class AppLocalizations {
   /// No description provided for @payment_step_1.
   ///
   /// In en, this message translates to:
-  /// **'Start your free trial today'**
+  /// **'Subscribe for this month and start earning'**
   String get payment_step_1;
 
   /// No description provided for @payment_step_2.
   ///
   /// In en, this message translates to:
-  /// **'Deliver and earn for 30 days free'**
+  /// **'Work when you want, earn as you like'**
   String get payment_step_2;
 
   /// No description provided for @payment_step_3.
   ///
   /// In en, this message translates to:
-  /// **'After trial, pay \$29.99/month'**
+  /// **'Only \$2.00 per month to stay active'**
   String get payment_step_3;
 
   /// No description provided for @payment_step_4.
   ///
   /// In en, this message translates to:
-  /// **'Cancel anytime, no commitment'**
+  /// **'Renew monthly, no commitments'**
   String get payment_step_4;
 
   /// No description provided for @payment_free_trial_badge.
@@ -1900,13 +1900,13 @@ abstract class AppLocalizations {
   /// No description provided for @payment_price_main.
   ///
   /// In en, this message translates to:
-  /// **'29'**
+  /// **'2'**
   String get payment_price_main;
 
   /// No description provided for @payment_price_decimal.
   ///
   /// In en, this message translates to:
-  /// **'.99'**
+  /// **'.00'**
   String get payment_price_decimal;
 
   /// No description provided for @payment_price_period.
@@ -1918,7 +1918,7 @@ abstract class AppLocalizations {
   /// No description provided for @payment_first_month_free.
   ///
   /// In en, this message translates to:
-  /// **'First month FREE, then \$29.99/mo'**
+  /// **'First month FREE, then \$2.00/mo'**
   String get payment_first_month_free;
 
   /// No description provided for @payment_terms_agree.
@@ -1945,11 +1945,11 @@ abstract class AppLocalizations {
   /// **'Privacy Policy'**
   String get payment_privacy_policy;
 
-  /// No description provided for @payment_start_free_trial.
+  /// No description provided for @pay.
   ///
   /// In en, this message translates to:
-  /// **'Start Free Trial'**
-  String get payment_start_free_trial;
+  /// **'Pay'**
+  String get pay;
 
   /// No description provided for @payment_secure_stripe.
   ///

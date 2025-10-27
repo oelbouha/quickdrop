@@ -1,4 +1,4 @@
-import 'package:quickdrop_app/core/widgets/iconTextField.dart';
+import 'package:quickdrop_app/core/widgets/login_text_field.dart';
 import 'package:quickdrop_app/core/widgets/auth_button.dart';
 import 'package:quickdrop_app/core/widgets/password_text_field.dart';
 import 'package:quickdrop_app/core/utils/imports.dart';
@@ -244,7 +244,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
             ),
           ),
           const SizedBox(height: 24),
-          IconTextField(
+          LoginTextField(
             controller: emailController,
             keyboardType: TextInputType.emailAddress,
             hintText: t.email,
