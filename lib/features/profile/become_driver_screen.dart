@@ -29,7 +29,6 @@ class BecomeDriverScreenState extends State<BecomeDriverScreen>
   File? _selectedImage;
   String? imagePath;
   bool _isImageLoading = false;
-  bool _showRegistrationForm = false;
 
   UserData? user;
 
@@ -40,10 +39,7 @@ class BecomeDriverScreenState extends State<BecomeDriverScreen>
     WidgetsBinding.instance.addPostFrameCallback((_) async {
        final userProvider = Provider.of<UserProvider>(context, listen: false);
         await userProvider.loadDriverData(user!.uid);
-      setState(() {
-          // _showRegistrationForm = !userProvider.isUserRequestedDriver;
-        _isLoadingData = false;
-      });
+   
     });
 
     user = Provider.of<UserProvider>(context, listen: false).user;
@@ -56,6 +52,7 @@ class BecomeDriverScreenState extends State<BecomeDriverScreen>
     lastNameController.text = user?.lastName ?? "";
     phoneNumberController.text = user?.phoneNumber ?? "";
   }
+
 
   @override
   void dispose() {
@@ -75,15 +72,15 @@ class BecomeDriverScreenState extends State<BecomeDriverScreen>
       return;
     }
 
-    final user = FirebaseAuth.instance.currentUser;
-    if (user != null && !user.emailVerified) {
-      AppUtils.showDialog(
-        context,
-        t.please_verify_email,
-        AppColors.error,
-      );
-      return;
-    }
+    // final user = FirebaseAuth.instance.currentUser;
+    // if (user != null && !user.emailVerified) {
+    //   AppUtils.showDialog(
+    //     context,
+    //     t.please_verify_email,
+    //     AppColors.error,
+    //   );
+    //   return;
+    // }
 
     if (_formKey.currentState!.validate()) {
       // Show confirmation dialog
@@ -163,21 +160,142 @@ class BecomeDriverScreenState extends State<BecomeDriverScreen>
   }
 
   bool _isDriverShouldPay() {
-    // return true;
     final user = Provider.of<UserProvider>(context, listen: false).user;
-    // final subscriptionEndAt = user?.subscriptionEndsAt;
-    // final now = DateTime.now();
-    // if (subscriptionEndAt != null) {
-    //   final endDate = DateTime.parse(subscriptionEndAt);
-    //   if (now.isAfter(endDate)) {
-    //     return true;
-    //   }
-    // }
     if (user?.subscriptionStatus == "inactive" ) {
       return true;
     }
     return false;
   }
+
+   bool _isDriverSubscriptionExpired() {
+    final user = Provider.of<UserProvider>(context, listen: false).user;
+    if (user?.subscriptionStatus == "expired" ) {
+      return true;
+    }
+    return false;
+  }
+
+
+
+  Widget _buildProgressIndicator(String currentStep) {
+    final t = AppLocalizations.of(context)!;
+    final steps = ['registration', 'pending', 'approved', 'active'];
+    final stepLabels = [t.register, t.pending, t.payment, t.active];
+    final currentIndex = steps.indexOf(currentStep);
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 10,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Row(
+        children: List.generate(steps.length * 2 - 1, (index) {
+          if (index.isOdd) {
+            // Line between steps
+            final lineIndex = index ~/ 2;
+            return Expanded(
+              child: Container(
+                height: 2,
+                decoration: BoxDecoration(
+                  color: currentIndex > lineIndex
+                      ? AppColors.succes
+                      : Colors.grey[300],
+                  borderRadius: BorderRadius.circular(1),
+                ),
+              ),
+            );
+          } else {
+            // Step indicator
+            final stepIndex = index ~/ 2;
+            final isActive = currentIndex == stepIndex;
+            final isCompleted = currentIndex > stepIndex;
+
+            return Column(
+              children: [
+                Container(
+                  width: 40,
+                  height: 40,
+                  decoration: BoxDecoration(
+                    color: isActive
+                        ? AppColors.blue
+                        : isCompleted
+                            ? AppColors.succes
+                            : Colors.grey[300],
+                    shape: BoxShape.circle,
+                  ),
+                  child: Center(
+                    child: isCompleted
+                        ? const CustomIcon(iconPath: "assets/icon/check.svg", color: Colors.white, size: 20)
+                        : Text(
+                            '${stepIndex + 1}',
+                            style: TextStyle(
+                              color: isActive || isCompleted
+                                  ? Colors.white
+                                  : Colors.grey[600],
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16,
+                            ),
+                          ),
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  stepLabels[stepIndex],
+                  style: TextStyle(
+                    fontSize: 12,
+                    fontWeight: isActive ? FontWeight.w600 : FontWeight.normal,
+                    color:
+                        isActive ? AppColors.blue : Colors.grey[600],
+                  ),
+                ),
+              ],
+            );
+          }
+        }),
+      ),
+    );
+  }
+
+
+
+String _getCurrentStep(UserProvider userProvider) {
+  if (userProvider.driverRequestStatus == null) {
+    return 'registration';
+  } else if (userProvider.driverRequestStatus == 'pending') {
+    return 'pending';
+  } else if (userProvider.driverRequestStatus == 'accepted') {
+    
+    if (_isDriverShouldPay()) {
+      return 'approved';
+    } else {
+      return 'active';
+    }
+  }
+  return 'registration';
+}
+
+
+Widget _buildStepContent(String step, UserProvider userProvider) {
+  switch (step) {
+    case 'registration':
+      return _buildRegistrationForm();
+    case 'pending':
+      return _buildPendingApproval();
+    case 'approved':
+      return _buildApprovedPayment();
+    case 'active':
+      return _buildActiveDriver();
+    default:
+      return _buildRegistrationForm();
+  }
+}
+
 
   @override
   Widget build(BuildContext context) {
@@ -198,43 +316,34 @@ class BecomeDriverScreenState extends State<BecomeDriverScreen>
       ),
       body: Consumer<UserProvider>(
         builder: (context, userProvider, child) {
-          if (userProvider.driverRequestStatus == null) {
+          if (userProvider.driverRequestStatus == null && _isLoadingData) {
             return loadingAnimation();
           }
-         
-          return SingleChildScrollView(
-            physics: const BouncingScrollPhysics(),
-            child: Padding(
-              padding: const EdgeInsets.all(AppTheme.homeScreenPadding),
-              child: userProvider.driverRequestStatus == "accepted" 
-                  ? _buildAcceptedScreen()
-                  : _buildUpdateScreen(userProvider.isUserRequestedDriver),
-            ),
+
+          String currentStep = _getCurrentStep(userProvider);
+          
+
+          return Column(
+            children: [
+              _buildProgressIndicator(currentStep),
+              Expanded(
+                child: SingleChildScrollView(
+                  physics: const BouncingScrollPhysics(),
+                  child: Padding(
+                    padding: const EdgeInsets.all(AppTheme.homeScreenPadding),
+                    child:  _buildStepContent(currentStep, userProvider),
+                  ),
+                ),
+              ),
+            ],
           );
         },
       ),
     );
   }
 
-  Widget _buildAcceptedScreen() {
-    final t = AppLocalizations.of(context)!;
-    final driverShouldPay = _isDriverShouldPay();
-    
-    if (driverShouldPay) {
-      return const PaymentScreen();
-    }
 
-    return StatusCard(
-      icon: Icons.info_outline,
-      title: "You are a driver now!",
-      message: "you can send request to others as a driver.",
-      color: AppColors.succes,
-    );
-  }
-
-  Widget _buildUpdateScreen(bool isUserRequestedDriver) {
-    final t = AppLocalizations.of(context)!;
-    // print("isUserRequestedDriver: $isUserRequestedDriver");
+    Widget _buildRegistrationForm() {
     return Form(
       key: _formKey,
       child: Column(
@@ -242,52 +351,254 @@ class BecomeDriverScreenState extends State<BecomeDriverScreen>
         children: [
           _buildHeaderSection(),
           const SizedBox(height: 24),
-          if (isUserRequestedDriver) ...[
-            StatusCard(
-              icon: Icons.info_outline,
-              title: t.request_driver_mode_title,
-              message: t.request_driver_mode_message,
-              color: AppColors.succes,
-            ),
-            // if (!_showRegistrationForm) ...[
-            //   const SizedBox(height: 24),
-            //   ElevatedButton(
-            //     onPressed: () {
-            //       setState(() {
-            //         _showRegistrationForm = !_showRegistrationForm;
-            //       });
-            //     },
-            //     style: ElevatedButton.styleFrom(
-            //       elevation: 0,
-            //       backgroundColor: AppColors.blue700.withOpacity(0.8),
-            //       shape: RoundedRectangleBorder(
-            //         borderRadius: BorderRadius.circular(12),
-            //       ),
-            //     ),
-            //     child: Text(
-            //       t.resend_request,
-            //       style: const TextStyle(color: Colors.white),
-            //     ),
-            //   ),
-            // ],
-          ],
-          // if (_showRegistrationForm) ...[
-            const SizedBox(height: 32),
-            _buildImageInfoSection(),
-            const SizedBox(height: 24),
-            _buildPersonalInfoSection(),
-            const SizedBox(height: 24),
-            _buildContactInfoSection(),
-            const SizedBox(height: 24),
-            _buildCarInfoSection(),
-            const SizedBox(height: 32),
-            _buildSaveButton(),
-            const SizedBox(height: 20),
-          // ]
+          _buildImageInfoSection(),
+          const SizedBox(height: 24),
+          _buildPersonalInfoSection(),
+          const SizedBox(height: 24),
+          _buildContactInfoSection(),
+          const SizedBox(height: 24),
+          _buildCarInfoSection(),
+          const SizedBox(height: 32),
+          IconTextButton(
+            onPressed:  requestDriverMode,
+            isLoading: _isLoading, 
+            iconPath: "assets/icon/save.svg",
+            loadingText: AppLocalizations.of(context)!.registering, 
+            hint: AppLocalizations.of(context)!.register),
+          const SizedBox(height: 20),
         ],
       ),
     );
   }
+
+
+  Widget _buildNextStep(int number, String title, String description) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Container(
+          width: 32,
+          height: 32,
+          decoration: BoxDecoration(
+            color: AppColors.blue.withOpacity(0.1),
+            shape: BoxShape.circle,
+          ),
+          child: Center(
+            child: Text(
+              '$number',
+              style: TextStyle(
+                color: AppColors.blue,
+                fontWeight: FontWeight.bold,
+                fontSize: 14,
+              ),
+            ),
+          ),
+        ),
+        const SizedBox(width: 12),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                title,
+                style: const TextStyle(
+                  fontWeight: FontWeight.w600,
+                  fontSize: 15,
+                ),
+              ),
+              const SizedBox(height: 4),
+              Text(
+                description,
+                style: TextStyle(
+                  color: Colors.grey[600],
+                  fontSize: 13,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+    Widget _buildApprovedPayment() {
+    final t = AppLocalizations.of(context)!;
+    return Column(
+      children: [
+        StatusCard(
+          icon: Icons.check_circle,
+          title: t.registration_approved,
+          message: t.registration_approved_message,
+          color: AppColors.succes,
+        ),
+        const SizedBox(height: 24),
+        const PaymentScreen(),
+      ],
+    );
+  }
+
+
+  Widget _buildActiveDriver() {
+    final t = AppLocalizations.of(context)!;
+    final expiredSubscription = _isDriverSubscriptionExpired();
+
+    if (expiredSubscription) {
+      return Column(
+        children: [
+          StatusCard(
+            icon: Icons.warning,
+            title: t.subscription_expired,
+            message: t.subscription_expired_message,
+            color: Colors.red,
+          ),
+          const SizedBox(height: 24),
+          const PaymentScreen(),
+        ],
+      );
+    }
+
+    return Column(
+      children: [
+        StatusCard(
+          icon: Icons.check_circle,
+          title: t.you_are_all_set,
+          message: t.you_are_all_set_message,
+          color: AppColors.succes,
+        ),
+        const SizedBox(height: 24),
+        _buildSubscriptionStatus(),
+        // const SizedBox(height: 24),
+        // _buildQuickStats(),
+        // const SizedBox(height: 24),
+        // _buildViewDeliveriesButton(),
+      ],
+    );
+  }
+
+ Widget _buildSubscriptionStatus() {
+    final t = AppLocalizations.of(context)!;
+    final user = Provider.of<UserProvider>(context, listen: false).user;
+    final subscriptionEndDate = user?.subscriptionEndsAt != null
+        ? DateTime.parse(user!.subscriptionEndsAt!)
+        : null;
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                t.subscription_status,
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w600,
+                  color: AppColors.headingText,
+                ),
+              ),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                decoration: BoxDecoration(
+                  color: AppColors.succes.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: Text(
+                  t.active_status,
+                  style: TextStyle(
+                    color: AppColors.succes,
+                    fontWeight: FontWeight.w600,
+                    fontSize: 12,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+          Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: AppColors.succes.withOpacity(0.1),
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(color: AppColors.succes.withOpacity(0.2)),
+            ),
+            child: Text(
+              subscriptionEndDate != null
+                  ? "${t.subscription_active_until} ${subscriptionEndDate.day}/${subscriptionEndDate.month}/${subscriptionEndDate.year}"
+                  : t.subscription_is_active,
+              style: TextStyle(
+                color: AppColors.succes,
+                fontSize: 14,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+ Widget _buildPendingApproval() {
+    final t = AppLocalizations.of(context)!;
+    return Column(
+      children: [
+        StatusCard(
+          icon: Icons.schedule,
+          title: t.request_driver_mode_title,
+          message: t.request_driver_mode_message,
+          color: Colors.orange,
+        ),
+        const SizedBox(height: 24),
+        Container(
+          padding: const EdgeInsets.all(20),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(16),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.05),
+                blurRadius: 10,
+                offset: const Offset(0, 4),
+              ),
+            ],
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                t.whats_next,
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w600,
+                  color: AppColors.headingText,
+                ),
+              ),
+              const SizedBox(height: 20),
+              _buildNextStep(1, t.document_verification,
+                  t.document_verification_desc),
+              const SizedBox(height: 12),
+              _buildNextStep(2, t.vehicle_inspection,
+                  t.vehicle_inspection_desc),
+              const SizedBox(height: 12),
+              _buildNextStep(3, t.approval_and_payment,
+                  t.approval_and_payment_desc),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
 
   Widget _buildHeaderSection() {
     final t = AppLocalizations.of(context)!;
@@ -679,73 +990,4 @@ class BecomeDriverScreenState extends State<BecomeDriverScreen>
     );
   }
 
-  Widget _buildSaveButton() {
-    final t = AppLocalizations.of(context)!;
-    return Container(
-      width: double.infinity,
-      height: 56,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(16),
-        gradient: LinearGradient(
-          colors: _isLoading
-              ? [Colors.grey, Colors.grey]
-              : [AppColors.blue, AppColors.blue.withOpacity(0.8)],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: AppColors.blue700.withOpacity(0.3),
-            blurRadius: 12,
-            offset: const Offset(0, 6),
-          ),
-        ],
-      ),
-      child: Material(
-        color: Colors.transparent,
-        child: InkWell(
-          onTap: _isLoading ? null : requestDriverMode,
-          borderRadius: BorderRadius.circular(16),
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 24),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                if (_isLoading) ...[
-                  SizedBox(
-                    width: 20,
-                    height: 20,
-                    child: CircularProgressIndicator(
-                      strokeWidth: 2,
-                      valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                  Text(
-                    t.registering,
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ] else ...[
-                  Icon(Icons.save, color: Colors.white, size: 20),
-                  const SizedBox(width: 8),
-                  Text(
-                    t.register,
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ],
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
 }

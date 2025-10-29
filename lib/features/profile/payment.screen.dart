@@ -4,7 +4,10 @@ import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:quickdrop_app/core/utils/imports.dart';
 
 class PaymentScreen extends StatefulWidget {
-  const PaymentScreen({Key? key}) : super(key: key);
+  
+  const PaymentScreen({
+    Key? key,
+  }) : super(key: key);
 
   @override
   State<PaymentScreen> createState() => PaymentScreenState();
@@ -13,6 +16,12 @@ class PaymentScreen extends StatefulWidget {
 class PaymentScreenState extends State<PaymentScreen> {
   bool _isLoading = false;
   bool _agreeToTerms = false;
+
+
+  String _getSubscriptionStatus() {
+    final user = Provider.of<UserProvider>(context, listen: false).user;
+    return (user?.subscriptionStatus ?? "inactive").toLowerCase();
+  }
 
   Future<void> _startPayment() async {
     setState(() => _isLoading = true);
@@ -61,13 +70,11 @@ class PaymentScreenState extends State<PaymentScreen> {
             AppColors.success);
       }
     } catch (e) {
-      print('${AppLocalizations.of(context)!.payment_error}: ${e.toString()}');
-
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-              content: Text(
-                  "${AppLocalizations.of(context)!.payment_failed}: ${e.toString()}")),
+        AppUtils.showDialog(
+            context,
+            AppLocalizations.of(context)!.payment_failed,
+            AppColors.error
         );
       }
     } finally {
@@ -390,93 +397,34 @@ class PaymentScreenState extends State<PaymentScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final subscriptionStatus = _getSubscriptionStatus();
     return Column(
       children: [
-        _buildHeroSection(),
 
-        // _buildFreeTrialBadge(),
-        // // Pricing Card
-        _buildPriceCard(),
-        const SizedBox(height: 24),
-
-        // How it works
-        _buildHowItWorks(),
-        const SizedBox(height: 24),
-
-        // Terms Checkbox
-        _buildTermsCheckbox(),
-
-        const SizedBox(height: 24),
-
-        // CTA Button
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: Container(
-            width: double.infinity,
-            height: 60,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(16),
-              gradient: _agreeToTerms
-                  ? LinearGradient(
-                      colors: [
-                        Theme.of(context).primaryColor,
-                        Theme.of(context).primaryColor.withOpacity(0.8),
-                      ],
-                    )
-                  : null,
-              color: _agreeToTerms ? null : Colors.grey[300],
-              boxShadow: _agreeToTerms
-                  ? [
-                      BoxShadow(
-                        color: Theme.of(context).primaryColor.withOpacity(0.3),
-                        blurRadius: 12,
-                        offset: const Offset(0, 6),
-                      ),
-                    ]
-                  : null,
-            ),
-            child: ElevatedButton(
-              onPressed: _agreeToTerms && !_isLoading
-                  ? () {
-                      setState(() => _isLoading = true);
-                      _startPayment();
-                    }
-                  : null,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.transparent,
-                shadowColor: Colors.transparent,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(16),
-                ),
-              ),
-              child: _isLoading
-                  ? const SizedBox(
-                      height: 24,
-                      width: 24,
-                      child: CircularProgressIndicator(
-                        strokeWidth: 2,
-                        valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                      ),
-                    )
-                  : Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          AppLocalizations.of(context)!.pay,
-                          style: const TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                          ),
-                        ),
-                        const SizedBox(width: 8),
-                        const Icon(Icons.arrow_forward, color: Colors.white),
-                      ],
-                    ),
-            ),
-          ),
+        if (subscriptionStatus == "inactive") ...[
+          _buildHeroSection(),
+          // _buildFreeTrialBadge(),
+          // // Pricing Card
+          _buildPriceCard(),
+          const SizedBox(height: 24),
+          // How it works
+          _buildHowItWorks(),
+          const SizedBox(height: 24),
+          // Terms Checkbox
+          // _buildTermsCheckbox(),
+          const SizedBox(height: 24),
+        ],
+        if (subscriptionStatus == "expired") ...[
+          _buildPriceCard(),
+          const SizedBox(height: 24),
+        ],
+         IconTextButton(
+            onPressed:  _startPayment,
+           isLoading: _isLoading, 
+           iconPath: "assets/icon/dollar-sign.svg",
+           loadingText: AppLocalizations.of(context)!.processing, 
+           hint: AppLocalizations.of(context)!.pay
         ),
-
         const SizedBox(height: 16),
 
         // Security Badge
