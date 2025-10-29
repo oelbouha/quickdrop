@@ -883,7 +883,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get vehicle_info_note => 'تأكد من أن معلومات المركبة تتطابق مع مستندات تسجيل المركبة.';
 
   @override
-  String get registering => 'جارٍ التسجيل...';
+  String get registering => 'جاري التسجيل';
 
   @override
   String get register => 'تسجيل';
@@ -892,43 +892,43 @@ class AppLocalizationsAr extends AppLocalizations {
   String get payment_start_journey => 'ابدأ رحلتك';
 
   @override
-  String get payment_join_drivers => 'انضم إلى آلاف السائقين الذين يكسبون يوميًا';
+  String get payment_join_drivers => 'انضم إلى آلاف السائقين الذين يربحون يوميًا';
 
   @override
-  String get payment_how_it_works => 'كيف يعمل';
+  String get payment_how_it_works => 'كيف تعمل';
 
   @override
-  String get payment_step_1 => 'اشترك هذا الشهر وابدأ في تحقيق الأرباح';
+  String get payment_step_1 => 'اشترك لهذا الشهر وابدأ في الربح';
 
   @override
-  String get payment_step_2 => 'خدم وقت ما بغيتي وربح كيف ما بغيتي';
+  String get payment_step_2 => 'اعمل وقتما تشاء واربح كما تريد';
 
   @override
-  String get payment_step_3 => 'غير 2 دولار فالشهر باش تبقى خدام';
+  String get payment_step_3 => 'فقط 50 درهم في الشهر للبقاء نشطًا';
 
   @override
-  String get payment_step_4 => 'جدد كل شهر بلا التزام';
+  String get payment_step_4 => 'جدد شهريًا، بدون التزامات';
 
   @override
-  String get payment_free_trial_badge => 'شهر واحد تجربة مجانية';
+  String get payment_free_trial_badge => 'تجربة مجانية لمدة شهر واحد';
 
   @override
-  String get payment_monthly_subscription => 'الاشتراك الشهري';
+  String get payment_monthly_subscription => 'اشتراك شهري';
 
   @override
-  String get payment_price => '\$';
+  String get payment_price => 'درهم';
 
   @override
-  String get payment_price_main => '2';
+  String get payment_price_main => '50';
 
   @override
-  String get payment_price_decimal => '.00';
+  String get payment_price_decimal => '';
 
   @override
-  String get payment_price_period => '/شهريًا';
+  String get payment_price_period => '/شهر';
 
   @override
-  String get payment_first_month_free => 'الشهر الأول مجاني، ثم 2.00\$/شهريًا';
+  String get payment_first_month_free => 'الشهر الأول مجاني، ثم 50 درهم/شهريًا';
 
   @override
   String get payment_terms_agree => 'أوافق على ';
@@ -943,10 +943,10 @@ class AppLocalizationsAr extends AppLocalizations {
   String get payment_privacy_policy => 'سياسة الخصوصية';
 
   @override
-  String get pay => 'أدفع';
+  String get pay => 'ادفع';
 
   @override
-  String get payment_secure_stripe => 'الدفع الآمن بواسطة Stripe';
+  String get payment_secure_stripe => 'دفع آمن عبر Stripe';
 
   @override
   String get payment_subscription_activated => 'تم تفعيل الاشتراك!';
@@ -955,10 +955,10 @@ class AppLocalizationsAr extends AppLocalizations {
   String get payment_failed => 'فشل الدفع';
 
   @override
-  String get payment_error => 'خطأ في الدفع';
+  String get payment_error => 'حدث خطأ في الدفع';
 
   @override
-  String get payment_not_signed_in => 'غير مسجل الدخول';
+  String get payment_not_signed_in => 'لم يتم تسجيل الدخول';
 
   @override
   String get payment_function_error => 'خطأ في الاختبار';
@@ -967,13 +967,13 @@ class AppLocalizationsAr extends AppLocalizations {
   String get payment_test_function => 'جارٍ اختبار الوظيفة...';
 
   @override
-  String get payment_calling_intent => 'جارٍ استدعاء createPaymentIntent...';
+  String get payment_calling_intent => 'يتم الآن إنشاء طلب الدفع...';
 
   @override
   String get payment_user_label => 'المستخدم';
 
   @override
-  String get payment_function_returned => 'الوظيفة أعادت القيمة';
+  String get payment_function_returned => 'تم إرجاع الوظيفة';
 
   @override
   String get profile_title => 'الملف الشخصي';
@@ -1458,4 +1458,67 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get onboarding_4_body => 'وصّل الطرود على طول مسارك واحصل على الأموال فوراً. QuickDrop يحول كل رحلة إلى فرصة.';
+
+  @override
+  String get pending => 'قيد الانتظار';
+
+  @override
+  String get payment => 'الدفع';
+
+  @override
+  String get registration_approved => 'تمت الموافقة على التسجيل!';
+
+  @override
+  String get registration_approved_message => 'تهانينا! تمت الموافقة على تسجيلك كسائق. أكمل الدفع لبدء قبول طلبات التوصيل.';
+
+  @override
+  String get subscription_expired => 'انتهى الاشتراك';
+
+  @override
+  String get subscription_expired_message => 'انتهى اشتراكك الشهري. يرجى تجديد اشتراكك لمواصلة قبول طلبات التوصيل.';
+
+  @override
+  String get you_are_all_set => 'أنت جاهز الآن!';
+
+  @override
+  String get you_are_all_set_message => 'مرحباً بك في مجتمع السائقين! يمكنك الآن البدء في قبول طلبات التوصيل وكسب المال.';
+
+  @override
+  String get subscription_status => 'حالة الاشتراك';
+
+  @override
+  String get active_status => 'نشط';
+
+  @override
+  String get subscription_active_until => 'اشتراكك نشط حتى';
+
+  @override
+  String get subscription_is_active => 'اشتراكك نشط';
+
+  @override
+  String get whats_next => 'ما التالي؟';
+
+  @override
+  String get document_verification => 'التحقق من المستندات';
+
+  @override
+  String get document_verification_desc => 'سنتحقق من بطاقة الهوية ورخصة القيادة الخاصة بك';
+
+  @override
+  String get vehicle_inspection => 'فحص المركبة';
+
+  @override
+  String get vehicle_inspection_desc => 'سيتم التحقق من تفاصيل مركبتك';
+
+  @override
+  String get approval_and_payment => 'الموافقة والدفع';
+
+  @override
+  String get approval_and_payment_desc => 'بمجرد الموافقة، أكمل الدفع للتفعيل';
+
+  @override
+  String get you_are_driver_now => 'أنت سائق الآن!';
+
+  @override
+  String get you_are_driver_now_message => 'يمكنك الآن إرسال طلبات للآخرين كسائق.';
 }

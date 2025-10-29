@@ -26,11 +26,11 @@ class AppUtils {
           children: [
             // Error icon
             if (backgroundColor == AppColors.succes)
-             Icon(
-              Icons.check_circle,
-              color: backgroundColor,
-              size: 24,
-            ),
+              Icon(
+                Icons.check_circle,
+                color: backgroundColor,
+                size: 24,
+              ),
             if (backgroundColor == AppColors.error)
               Icon(
                 Icons.error,

@@ -1828,7 +1828,7 @@ abstract class AppLocalizations {
   /// No description provided for @registering.
   ///
   /// In en, this message translates to:
-  /// **'Registering...'**
+  /// **'Registering'**
   String get registering;
 
   /// No description provided for @register.
@@ -1870,7 +1870,7 @@ abstract class AppLocalizations {
   /// No description provided for @payment_step_3.
   ///
   /// In en, this message translates to:
-  /// **'Only \$2.00 per month to stay active'**
+  /// **'Only 50 dh per month to stay active'**
   String get payment_step_3;
 
   /// No description provided for @payment_step_4.
@@ -1894,19 +1894,19 @@ abstract class AppLocalizations {
   /// No description provided for @payment_price.
   ///
   /// In en, this message translates to:
-  /// **'\$'**
+  /// **'dh'**
   String get payment_price;
 
   /// No description provided for @payment_price_main.
   ///
   /// In en, this message translates to:
-  /// **'2'**
+  /// **'50'**
   String get payment_price_main;
 
   /// No description provided for @payment_price_decimal.
   ///
   /// In en, this message translates to:
-  /// **'.00'**
+  /// **''**
   String get payment_price_decimal;
 
   /// No description provided for @payment_price_period.
@@ -1918,7 +1918,7 @@ abstract class AppLocalizations {
   /// No description provided for @payment_first_month_free.
   ///
   /// In en, this message translates to:
-  /// **'First month FREE, then \$2.00/mo'**
+  /// **'First month FREE, then 50 dh/month'**
   String get payment_first_month_free;
 
   /// No description provided for @payment_terms_agree.
@@ -2970,6 +2970,132 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Deliver packages along your route and get paid instantly. QuickDrop turns every trip into an opportunity.'**
   String get onboarding_4_body;
+
+  /// No description provided for @pending.
+  ///
+  /// In en, this message translates to:
+  /// **'Pending'**
+  String get pending;
+
+  /// No description provided for @payment.
+  ///
+  /// In en, this message translates to:
+  /// **'Payment'**
+  String get payment;
+
+  /// No description provided for @registration_approved.
+  ///
+  /// In en, this message translates to:
+  /// **'Registration Approved!'**
+  String get registration_approved;
+
+  /// No description provided for @registration_approved_message.
+  ///
+  /// In en, this message translates to:
+  /// **'Congratulations! Your driver registration has been approved. Complete the payment to start accepting delivery requests.'**
+  String get registration_approved_message;
+
+  /// No description provided for @subscription_expired.
+  ///
+  /// In en, this message translates to:
+  /// **'Subscription Expired'**
+  String get subscription_expired;
+
+  /// No description provided for @subscription_expired_message.
+  ///
+  /// In en, this message translates to:
+  /// **'Your monthly subscription has expired. Please renew your subscription to continue accepting delivery requests.'**
+  String get subscription_expired_message;
+
+  /// No description provided for @you_are_all_set.
+  ///
+  /// In en, this message translates to:
+  /// **'You\'re All Set!'**
+  String get you_are_all_set;
+
+  /// No description provided for @you_are_all_set_message.
+  ///
+  /// In en, this message translates to:
+  /// **'Welcome to the driver community! You can now start accepting delivery requests and earning money.'**
+  String get you_are_all_set_message;
+
+  /// No description provided for @subscription_status.
+  ///
+  /// In en, this message translates to:
+  /// **'Subscription Status'**
+  String get subscription_status;
+
+  /// No description provided for @active_status.
+  ///
+  /// In en, this message translates to:
+  /// **'Active'**
+  String get active_status;
+
+  /// No description provided for @subscription_active_until.
+  ///
+  /// In en, this message translates to:
+  /// **'Your subscription is active until'**
+  String get subscription_active_until;
+
+  /// No description provided for @subscription_is_active.
+  ///
+  /// In en, this message translates to:
+  /// **'Your subscription is active'**
+  String get subscription_is_active;
+
+  /// No description provided for @whats_next.
+  ///
+  /// In en, this message translates to:
+  /// **'What\'s Next?'**
+  String get whats_next;
+
+  /// No description provided for @document_verification.
+  ///
+  /// In en, this message translates to:
+  /// **'Document Verification'**
+  String get document_verification;
+
+  /// No description provided for @document_verification_desc.
+  ///
+  /// In en, this message translates to:
+  /// **'We\'ll verify your ID and driver\'s license'**
+  String get document_verification_desc;
+
+  /// No description provided for @vehicle_inspection.
+  ///
+  /// In en, this message translates to:
+  /// **'Vehicle Inspection'**
+  String get vehicle_inspection;
+
+  /// No description provided for @vehicle_inspection_desc.
+  ///
+  /// In en, this message translates to:
+  /// **'Your vehicle details will be verified'**
+  String get vehicle_inspection_desc;
+
+  /// No description provided for @approval_and_payment.
+  ///
+  /// In en, this message translates to:
+  /// **'Approval & Payment'**
+  String get approval_and_payment;
+
+  /// No description provided for @approval_and_payment_desc.
+  ///
+  /// In en, this message translates to:
+  /// **'Once approved, complete payment to activate'**
+  String get approval_and_payment_desc;
+
+  /// No description provided for @you_are_driver_now.
+  ///
+  /// In en, this message translates to:
+  /// **'You are a driver now!'**
+  String get you_are_driver_now;
+
+  /// No description provided for @you_are_driver_now_message.
+  ///
+  /// In en, this message translates to:
+  /// **'you can send request to others as a driver.'**
+  String get you_are_driver_now_message;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

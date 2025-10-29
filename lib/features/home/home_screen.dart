@@ -84,7 +84,7 @@ class _HomeScreenState extends State<HomeScreen> {
         if (subscriptionEndAt != null) {
           final endDate = DateTime.parse(subscriptionEndAt);
           if (now.isAfter(endDate)) {
-            Provider.of<UserProvider>(context, listen: false).updateSubscriptionStatus("inactive");
+            Provider.of<UserProvider>(context, listen: false).updateSubscriptionStatus("expired");
           }
         }
       } catch(e) {

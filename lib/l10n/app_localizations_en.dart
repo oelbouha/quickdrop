@@ -883,7 +883,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get vehicle_info_note => 'Make sure the vehicle information matches your vehicle registration documents.';
 
   @override
-  String get registering => 'Registering...';
+  String get registering => 'Registering';
 
   @override
   String get register => 'Register';
@@ -904,7 +904,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get payment_step_2 => 'Work when you want, earn as you like';
 
   @override
-  String get payment_step_3 => 'Only \$2.00 per month to stay active';
+  String get payment_step_3 => 'Only 50 dh per month to stay active';
 
   @override
   String get payment_step_4 => 'Renew monthly, no commitments';
@@ -916,19 +916,19 @@ class AppLocalizationsEn extends AppLocalizations {
   String get payment_monthly_subscription => 'Monthly Subscription';
 
   @override
-  String get payment_price => '\$';
+  String get payment_price => 'dh';
 
   @override
-  String get payment_price_main => '2';
+  String get payment_price_main => '50';
 
   @override
-  String get payment_price_decimal => '.00';
+  String get payment_price_decimal => '';
 
   @override
   String get payment_price_period => '/month';
 
   @override
-  String get payment_first_month_free => 'First month FREE, then \$2.00/mo';
+  String get payment_first_month_free => 'First month FREE, then 50 dh/month';
 
   @override
   String get payment_terms_agree => 'I agree to the ';
@@ -1458,4 +1458,67 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get onboarding_4_body => 'Deliver packages along your route and get paid instantly. QuickDrop turns every trip into an opportunity.';
+
+  @override
+  String get pending => 'Pending';
+
+  @override
+  String get payment => 'Payment';
+
+  @override
+  String get registration_approved => 'Registration Approved!';
+
+  @override
+  String get registration_approved_message => 'Congratulations! Your driver registration has been approved. Complete the payment to start accepting delivery requests.';
+
+  @override
+  String get subscription_expired => 'Subscription Expired';
+
+  @override
+  String get subscription_expired_message => 'Your monthly subscription has expired. Please renew your subscription to continue accepting delivery requests.';
+
+  @override
+  String get you_are_all_set => 'You\'re All Set!';
+
+  @override
+  String get you_are_all_set_message => 'Welcome to the driver community! You can now start accepting delivery requests and earning money.';
+
+  @override
+  String get subscription_status => 'Subscription Status';
+
+  @override
+  String get active_status => 'Active';
+
+  @override
+  String get subscription_active_until => 'Your subscription is active until';
+
+  @override
+  String get subscription_is_active => 'Your subscription is active';
+
+  @override
+  String get whats_next => 'What\'s Next?';
+
+  @override
+  String get document_verification => 'Document Verification';
+
+  @override
+  String get document_verification_desc => 'We\'ll verify your ID and driver\'s license';
+
+  @override
+  String get vehicle_inspection => 'Vehicle Inspection';
+
+  @override
+  String get vehicle_inspection_desc => 'Your vehicle details will be verified';
+
+  @override
+  String get approval_and_payment => 'Approval & Payment';
+
+  @override
+  String get approval_and_payment_desc => 'Once approved, complete payment to activate';
+
+  @override
+  String get you_are_driver_now => 'You are a driver now!';
+
+  @override
+  String get you_are_driver_now_message => 'you can send request to others as a driver.';
 }

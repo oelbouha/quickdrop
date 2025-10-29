@@ -122,7 +122,6 @@ class UserProvider with ChangeNotifier {
 
   bool canDriverMakeActions() {
     if (_user == null) return false;
-    print("Subscription status: ${_user!.subscriptionStatus}");
     return _user!.subscriptionStatus == 'active';
   }
 
@@ -169,7 +168,6 @@ class UserProvider with ChangeNotifier {
           .get();
       if (doc.exists) {
         final status = doc.data()?['driverStatus'];
-        print("Driver request status: $status");
         if (status == 'pending') {
           return true;
         }
@@ -189,6 +187,9 @@ class UserProvider with ChangeNotifier {
             DateTime.now().add(const Duration(days: 30)).toIso8601String(),
       });
       _user?.subscriptionStatus = 'active';
+      _user?.subscriptionEndsAt =
+          DateTime.now().add(const Duration(days: 30)).toIso8601String();
+      
       notifyListeners();
     } catch (e) {
       // print("Error updating payment date: $e");
