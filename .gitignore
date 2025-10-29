@@ -119,4 +119,4 @@ app.*.symbols
 !/dev/ci/**/Gemfile.locklib/firebase_options.dart
 
 lib/firebase_options.dart
-.env.env
+.env
