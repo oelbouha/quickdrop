@@ -616,8 +616,14 @@ abstract class AppLocalizations {
   /// No description provided for @manage_account.
   ///
   /// In en, this message translates to:
-  /// **'Manage account preferences'**
+  /// **'Manage Account'**
   String get manage_account;
+
+  /// No description provided for @manage_account_preference.
+  ///
+  /// In en, this message translates to:
+  /// **'Manage account preferences'**
+  String get manage_account_preference;
 
   /// No description provided for @manage_notifications.
   ///

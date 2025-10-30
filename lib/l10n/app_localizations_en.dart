@@ -267,7 +267,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get security => 'Security';
 
   @override
-  String get manage_account => 'Manage account preferences';
+  String get manage_account => 'Manage Account';
+
+  @override
+  String get manage_account_preference => 'Manage account preferences';
 
   @override
   String get manage_notifications => 'Manage your notification preferences';

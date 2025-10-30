@@ -280,12 +280,19 @@ class _ListingCardDetailsState extends State<ListingCardDetails> {
           _buildDetailItem(
             icon: "assets/icon/delivery.svg",
             title: t.route,
-            child: RouteIndicator(
-              from: widget.shipment.from,
-              to: widget.shipment.to,
-              fontSize: 16,
-              iconSize: 16,
-            ),
+            child: _isTrip && _selectedTrip?.middleStops != null && _selectedTrip!.middleStops!.isNotEmpty
+              ? RouteWithStops(
+                  from: widget.shipment.from,
+                  to: widget.shipment.to,
+                  middleStops: _selectedTrip!.middleStops,
+                  fontSize: 16,
+                )
+              : RouteIndicator(
+                  from: widget.shipment.from,
+                  to: widget.shipment.to,
+                  fontSize: 16,
+                  iconSize: 16,
+                ),
           ),
           _buildDetailItem(
             icon: "assets/icon/calendar.svg",
@@ -944,6 +951,135 @@ class TripDropdownField extends StatelessWidget {
         final trip = trips.firstWhereOrNull((t) => t.id == id);
         return validator?.call(trip);
       },
+    );
+  }
+}
+
+
+
+class RouteWithStops extends StatelessWidget {
+  final String from;
+  final String to;
+  final List<String>? middleStops;
+  final double fontSize;
+
+  const RouteWithStops({
+    super.key,
+    required this.from,
+    required this.to,
+    this.middleStops,
+    this.fontSize = 16,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final t = AppLocalizations.of(context)!;
+    
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Departure
+        _buildRoutePoint(
+          city: from,
+          label: 'Departure',
+          isStart: true,
+          isEnd: false,
+        ),
+        
+        // Middle stops
+        if (middleStops != null && middleStops!.isNotEmpty)
+          ...middleStops!.asMap().entries.map((entry) {
+            return _buildRoutePoint(
+              city: entry.value,
+              label: '${t.stop ?? 'Stop'} ${entry.key + 1}',
+              isStart: false,
+              isEnd: false,
+            );
+          }).toList(),
+        
+        // Arrival
+        _buildRoutePoint(
+          city: to,
+          label: 'Arrival',
+          isStart: false,
+          isEnd: true,
+        ),
+      ],
+    );
+  }
+
+  Widget _buildRoutePoint({
+    required String city,
+    required String label,
+    required bool isStart,
+    required bool isEnd,
+  }) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Timeline indicator
+        Column(
+          children: [
+            // Dot
+            Container(
+              width: isStart || isEnd ? 12 : 8,
+              height: isStart || isEnd ? 12 : 8,
+              decoration: BoxDecoration(
+                color: isStart
+                    ? AppColors.blue600
+                    : isEnd
+                        ? Colors.green
+                        : AppColors.lessImportant,
+                shape: BoxShape.circle,
+                border: Border.all(
+                  color: isStart
+                      ? AppColors.blue600
+                      : isEnd
+                          ? Colors.green
+                          : AppColors.lessImportant,
+                  width: isStart || isEnd ? 3 : 2,
+                ),
+              ),
+            ),
+            // Line connector (don't show after last point)
+            if (!isEnd)
+              Container(
+                width: 2,
+                height: 32,
+                color: AppColors.lessImportant.withValues(alpha: 0.3),
+              ),
+          ],
+        ),
+        const SizedBox(width: 12),
+        // Text content
+        Expanded(
+          child: Padding(
+            padding: EdgeInsets.only(bottom: isEnd ? 0 : 8),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  city,
+                  style: TextStyle(
+                    fontSize: fontSize,
+                    fontWeight: isStart || isEnd ? FontWeight.bold : FontWeight.w600,
+                    color: AppColors.headingText,
+                  ),
+                ),
+                const SizedBox(height: 2),
+                Text(
+                  label,
+                  style: TextStyle(
+                    fontSize: fontSize - 3,
+                    color: AppColors.lessImportant,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

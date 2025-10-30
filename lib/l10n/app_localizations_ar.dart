@@ -267,7 +267,10 @@ class AppLocalizationsAr extends AppLocalizations {
   String get security => 'الأمان';
 
   @override
-  String get manage_account => 'إدارة إعدادات الحساب';
+  String get manage_account => 'إدارة الحساب';
+
+  @override
+  String get manage_account_preference => 'إدارة إعدادات الحساب';
 
   @override
   String get manage_notifications => 'إدارة إعدادات الإشعارات';

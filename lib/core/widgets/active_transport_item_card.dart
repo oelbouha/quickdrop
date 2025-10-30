@@ -59,7 +59,7 @@ class _ActiveItemCardState extends State<ActiveItemCard> {
                       id: widget.item.id,
                       price: widget.item.price),
                   const SizedBox(height: 16),
-                  _buildBody(),
+                  buildShipmentBody(context, widget.item.date, widget.item.weight ),
                 ])),
             _buildMiddleStops(),
             _buildFooter(),
@@ -67,54 +67,7 @@ class _ActiveItemCardState extends State<ActiveItemCard> {
         ));
   }
 
-  Widget _buildBody() {
-    final t = AppLocalizations.of(context)!;
-    return Row(
-      children: [
-        Expanded(
-          child: _buildInfoColumn(
-            label: t.date,
-            value: '${widget.item.date}',
-          ),
-        ),
-        Container(
-          width: 1,
-          height: 40,
-          color: const Color(0xFFE5E7EB),
-        ),
-        Expanded(
-          child: _buildInfoColumn(
-            label: t.weight,
-            value: '${widget.item.weight}kg',
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildInfoColumn({required String label, required String value}) {
-    return Column(
-      children: [
-        Text(
-          label,
-          style: const TextStyle(
-            fontSize: 12,
-            color: Color(0xFF6B7280),
-            fontWeight: FontWeight.w500,
-          ),
-        ),
-        const SizedBox(height: 4),
-        Text(
-          value,
-          style: const TextStyle(
-            fontSize: 14,
-            color: Color(0xFF111827),
-            fontWeight: FontWeight.w600,
-          ),
-        ),
-      ],
-    );
-  }
+ 
 
   Widget _buildFooter() {
     final t = AppLocalizations.of(context)!;
@@ -314,3 +267,54 @@ class _ActiveItemCardState extends State<ActiveItemCard> {
     );
   }
 }
+
+
+  Widget _buildInfoColumn({required String label, required String value}) {
+    return Column(
+      children: [
+        Text(
+          label,
+          style: const TextStyle(
+            fontSize: 12,
+            color: Color(0xFF6B7280),
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+        const SizedBox(height: 4),
+        Text(
+          value,
+          style: const TextStyle(
+            fontSize: 14,
+            color: Color(0xFF111827),
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+      ],
+    );
+  }
+
+
+ Widget buildShipmentBody(BuildContext context, String date, String weight) {
+    final t = AppLocalizations.of(context)!;
+    return Row(
+      children: [
+        Expanded(
+          child: _buildInfoColumn(
+            label: t.date,
+            value: date,
+          ),
+        ),
+        Container(
+          width: 1,
+          height: 40,
+          color: const Color(0xFFE5E7EB),
+        ),
+        Expanded(
+          child: _buildInfoColumn(
+            label: t.weight,
+            value: '$weight ${t.kg}',
+          ),
+        ),
+      ],
+    );
+  }

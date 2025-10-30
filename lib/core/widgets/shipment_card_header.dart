@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:quickdrop_app/core/utils/imports.dart';
 import 'package:quickdrop_app/core/widgets/custom_svg.dart';
 import 'package:quickdrop_app/theme/colors.dart';
 
@@ -18,6 +19,8 @@ class BuildHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isArabic = Localizations.localeOf(context).languageCode == 'ar';
+    final t = AppLocalizations.of(context)!;
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -54,8 +57,8 @@ class BuildHeader extends StatelessWidget {
               const SizedBox(height: 4),
               Row(
                 children: [
-                  const CustomIcon(
-                    iconPath: "assets/icon/arrow-bottom-right.svg",
+                   CustomIcon(
+                    iconPath: isArabic ? "assets/icon/arrow-bottom-left.svg" : "assets/icon/arrow-bottom-right.svg",
                     size: 16,
                     color: Color(0xFF6B7280), // Gray-500
                   ),
@@ -85,7 +88,7 @@ class BuildHeader extends StatelessWidget {
             ),
             ),
              Text(
-              'DH',
+              t.dirham,
               style: Theme.of(context).textTheme.labelSmall?.copyWith(
               color: const Color(0xFF6B7280),
               fontWeight: FontWeight.w500,

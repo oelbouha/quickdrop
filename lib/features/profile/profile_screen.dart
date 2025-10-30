@@ -306,8 +306,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
           onTap: () => context.push("/profile/info"),
         ),
         settingsCard(
-          title: t.security,
-          subtitle: t.manage_account,
+          title: t.manage_account,
+          subtitle: t.manage_account_preference,
           iconPath: "assets/icon/edit-user.svg",
           onTap: () => context.push("/profile-security"),
         ),

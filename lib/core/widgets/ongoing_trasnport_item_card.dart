@@ -255,7 +255,8 @@ class OngoingItemCardState extends State<OngoingItemCard> {
                       id: widget.item.id,
                       price: widget.item.price),
                   const SizedBox(height: 16),
-                  _buildBody(),
+                 
+                  buildShipmentBody(context, widget.item.date, widget.item.weight ),
                   const SizedBox(height: 16),
                   _buildCourierCard(),
                 ])),
@@ -268,55 +269,6 @@ class OngoingItemCardState extends State<OngoingItemCard> {
 
 
 
-
-  Widget _buildBody() {
-    final t = AppLocalizations.of(context)!;
-    return Row(
-      children: [
-        Expanded(
-          child: _buildInfoColumn(
-            label: t.date,
-            value: '${widget.item.date}',
-          ),
-        ),
-        Container(
-          width: 1,
-          height: 40,
-          color: const Color(0xFFE5E7EB),
-        ),
-        Expanded(
-          child: _buildInfoColumn(
-            label: t.weight,
-            value: '${widget.item.weight}kg',
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildInfoColumn({required String label, required String value}) {
-    return Column(
-      children: [
-        Text(
-          label,
-          style: const TextStyle(
-            fontSize: 12,
-            color: Color(0xFF6B7280),
-            fontWeight: FontWeight.w500,
-          ),
-        ),
-        const SizedBox(height: 4),
-        Text(
-          value,
-          style: const TextStyle(
-            fontSize: 14,
-            color: Color(0xFF111827),
-            fontWeight: FontWeight.w600,
-          ),
-        ),
-      ],
-    );
-  }
 
   Widget _buildCourierCard() {
     return Container(

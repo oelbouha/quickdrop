@@ -71,7 +71,7 @@ class HelpScreenState extends State<HelpScreen> {
           t.faq_title,
           style:const TextStyle(
             color: AppColors.textPrimary,
-            fontSize: 18,
+            fontSize: 16,
             fontWeight: FontWeight.bold,
           ),
           textAlign: TextAlign.center,
@@ -248,10 +248,10 @@ class _AskQuestionWidgetState extends State<AskQuestionWidget> {
                 ),
               ),
               const SizedBox(width: 12),
-               Text(
+              Text(
                 t.still_have_questions,
                 style:const TextStyle(
-                  fontSize: 20,
+                  fontSize: 16,
                   fontWeight: FontWeight.bold,
                   color: Color(0xFF111827),
                 ),
@@ -463,7 +463,7 @@ class HelpfulTipsWidget extends StatelessWidget {
              Text(
               t.helpful_tips,
               style:const TextStyle(
-                fontSize: 20,
+                fontSize: 16,
                 fontWeight: FontWeight.bold,
                 color: Color(0xFF111827),
               ),
