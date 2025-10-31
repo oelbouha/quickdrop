@@ -99,32 +99,10 @@ class _IntroScreenState extends State<IntroScreen> with TickerProviderStateMixin
                     children: [
                       FadeTransition(
                         opacity: _fadeAnimation,
-                        child: Container(
-                          width: 80,
-                          height: 80,
-                          decoration: BoxDecoration(
-                            gradient:  LinearGradient(
-                              begin: Alignment.topLeft,
-                              end: Alignment.bottomRight,
-                              colors: [
-                                Theme.of(context).colorScheme.primary,
-                                Theme.of(context).colorScheme.tertiary,
-                              ],
-                            ),
-                            borderRadius: BorderRadius.circular(20),
-                            boxShadow: [
-                              BoxShadow(
-                                color: const Color(0xFF2563EB).withOpacity(0.2),
-                                blurRadius: 12,
-                                offset: const Offset(0, 4),
-                              ),
-                            ],
-                          ),
-                          child: const Icon(
-                            Icons.local_shipping_rounded,
-                            color: Colors.white,
-                            size: 40,
-                          ),
+                        child: Image.asset(
+                          'assets/images/Icon.png',
+                          width: 100,
+                          height: 100,
                         ),
                       ),
 
