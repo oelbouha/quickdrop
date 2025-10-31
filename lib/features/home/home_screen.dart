@@ -330,7 +330,7 @@ class _HomeScreenState extends State<HomeScreen> {
             backgroundColor: AppColors.cardBackground,
             onTap: () => _selectDate(context),
             hintText: t.select_pickup_date,
-            validator: Validators.notEmpty, 
+            validator: Validators.notEmpty(context), 
           ),
 
           const SizedBox(height: 20),

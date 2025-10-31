@@ -116,7 +116,7 @@ class _ReportUserDialogState extends State<ReportUserDialog> {
                 hintText: AppLocalizations.of(context)!.report_hint_text,
                 // backgroundColor: AppColors.cardBackground,
                 maxLines: 4,
-                validator: Validators.notEmpty,
+                validator: Validators.notEmpty(context),
                 displayLabel: false,
               ),
               const SizedBox(height: 16),

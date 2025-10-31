@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:quickdrop_app/l10n/app_localizations.dart';
 import 'package:quickdrop_app/theme/colors.dart';
 import 'package:quickdrop_app/theme/AppTheme.dart';
 import 'package:quickdrop_app/core/widgets/custom_svg.dart';
@@ -78,7 +79,7 @@ class _PasswordTextfieldState extends State<PasswordTextfield> {
         hintStyle: const TextStyle(
           color: AppColors.textFieldHintText,
         ),
-        hintText: "Password",
+        hintText: AppLocalizations.of(context)!.password,
         filled: false,
         prefixIcon:  widget.showPrefix == true ?  Padding(
           padding:  EdgeInsets.all(12),

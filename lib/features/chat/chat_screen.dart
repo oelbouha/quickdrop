@@ -3,7 +3,6 @@ import 'package:quickdrop_app/features/chat/chat_conversation_card.dart';
 import 'package:go_router/go_router.dart';
 import 'package:quickdrop_app/core/utils/imports.dart';
 
-
 class ChatScreen extends StatefulWidget {
   const ChatScreen({Key? key}) : super(key: key);
   @override
@@ -20,20 +19,18 @@ class _ChatScreenState extends State<ChatScreen>
     user = Provider.of<UserProvider>(context, listen: false).user;
   }
 
-
-
   @override
   Widget build(BuildContext context) {
     final t = AppLocalizations.of(context)!;
     return Scaffold(
-        backgroundColor: AppColors.background,
-        appBar: AppBar(
+      backgroundColor: AppColors.background,
+      appBar: AppBar(
           backgroundColor: AppColors.blue,
           // centerTitle: true,
           // elevation: 0,
-          title:  Text(
+          title: Text(
             t.chats,
-            style: const  TextStyle(
+            style: const TextStyle(
               color: AppColors.white,
               fontWeight: FontWeight.w500,
               fontSize: 22,
@@ -46,78 +43,73 @@ class _ChatScreenState extends State<ChatScreen>
             //   color: AppColors.white
             // ),
             // const SizedBox(width: 16),
-             NotificationIcon(
-              color: AppColors.white
-            ),
+            NotificationIcon(color: AppColors.white),
             const SizedBox(width: 16),
-          ]
-        
-        ),
-        body:  _buildChatConversations(),
+          ]),
+      body: _buildChatConversations(),
     );
   }
 
-
-
   Widget _buildChatConversations() {
     final chatProvider = Provider.of<ChatProvider>(context);
-
+    final t = AppLocalizations.of(context)!;
     return Container(
         margin: const EdgeInsets.only(
             left: AppTheme.cardPadding, right: AppTheme.cardPadding),
         child: StreamBuilder(
-          stream: chatProvider.getConversations(),
-          builder: (context, snapshot) => snapshot.connectionState ==
-                  ConnectionState.waiting
-              ?  loadingAnimation()
-              : snapshot.hasError
-                  ? const Center(child: Text("Error loading conversations"))
-                  : snapshot.hasData && (snapshot.data as List).isNotEmpty
-                      ? ListView.builder(
-                          itemCount: (snapshot.data as List).length,
-                          itemBuilder: (context, index) {
-                            // print("data ${snapshot.data as List}");
-                            // final user =
-                            if (snapshot.data == null) {
-                              return  buildEmptyState(
-                                      Icons.chat_bubble,
-                                      "No Conversation yet",
-                                      "Your chat conversations will appear here once you start messaging"
-                                  );
-                            }
-                            final conversation = (snapshot.data as List)[index];
-                            if (conversation['userId'] == null || conversation == null) {
-                              return const SizedBox.shrink();
-                            }
-                            // List<Map<String, dynamic>> user = conversation['user'];
-                            // print("user data: ${user}");
-                            // print("sender id: ${conversation['participants'][0]}");
-                            return Column(children: [
-                              if (index == 0)
+            stream: chatProvider.getConversations(),
+            builder: (context, snapshot) => snapshot.connectionState ==
+                    ConnectionState.waiting
+                ? loadingAnimation()
+                : snapshot.hasError
+                    ?  Center(child: Text(t.error_loading_conversations))
+                    : snapshot.hasData && (snapshot.data as List).isNotEmpty
+                        ? ListView.builder(
+                            itemCount: (snapshot.data as List).length,
+                            itemBuilder: (context, index) {
+                              // print("data ${snapshot.data as List}");
+                              // final user =
+                              if (snapshot.data == null) {
+                                return buildEmptyState(
+                                    Icons.chat_bubble,
+                                    t.no_conversation_yet,
+                                    t.chat_empty_message);
+                              }
+                              final conversation =
+                                  (snapshot.data as List)[index];
+                              if (conversation['userId'] == null ||
+                                  conversation == null) {
+                                return const SizedBox.shrink();
+                              }
+                              // List<Map<String, dynamic>> user = conversation['user'];
+                              // print("user data: ${user}");
+                              // print("sender id: ${conversation['participants'][0]}");
+                              return Column(children: [
+                                if (index == 0)
+                                  const SizedBox(
+                                      height: AppTheme.gapBetweenCards),
+                                ChatConversationCard(
+                                  header: conversation['userName'] ?? 'Guest',
+                                  subHeader: conversation['lastMessage'] ??
+                                      'No messages yet',
+                                  photoUrl: conversation['photoUrl'] ??
+                                      AppTheme.defaultProfileImage,
+                                  userId: conversation['userId'],
+                                  isMessageSeen:
+                                      conversation['lastMessageSeen'],
+                                  messageSender:
+                                      conversation['lastMessageSender'],
+                                ),
                                 const SizedBox(
                                     height: AppTheme.gapBetweenCards),
-                              ChatConversationCard(
-                                header: conversation['userName'] ?? 'Guest',
-                                subHeader: conversation['lastMessage'] ?? 'No messages yet',
-                                photoUrl: conversation['photoUrl'] ?? AppTheme.defaultProfileImage,
-                                userId: conversation['userId'],
-                                isMessageSeen: conversation['lastMessageSeen'],
-                                messageSender:
-                                    conversation['lastMessageSender'],
-                              ),
-                              const SizedBox(height: AppTheme.gapBetweenCards),
-                            ]);
-                          },
-                        )
-                      :buildEmptyState(
+                              ]);
+                            },
+                          )
+                        : buildEmptyState(
                           Icons.chat_bubble,
-                          "No Conversation yet",
-                          "Your chat conversations will appear here once you start messaging"
-                      )
-        ));
+                          t.no_conversation_yet,
+                          t.chat_empty_message)
+                          )
+                          );
   }
-
-
-
-
 }

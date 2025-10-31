@@ -108,7 +108,7 @@ class _IntroScreenState extends State<IntroScreen> with TickerProviderStateMixin
 
                       const SizedBox(height: 48),
 
-                      /// Enhanced Hero Text
+                      /// Title and Description
                       Column(
                         children: [
                           RichText(

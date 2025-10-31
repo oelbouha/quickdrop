@@ -617,7 +617,39 @@
   "approval_and_payment_desc": "Once approved, complete payment to activate",
   "you_are_driver_now": "You are a driver now!",
   "you_are_driver_now_message": "you can send request to others as a driver.",
-  "registering": "Registering"
+  "registering": "Registering",
+    "enter_verification_code": "Enter Verification Code",
+    "verification_code_sent_to": "Enter the verification code sent to",
+    "your_phone_number": "your phone number",
+    "enter_valid_code": "Enter a valid 6-digit code",
+    "invalid_code_error": "Invalid code. Please try again.",
+    "please_wait": "Please wait",
+    "max_retries_reached": "you reached max tries try again later.",
+    "failed_to_resend_code": "Failed to resend code:",
+    "code_sent_success": "code was sent , check your inbox.",
+    "didnt_receive_code": "Didn't receive the code? ",
+    "resend_code_in": "Resend code in",
+    "seconds": "seconds",
+    "resend_code": "Resend code",
+
+     "by_clicking": "By clicking ",
+    "continue_action": "Continue, ",
+    "agree_to_quickdrop": "I agree to QuickDrop's ",
+    "terms_of_service": "Terms of Service,",
+    "acknowledge_read": " and acknowledge that I have read the ",
+    "privacy_policy": "Privacy Policy",
+     "field_cannot_be_empty": "This field cannot be empty",
+    "enter_valid_number": "Enter a valid number",
+    "phone_cannot_be_empty": "Phone number cannot be empty",
+    "enter_valid_phone": "Enter a valid phone number",
+    "email_cannot_be_empty": "Email cannot be empty",
+    "enter_valid_email": "Enter a valid email",
+    "name_min_length": "Name must be more than 4 character",
+     "no_conversation_yet": "No Conversation yet",
+    "chat_empty_message": "Your chat conversations will appear here once you start messaging",
+        "error_loading_conversations": "Error loading conversations"
+
+
 
 
 

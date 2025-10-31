@@ -304,7 +304,7 @@ class _AddTripScreenState extends State<AddTripScreen>
             controller: priceController,
             hintText: "0.00",
             label: loc.delivery_price,
-            validator: Validators.isNumber,
+            validator: Validators.isNumber(context),
             keyboardType: TextInputType.number,
           ),
           const SizedBox(height: 16),
@@ -312,7 +312,7 @@ class _AddTripScreenState extends State<AddTripScreen>
             controller: weightController,
             hintText: "0.00",
             label: loc.available_weight,
-            validator: Validators.isNumber,
+            validator: Validators.isNumber(context),
             keyboardType: TextInputType.number,
           ),
           const SizedBox(height: 20),
@@ -346,7 +346,7 @@ class _AddTripScreenState extends State<AddTripScreen>
           AppUtils.showDialog(context,loc.price_required, AppColors.error);
           return false;
         }
-        if (Validators.isNumber(priceController.text) != null) {
+        if (Validators.isNumber(context)(priceController.text) != null) {
           AppUtils.showDialog(context,loc.price_number, AppColors.error);
           return false;
         }
@@ -356,7 +356,7 @@ class _AddTripScreenState extends State<AddTripScreen>
           AppUtils.showDialog(context,loc.weight_required, AppColors.error);
           return false;
         }
-        if (Validators.isNumber(weightController.text) != null) {
+        if (Validators.isNumber(context)(weightController.text) != null) {
           AppUtils.showDialog(context,loc.weight_number, AppColors.error);
           return false;
         }
@@ -735,7 +735,7 @@ Container(
             backgroundColor: AppColors.cardBackground,
             onTap: () => _selectDate(context),
             hintText: loc.select_pickup_date,
-            validator: Validators.notEmpty,
+            validator: Validators.notEmpty(context),
           ),
           const SizedBox(height: 20),
           

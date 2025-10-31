@@ -825,7 +825,7 @@ class _ListingCardDetailsState extends State<ListingCardDetails> {
                     controller: priceController,
                     hintText: t.delivery_price_hint,
                     label: t.delivery_price_label,
-                    validator: Validators.isNumber,
+                    validator: Validators.isNumber(context),
                     keyboardType: TextInputType.number,
                   ),
                   const SizedBox(height: 20),

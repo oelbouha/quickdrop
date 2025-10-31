@@ -602,7 +602,38 @@
   "approval_and_payment_desc": "بمجرد الموافقة، أكمل الدفع للتفعيل",
   "you_are_driver_now": "أنت سائق الآن!",
   "you_are_driver_now_message": "يمكنك الآن إرسال طلبات للآخرين كسائق.",
-  "registering": "جاري التسجيل"
+  "registering": "جاري التسجيل",
+    "enter_verification_code": "أدخل رمز التحقق",
+    "verification_code_sent_to": "أدخل رمز التحقق المرسل إلى",
+    "your_phone_number": "رقم هاتفك",
+    "enter_valid_code": "أدخل رمزًا صالحًا مكونًا من 6 أرقام",
+    "invalid_code_error": "رمز غير صحيح. يرجى المحاولة مرة أخرى.",
+    "please_wait": "يرجى الانتظار",
+    "max_retries_reached": "لقد وصلت إلى الحد الأقصى من المحاولات، حاول مرة أخرى لاحقًا.",
+    "failed_to_resend_code": "فشل في إعادة إرسال الرمز:",
+    "code_sent_success": "تم إرسال الرمز، تحقق من صندوق الوارد الخاص بك.",
+    "didnt_receive_code": "لم تستلم الرمز؟ ",
+    "resend_code_in": "إعادة إرسال الرمز في",
+    "seconds": "ثانية",
+    "resend_code": "إعادة إرسال الرمز",
+    "by_clicking": "بالنقر على ",
+    "continue_action": "متابعة، ",
+    "agree_to_quickdrop": "أوافق على ",
+    "terms_of_service": "شروط الخدمة الخاصة بـ QuickDrop،",
+    "acknowledge_read": " وأقر بأنني قرأت ",
+    "privacy_policy": "سياسة الخصوصية",
+     "field_cannot_be_empty": "هذا الحقل لا يمكن أن يكون فارغًا",
+    "enter_valid_number": "أدخل رقمًا صالحًا",
+    "phone_cannot_be_empty": "رقم الهاتف لا يمكن أن يكون فارغًا",
+    "enter_valid_phone": "أدخل رقم هاتف صالح",
+    "email_cannot_be_empty": "البريد الإلكتروني لا يمكن أن يكون فارغًا",
+    "enter_valid_email": "أدخل بريدًا إلكترونيًا صالحًا",
+    "name_min_length": "يجب أن يكون الاسم أكثر من 4 أحرف",
+      "no_conversation_yet": "لا توجد محادثات بعد",
+    "chat_empty_message": "ستظهر محادثاتك هنا بمجرد أن تبدأ بالمراسلة",
+        "error_loading_conversations": "خطأ في تحميل المحادثات"
+
+
 
 
 

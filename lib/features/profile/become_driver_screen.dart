@@ -730,7 +730,7 @@ Widget _buildStepContent(String step, UserProvider userProvider) {
                 label: t.first_name,
                 hintText: t.enter_first_name,
                 iconPath: "assets/icon/user.svg",
-                validator: Validators.name,
+                validator: Validators.name(context),
               ),
             ),
             const SizedBox(width: 12),
@@ -740,7 +740,7 @@ Widget _buildStepContent(String step, UserProvider userProvider) {
                 label: t.last_name,
                 hintText: t.enter_last_name,
                 iconPath: "assets/icon/user.svg",
-                validator: Validators.name,
+                validator: Validators.name(context),
               ),
             ),
           ],
@@ -752,7 +752,7 @@ Widget _buildStepContent(String step, UserProvider userProvider) {
           hintText: t.enter_national_id,
           iconPath: "assets/icon/id-card.svg",
           keyboardType: TextInputType.emailAddress,
-          validator: Validators.notEmpty,
+          validator: Validators.notEmpty(context),
         ),
         const SizedBox(height: 16),
         StatusCard(
@@ -780,7 +780,7 @@ Widget _buildStepContent(String step, UserProvider userProvider) {
           hintText: t.email_hint,
           iconPath: "assets/icon/email.svg",
           keyboardType: TextInputType.emailAddress,
-          validator: Validators.email,
+          validator: Validators.email(context),
         ),
 
         const SizedBox(height: 16),
@@ -851,7 +851,7 @@ Widget _buildStepContent(String step, UserProvider userProvider) {
           hintText: t.phone_hint,
           iconPath: "assets/icon/phone.svg",
           keyboardType: TextInputType.phone,
-          validator: Validators.phone,
+          validator: Validators.phone(context),
         ),
         const SizedBox(height: 16),
         Text(
@@ -917,7 +917,7 @@ Widget _buildStepContent(String step, UserProvider userProvider) {
           hintText: t.vehicle_plate_number_hint,
           iconPath: "assets/icon/car.svg",
           keyboardType: TextInputType.emailAddress,
-          validator: Validators.notEmpty,
+          validator: Validators.notEmpty(context),
         ),
         const SizedBox(height: 16),
         AppTextField(
@@ -926,7 +926,7 @@ Widget _buildStepContent(String step, UserProvider userProvider) {
           hintText: t.driver_number_hint,
           iconPath: "assets/icon/car.svg",
           keyboardType: TextInputType.phone,
-          validator: Validators.notEmpty,
+          validator: Validators.notEmpty(context),
         ),
         const SizedBox(height: 16),
         AppTextField(
@@ -935,7 +935,7 @@ Widget _buildStepContent(String step, UserProvider userProvider) {
           hintText: t.vehicle_type_hint,
           iconPath: "assets/icon/car.svg",
           keyboardType: TextInputType.text,
-          validator: Validators.notEmpty,
+          validator: Validators.notEmpty(context),
         ),
         const SizedBox(height: 16),
         StatusCard(

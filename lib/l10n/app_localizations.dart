@@ -3102,6 +3102,168 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'you can send request to others as a driver.'**
   String get you_are_driver_now_message;
+
+  /// No description provided for @enter_verification_code.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter Verification Code'**
+  String get enter_verification_code;
+
+  /// No description provided for @verification_code_sent_to.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter the verification code sent to'**
+  String get verification_code_sent_to;
+
+  /// No description provided for @your_phone_number.
+  ///
+  /// In en, this message translates to:
+  /// **'your phone number'**
+  String get your_phone_number;
+
+  /// No description provided for @enter_valid_code.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a valid 6-digit code'**
+  String get enter_valid_code;
+
+  /// No description provided for @invalid_code_error.
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid code. Please try again.'**
+  String get invalid_code_error;
+
+  /// No description provided for @please_wait.
+  ///
+  /// In en, this message translates to:
+  /// **'Please wait'**
+  String get please_wait;
+
+  /// No description provided for @max_retries_reached.
+  ///
+  /// In en, this message translates to:
+  /// **'you reached max tries try again later.'**
+  String get max_retries_reached;
+
+  /// No description provided for @failed_to_resend_code.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to resend code:'**
+  String get failed_to_resend_code;
+
+  /// No description provided for @code_sent_success.
+  ///
+  /// In en, this message translates to:
+  /// **'code was sent , check your inbox.'**
+  String get code_sent_success;
+
+  /// No description provided for @didnt_receive_code.
+  ///
+  /// In en, this message translates to:
+  /// **'Didn\'t receive the code? '**
+  String get didnt_receive_code;
+
+  /// No description provided for @resend_code_in.
+  ///
+  /// In en, this message translates to:
+  /// **'Resend code in'**
+  String get resend_code_in;
+
+  /// No description provided for @seconds.
+  ///
+  /// In en, this message translates to:
+  /// **'seconds'**
+  String get seconds;
+
+  /// No description provided for @resend_code.
+  ///
+  /// In en, this message translates to:
+  /// **'Resend code'**
+  String get resend_code;
+
+  /// No description provided for @by_clicking.
+  ///
+  /// In en, this message translates to:
+  /// **'By clicking '**
+  String get by_clicking;
+
+  /// No description provided for @continue_action.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue, '**
+  String get continue_action;
+
+  /// No description provided for @agree_to_quickdrop.
+  ///
+  /// In en, this message translates to:
+  /// **'I agree to QuickDrop\'s '**
+  String get agree_to_quickdrop;
+
+  /// No description provided for @terms_of_service.
+  ///
+  /// In en, this message translates to:
+  /// **'Terms of Service,'**
+  String get terms_of_service;
+
+  /// No description provided for @acknowledge_read.
+  ///
+  /// In en, this message translates to:
+  /// **' and acknowledge that I have read the '**
+  String get acknowledge_read;
+
+  /// No description provided for @field_cannot_be_empty.
+  ///
+  /// In en, this message translates to:
+  /// **'This field cannot be empty'**
+  String get field_cannot_be_empty;
+
+  /// No description provided for @enter_valid_number.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a valid number'**
+  String get enter_valid_number;
+
+  /// No description provided for @phone_cannot_be_empty.
+  ///
+  /// In en, this message translates to:
+  /// **'Phone number cannot be empty'**
+  String get phone_cannot_be_empty;
+
+  /// No description provided for @enter_valid_phone.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a valid phone number'**
+  String get enter_valid_phone;
+
+  /// No description provided for @email_cannot_be_empty.
+  ///
+  /// In en, this message translates to:
+  /// **'Email cannot be empty'**
+  String get email_cannot_be_empty;
+
+  /// No description provided for @enter_valid_email.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a valid email'**
+  String get enter_valid_email;
+
+  /// No description provided for @name_min_length.
+  ///
+  /// In en, this message translates to:
+  /// **'Name must be more than 4 character'**
+  String get name_min_length;
+
+  /// No description provided for @no_conversation_yet.
+  ///
+  /// In en, this message translates to:
+  /// **'No Conversation yet'**
+  String get no_conversation_yet;
+
+  /// No description provided for @chat_empty_message.
+  ///
+  /// In en, this message translates to:
+  /// **'Your chat conversations will appear here once you start messaging'**
+  String get chat_empty_message;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

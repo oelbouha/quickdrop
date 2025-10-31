@@ -121,7 +121,7 @@ class _SingupPageState extends State<SignUpScreen> {
               obsecureText: false,
               iconPath: "assets/icon/user.svg",
               isRequired: false,
-              validator: Validators.name,
+              validator: Validators.name(context),
             ),
             const SizedBox(height: 8),
             AppTextField(
@@ -130,7 +130,7 @@ class _SingupPageState extends State<SignUpScreen> {
               displayLabel: false,
               iconPath: "assets/icon/user.svg",
               isRequired: false,
-              validator: Validators.name,
+              validator: Validators.name(context),
             ),
             const SizedBox(height: 8),
             
@@ -167,12 +167,12 @@ class _SingupPageState extends State<SignUpScreen> {
               label: t.email,
               obsecureText: false,
               iconPath: "assets/icon/email.svg",
-              validator: Validators.email,
+              validator: Validators.email(context),
             ),
             const SizedBox(height: 8),
             PasswordTextfield(
               controller: passwordController,
-              validator: Validators.notEmpty,
+              validator: Validators.notEmpty(context),
               showPrefix: true,
             ),
             const SizedBox(
@@ -186,17 +186,17 @@ class _SingupPageState extends State<SignUpScreen> {
                   color: AppColors.shipmentText,
                 ),
                 children: [
-                  const TextSpan(text: "By clicking "),
-                  const TextSpan(
-                    text: "Continue, ",
+                   TextSpan(text: t.by_clicking),
+                   TextSpan(
+                    text: t.continue_action,
                     style: TextStyle(
                       fontWeight: FontWeight.w700,
                       color: AppColors.dark,
                     ),
                   ),
-                  const TextSpan(text: "I agree to QuickDrop's "),
+                   TextSpan(text: t.agree_to_quickdrop),
                   TextSpan(
-                    text: "Terms of Service,",
+                    text: t.terms_of_service,
                     style: const TextStyle(
                       fontWeight: FontWeight.w800,
                       color: AppColors.dark,
@@ -207,10 +207,10 @@ class _SingupPageState extends State<SignUpScreen> {
                         context.push('/terms-of-service');
                       },
                   ),
-                  const TextSpan(
-                      text: " and acknowledge that I have read the "),
+                   TextSpan(
+                      text: t.acknowledge_read),
                   TextSpan(
-                    text: "Privacy Policy",
+                    text: t.privacy_policy,
                     style: const TextStyle(
                       fontWeight: FontWeight.w800,
                       color: AppColors.dark,
@@ -241,4 +241,6 @@ class _SingupPageState extends State<SignUpScreen> {
           ],
         ));
   }
+
+
 }

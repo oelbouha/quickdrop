@@ -235,7 +235,7 @@ Future<void> updateInfo() async {
           hintText: t.email_hint,
          iconPath: "assets/icon/email.svg",
           keyboardType: TextInputType.emailAddress,
-          validator: Validators.email,
+          validator: Validators.email(context),
         ),
         // const SizedBox(height: 16),
         // AppTextField(
@@ -244,7 +244,7 @@ Future<void> updateInfo() async {
         //   hintText: t.phone_hint,
         //   iconPath: "assets/icon/phone.svg",
         //   keyboardType: TextInputType.phone,
-        //   validator: Validators.phone,
+        //   validator: Validators.phone(context),
         // ),
       ],
     );

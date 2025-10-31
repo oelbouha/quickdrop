@@ -1524,4 +1524,85 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get you_are_driver_now_message => 'Vous pouvez maintenant envoyer des demandes aux autres en tant que chauffeur.';
+
+  @override
+  String get enter_verification_code => 'Entrez le code de vérification';
+
+  @override
+  String get verification_code_sent_to => 'Entrez le code de vérification envoyé à';
+
+  @override
+  String get your_phone_number => 'votre numéro de téléphone';
+
+  @override
+  String get enter_valid_code => 'Entrez un code valide à 6 chiffres';
+
+  @override
+  String get invalid_code_error => 'Code invalide. Veuillez réessayer.';
+
+  @override
+  String get please_wait => 'Veuillez patienter';
+
+  @override
+  String get max_retries_reached => 'vous avez atteint le nombre maximum de tentatives, réessayez plus tard.';
+
+  @override
+  String get failed_to_resend_code => 'Échec de renvoi du code:';
+
+  @override
+  String get code_sent_success => 'le code a été envoyé, vérifiez votre boîte de réception.';
+
+  @override
+  String get didnt_receive_code => 'Vous n\'avez pas reçu le code? ';
+
+  @override
+  String get resend_code_in => 'Renvoyer le code dans';
+
+  @override
+  String get seconds => 'secondes';
+
+  @override
+  String get resend_code => 'Renvoyer le code';
+
+  @override
+  String get by_clicking => 'En cliquant sur ';
+
+  @override
+  String get continue_action => 'Continuer, ';
+
+  @override
+  String get agree_to_quickdrop => 'j\'accepte les ';
+
+  @override
+  String get terms_of_service => 'Conditions d\'utilisation de QuickDrop,';
+
+  @override
+  String get acknowledge_read => ' et reconnais avoir lu la ';
+
+  @override
+  String get field_cannot_be_empty => 'Ce champ ne peut pas être vide';
+
+  @override
+  String get enter_valid_number => 'Entrez un numéro valide';
+
+  @override
+  String get phone_cannot_be_empty => 'Le numéro de téléphone ne peut pas être vide';
+
+  @override
+  String get enter_valid_phone => 'Entrez un numéro de téléphone valide';
+
+  @override
+  String get email_cannot_be_empty => 'L\'email ne peut pas être vide';
+
+  @override
+  String get enter_valid_email => 'Entrez un email valide';
+
+  @override
+  String get name_min_length => 'Le nom doit comporter plus de 4 caractères';
+
+  @override
+  String get no_conversation_yet => 'Pas encore de conversation';
+
+  @override
+  String get chat_empty_message => 'Vos conversations apparaîtront ici une fois que vous commencerez à envoyer des messages';
 }

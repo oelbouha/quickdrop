@@ -755,7 +755,7 @@ class AppLocalizationsAr extends AppLocalizations {
   }
 
   @override
-  String get error_loading_conversations => 'حدث خطأ أثناء تحميل المحادثات';
+  String get error_loading_conversations => 'خطأ في تحميل المحادثات';
 
   @override
   String get no_active_negotiations => 'لا توجد مفاوضات نشطة';
@@ -1524,4 +1524,85 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get you_are_driver_now_message => 'يمكنك الآن إرسال طلبات للآخرين كسائق.';
+
+  @override
+  String get enter_verification_code => 'أدخل رمز التحقق';
+
+  @override
+  String get verification_code_sent_to => 'أدخل رمز التحقق المرسل إلى';
+
+  @override
+  String get your_phone_number => 'رقم هاتفك';
+
+  @override
+  String get enter_valid_code => 'أدخل رمزًا صالحًا مكونًا من 6 أرقام';
+
+  @override
+  String get invalid_code_error => 'رمز غير صحيح. يرجى المحاولة مرة أخرى.';
+
+  @override
+  String get please_wait => 'يرجى الانتظار';
+
+  @override
+  String get max_retries_reached => 'لقد وصلت إلى الحد الأقصى من المحاولات، حاول مرة أخرى لاحقًا.';
+
+  @override
+  String get failed_to_resend_code => 'فشل في إعادة إرسال الرمز:';
+
+  @override
+  String get code_sent_success => 'تم إرسال الرمز، تحقق من صندوق الوارد الخاص بك.';
+
+  @override
+  String get didnt_receive_code => 'لم تستلم الرمز؟ ';
+
+  @override
+  String get resend_code_in => 'إعادة إرسال الرمز في';
+
+  @override
+  String get seconds => 'ثانية';
+
+  @override
+  String get resend_code => 'إعادة إرسال الرمز';
+
+  @override
+  String get by_clicking => 'بالنقر على ';
+
+  @override
+  String get continue_action => 'متابعة، ';
+
+  @override
+  String get agree_to_quickdrop => 'أوافق على ';
+
+  @override
+  String get terms_of_service => 'شروط الخدمة الخاصة بـ QuickDrop،';
+
+  @override
+  String get acknowledge_read => ' وأقر بأنني قرأت ';
+
+  @override
+  String get field_cannot_be_empty => 'هذا الحقل لا يمكن أن يكون فارغًا';
+
+  @override
+  String get enter_valid_number => 'أدخل رقمًا صالحًا';
+
+  @override
+  String get phone_cannot_be_empty => 'رقم الهاتف لا يمكن أن يكون فارغًا';
+
+  @override
+  String get enter_valid_phone => 'أدخل رقم هاتف صالح';
+
+  @override
+  String get email_cannot_be_empty => 'البريد الإلكتروني لا يمكن أن يكون فارغًا';
+
+  @override
+  String get enter_valid_email => 'أدخل بريدًا إلكترونيًا صالحًا';
+
+  @override
+  String get name_min_length => 'يجب أن يكون الاسم أكثر من 4 أحرف';
+
+  @override
+  String get no_conversation_yet => 'لا توجد محادثات بعد';
+
+  @override
+  String get chat_empty_message => 'ستظهر محادثاتك هنا بمجرد أن تبدأ بالمراسلة';
 }

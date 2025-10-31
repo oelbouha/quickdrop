@@ -68,6 +68,7 @@ class _VerifyPhoneScreenState extends State<VerifyPhoneScreen> {
   }
 
   void verifyCode(String smsCode) async {
+    final t = AppLocalizations.of(context)!;
     setState(() => isLoading = true);
     try {
       PhoneAuthCredential credential = PhoneAuthProvider.credential(
@@ -83,20 +84,21 @@ class _VerifyPhoneScreenState extends State<VerifyPhoneScreen> {
       );
     } catch (e) {
       AppUtils.showDialog(
-          context, "Invalid code. Please try again.", AppColors.error);
+          context, t.invalid_code_error, AppColors.error);
     } finally {
       setState(() => isLoading = false);
     }
   }
 
   void resendCode() async {
+    final t = AppLocalizations.of(context)!;
     if (_canSendCode == false) {
-      AppUtils.showDialog(context, "Please wait", AppColors.error);
+      AppUtils.showDialog(context, t.please_wait, AppColors.error);
       return;
     }
     if (maxCodeSend == 3) {
       AppUtils.showDialog(
-          context, "you reached max tries try again later.", AppColors.error);
+          context, t.max_retries_reached, AppColors.error);
       if (maxRetryTimeOutEnd) return;
       maxRetryTimeOutEnd = true;
       Future.delayed(const Duration(seconds: 10000), () {
@@ -113,7 +115,7 @@ class _VerifyPhoneScreenState extends State<VerifyPhoneScreen> {
       verificationCompleted: (PhoneAuthCredential credential) {},
       verificationFailed: (FirebaseAuthException e) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("Failed to resend code: ${e.message}")),
+          SnackBar(content: Text("${t.failed_to_resend_code} ${e.message}")),
         );
       },
       codeSent: (String newVerificationId, int? resendToken) {
@@ -122,7 +124,7 @@ class _VerifyPhoneScreenState extends State<VerifyPhoneScreen> {
         });
 
         AppUtils.showDialog(
-            context, "code was sent , check your inbox.", AppColors.blue700);
+            context, t.code_sent_success, AppColors.blue700);
       },
       codeAutoRetrievalTimeout: (String verificationId) {},
     );
@@ -147,15 +149,15 @@ class _VerifyPhoneScreenState extends State<VerifyPhoneScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                const Text(
-                  "Enter Verification Code",
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                Text(
+                  t.enter_verification_code,
+                  style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 20),
-                const Text(
-                  "Enter the verification code sent to",
-                  style: TextStyle(
+                Text(
+                  t.verification_code_sent_to,
+                  style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w400,
                     color: AppColors.headingText,
@@ -163,7 +165,7 @@ class _VerifyPhoneScreenState extends State<VerifyPhoneScreen> {
                   textAlign: TextAlign.center,
                 ),
                 Text(
-                  widget.phoneNumber ?? 'your phone number',
+                  widget.phoneNumber ?? t.your_phone_number,
                   style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w600,
@@ -182,7 +184,7 @@ class _VerifyPhoneScreenState extends State<VerifyPhoneScreen> {
                   },
                   validator: (value) {
                     if (value == null || value.trim().length != 6) {
-                      return "Enter a valid 6-digit code";
+                      return t.enter_valid_code;
                     }
                     return null;
                   },
@@ -214,8 +216,8 @@ class _VerifyPhoneScreenState extends State<VerifyPhoneScreen> {
                   children: [
                     Text(
                       _canSendCode
-                          ? "Didn't receive the code? "
-                          : "Resend code in $_timeLeft seconds",
+                          ? t.didnt_receive_code
+                          : "${t.resend_code_in} $_timeLeft ${t.seconds}",
                       style: const TextStyle(
                         color: AppColors.shipmentText,
                         fontSize: 14,
@@ -224,7 +226,7 @@ class _VerifyPhoneScreenState extends State<VerifyPhoneScreen> {
                     if (_canSendCode)
                       GestureDetectorWidget(
                         onPressed: resendCode,
-                        hintText: "Resend code",
+                        hintText: t.resend_code,
                         color: AppColors.dark,
                       ),
                   ],

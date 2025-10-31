@@ -94,12 +94,11 @@ class TripCardState extends State<TripCard> {
   bool hasManyStops = stops.length > 3;
   List<String> displayStops = hasManyStops ? stops.sublist(0, 2) : stops;
 
-  // Arrows adapt based on text direction
-  final arrow = isRTL ? ' ← ' : ' → ';
+
+  final arrow = ' → ';
 
   List<InlineSpan> routeSpans = [];
 
-  // === LTR (English/French) ===
   if (!isRTL) {
     // FROM city
     routeSpans.add(_textSpan(widget.shipment.from, const Color(0xFF6A7681)));
@@ -115,19 +114,19 @@ class TripCardState extends State<TripCard> {
       routeSpans.add(_textSpan(' +${stops.length - 2} ${t.more}', Colors.orange));
     }
 
-    // → Arrow to destination
+    
     routeSpans.add(_arrowSpan(arrow));
 
     // TO city
     routeSpans.add(_textSpan(widget.shipment.to, const Color(0xFF6A7681)));
   }
 
-  // === RTL (Arabic) ===
+  
   else {
     // FROM city
     routeSpans.add(_textSpan(widget.shipment.from, const Color(0xFF6A7681)));
 
-    // ← Arrow
+    
     routeSpans.add(_arrowSpan(arrow));
 
     // MIDDLE stops

@@ -125,7 +125,7 @@ class _ReviewUserDialogState extends State<ReviewUserDialog> {
               hintText: AppLocalizations.of(context)!.review_hint_text,
               // backgroundColor: AppColors.cardBackground,
               maxLines: 3,
-              validator: Validators.notEmpty,
+              validator: Validators.notEmpty(context),
               displayLabel: false,
             ),
             const SizedBox(height: 16),

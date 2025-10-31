@@ -607,7 +607,38 @@
   "approval_and_payment_desc": "Une fois approuvé, complétez le paiement pour activer",
   "you_are_driver_now": "Vous êtes maintenant chauffeur !",
   "you_are_driver_now_message": "Vous pouvez maintenant envoyer des demandes aux autres en tant que chauffeur.",
-  "registering": "Inscription en cours"
+  "registering": "Inscription en cours",
+  "enter_verification_code": "Entrez le code de vérification",
+    "verification_code_sent_to": "Entrez le code de vérification envoyé à",
+    "your_phone_number": "votre numéro de téléphone",
+    "enter_valid_code": "Entrez un code valide à 6 chiffres",
+    "invalid_code_error": "Code invalide. Veuillez réessayer.",
+    "please_wait": "Veuillez patienter",
+    "max_retries_reached": "vous avez atteint le nombre maximum de tentatives, réessayez plus tard.",
+    "failed_to_resend_code": "Échec de renvoi du code:",
+    "code_sent_success": "le code a été envoyé, vérifiez votre boîte de réception.",
+    "didnt_receive_code": "Vous n'avez pas reçu le code? ",
+    "resend_code_in": "Renvoyer le code dans",
+    "seconds": "secondes",
+    "resend_code": "Renvoyer le code",
+     "by_clicking": "En cliquant sur ",
+    "continue_action": "Continuer, ",
+    "agree_to_quickdrop": "j'accepte les ",
+    "terms_of_service": "Conditions d'utilisation de QuickDrop,",
+    "acknowledge_read": " et reconnais avoir lu la ",
+    "privacy_policy": "Politique de confidentialité",
+     "field_cannot_be_empty": "Ce champ ne peut pas être vide",
+    "enter_valid_number": "Entrez un numéro valide",
+    "phone_cannot_be_empty": "Le numéro de téléphone ne peut pas être vide",
+    "enter_valid_phone": "Entrez un numéro de téléphone valide",
+    "email_cannot_be_empty": "L'email ne peut pas être vide",
+    "enter_valid_email": "Entrez un email valide",
+    "name_min_length": "Le nom doit comporter plus de 4 caractères",
+        "no_conversation_yet": "Pas encore de conversation",
+    "chat_empty_message": "Vos conversations apparaîtront ici une fois que vous commencerez à envoyer des messages",
+        "error_loading_conversations": "Erreur lors du chargement des conversations"
+
+
 
 
 

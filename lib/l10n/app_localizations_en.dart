@@ -1524,4 +1524,85 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get you_are_driver_now_message => 'you can send request to others as a driver.';
+
+  @override
+  String get enter_verification_code => 'Enter Verification Code';
+
+  @override
+  String get verification_code_sent_to => 'Enter the verification code sent to';
+
+  @override
+  String get your_phone_number => 'your phone number';
+
+  @override
+  String get enter_valid_code => 'Enter a valid 6-digit code';
+
+  @override
+  String get invalid_code_error => 'Invalid code. Please try again.';
+
+  @override
+  String get please_wait => 'Please wait';
+
+  @override
+  String get max_retries_reached => 'you reached max tries try again later.';
+
+  @override
+  String get failed_to_resend_code => 'Failed to resend code:';
+
+  @override
+  String get code_sent_success => 'code was sent , check your inbox.';
+
+  @override
+  String get didnt_receive_code => 'Didn\'t receive the code? ';
+
+  @override
+  String get resend_code_in => 'Resend code in';
+
+  @override
+  String get seconds => 'seconds';
+
+  @override
+  String get resend_code => 'Resend code';
+
+  @override
+  String get by_clicking => 'By clicking ';
+
+  @override
+  String get continue_action => 'Continue, ';
+
+  @override
+  String get agree_to_quickdrop => 'I agree to QuickDrop\'s ';
+
+  @override
+  String get terms_of_service => 'Terms of Service,';
+
+  @override
+  String get acknowledge_read => ' and acknowledge that I have read the ';
+
+  @override
+  String get field_cannot_be_empty => 'This field cannot be empty';
+
+  @override
+  String get enter_valid_number => 'Enter a valid number';
+
+  @override
+  String get phone_cannot_be_empty => 'Phone number cannot be empty';
+
+  @override
+  String get enter_valid_phone => 'Enter a valid phone number';
+
+  @override
+  String get email_cannot_be_empty => 'Email cannot be empty';
+
+  @override
+  String get enter_valid_email => 'Enter a valid email';
+
+  @override
+  String get name_min_length => 'Name must be more than 4 character';
+
+  @override
+  String get no_conversation_yet => 'No Conversation yet';
+
+  @override
+  String get chat_empty_message => 'Your chat conversations will appear here once you start messaging';
 }
