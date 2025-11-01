@@ -280,19 +280,21 @@ class _ListingCardDetailsState extends State<ListingCardDetails> {
           _buildDetailItem(
             icon: "assets/icon/delivery.svg",
             title: t.route,
-            child: _isTrip && _selectedTrip?.middleStops != null && _selectedTrip!.middleStops!.isNotEmpty
-              ? RouteWithStops(
-                  from: widget.shipment.from,
-                  to: widget.shipment.to,
-                  middleStops: _selectedTrip!.middleStops,
-                  fontSize: 16,
-                )
-              : RouteIndicator(
-                  from: widget.shipment.from,
-                  to: widget.shipment.to,
-                  fontSize: 16,
-                  iconSize: 16,
-                ),
+            child: _isTrip &&
+                    _selectedTrip?.middleStops != null &&
+                    _selectedTrip!.middleStops!.isNotEmpty
+                ? RouteWithStops(
+                    from: widget.shipment.from,
+                    to: widget.shipment.to,
+                    middleStops: _selectedTrip!.middleStops,
+                    fontSize: 16,
+                  )
+                : RouteIndicator(
+                    from: widget.shipment.from,
+                    to: widget.shipment.to,
+                    fontSize: 16,
+                    iconSize: 16,
+                  ),
           ),
           _buildDetailItem(
             icon: "assets/icon/calendar.svg",
@@ -731,6 +733,58 @@ class _ListingCardDetailsState extends State<ListingCardDetails> {
     }
   }
 
+  List<Shipment> _getMatchedShipments() {
+    final userId = FirebaseAuth.instance.currentUser?.uid;
+    if (userId == null) {
+      return [];
+    }
+
+    final trip = widget.shipment as Trip;
+    final from = trip.from;
+    final to = trip.to;
+    final middleStops = trip.middleStops ?? [];
+
+    final shipmentProvider =
+        Provider.of<ShipmentProvider>(context, listen: false);
+    shipmentProvider.fetchShipmentsByUserId(userId);
+
+    final shipments = shipmentProvider.shipments
+        .where((shipment) =>
+            shipment.userId == userId &&
+                shipment.status == "active" &&
+                shipment.from == from &&
+                shipment.to == to ||
+            middleStops.contains(shipment.from) ||
+            middleStops.contains(shipment.to))
+        .toList();
+
+    return shipments;
+  }
+
+  List<Trip> _getMatchedTrips() {
+    final userId = FirebaseAuth.instance.currentUser?.uid;
+    if (userId == null) {
+      return [];
+    }
+
+    final shipment = widget.shipment as Shipment;
+    final from = shipment.from;
+    final to = shipment.to;
+
+    final tripProvider = Provider.of<TripProvider>(context, listen: false);
+   
+
+    final trips = tripProvider.trips
+        .where((trip) => trip.userId == userId && trip.status == "active"
+            && (trip.from == from && trip.to == to ||
+                (trip.middleStops != null && trip.middleStops!.contains(from)) ||
+                (trip.middleStops != null && trip.middleStops!.contains(to)))
+        )
+        .toList();
+
+    return trips;
+  } 
+
   Widget _buildRequesBody() {
     final t = AppLocalizations.of(context)!;
     return Consumer2<TripProvider, ShipmentProvider>(
@@ -740,15 +794,21 @@ class _ListingCardDetailsState extends State<ListingCardDetails> {
         return Center(child: Text(t.login_required));
       }
 
-      final activeTrips = tripProvider.trips
-          .where((trip) => trip.userId == user.uid && trip.status == "active")
-          .toList();
+      List<Trip> activeTrips = [];
+      if (_isTrip == false) {
+        activeTrips = _getMatchedTrips();
+        print("found matched trips: ${activeTrips.length}");
+      }
 
-      shipmentProvider.fetchShipmentsByUserId(user.uid);
-      final activeShipments = shipmentProvider.shipments
-          .where((shipment) =>
-              shipment.userId == user.uid && shipment.status == "active")
-          .toList();
+      List<Shipment> activeShipments = [];
+      if (_isTrip == true) {
+          activeShipments = _getMatchedShipments();
+          print("found matched shipments: ${activeShipments.length}");
+      }
+
+      // need to filter trips and shipments that are not the current one
+      print(
+          "curent shipment from : ${widget.shipment.from} to: ${widget.shipment.to}");
 
       return StatefulBuilder(
           builder: (BuildContext context, StateSetter setModalState) {
@@ -955,8 +1015,6 @@ class TripDropdownField extends StatelessWidget {
   }
 }
 
-
-
 class RouteWithStops extends StatelessWidget {
   final String from;
   final String to;
@@ -974,7 +1032,7 @@ class RouteWithStops extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final t = AppLocalizations.of(context)!;
-    
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -985,7 +1043,7 @@ class RouteWithStops extends StatelessWidget {
           isStart: true,
           isEnd: false,
         ),
-        
+
         // Middle stops
         if (middleStops != null && middleStops!.isNotEmpty)
           ...middleStops!.asMap().entries.map((entry) {
@@ -996,7 +1054,7 @@ class RouteWithStops extends StatelessWidget {
               isEnd: false,
             );
           }).toList(),
-        
+
         // Arrival
         _buildRoutePoint(
           city: to,
@@ -1062,7 +1120,8 @@ class RouteWithStops extends StatelessWidget {
                   city,
                   style: TextStyle(
                     fontSize: fontSize,
-                    fontWeight: isStart || isEnd ? FontWeight.bold : FontWeight.w600,
+                    fontWeight:
+                        isStart || isEnd ? FontWeight.bold : FontWeight.w600,
                     color: AppColors.headingText,
                   ),
                 ),

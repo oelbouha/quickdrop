@@ -1409,7 +1409,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get photo_format_hint => 'JPG, PNG jusqu\'à 5 Mo';
 
   @override
-  String get no_active_shipments_available => 'Aucun envoi actif disponible';
+  String get no_active_shipments_available => 'Aucun voyage actif ne correspond à la destination de ce colis';
 
   @override
   String get choose_a_shipment => 'Choisissez un envoi';

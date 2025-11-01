@@ -2872,7 +2872,7 @@ abstract class AppLocalizations {
   /// No description provided for @no_active_shipments_available.
   ///
   /// In en, this message translates to:
-  /// **'No active shipments available'**
+  /// **'No active shipments match this trip destination'**
   String get no_active_shipments_available;
 
   /// No description provided for @choose_a_shipment.

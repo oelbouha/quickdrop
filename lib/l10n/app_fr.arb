@@ -561,7 +561,7 @@
   "take_a_picture": "Prendre une photo",
   "upload_photo": "Télécharger une photo",
 "photo_format_hint": "JPG, PNG jusqu'à 5 Mo",
-"no_active_shipments_available": "Aucun envoi actif disponible",
+"no_active_shipments_available": "Aucun voyage actif ne correspond à la destination de ce colis",
 "choose_a_shipment": "Choisissez un envoi",
 "please_select_shipment": "Veuillez sélectionner un envoi",
 "request_already_sent": "Vous avez déjà envoyé une demande pour cet envoi. Veuillez attendre que le propriétaire l'accepte ou la rejette.",

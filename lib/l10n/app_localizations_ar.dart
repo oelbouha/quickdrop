@@ -1409,7 +1409,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get photo_format_hint => 'الصور بصيغ JPG أو PNG، بحجم لا يتجاوز 5 ميغابايت';
 
   @override
-  String get no_active_shipments_available => 'لا توجد شحنات نشطة متاحة';
+  String get no_active_shipments_available => 'لا توجد شحنات نشطة تطابق وجهة هذه الشحنة';
 
   @override
   String get choose_a_shipment => 'اختر شحنة';
