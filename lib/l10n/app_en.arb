@@ -647,7 +647,9 @@
     "name_min_length": "Name must be more than 4 character",
      "no_conversation_yet": "No Conversation yet",
     "chat_empty_message": "Your chat conversations will appear here once you start messaging",
-        "error_loading_conversations": "Error loading conversations"
+        "error_loading_conversations": "Error loading conversations",
+          "share_message": "🚀 Check out QuickDrop! Send and receive packages easily.\nComing soon to the Play Store — stay tuned!",
+  "share_subject": "QuickDrop App"
 
 
 

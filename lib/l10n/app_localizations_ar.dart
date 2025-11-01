@@ -1605,4 +1605,10 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get chat_empty_message => 'ستظهر محادثاتك هنا بمجرد أن تبدأ بالمراسلة';
+
+  @override
+  String get share_message => '🚀 اكتشف تطبيق كويك دروب! أرسل واستقبل الطرود بسهولة.\nقريبًا على متجر بلاي — ترقبوا!';
+
+  @override
+  String get share_subject => 'تطبيق كويك دروب';
 }

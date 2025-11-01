@@ -3,6 +3,8 @@ import 'package:quickdrop_app/features/profile/settings_card.dart';
 import 'package:quickdrop_app/core/utils/imports.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:intl/intl.dart';
+import 'package:share_plus/share_plus.dart';
+
 
 String formatDate(String rawDate) {
   DateTime dateTime = DateFormat("dd/MM/yyyy").parse(rawDate);
@@ -211,7 +213,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
           subtitle: t.invite_friends,
           icon: Icons.card_giftcard_outlined,
           color: const Color(0xFF00A699),
-          onTap: () => _showComingSoon("refer to your friend"),
+          onTap: () =>{
+            Share.share(
+              t.share_message,
+              subject: t.share_subject
+            )
+          },
         ),
       ],
     );

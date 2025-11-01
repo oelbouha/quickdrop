@@ -3264,6 +3264,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Your chat conversations will appear here once you start messaging'**
   String get chat_empty_message;
+
+  /// No description provided for @share_message.
+  ///
+  /// In en, this message translates to:
+  /// **'🚀 Check out QuickDrop! Send and receive packages easily.\nComing soon to the Play Store — stay tuned!'**
+  String get share_message;
+
+  /// No description provided for @share_subject.
+  ///
+  /// In en, this message translates to:
+  /// **'QuickDrop App'**
+  String get share_subject;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

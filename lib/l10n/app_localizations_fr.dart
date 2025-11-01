@@ -1605,4 +1605,10 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get chat_empty_message => 'Vos conversations apparaîtront ici une fois que vous commencerez à envoyer des messages';
+
+  @override
+  String get share_message => '🚀 Découvrez QuickDrop ! Envoyez et recevez des colis facilement.\nBientôt disponible sur le Play Store — restez à l\'écoute !';
+
+  @override
+  String get share_subject => 'Application QuickDrop';
 }
