@@ -1611,4 +1611,145 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get share_subject => 'Application QuickDrop';
+
+  @override
+  String get privacy_policy_title => 'Politique de confidentialité';
+
+  @override
+  String get privacy_last_updated => 'Dernière mise à jour : 2025-24-5';
+
+  @override
+  String get privacy_introduction_title => 'Introduction';
+
+  @override
+  String get privacy_introduction_content => 'QuickDrop (\"nous\", \"notre\" ou \"nos\") s\'engage à protéger votre vie privée. Cette politique de confidentialité explique comment nous collectons, utilisons, divulguons et protégeons vos informations lorsque vous utilisez notre application mobile de livraison de colis entre particuliers.';
+
+  @override
+  String get privacy_info_collect_title => '1. Informations que nous collectons';
+
+  @override
+  String get privacy_personal_info_title => 'Informations personnelles :';
+
+  @override
+  String get privacy_personal_info_content => '• Nom et coordonnées (email, numéro de téléphone)\n• Photo de profil et documents d\'identité\n• Adresses de livraison et données de localisation\n• Informations sur l\'appareil et identifiants uniques';
+
+  @override
+  String get privacy_usage_info_title => 'Informations d\'utilisation :';
+
+  @override
+  String get privacy_usage_info_content => '• Modèles d\'utilisation et préférences de l\'application\n• Historique des livraisons et enregistrements des transactions\n• Communication entre utilisateurs (à des fins de sécurité et de qualité)\n• Évaluations et avis';
+
+  @override
+  String get privacy_how_use_title => '2. Comment nous utilisons vos informations';
+
+  @override
+  String get privacy_how_use_content => 'Nous utilisons vos informations pour :\n• Faciliter les livraisons de colis et connecter les utilisateurs\n• Vérifier l\'identité des utilisateurs et assurer la sécurité de la plateforme\n• Fournir un support client et résoudre les litiges\n• Améliorer nos services et développer de nouvelles fonctionnalités\n• Respecter les exigences légales et prévenir la fraude\n• Analyser les modèles d\'utilisation pour améliorer l\'expérience utilisateur';
+
+  @override
+  String get privacy_info_sharing_title => '3. Partage des informations';
+
+  @override
+  String get privacy_info_sharing_content => 'Nous partageons vos informations uniquement dans ces circonstances :\n• Avec d\'autres utilisateurs si nécessaire pour la coordination des livraisons\n• Avec les processeurs de paiement pour le traitement des transactions\n• Avec les prestataires de services qui nous aident dans nos opérations\n• Lorsque la loi ou une procédure judiciaire l\'exige\n• Pour protéger nos droits et prévenir les activités illégales\nNous ne vendons jamais vos informations personnelles à des tiers.';
+
+  @override
+  String get privacy_data_security_title => '4. Sécurité des données';
+
+  @override
+  String get privacy_data_security_content => 'Nous mettons en œuvre des mesures de sécurité standard de l\'industrie, notamment :\n• Chiffrement des données en transit et au repos\n• Authentification sécurisée et contrôles d\'accès\n• Audits et mises à jour de sécurité réguliers\n• Accès limité aux informations personnelles par les employés\nCependant, aucune méthode de transmission sur Internet n\'est sécurisée à 100%.';
+
+  @override
+  String get privacy_data_retention_title => '5. Conservation des données';
+
+  @override
+  String get privacy_data_retention_content => 'Nous conservons vos informations aussi longtemps que :\n• Votre compte est actif\n• Nécessaire pour fournir nos services\n• Requis par la loi ou pour des procédures judiciaires\n• Nécessaire pour la sécurité et la prévention de la fraude\n\nVous pouvez demander la suppression de votre compte à tout moment, bien que certaines informations puissent être conservées pour la conformité légale.';
+
+  @override
+  String get privacy_your_rights_title => '6. Vos droits et choix';
+
+  @override
+  String get privacy_your_rights_content => 'Vous avez le droit de :\n• Accéder et consulter vos informations personnelles\n• Corriger les données inexactes ou incomplètes\n• Supprimer votre compte et les données associées\nPour exercer ces droits, contactez-nous via l\'application ou par email.';
+
+  @override
+  String get privacy_children_title => '7. Confidentialité des enfants';
+
+  @override
+  String get privacy_children_content => 'Notre service n\'est pas destiné aux utilisateurs de moins de 18 ans. Nous ne collectons pas sciemment d\'informations personnelles auprès d\'enfants de moins de 18 ans. Si nous prenons connaissance d\'une telle collecte, nous supprimerons immédiatement les informations.';
+
+  @override
+  String get privacy_international_title => '8. Transferts internationaux de données';
+
+  @override
+  String get privacy_international_content => 'Vos informations peuvent être transférées et traitées dans des pays autres que le vôtre. Nous veillons à ce que des garanties appropriées soient en place pour protéger vos données conformément à cette politique de confidentialité.';
+
+  @override
+  String get privacy_third_party_title => '9. Services tiers';
+
+  @override
+  String get privacy_third_party_content => 'Notre application peut contenir des liens vers des services tiers ou s\'intégrer à des plateformes externes. Cette politique de confidentialité ne couvre pas les pratiques tierces. Veuillez consulter leurs politiques de confidentialité séparément.';
+
+  @override
+  String get privacy_changes_title => '10. Modifications de cette politique';
+
+  @override
+  String get privacy_changes_content => 'Nous pouvons mettre à jour cette politique de confidentialité périodiquement. Nous informerons les utilisateurs des modifications importantes via l\'application ou par email. Votre utilisation continue après les modifications indique l\'acceptation de la politique mise à jour.';
+
+  @override
+  String get terms_of_service_title => 'Conditions d\'utilisation';
+
+  @override
+  String get terms_last_updated => 'Dernière mise à jour : 2025-24-5';
+
+  @override
+  String get terms_acceptance_title => '1. Acceptation des conditions';
+
+  @override
+  String get terms_acceptance_content => 'En accédant et en utilisant QuickDrop (\"l\'Application\", \"notre Service\"), vous acceptez et convenez d\'être lié par les termes et dispositions de cet accord. Si vous n\'acceptez pas de respecter ce qui précède, veuillez ne pas utiliser ce service.';
+
+  @override
+  String get terms_description_title => '2. Description du service';
+
+  @override
+  String get terms_description_content => 'QuickDrop est une plateforme de livraison de colis entre particuliers qui met en relation les utilisateurs qui ont besoin de colis livrés (\"Expéditeurs\") avec les utilisateurs prêts à livrer des colis (\"Transporteurs\"). Notre plateforme facilite ces connexions mais ne fournit pas directement de services de livraison.';
+
+  @override
+  String get terms_user_responsibilities_title => '3. Responsabilités des utilisateurs';
+
+  @override
+  String get terms_user_responsibilities_content => 'Les expéditeurs sont responsables de :\n• Décrire avec précision le contenu et les dimensions des colis\n• S\'assurer que les colis sont conformes aux lois et réglementations locales\n• Emballer correctement pour éviter les dommages pendant le transport\n• Fournir des adresses de collecte et de livraison exactes\n• Payer les frais de livraison convenus\n\nLes transporteurs sont responsables de :\n• Livraison sûre et rapide des colis\n• Traiter les colis avec un soin raisonnable\n• Suivre les instructions de livraison\n• Maintenir une identification et un transport valides\n• Signaler rapidement tout problème ou retard';
+
+  @override
+  String get terms_prohibited_items_title => '4. Articles interdits';
+
+  @override
+  String get terms_prohibited_items_content => 'Les articles suivants sont strictement interdits sur notre plateforme :\n• Substances illégales ou contrebande\n• Matériaux dangereux (explosifs, produits chimiques, etc.)\n• Armes ou munitions\n• Animaux vivants\n• Denrées périssables sans emballage approprié\n• Articles dépassant les limites de poids/taille spécifiées dans l\'application\n• Espèces ou instruments négociables\n• Articles violant les droits de propriété intellectuelle';
+
+  @override
+  String get terms_liability_title => '6. Responsabilité et assurance';
+
+  @override
+  String get terms_liability_content => 'QuickDrop agit comme une plateforme connectant les utilisateurs et n\'est pas responsable de :\n• Perte, dommage ou vol de colis\n• Retards de livraison\n• Actions ou négligence des utilisateurs\n• Contenu ou état des colis\n\nLes utilisateurs sont encouragés à souscrire une assurance pour les articles de valeur. Notre responsabilité est limitée dans toute la mesure permise par la loi.';
+
+  @override
+  String get terms_user_conduct_title => '7. Conduite des utilisateurs';
+
+  @override
+  String get terms_user_conduct_content => 'Les utilisateurs doivent :\n• Fournir des informations exactes et véridiques\n• Respecter les autres utilisateurs et maintenir une conduite professionnelle\n• Ne pas utiliser le service pour des activités illégales\n• Ne pas tenter de contourner la plateforme pour des transactions directes\n• Signaler les activités suspectes ou les violations de politique';
+
+  @override
+  String get terms_account_termination_title => '8. Résiliation du compte';
+
+  @override
+  String get terms_account_termination_content => 'Nous nous réservons le droit de suspendre ou de résilier des comptes pour violation de ces conditions, activité suspecte ou autres raisons à notre seule discrétion. Les utilisateurs peuvent fermer leurs comptes à tout moment via les paramètres de l\'application.';
+
+  @override
+  String get terms_privacy_title => '9. Confidentialité';
+
+  @override
+  String get terms_privacy_content => 'Votre confidentialité est importante pour nous. Veuillez consulter notre politique de confidentialité pour comprendre comment nous collectons, utilisons et protégeons vos informations.';
+
+  @override
+  String get terms_modifications_title => '10. Modifications';
+
+  @override
+  String get terms_modifications_content => 'Nous nous réservons le droit de modifier ces conditions à tout moment. Les utilisateurs seront informés des changements importants via l\'application ou par email. L\'utilisation continue après les modifications constitue l\'acceptation des nouvelles conditions.';
 }

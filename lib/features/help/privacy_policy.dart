@@ -5,18 +5,18 @@ class PrivacyPolicy extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final t = AppLocalizations.of(context)!;
+    
     return Scaffold(
       backgroundColor: AppColors.white,
       appBar: AppBar(
-        title: const Text(
-          'Privacy Policy',
-          style: TextStyle(color: AppColors.appBarText, fontWeight: FontWeight.w600),
+        title: Text(
+          t.privacy_policy_title,
+          style: const TextStyle(color: AppColors.appBarText, fontWeight: FontWeight.w600),
         ),
         backgroundColor: AppColors.appBarBackground,
         centerTitle: true,
-
         iconTheme: const IconThemeData(color: AppColors.appBarIcons),
-        // systemOverlayStyle: SystemUiOverlayStyle.dark,
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
@@ -24,105 +24,62 @@ class PrivacyPolicy extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _buildSection(
-              'Last Updated: 2025-24-5',
+              t.privacy_last_updated,
               '',
               isDate: true,
             ),
             _buildSection(
-              'Introduction',
-              'QuickDrop ("we", "our", or "us") is committed to protecting your privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our peer-to-peer package delivery mobile application.',
+              t.privacy_introduction_title,
+              t.privacy_introduction_content,
             ),
             _buildSection(
-              '1. Information We Collect',
+              t.privacy_info_collect_title,
               '',
             ),
             _buildSubSection(
-              'Personal Information:',
-              '• Name and contact information (email, phone number)\n'
-              '• Profile photo and identification documents\n'
-              // '• Payment information (processed securely through third parties)\n'
-              '• Delivery addresses and location data\n'
-              '• Device information and unique identifiers',
+              t.privacy_personal_info_title,
+              t.privacy_personal_info_content,
             ),
             _buildSubSection(
-              'Usage Information:',
-              '• App usage patterns and preferences\n'
-              '• Delivery history and transaction records\n'
-              '• Communication between users (for safety and quality purposes)\n'
-              '• Ratings and reviews\n',
-            ),
-           
-            _buildSection(
-              '2. How We Use Your Information',
-              'We use your information to:\n'
-              '• Facilitate package deliveries and connect users\n'
-              // '• Process payments and maintain transaction records\n'
-              '• Verify user identity and ensure platform safety\n'
-              '• Provide customer support and resolve disputes\n'
-              '• Improve our services and develop new features\n'
-              '• Comply with legal requirements and prevent fraud\n'
-              '• Analyze usage patterns to enhance user experience',
+              t.privacy_usage_info_title,
+              t.privacy_usage_info_content,
             ),
             _buildSection(
-              '3. Information Sharing',
-              'We share your information only in these circumstances:\n'
-              '• With other users as necessary for delivery coordination\n'
-              '• With payment processors for transaction processing\n'
-              '• With service providers who assist our operations\n'
-              '• When required by law or legal process\n'
-              '• To protect our rights and prevent illegal activities\n'
-              'We never sell your personal information to third parties.',
-            ),
-            
-            _buildSection(
-              '4. Data Security',
-              'We implement industry-standard security measures including:\n'
-              '• Encryption of data in transit and at rest\n'
-              '• Secure authentication and access controls\n'
-              '• Regular security audits and updates\n'
-              '• Limited access to personal information by employees\n'
-              'However, no method of transmission over the Internet is 100% secure.',
+              t.privacy_how_use_title,
+              t.privacy_how_use_content,
             ),
             _buildSection(
-              '5. Data Retention',
-              'We retain your information for as long as:\n'
-              '• Your account is active\n'
-              '• Needed to provide our services\n'
-              '• Required by law or for legal proceedings\n'
-              '• Necessary for safety and fraud prevention\n\n'
-              'You can request account deletion at any time, though some information may be retained for legal compliance.',
+              t.privacy_info_sharing_title,
+              t.privacy_info_sharing_content,
             ),
             _buildSection(
-              '6. Your Rights and Choices',
-              'You have the right to:\n'
-              '• Access and review your personal information\n'
-              '• Correct inaccurate or incomplete data\n'
-              '• Delete your account and associated data\n'
-              'To exercise these rights, contact us through the app or email.',
+              t.privacy_data_security_title,
+              t.privacy_data_security_content,
             ),
             _buildSection(
-              '7. Children\'s Privacy',
-              'Our service is not intended for users under 18 years of age. We do not knowingly collect personal information from children under 18. If we become aware of such collection, we will delete the information immediately.',
+              t.privacy_data_retention_title,
+              t.privacy_data_retention_content,
             ),
             _buildSection(
-              '8. International Data Transfers',
-              'Your information may be transferred to and processed in countries other than your own. We ensure appropriate safeguards are in place to protect your data in accordance with this Privacy Policy.',
+              t.privacy_your_rights_title,
+              t.privacy_your_rights_content,
             ),
             _buildSection(
-              '9. Third-Party Services',
-              'Our app may contain links to third-party services or integrate with external platforms. This Privacy Policy does not cover third-party practices. Please review their privacy policies separately.',
+              t.privacy_children_title,
+              t.privacy_children_content,
             ),
             _buildSection(
-              '10. Changes to This Policy',
-              'We may update this Privacy Policy periodically. We will notify users of significant changes through the app or email. Your continued use after changes indicates acceptance of the updated policy.',
+              t.privacy_international_title,
+              t.privacy_international_content,
             ),
-            // _buildSection(
-            //   '12. Contact Us',
-            //   'For questions about this Privacy Policy or data practices, contact us at:\n'
-            //   'Email: privacy@quickdrop.com\n'
-            //   'Address: address\n'
-            //   'Phone: phone number',
-            // ),
+            _buildSection(
+              t.privacy_third_party_title,
+              t.privacy_third_party_content,
+            ),
+            _buildSection(
+              t.privacy_changes_title,
+              t.privacy_changes_content,
+            ),
             const SizedBox(height: 32),
           ],
         ),

@@ -1611,4 +1611,145 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get share_subject => 'QuickDrop App';
+
+  @override
+  String get privacy_policy_title => 'Privacy Policy';
+
+  @override
+  String get privacy_last_updated => 'Last Updated: 2025-24-5';
+
+  @override
+  String get privacy_introduction_title => 'Introduction';
+
+  @override
+  String get privacy_introduction_content => 'QuickDrop (\"we\", \"our\", or \"us\") is committed to protecting your privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our peer-to-peer package delivery mobile application.';
+
+  @override
+  String get privacy_info_collect_title => '1. Information We Collect';
+
+  @override
+  String get privacy_personal_info_title => 'Personal Information:';
+
+  @override
+  String get privacy_personal_info_content => '• Name and contact information (email, phone number)\n• Profile photo and identification documents\n• Delivery addresses and location data\n• Device information and unique identifiers';
+
+  @override
+  String get privacy_usage_info_title => 'Usage Information:';
+
+  @override
+  String get privacy_usage_info_content => '• App usage patterns and preferences\n• Delivery history and transaction records\n• Communication between users (for safety and quality purposes)\n• Ratings and reviews';
+
+  @override
+  String get privacy_how_use_title => '2. How We Use Your Information';
+
+  @override
+  String get privacy_how_use_content => 'We use your information to:\n• Facilitate package deliveries and connect users\n• Verify user identity and ensure platform safety\n• Provide customer support and resolve disputes\n• Improve our services and develop new features\n• Comply with legal requirements and prevent fraud\n• Analyze usage patterns to enhance user experience';
+
+  @override
+  String get privacy_info_sharing_title => '3. Information Sharing';
+
+  @override
+  String get privacy_info_sharing_content => 'We share your information only in these circumstances:\n• With other users as necessary for delivery coordination\n• With payment processors for transaction processing\n• With service providers who assist our operations\n• When required by law or legal process\n• To protect our rights and prevent illegal activities\nWe never sell your personal information to third parties.';
+
+  @override
+  String get privacy_data_security_title => '4. Data Security';
+
+  @override
+  String get privacy_data_security_content => 'We implement industry-standard security measures including:\n• Encryption of data in transit and at rest\n• Secure authentication and access controls\n• Regular security audits and updates\n• Limited access to personal information by employees\nHowever, no method of transmission over the Internet is 100% secure.';
+
+  @override
+  String get privacy_data_retention_title => '5. Data Retention';
+
+  @override
+  String get privacy_data_retention_content => 'We retain your information for as long as:\n• Your account is active\n• Needed to provide our services\n• Required by law or for legal proceedings\n• Necessary for safety and fraud prevention\n\nYou can request account deletion at any time, though some information may be retained for legal compliance.';
+
+  @override
+  String get privacy_your_rights_title => '6. Your Rights and Choices';
+
+  @override
+  String get privacy_your_rights_content => 'You have the right to:\n• Access and review your personal information\n• Correct inaccurate or incomplete data\n• Delete your account and associated data\nTo exercise these rights, contact us through the app or email.';
+
+  @override
+  String get privacy_children_title => '7. Children\'s Privacy';
+
+  @override
+  String get privacy_children_content => 'Our service is not intended for users under 18 years of age. We do not knowingly collect personal information from children under 18. If we become aware of such collection, we will delete the information immediately.';
+
+  @override
+  String get privacy_international_title => '8. International Data Transfers';
+
+  @override
+  String get privacy_international_content => 'Your information may be transferred to and processed in countries other than your own. We ensure appropriate safeguards are in place to protect your data in accordance with this Privacy Policy.';
+
+  @override
+  String get privacy_third_party_title => '9. Third-Party Services';
+
+  @override
+  String get privacy_third_party_content => 'Our app may contain links to third-party services or integrate with external platforms. This Privacy Policy does not cover third-party practices. Please review their privacy policies separately.';
+
+  @override
+  String get privacy_changes_title => '10. Changes to This Policy';
+
+  @override
+  String get privacy_changes_content => 'We may update this Privacy Policy periodically. We will notify users of significant changes through the app or email. Your continued use after changes indicates acceptance of the updated policy.';
+
+  @override
+  String get terms_of_service_title => 'Terms of Service';
+
+  @override
+  String get terms_last_updated => 'Last Updated: 2025-24-5';
+
+  @override
+  String get terms_acceptance_title => '1. Acceptance of Terms';
+
+  @override
+  String get terms_acceptance_content => 'By accessing and using QuickDrop (\"the App\", \"our Service\"), you accept and agree to be bound by the terms and provision of this agreement. If you do not agree to abide by the above, please do not use this service.';
+
+  @override
+  String get terms_description_title => '2. Description of Service';
+
+  @override
+  String get terms_description_content => 'QuickDrop is a peer-to-peer package delivery platform that connects users who need packages delivered (\"Senders\") with users willing to deliver packages (\"Carriers\"). Our platform facilitates these connections but does not directly provide delivery services.';
+
+  @override
+  String get terms_user_responsibilities_title => '3. User Responsibilities';
+
+  @override
+  String get terms_user_responsibilities_content => 'Senders are responsible for:\n• Accurately describing package contents and dimensions\n• Ensuring packages comply with local laws and regulations\n• Proper packaging to prevent damage during transport\n• Providing accurate pickup and delivery addresses\n• Paying agreed-upon delivery fees\n\nCarriers are responsible for:\n• Safe and timely delivery of packages\n• Treating packages with reasonable care\n• Following delivery instructions\n• Maintaining valid identification and transportation\n• Reporting any issues or delays promptly';
+
+  @override
+  String get terms_prohibited_items_title => '4. Prohibited Items';
+
+  @override
+  String get terms_prohibited_items_content => 'The following items are strictly prohibited on our platform:\n• Illegal substances or contraband\n• Hazardous materials (explosives, chemicals, etc.)\n• Weapons or ammunition\n• Live animals\n• Perishable food items without proper packaging\n• Items exceeding weight/size limits specified in the app\n• Cash or negotiable instruments\n• Items that violate intellectual property rights';
+
+  @override
+  String get terms_liability_title => '6. Liability and Insurance';
+
+  @override
+  String get terms_liability_content => 'QuickDrop acts as a platform connecting users and is not liable for:\n• Loss, damage, or theft of packages\n• Delays in delivery\n• Actions or negligence of users\n• Content or condition of packages\n\nUsers are encouraged to purchase insurance for valuable items. Our liability is limited to the maximum extent permitted by law.';
+
+  @override
+  String get terms_user_conduct_title => '7. User Conduct';
+
+  @override
+  String get terms_user_conduct_content => 'Users must:\n• Provide accurate and truthful information\n• Respect other users and maintain professional conduct\n• Not use the service for illegal activities\n• Not attempt to circumvent the platform for direct transactions\n• Report suspicious activities or policy violations';
+
+  @override
+  String get terms_account_termination_title => '8. Account Termination';
+
+  @override
+  String get terms_account_termination_content => 'We reserve the right to suspend or terminate accounts for violations of these terms, suspicious activity, or other reasons at our sole discretion. Users may close their accounts at any time through the app settings.';
+
+  @override
+  String get terms_privacy_title => '9. Privacy';
+
+  @override
+  String get terms_privacy_content => 'Your privacy is important to us. Please review our Privacy Policy to understand how we collect, use, and protect your information.';
+
+  @override
+  String get terms_modifications_title => '10. Modifications';
+
+  @override
+  String get terms_modifications_content => 'We reserve the right to modify these terms at any time. Users will be notified of significant changes through the app or email. Continued use after modifications constitutes acceptance of the new terms.';
 }
