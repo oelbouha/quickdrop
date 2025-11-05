@@ -639,6 +639,7 @@
         "error_loading_conversations": "Erreur lors du chargement des conversations",
           "share_message": "🚀 Découvrez QuickDrop ! Envoyez et recevez des colis facilement.\nBientôt disponible sur le Play Store — restez à l'écoute !",
   "share_subject": "Application QuickDrop",
+"transport_type": "Type de transport",
 
   
   "privacy_policy_title": "Politique de confidentialité",

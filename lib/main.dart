@@ -124,9 +124,7 @@ void main() async {
 
   runApp(
     MultiProvider(
-
       providers: [
-
         ChangeNotifierProvider(create: (context) => LocaleProvider()),
         ChangeNotifierProvider(create: (context) => ShipmentProvider()),
         ChangeNotifierProvider(create: (context) => StatisticsProvider()),

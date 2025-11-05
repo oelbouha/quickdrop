@@ -4,6 +4,7 @@ import 'package:quickdrop_app/core/utils/imports.dart';
 import 'package:quickdrop_app/core/widgets/route_indicator.dart';
 import 'package:collection/collection.dart';
 
+import 'package:share_plus/share_plus.dart';
 import 'package:quickdrop_app/features/models/notification_model.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 
@@ -185,6 +186,7 @@ class _ListingCardDetailsState extends State<ListingCardDetails> {
   }
 
   Widget _buildSliverApp() {
+    final t = AppLocalizations.of(context)!;
     return SliverAppBar(
       expandedHeight: _selectedShipment == null ? 100 : 300,
       pinned: true,
@@ -212,9 +214,7 @@ class _ListingCardDetailsState extends State<ListingCardDetails> {
           child: IconButton(
             icon: const Icon(Icons.share, color: Colors.black),
             onPressed: () {
-              // Share functionality
-              AppUtils.showDialog(
-                  context, "Share feature is comming", AppColors.blue700);
+              Share.share(t.share_message, subject: t.share_subject);
             },
           ),
         ),
@@ -236,7 +236,7 @@ class _ListingCardDetailsState extends State<ListingCardDetails> {
                 _buildDescription(),
                 const SizedBox(height: 20),
                 _buildDetailsSection(),
-                const SizedBox(height: 150),
+                // const SizedBox(height: 150),
               ],
             ),
           ),
@@ -270,7 +270,7 @@ class _ListingCardDetailsState extends State<ListingCardDetails> {
         children: [
           Text(
             t.package_details,
-            style: TextStyle(
+            style: const TextStyle(
               color: AppColors.headingText,
               fontWeight: FontWeight.bold,
               fontSize: 20,
@@ -312,7 +312,7 @@ class _ListingCardDetailsState extends State<ListingCardDetails> {
             title:
                 _selectedShipment == null ? t.available_weight : t.weight_label,
             child: Text(
-              '${widget.shipment.weight} kg',
+              '${widget.shipment.weight} ${t.kg}',
               style: const TextStyle(
                 color: AppColors.headingText,
                 fontSize: 16,
@@ -325,7 +325,7 @@ class _ListingCardDetailsState extends State<ListingCardDetails> {
                 : "assets/icon/car.svg",
             title: _selectedShipment != null
                 ? t.package_type_label
-                : "Transport type",
+                : t.transport_type,
             child: Text(
               '${_selectedShipment == null ? _selectedTrip!.transportType : _selectedShipment!.type}',
               style: const TextStyle(
@@ -550,8 +550,8 @@ class _ListingCardDetailsState extends State<ListingCardDetails> {
                   fontSize: 26,
                   color: AppColors.headingText,
                   fontWeight: FontWeight.bold)),
-          Text(t.package_description_hint,
-              style: TextStyle(
+          Text(t.package_description_label,
+              style: const TextStyle(
                   color: AppColors.headingText,
                   fontWeight: FontWeight.bold,
                   fontSize: 26)),
@@ -661,14 +661,6 @@ class _ListingCardDetailsState extends State<ListingCardDetails> {
           context, t.please_complete_all_fields, AppColors.error);
       return;
     }
-    // if (trip == null) {
-    //   AppUtils.showDialog(context, t.please_select_trip, AppColors.error);
-    //   return;
-    // }
-    // if (trip.id == null) {
-    //   AppUtils.showDialog(context, t.selected_trip_invalid, AppColors.error);
-    //   return;
-    // }
 
     // Helper function to update loading state
     void updateLoadingState(bool isLoading) {
@@ -708,11 +700,7 @@ class _ListingCardDetailsState extends State<ListingCardDetails> {
       if (mounted) {
         priceController.clear();
         noteController.clear();
-        // setState(() {
-        //   _selectedTrip = null;
-        // });
 
-        // Show success message
         AppUtils.showDialog(context, t.request_sent_success, AppColors.succes);
       }
     } catch (e) {
@@ -772,18 +760,19 @@ class _ListingCardDetailsState extends State<ListingCardDetails> {
     final to = shipment.to;
 
     final tripProvider = Provider.of<TripProvider>(context, listen: false);
-   
 
     final trips = tripProvider.trips
-        .where((trip) => trip.userId == userId && trip.status == "active"
-            && (trip.from == from && trip.to == to ||
-                (trip.middleStops != null && trip.middleStops!.contains(from)) ||
-                (trip.middleStops != null && trip.middleStops!.contains(to)))
-        )
+        .where((trip) =>
+            trip.userId == userId &&
+            trip.status == "active" &&
+            (trip.from == from && trip.to == to ||
+                (trip.middleStops != null &&
+                    trip.middleStops!.contains(from)) ||
+                (trip.middleStops != null && trip.middleStops!.contains(to))))
         .toList();
 
     return trips;
-  } 
+  }
 
   Widget _buildRequesBody() {
     final t = AppLocalizations.of(context)!;
@@ -797,18 +786,12 @@ class _ListingCardDetailsState extends State<ListingCardDetails> {
       List<Trip> activeTrips = [];
       if (_isTrip == false) {
         activeTrips = _getMatchedTrips();
-        print("found matched trips: ${activeTrips.length}");
       }
 
       List<Shipment> activeShipments = [];
       if (_isTrip == true) {
-          activeShipments = _getMatchedShipments();
-          print("found matched shipments: ${activeShipments.length}");
+        activeShipments = _getMatchedShipments();
       }
-
-      // need to filter trips and shipments that are not the current one
-      print(
-          "curent shipment from : ${widget.shipment.from} to: ${widget.shipment.to}");
 
       return StatefulBuilder(
           builder: (BuildContext context, StateSetter setModalState) {

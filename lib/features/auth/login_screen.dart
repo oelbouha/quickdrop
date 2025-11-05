@@ -140,6 +140,8 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
             .fetchUserData(FirebaseAuth.instance.currentUser!.uid);
         Provider.of<UserProvider>(context, listen: false).setUser(user);
         // print("Signed in successfully");
+
+        await AuthService.setLoggedIn(true);
         // print("user :: ${FirebaseAuth.instance.currentUser}");
         context.go('/home');
       } catch (e) {

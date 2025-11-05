@@ -537,7 +537,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get pickup_date => 'تاريخ الاستلام';
 
   @override
-  String get transport_type => 'نوع وسيلة النقل';
+  String get transport_type => 'نوع النقل';
 
   @override
   String get timing_tip_title => 'توقيت مرن';

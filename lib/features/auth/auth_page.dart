@@ -1,30 +1,22 @@
-import 'package:flutter/material.dart';
-import 'package:quickdrop_app/features/navigation/bottom_nav_bar.dart';
-import 'package:quickdrop_app/features/auth/login_screen.dart';
+
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:provider/provider.dart';
-import 'package:quickdrop_app/features/models/user_model.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-class AuthPage extends StatefulWidget {
-  const AuthPage({super.key});
+class AuthService {
+  static const String KEY_IS_LOGGED_IN = 'isLoggedIn';
+  
+  static Future<void> setLoggedIn(bool value) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool(KEY_IS_LOGGED_IN, value);
+  }
 
-  @override
-  _AuthPageState createState() => _AuthPageState();
-}
+  static Future<bool> isLoggedIn() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getBool(KEY_IS_LOGGED_IN) ?? false;
+  }
 
-class _AuthPageState extends State<AuthPage> {
-  // bool _hasChangedTab = false;
-  // bool _hasClearedUser = false;
-
-  @override
-  Widget build(BuildContext context) {
-    // final navigationProvider = Provider.of<NavigationProvider>(context, listen: false);
-    final user = Provider.of<UserProvider>(context, listen: false).user;
-
-    if (user != null) {
-      return LoginPage();
-    } else {
-      return const LoginPage();
-    }
+  static Future<void> logout() async {
+    await FirebaseAuth.instance.signOut();
+    await setLoggedIn(false);
   }
 }

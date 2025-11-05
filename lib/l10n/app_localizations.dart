@@ -1156,7 +1156,7 @@ abstract class AppLocalizations {
   /// No description provided for @transport_type.
   ///
   /// In en, this message translates to:
-  /// **'Transport Type'**
+  /// **'Transport type'**
   String get transport_type;
 
   /// No description provided for @timing_tip_title.

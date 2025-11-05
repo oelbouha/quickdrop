@@ -49,10 +49,10 @@ class AppRouter {
   static GoRouter createRouter(BuildContext context) {
     return GoRouter(
       // initialLocation: '/home',
-      redirect: (context, state) {
+      redirect: (context, state) async {
         final user = FirebaseAuth.instance.currentUser;
         final currentPath = state.uri.path;
-        final isLoggingIn = currentPath == '/';
+        final isLoggedIn = await AuthService.isLoggedIn();
         final publicRoutes = {
           '/',
           '/signup',
@@ -65,19 +65,28 @@ class AppRouter {
         };
 
 
-        if (user != null && currentPath == '/create-account' ||
-            currentPath == "/verify-number") {
+         // Allow access to verification and account creation
+        if (user != null && (currentPath == '/create-account' ||
+            currentPath == "/verify-number")) {
           return null;
         }
 
+        // Allow access to public routes
         if (publicRoutes.contains(currentPath)) {
           return null;
         }
 
-        if (user != null && currentPath == '/') {
+        // If user is logged in and tries to access root, redirect to home
+        if (user != null && isLoggedIn && currentPath == '/') {
           Provider.of<UserProvider>(context, listen: false).fetchUser(user.uid);
           return '/home';
         }
+
+        // If user is not logged in and tries to access protected route
+        if (user == null && !publicRoutes.contains(currentPath)) {
+          return '/login';
+        }
+
         return null;
       },
       routes: [
@@ -433,7 +442,7 @@ class AppRouter {
               if (tripId == null || userId == null) {
                 return buildCustomTransitionPage(
                     context,
-                    ErrorPage(
+                    const ErrorPage(
                       errorMessage: "Trip ID or User ID is missing.",
                     ));
               }

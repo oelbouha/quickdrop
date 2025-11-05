@@ -631,6 +631,7 @@
     "resend_code_in": "Resend code in",
     "seconds": "seconds",
     "resend_code": "Resend code",
+    "transport_type": "Transport type",
 
      "by_clicking": "By clicking ",
     "continue_action": "Continue, ",
@@ -692,7 +693,7 @@
   
   "privacy_changes_title": "10. Changes to This Policy",
   "privacy_changes_content": "We may update this Privacy Policy periodically. We will notify users of significant changes through the app or email. Your continued use after changes indicates acceptance of the updated policy.",
-  
+
   "terms_of_service_title": "Terms of Service",
   "terms_last_updated": "Last Updated: 2025-24-5",
   

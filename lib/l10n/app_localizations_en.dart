@@ -537,7 +537,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get pickup_date => 'Pickup Date';
 
   @override
-  String get transport_type => 'Transport Type';
+  String get transport_type => 'Transport type';
 
   @override
   String get timing_tip_title => 'Flexible Timing';

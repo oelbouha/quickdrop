@@ -63,6 +63,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     try {
       if (mounted) {
         await Provider.of<UserProvider>(context, listen: false).singOutUser();
+        await AuthService.logout();
         if (mounted) context.go("/login");
       }
     } on FirebaseException catch (e) {
