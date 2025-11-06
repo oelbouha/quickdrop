@@ -640,6 +640,7 @@
           "share_message": "🚀 Découvrez QuickDrop ! Envoyez et recevez des colis facilement.\nBientôt disponible sur le Play Store — restez à l'écoute !",
   "share_subject": "Application QuickDrop",
 "transport_type": "Type de transport",
+"forgot_password": "Mot de passe oublié ?",
 
   
   "privacy_policy_title": "Politique de confidentialité",
@@ -711,7 +712,15 @@
   "terms_privacy_content": "Votre confidentialité est importante pour nous. Veuillez consulter notre politique de confidentialité pour comprendre comment nous collectons, utilisons et protégeons vos informations.",
   
   "terms_modifications_title": "10. Modifications",
-  "terms_modifications_content": "Nous nous réservons le droit de modifier ces conditions à tout moment. Les utilisateurs seront informés des changements importants via l'application ou par email. L'utilisation continue après les modifications constitue l'acceptation des nouvelles conditions."
+  "terms_modifications_content": "Nous nous réservons le droit de modifier ces conditions à tout moment. Les utilisateurs seront informés des changements importants via l'application ou par email. L'utilisation continue après les modifications constitue l'acceptation des nouvelles conditions.",
+  "forgot_password_title": "Mot de passe oublié",
+"forgot_password_description": "Entrez votre adresse e-mail pour réinitialiser votre mot de passe.",
+"forgot_password_empty_email": "Veuillez entrer votre adresse e-mail.",
+"forgot_password_email_sent": "E-mail de réinitialisation du mot de passe envoyé. Veuillez vérifier votre boîte de réception.",
+"forgot_password_error": "Une erreur s'est produite. Veuillez réessayer.",
+"forgot_password_sending": "Envoi...",
+"forgot_password_send_email": "Envoyer l'e-mail de réinitialisation",
+"too_many_requests": "Trop de demandes. Veuillez réessayer plus tard."
 
 
 

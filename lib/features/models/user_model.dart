@@ -388,6 +388,7 @@ class UserProvider with ChangeNotifier {
           .addStatictics(user.uid, stats);
       _user = user;
       await saveUserToFirestore(user);
+      await AuthService.setLoggedIn(true);
 
       context.go('/home');
 

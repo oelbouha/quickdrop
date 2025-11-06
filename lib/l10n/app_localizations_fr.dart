@@ -654,6 +654,9 @@ class AppLocalizationsFr extends AppLocalizations {
   String get package_type_required => 'Le type de colis est requis';
 
   @override
+  String get forgot_password => 'Mot de passe oublié ?';
+
+  @override
   String get quantity_required => 'La quantité est requise';
 
   @override
@@ -1752,4 +1755,28 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get terms_modifications_content => 'Nous nous réservons le droit de modifier ces conditions à tout moment. Les utilisateurs seront informés des changements importants via l\'application ou par email. L\'utilisation continue après les modifications constitue l\'acceptation des nouvelles conditions.';
+
+  @override
+  String get forgot_password_title => 'Mot de passe oublié';
+
+  @override
+  String get forgot_password_description => 'Entrez votre adresse e-mail pour réinitialiser votre mot de passe.';
+
+  @override
+  String get forgot_password_empty_email => 'Veuillez entrer votre adresse e-mail.';
+
+  @override
+  String get forgot_password_email_sent => 'E-mail de réinitialisation du mot de passe envoyé. Veuillez vérifier votre boîte de réception.';
+
+  @override
+  String get forgot_password_error => 'Une erreur s\'est produite. Veuillez réessayer.';
+
+  @override
+  String get forgot_password_sending => 'Envoi...';
+
+  @override
+  String get forgot_password_send_email => 'Envoyer l\'e-mail de réinitialisation';
+
+  @override
+  String get too_many_requests => 'Trop de demandes. Veuillez réessayer plus tard.';
 }

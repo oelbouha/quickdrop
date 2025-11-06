@@ -654,6 +654,9 @@ class AppLocalizationsAr extends AppLocalizations {
   String get package_type_required => 'نوع الطرد مطلوب';
 
   @override
+  String get forgot_password => 'هل نسيت كلمة المرور؟';
+
+  @override
   String get quantity_required => 'الكمية مطلوبة';
 
   @override
@@ -1752,4 +1755,28 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get terms_modifications_content => 'نحتفظ بالحق في تعديل هذه الشروط في أي وقت. سيتم إخطار المستخدمين بالتغييرات الهامة عبر التطبيق أو البريد الإلكتروني. يشكل الاستمرار في الاستخدام بعد التعديلات قبولًا للشروط الجديدة.';
+
+  @override
+  String get forgot_password_title => 'هل نسيت كلمة المرور';
+
+  @override
+  String get forgot_password_description => 'أدخل بريدك الإلكتروني لإعادة تعيين كلمة المرور الخاصة بك.';
+
+  @override
+  String get forgot_password_empty_email => 'يرجى إدخال عنوان بريدك الإلكتروني.';
+
+  @override
+  String get forgot_password_email_sent => 'تم إرسال رسالة إعادة تعيين كلمة المرور. يرجى التحقق من بريدك الوارد.';
+
+  @override
+  String get forgot_password_error => 'حدث خطأ. يرجى المحاولة مرة أخرى.';
+
+  @override
+  String get forgot_password_sending => 'جارٍ الإرسال...';
+
+  @override
+  String get forgot_password_send_email => 'إرسال بريد إعادة التعيين';
+
+  @override
+  String get too_many_requests => 'عدد كبير جدًا من الطلبات. يرجى المحاولة لاحقًا.';
 }

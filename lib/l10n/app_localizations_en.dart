@@ -654,6 +654,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get package_type_required => 'Package type is required';
 
   @override
+  String get forgot_password => 'Forgot Password?';
+
+  @override
   String get quantity_required => 'Quantity is required';
 
   @override
@@ -1752,4 +1755,28 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get terms_modifications_content => 'We reserve the right to modify these terms at any time. Users will be notified of significant changes through the app or email. Continued use after modifications constitutes acceptance of the new terms.';
+
+  @override
+  String get forgot_password_title => 'Forgot Password';
+
+  @override
+  String get forgot_password_description => 'Enter your email to reset your password.';
+
+  @override
+  String get forgot_password_empty_email => 'Please enter your email address.';
+
+  @override
+  String get forgot_password_email_sent => 'Password reset email sent. Please check your inbox.';
+
+  @override
+  String get forgot_password_error => 'An error occurred. Please try again.';
+
+  @override
+  String get forgot_password_sending => 'Sending...';
+
+  @override
+  String get forgot_password_send_email => 'Send Reset Email';
+
+  @override
+  String get too_many_requests => 'Too many requests. Please try again later.';
 }

@@ -1375,6 +1375,12 @@ abstract class AppLocalizations {
   /// **'Package type is required'**
   String get package_type_required;
 
+  /// No description provided for @forgot_password.
+  ///
+  /// In en, this message translates to:
+  /// **'Forgot Password?'**
+  String get forgot_password;
+
   /// No description provided for @quantity_required.
   ///
   /// In en, this message translates to:
@@ -3558,6 +3564,54 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'We reserve the right to modify these terms at any time. Users will be notified of significant changes through the app or email. Continued use after modifications constitutes acceptance of the new terms.'**
   String get terms_modifications_content;
+
+  /// No description provided for @forgot_password_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Forgot Password'**
+  String get forgot_password_title;
+
+  /// No description provided for @forgot_password_description.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your email to reset your password.'**
+  String get forgot_password_description;
+
+  /// No description provided for @forgot_password_empty_email.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter your email address.'**
+  String get forgot_password_empty_email;
+
+  /// No description provided for @forgot_password_email_sent.
+  ///
+  /// In en, this message translates to:
+  /// **'Password reset email sent. Please check your inbox.'**
+  String get forgot_password_email_sent;
+
+  /// No description provided for @forgot_password_error.
+  ///
+  /// In en, this message translates to:
+  /// **'An error occurred. Please try again.'**
+  String get forgot_password_error;
+
+  /// No description provided for @forgot_password_sending.
+  ///
+  /// In en, this message translates to:
+  /// **'Sending...'**
+  String get forgot_password_sending;
+
+  /// No description provided for @forgot_password_send_email.
+  ///
+  /// In en, this message translates to:
+  /// **'Send Reset Email'**
+  String get forgot_password_send_email;
+
+  /// No description provided for @too_many_requests.
+  ///
+  /// In en, this message translates to:
+  /// **'Too many requests. Please try again later.'**
+  String get too_many_requests;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

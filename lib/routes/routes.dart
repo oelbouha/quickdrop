@@ -1,4 +1,5 @@
 import 'package:quickdrop_app/core/utils/imports.dart';
+import 'package:quickdrop_app/features/auth/forgot_password_screen.dart';
 import 'package:quickdrop_app/features/auth/onboarding_screen.dart';
 import 'package:quickdrop_app/features/auth/splash_redirect.dart';
 import 'package:quickdrop_app/features/profile/change_contact_info_screen.dart';
@@ -154,6 +155,15 @@ class AppRouter {
               return buildCustomTransitionPage(
                 context,
                 const LoginPage(),
+              );
+            }),
+            GoRoute(
+            path: '/forgot-password',
+            name: 'forgot-password',
+            pageBuilder: (context, state) {
+              return buildCustomTransitionPage(
+                context,
+                const ForgotPasswordScreen(),
               );
             }),
         GoRoute(

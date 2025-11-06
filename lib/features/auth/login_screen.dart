@@ -302,6 +302,15 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
             radius: 60,
           ),
           const SizedBox(height: 24),
+          
+           TextWithLinkButton(
+            text: "",
+            textLink: t.forgot_password,
+            navigatTo: '/forgot-password',
+            context: context,
+            push: true,
+          ),
+          const SizedBox(height: 16),
           TextWithLinkButton(
             text: t.dont_have_accout,
             textLink: t.signup,
