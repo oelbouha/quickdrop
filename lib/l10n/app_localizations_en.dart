@@ -165,7 +165,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get faq_q3 => 'How much can I save compared to traditional shipping?';
 
   @override
-  String get faq_a3 => 'Users typically save 50-70% compared to major carriers like FedEx or UPS, especially for international shipments. Prices vary based on size, weight, and destination.';
+  String get faq_a3 => 'Our peer-to-peer model often offers significantly lower costs than traditional delivery services in Morocco.';
 
   @override
   String get faq_q4 => 'How do I become a courier?';
@@ -183,7 +183,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get service_send_title => 'Send Packages';
 
   @override
-  String get service_send_description => 'Connect with verified travelers heading to your destination. Save up to 70% on shipping costs with our trusted courier network.';
+  String get service_send_description => 'Connect with verified travelers going to your destination and enjoy lower shipping costs through our trusted peer-to-peer network.';
 
   @override
   String get service_courier_title => 'Become a Courier';

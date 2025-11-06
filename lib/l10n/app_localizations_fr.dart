@@ -165,7 +165,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get faq_q3 => 'Combien puis-je économiser par rapport aux services classiques ?';
 
   @override
-  String get faq_a3 => 'Les utilisateurs économisent généralement 50 à 70 % par rapport aux grands transporteurs comme FedEx ou UPS, surtout pour les envois internationaux. Les prix varient selon la taille, le poids et la destination.';
+  String get faq_a3 => 'Notre modèle de livraison entre particuliers permet souvent de réduire considérablement les coûts par rapport aux services de livraison traditionnels au Maroc.';
 
   @override
   String get faq_q4 => 'Comment devenir coursier ?';
@@ -183,7 +183,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get service_send_title => 'Envoyer des colis';
 
   @override
-  String get service_send_description => 'Connectez-vous avec des voyageurs vérifiés se rendant à votre destination. Économisez jusqu’à 70 % sur les frais d’expédition grâce à notre réseau de coursiers fiables.';
+  String get service_send_description => 'Connectez-vous avec des voyageurs vérifiés se rendant à votre destination et profitez de coûts de livraison réduits grâce à notre réseau de livraison entre particuliers de confiance.';
 
   @override
   String get service_courier_title => 'Devenir coursier';

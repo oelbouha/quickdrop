@@ -412,7 +412,7 @@ abstract class AppLocalizations {
   /// No description provided for @faq_a3.
   ///
   /// In en, this message translates to:
-  /// **'Users typically save 50-70% compared to major carriers like FedEx or UPS, especially for international shipments. Prices vary based on size, weight, and destination.'**
+  /// **'Our peer-to-peer model often offers significantly lower costs than traditional delivery services in Morocco.'**
   String get faq_a3;
 
   /// No description provided for @faq_q4.
@@ -448,7 +448,7 @@ abstract class AppLocalizations {
   /// No description provided for @service_send_description.
   ///
   /// In en, this message translates to:
-  /// **'Connect with verified travelers heading to your destination. Save up to 70% on shipping costs with our trusted courier network.'**
+  /// **'Connect with verified travelers going to your destination and enjoy lower shipping costs through our trusted peer-to-peer network.'**
   String get service_send_description;
 
   /// No description provided for @service_courier_title.

@@ -84,8 +84,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
             ),
             const SizedBox(height: 24),
             PrimaryButton(
-              hintText:
-                  _loading ? t.forgot_password_sending : t.forgot_password_send_email,
+              hintText: t.forgot_password_send_email,
               onPressed: _resetPassword,
               isLoading: _loading,
             ),

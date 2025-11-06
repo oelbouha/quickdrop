@@ -165,7 +165,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get faq_q3 => 'كم يمكنني التوفير مقارنة بخدمات الشحن التقليدية؟';
 
   @override
-  String get faq_a3 => 'يوفر المستخدمون عادة من 50٪ إلى 70٪ مقارنة بخدمات مثل FedEx أو UPS، خصوصًا للشحن الدولي. تختلف الأسعار حسب الحجم والوزن والوجهة.';
+  String get faq_a3 => 'يُتيح نموذج التوصيل بين الأفراد عادةً تكاليف أقل بكثير مقارنة بخدمات التوصيل التقليدية في المغرب.';
 
   @override
   String get faq_q4 => 'كيف أصبح سائق توصيل؟';
@@ -183,7 +183,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get service_send_title => 'إرسال الطرود';
 
   @override
-  String get service_send_description => 'تواصل مع مسافرين موثوقين متجهين إلى وجهتك. وفر حتى 70٪ من تكاليف الشحن عبر شبكتنا الموثوقة.';
+  String get service_send_description => 'تواصل مع المسافرين الموثوقين المتجهين إلى وجهتك واستمتع بتكاليف شحن أقل من خلال شبكة التوصيل بين الأفراد الموثوقة لدينا.';
 
   @override
   String get service_courier_title => 'كن سائق توصيل';
