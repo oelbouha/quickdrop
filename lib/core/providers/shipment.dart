@@ -161,10 +161,7 @@ class ShipmentProvider with ChangeNotifier {
     }
   }
 
- 
- 
-
- Future<String?> uploadImageToSupabase(File image) async {
+  Future<String?> uploadImageToSupabase(File image) async {
   try {
     final supabase = Supabase.instance.client;
     
@@ -173,12 +170,12 @@ class ShipmentProvider with ChangeNotifier {
     
     // Upload file to Supabase Storage
     await supabase.storage
-        .from('images') 
+        .from('quickdrop-images') 
         .upload(fileName, image);
     
     // Get public URL
     final publicUrl = supabase.storage
-        .from('images')
+        .from('quickdrop-images')
         .getPublicUrl(fileName);
     
     return publicUrl;
@@ -187,7 +184,6 @@ class ShipmentProvider with ChangeNotifier {
     return null;
   }
 }
-
   List<Shipment> getActiveShipments(String userId) {
     return _shipments
         .where((s) => s.userId == userId && s.status == 'active')
