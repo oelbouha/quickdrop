@@ -3612,6 +3612,60 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Too many requests. Please try again later.'**
   String get too_many_requests;
+
+  /// No description provided for @user_not_found.
+  ///
+  /// In en, this message translates to:
+  /// **'No account found with this email.'**
+  String get user_not_found;
+
+  /// No description provided for @email_already_in_use.
+  ///
+  /// In en, this message translates to:
+  /// **'This email is already in use.'**
+  String get email_already_in_use;
+
+  /// No description provided for @invalid_email.
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid email or password.'**
+  String get invalid_email;
+
+  /// No description provided for @network_error.
+  ///
+  /// In en, this message translates to:
+  /// **'Network error. Please check your connection and try again.'**
+  String get network_error;
+
+  /// No description provided for @error_login.
+  ///
+  /// In en, this message translates to:
+  /// **'An unexpected error occurred. Please try again.'**
+  String get error_login;
+
+  /// No description provided for @invalid_phone_number.
+  ///
+  /// In en, this message translates to:
+  /// **'The phone number format is invalid. Please include country code.'**
+  String get invalid_phone_number;
+
+  /// No description provided for @quota_exceeded.
+  ///
+  /// In en, this message translates to:
+  /// **'SMS quota exceeded for today. Please try again tomorrow or contact support.'**
+  String get quota_exceeded;
+
+  /// No description provided for @missing_phone_number.
+  ///
+  /// In en, this message translates to:
+  /// **'Phone number is required.'**
+  String get missing_phone_number;
+
+  /// No description provided for @phone_verification_failed.
+  ///
+  /// In en, this message translates to:
+  /// **'Phone verification failed, please try again later.'**
+  String get phone_verification_failed;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

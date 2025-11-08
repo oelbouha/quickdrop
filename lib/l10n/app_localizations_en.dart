@@ -1779,4 +1779,31 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get too_many_requests => 'Too many requests. Please try again later.';
+
+  @override
+  String get user_not_found => 'No account found with this email.';
+
+  @override
+  String get email_already_in_use => 'This email is already in use.';
+
+  @override
+  String get invalid_email => 'Invalid email or password.';
+
+  @override
+  String get network_error => 'Network error. Please check your connection and try again.';
+
+  @override
+  String get error_login => 'An unexpected error occurred. Please try again.';
+
+  @override
+  String get invalid_phone_number => 'The phone number format is invalid. Please include country code.';
+
+  @override
+  String get quota_exceeded => 'SMS quota exceeded for today. Please try again tomorrow or contact support.';
+
+  @override
+  String get missing_phone_number => 'Phone number is required.';
+
+  @override
+  String get phone_verification_failed => 'Phone verification failed, please try again later.';
 }

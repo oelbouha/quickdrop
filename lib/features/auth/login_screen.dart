@@ -125,6 +125,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
 
   void _signInUserWithEmail() async {
     if (_isEmailLoading) return;
+    final t = AppLocalizations.of(context)!;
     if (_formKey.currentState!.validate()) {
       setState(() => _isEmailLoading = true);
       try {
@@ -133,8 +134,8 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
           emailController.text.trim(),
           passwordController.text.trim(),
         );
-        await saveCredentials(
-            emailController.text.trim(), passwordController.text.trim());
+        // await saveCredentials(
+        //     emailController.text.trim(), passwordController.text.trim());
         _handleFcmTokenSave(FirebaseAuth.instance.currentUser!.uid);
         UserData user = await Provider.of<UserProvider>(context, listen: false)
             .fetchUserData(FirebaseAuth.instance.currentUser!.uid);
@@ -145,9 +146,42 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
         // print("user :: ${FirebaseAuth.instance.currentUser}");
         context.go('/home');
       } catch (e) {
-        print("Error signing in: $e");
-        if (mounted)
-          AppUtils.showDialog(context, e.toString(), AppColors.error);
+        final message = e.toString();
+        if (message.contains('user-not-found')) {
+          if (mounted) {
+            AppUtils.showDialog(
+              context,
+              t.user_not_found,
+              AppColors.error,
+            );
+          }
+        } else if (message.contains('email-already-in-use')) {
+          if (mounted) {
+            AppUtils.showDialog(
+              context,
+              t.email_already_in_use,
+              AppColors.error,
+            );
+          }
+        } else if (message.contains('invalid-email') ||
+            message.contains('wrong-password')) {
+          if (mounted) {
+            AppUtils.showDialog(
+              context,
+              t.invalid_email,
+              AppColors.error,
+            );
+          }
+        } else if (message.contains('network-request-failed')) {
+          if (mounted) {
+            AppUtils.showDialog(context, t.network_error, AppColors.error);
+          }
+        }
+        else {
+          if (mounted) {
+            AppUtils.showDialog(context, t.error_login, AppColors.error);
+          }
+        }
       } finally {
         setState(() => _isEmailLoading = false);
       }

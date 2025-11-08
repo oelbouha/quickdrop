@@ -1778,5 +1778,32 @@ class AppLocalizationsFr extends AppLocalizations {
   String get forgot_password_send_email => 'Envoyer l\'e-mail de réinitialisation';
 
   @override
-  String get too_many_requests => 'Trop de demandes. Veuillez réessayer plus tard.';
+  String get too_many_requests => 'Trop de requêtes. Veuillez réessayer plus tard.';
+
+  @override
+  String get user_not_found => 'Aucun compte trouvé avec cet e-mail.';
+
+  @override
+  String get email_already_in_use => 'Cet e-mail est déjà utilisé.';
+
+  @override
+  String get invalid_email => 'E-mail ou mot de passe invalide.';
+
+  @override
+  String get network_error => 'Erreur réseau. Veuillez vérifier votre connexion et réessayer.';
+
+  @override
+  String get error_login => 'Une erreur inattendue s\'est produite. Veuillez réessayer.';
+
+  @override
+  String get invalid_phone_number => 'Le format du numéro de téléphone est invalide. Veuillez inclure l\'indicatif du pays.';
+
+  @override
+  String get quota_exceeded => 'Quota de SMS dépassé pour aujourd\'hui. Veuillez réessayer demain ou contacter le support.';
+
+  @override
+  String get missing_phone_number => 'Le numéro de téléphone est requis.';
+
+  @override
+  String get phone_verification_failed => 'La vérification du téléphone a échoué, veuillez réessayer plus tard.';
 }

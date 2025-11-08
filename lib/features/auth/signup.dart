@@ -22,6 +22,7 @@ class _SignupState extends State<Signup> {
   bool _isGoogleLoading = false;
 
   void _signupUserWithPhoneNumber() async {
+    final t = AppLocalizations.of(context)!;
     if (_isEmailLoading) return;
     setState(() {
       _isEmailLoading = true;
@@ -30,7 +31,7 @@ class _SignupState extends State<Signup> {
     final phone = phoneNumberController.text.trim();
     if (phone.isEmpty) {
       AppUtils.showDialog(
-          context, "Please enter your phone number", AppColors.error);
+          context, t.missing_phone_number, AppColors.error);
       setState(() {
         _isEmailLoading = false;
       });
@@ -49,31 +50,19 @@ class _SignupState extends State<Signup> {
         String errorMessage;
         switch (e.code) {
           case 'invalid-phone-number':
-            errorMessage =
-                'The phone number format is invalid. Please include country code.';
+            errorMessage = t.invalid_phone_number;
             break;
           case 'too-many-requests':
-            errorMessage = 'Too many requests. Please try again later.';
+            errorMessage = t.too_many_requests;
             break;
           case 'quota-exceeded':
-            errorMessage =
-                'SMS quota exceeded for today. Please try again tomorrow or contact support.';
-            break;
-          case 'app-not-authorized':
-            errorMessage =
-                'App not authorized. Please check Firebase configuration.';
+            errorMessage = t.quota_exceeded;
             break;
           case 'missing-phone-number':
-            errorMessage = 'Phone number is required.';
-            break;
-          case 'invalid-app-credential':
-            errorMessage =
-                'Invalid app credentials. Check your Firebase setup.';
+            errorMessage = t.missing_phone_number;
             break;
           default:
-            
-              errorMessage = 'Phone verification failed: ${e.message}';
-            
+            errorMessage = t.error_login;
         }
 
         AppUtils.showDialog(context, errorMessage, AppColors.error);
@@ -106,8 +95,17 @@ class _SignupState extends State<Signup> {
       await Provider.of<UserProvider>(context, listen: false)
           .signInWithGoogle(context);
     } catch (e) {
-      if (mounted) {
-        AppUtils.showDialog(context, e.toString(), AppColors.error);
+      if (e.toString().contains('network-request-failed')) {
+        if (mounted) {
+          AppUtils.showDialog(context,
+              AppLocalizations.of(context)!.network_error, AppColors.error);
+        }
+      } else {
+        // Handle other errors
+        if (mounted) {
+          AppUtils.showDialog(context,
+              AppLocalizations.of(context)!.error_login, AppColors.error);
+        }
       }
     } finally {
       setState(() {
@@ -164,9 +162,9 @@ class _SignupState extends State<Signup> {
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-         Text(
-         t.signup_phone_title,
-          style:const TextStyle(
+        Text(
+          t.signup_phone_title,
+          style: const TextStyle(
               color: AppColors.headingText,
               fontWeight: FontWeight.w700,
               fontSize: 30),
@@ -175,7 +173,7 @@ class _SignupState extends State<Signup> {
         const SizedBox(
           height: 10,
         ),
-         Text(
+        Text(
           t.enter_phone_number_msg,
           style: const TextStyle(
             color: AppColors.shipmentText,
@@ -200,25 +198,25 @@ class _SignupState extends State<Signup> {
         const SizedBox(
           height: 24,
         ),
-         Row(
+        Row(
           children: [
-           const Expanded(
+            const Expanded(
               child: Divider(
                 color: AppColors.lessImportant,
                 thickness: 0.4,
               ),
             ),
-           const SizedBox(
+            const SizedBox(
               width: 8,
             ),
             Text(
               t.or,
               style: TextStyle(color: AppColors.shipmentText, fontSize: 12),
             ),
-           const SizedBox(
+            const SizedBox(
               width: 8,
             ),
-           const Expanded(
+            const Expanded(
               child: Divider(
                 color: AppColors.lessImportant,
                 thickness: 0.4,

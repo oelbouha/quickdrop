@@ -731,7 +731,20 @@
 "forgot_password_error": "An error occurred. Please try again.",
 "forgot_password_sending": "Sending...",
 "forgot_password_send_email": "Send Reset Email",
-"too_many_requests": "Too many requests. Please try again later."
+"too_many_requests": "Too many requests. Please try again later.",
+"user_not_found": "No account found with this email.",
+  "email_already_in_use": "This email is already in use.",
+  "invalid_email": "Invalid email or password.",
+  "network_error": "Network error. Please check your connection and try again.",
+  "error_login": "An unexpected error occurred. Please try again.",
+   "invalid_phone_number": "The phone number format is invalid. Please include country code.",
+  "too_many_requests": "Too many requests. Please try again later.",
+  "quota_exceeded": "SMS quota exceeded for today. Please try again tomorrow or contact support.",
+  "missing_phone_number": "Phone number is required.",
+  "phone_verification_failed": "Phone verification failed, please try again later."
+
+
+
 
 
 

@@ -1778,5 +1778,32 @@ class AppLocalizationsAr extends AppLocalizations {
   String get forgot_password_send_email => 'إرسال بريد إعادة التعيين';
 
   @override
-  String get too_many_requests => 'عدد كبير جدًا من الطلبات. يرجى المحاولة لاحقًا.';
+  String get too_many_requests => 'طلبات كثيرة جدًا. يرجى المحاولة لاحقًا.';
+
+  @override
+  String get user_not_found => 'لم يتم العثور على حساب بهذا البريد الإلكتروني.';
+
+  @override
+  String get email_already_in_use => 'هذا البريد الإلكتروني مستخدم بالفعل.';
+
+  @override
+  String get invalid_email => 'البريد الإلكتروني أو كلمة المرور غير صحيحة.';
+
+  @override
+  String get network_error => 'خطأ في الشبكة. يرجى التحقق من الاتصال والمحاولة مرة أخرى.';
+
+  @override
+  String get error_login => 'حدث خطأ غير متوقع. يرجى المحاولة مرة أخرى.';
+
+  @override
+  String get invalid_phone_number => 'تنسيق رقم الهاتف غير صالح. يرجى تضمين رمز الدولة.';
+
+  @override
+  String get quota_exceeded => 'تم تجاوز حد رسائل SMS لليوم. يرجى المحاولة غدًا أو الاتصال بالدعم.';
+
+  @override
+  String get missing_phone_number => 'رقم الهاتف مطلوب.';
+
+  @override
+  String get phone_verification_failed => 'فشلت عملية التحقق من الهاتف، يرجى المحاولة لاحقًا.';
 }

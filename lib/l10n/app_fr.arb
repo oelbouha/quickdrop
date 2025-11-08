@@ -720,7 +720,20 @@
 "forgot_password_error": "Une erreur s'est produite. Veuillez réessayer.",
 "forgot_password_sending": "Envoi...",
 "forgot_password_send_email": "Envoyer l'e-mail de réinitialisation",
-"too_many_requests": "Trop de demandes. Veuillez réessayer plus tard."
+"too_many_requests": "Trop de demandes. Veuillez réessayer plus tard.",
+  "user_not_found": "Aucun compte trouvé avec cet e-mail.",
+  "email_already_in_use": "Cet e-mail est déjà utilisé.",
+  "invalid_email": "E-mail ou mot de passe invalide.",
+  "network_error": "Erreur réseau. Veuillez vérifier votre connexion et réessayer.",
+  "error_login": "Une erreur inattendue s'est produite. Veuillez réessayer.",
+  "invalid_phone_number": "Le format du numéro de téléphone est invalide. Veuillez inclure l'indicatif du pays.",
+  "too_many_requests": "Trop de requêtes. Veuillez réessayer plus tard.",
+  "quota_exceeded": "Quota de SMS dépassé pour aujourd'hui. Veuillez réessayer demain ou contacter le support.",
+  "missing_phone_number": "Le numéro de téléphone est requis.",
+  "phone_verification_failed": "La vérification du téléphone a échoué, veuillez réessayer plus tard."
+
+
+
 
 
 

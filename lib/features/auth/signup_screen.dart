@@ -49,7 +49,27 @@ class _SingupPageState extends State<SignUpScreen> {
           context.go('/home');
         }
       }  catch (e) {
-        if (mounted) AppUtils.showDialog(context, e.toString(), AppColors.error);
+        if (e.toString().contains('email-already-in-use')) {
+          if (mounted) {
+            AppUtils.showDialog(
+                context, AppLocalizations.of(context)!.email_already_in_use, AppColors.error);
+          }
+        } else if (e.toString().contains('invalid-email')) {
+          if (mounted) {
+            AppUtils.showDialog(
+                context, AppLocalizations.of(context)!.invalid_email, AppColors.error);
+          }
+        } else if (e.toString().contains('network-request-failed')) {
+          if (mounted) {
+            AppUtils.showDialog(context, AppLocalizations.of(context)!.network_error, AppColors.error);
+          }
+        } else {
+          // Handle other errors
+          if (mounted) {
+            AppUtils.showDialog(
+                context, AppLocalizations.of(context)!.error_login, AppColors.error);
+          }
+        }
       } finally {
         setState(() {
           _isEmailLoading = false;

@@ -203,7 +203,6 @@ class _AddShipmentScreenState extends State<AddShipmentScreen>
       }
 
      try {
-
        imagePath =  await Provider.of<ShipmentProvider>(context, listen: false)
           .uploadImageToSupabase(File(_selectedImage!.path));
       if (imagePath == null) {
