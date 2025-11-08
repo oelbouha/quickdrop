@@ -1,5 +1,6 @@
 import 'package:quickdrop_app/core/utils/imports.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter/scheduler.dart';
 
 class SplashRedirect extends StatefulWidget {
   const SplashRedirect({super.key});
@@ -12,7 +13,10 @@ class _SplashRedirectState extends State<SplashRedirect> {
   @override
   void initState() {
     super.initState();
-    _checkRoute();
+    // Defer navigation until after the first frame to ensure the GoRouter  is available on the widget tree. Calling context.go() directly in  initState can sometimes fail if the router isn't yet ready.
+    SchedulerBinding.instance.addPostFrameCallback((_) {
+      _checkRoute();
+    });
   }
 
   Future<void> _checkRoute() async {
