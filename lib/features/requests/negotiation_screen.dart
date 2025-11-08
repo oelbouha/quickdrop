@@ -41,9 +41,7 @@ Future<(UserData, TransportItem, DeliveryRequest)> fetchData() async {
   final transportItem = await Provider.of<ShipmentProvider>(context, listen: false).fetchShipmentById(widget.shipmentId);
   final request = await Provider.of<DeliveryRequestProvider>(context, listen: false).fetchRequestById(widget.requestId);
   if (user == null || transportItem == null || request == null) {
-    if (request == null) print("request not found");
-    if (transportItem == null) print("shipment not found");
-    if (user == null) print("user not found");
+    
     return Future.error("Data not found");}
   return (user, transportItem, request);
 }
@@ -122,7 +120,7 @@ class _NegotiationContentState extends State<NegotiationContent> {
         .then((_) {
       // print("Message seen status updated");
     }).catchError((error) {
-      print("Error updating message seen status: $error");
+      // print("Failed to update message seen status: $error");
     });
     
     if (widget.request.senderId == widget.user.uid) {
