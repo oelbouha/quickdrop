@@ -727,7 +727,9 @@
   "too_many_requests": "طلبات كثيرة جدًا. يرجى المحاولة لاحقًا.",
   "quota_exceeded": "تم تجاوز حد رسائل SMS لليوم. يرجى المحاولة غدًا أو الاتصال بالدعم.",
   "missing_phone_number": "رقم الهاتف مطلوب.",
-  "phone_verification_failed": "فشلت عملية التحقق من الهاتف، يرجى المحاولة لاحقًا."
+  "phone_verification_failed": "فشلت عملية التحقق من الهاتف، يرجى المحاولة لاحقًا.",
+  "notification_settings": "إعدادات الإشعارات"
+
 
 
 

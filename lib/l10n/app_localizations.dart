@@ -3666,6 +3666,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Phone verification failed, please try again later.'**
   String get phone_verification_failed;
+
+  /// No description provided for @notification_settings.
+  ///
+  /// In en, this message translates to:
+  /// **'Notification Settings'**
+  String get notification_settings;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

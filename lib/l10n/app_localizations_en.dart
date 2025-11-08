@@ -1806,4 +1806,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get phone_verification_failed => 'Phone verification failed, please try again later.';
+
+  @override
+  String get notification_settings => 'Notification Settings';
 }

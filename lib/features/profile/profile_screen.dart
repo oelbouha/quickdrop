@@ -323,7 +323,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           title: t.notifications,
           subtitle: t.manage_notifications,
           iconPath: "assets/icon/notification.svg",
-          onTap: () => _showComingSoon("notifications"),
+          onTap: () => context.push("/notifications-settings"),
         ),
         // settingsCard(
         //   title: t.payment_methods,

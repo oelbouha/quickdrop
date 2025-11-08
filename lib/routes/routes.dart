@@ -6,6 +6,7 @@ import 'package:quickdrop_app/features/profile/change_contact_info_screen.dart';
 import 'package:quickdrop_app/features/profile/change_language_screen.dart';
 import 'package:quickdrop_app/features/profile/change_personal_info_screen.dart';
 import 'package:quickdrop_app/features/profile/change_profile_image_screen.dart';
+import 'package:quickdrop_app/features/profile/notification_setting_screen.dart';
 import 'package:quickdrop_app/features/profile/payment.screen.dart';
 import 'package:quickdrop_app/features/requests/negotiation_screen.dart';
 import 'package:quickdrop_app/features/home/home_screen.dart';
@@ -279,6 +280,14 @@ class AppRouter {
           pageBuilder: (context, state) => buildCustomTransitionPage(
             context,
             const ProfileScreen(),
+          ),
+        ),
+        GoRoute(
+          name: "notifications-settings",
+          path: "/notifications-settings",
+          pageBuilder: (context, state) => buildCustomTransitionPage(
+            context,
+            const NotificationSettingScreen(),
           ),
         ),
         GoRoute(

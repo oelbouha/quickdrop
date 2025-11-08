@@ -741,7 +741,10 @@
   "too_many_requests": "Too many requests. Please try again later.",
   "quota_exceeded": "SMS quota exceeded for today. Please try again tomorrow or contact support.",
   "missing_phone_number": "Phone number is required.",
-  "phone_verification_failed": "Phone verification failed, please try again later."
+  "phone_verification_failed": "Phone verification failed, please try again later.",
+
+  "notification_settings": "Notification Settings"
+
 
 
 

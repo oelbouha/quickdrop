@@ -730,7 +730,9 @@
   "too_many_requests": "Trop de requêtes. Veuillez réessayer plus tard.",
   "quota_exceeded": "Quota de SMS dépassé pour aujourd'hui. Veuillez réessayer demain ou contacter le support.",
   "missing_phone_number": "Le numéro de téléphone est requis.",
-  "phone_verification_failed": "La vérification du téléphone a échoué, veuillez réessayer plus tard."
+  "phone_verification_failed": "La vérification du téléphone a échoué, veuillez réessayer plus tard.",
+  "notification_settings": "Paramètres de notification"
+
 
 
 

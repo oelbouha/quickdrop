@@ -1806,4 +1806,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get phone_verification_failed => 'فشلت عملية التحقق من الهاتف، يرجى المحاولة لاحقًا.';
+
+  @override
+  String get notification_settings => 'إعدادات الإشعارات';
 }
