@@ -340,6 +340,8 @@ class UserProvider with ChangeNotifier {
     }
   }
 
+
+
   Future<void> signInWithGoogle(BuildContext context) async {
     try {
       final GoogleSignIn googleSignIn = GoogleSignIn(
@@ -396,6 +398,7 @@ class UserProvider with ChangeNotifier {
     } on FirebaseAuthException catch (e) {
       throw Exception('Error signing in with Google: $e');
     } catch (e) {
+      print("Error signing in with Google: $e");
       throw Exception('An unexpected error occurred: $e');
     }
   }
