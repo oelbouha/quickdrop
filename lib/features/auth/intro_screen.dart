@@ -16,33 +16,15 @@ class _IntroScreenState extends State<IntroScreen> with TickerProviderStateMixin
   bool _isSignUpLoading = false;
   bool _isGoogleLoading = false;
   
-  late AnimationController _fadeController;
-  late Animation<double> _fadeAnimation;
 
-  @override
-  void initState() {
-    super.initState();
-    _fadeController = AnimationController(
-      duration: const Duration(milliseconds: 600),
-      vsync: this,
-    );
-    _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
-      CurvedAnimation(parent: _fadeController, curve: Curves.easeOut),
-    );
-    _fadeController.forward();
-  }
 
-  @override
-  void dispose() {
-    _fadeController.dispose();
-    super.dispose();
-  }
+
+ 
 
   void _signInWithGoogle() async {
     if (_isGoogleLoading) return;
     
-    // Add haptic feedback
-    HapticFeedback.lightImpact();
+    
     
     setState(() {
       _isGoogleLoading = true;
@@ -51,6 +33,8 @@ class _IntroScreenState extends State<IntroScreen> with TickerProviderStateMixin
     try {
       await Provider.of<UserProvider>(context, listen: false)
           .signInWithGoogle(context);
+
+        FcmHandler.handleFcmTokenSave(FirebaseAuth.instance.currentUser!.uid, context);
     } catch (e) {
       if (mounted) AppUtils.showDialog(context, e.toString(), AppColors.error);
     } finally {
@@ -62,10 +46,7 @@ class _IntroScreenState extends State<IntroScreen> with TickerProviderStateMixin
     }
   }
 
-  void _navigateWithHaptic(String route) {
-    HapticFeedback.lightImpact();
-    context.pushNamed(route);
-  }
+  
 
   @override
   Widget build(BuildContext context) {
@@ -97,14 +78,11 @@ class _IntroScreenState extends State<IntroScreen> with TickerProviderStateMixin
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      FadeTransition(
-                        opacity: _fadeAnimation,
-                        child: Image.asset(
+                      Image.asset(
                           'assets/images/Icon.png',
                           width: 100,
                           height: 100,
                         ),
-                      ),
 
                       const SizedBox(height: 48),
 

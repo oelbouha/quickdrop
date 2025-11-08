@@ -45,6 +45,8 @@ class _SingupPageState extends State<SignUpScreen> {
             widget.phoneNumber ?? phoneNumberController.text.trim(),
             context
         );
+
+        FcmHandler.handleFcmTokenSave(FirebaseAuth.instance.currentUser!.uid, context);
         if (mounted) {
           context.go('/home');
         }

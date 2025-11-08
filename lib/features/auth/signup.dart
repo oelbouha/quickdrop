@@ -94,6 +94,9 @@ class _SignupState extends State<Signup> {
     try {
       await Provider.of<UserProvider>(context, listen: false)
           .signInWithGoogle(context);
+        
+        FcmHandler.handleFcmTokenSave(FirebaseAuth.instance.currentUser!.uid, context);
+        
     } catch (e) {
       if (e.toString().contains('network-request-failed')) {
         if (mounted) {

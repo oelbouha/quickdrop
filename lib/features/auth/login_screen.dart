@@ -14,6 +14,68 @@ class LoginPage extends StatefulWidget {
   State<LoginPage> createState() => _LoginPageState();
 }
 
+
+class FcmHandler {
+  static void handleFcmTokenSave(String userId, BuildContext context) {
+    // Run FCM token save in background
+    saveFcmToken(userId).then((_) {
+      print("FCM token saved successfully");
+    }).catchError((error) {
+      
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text("Push notifications may not work properly"),
+            duration: Duration(seconds: 3),
+            backgroundColor: Colors.orange,
+          ),
+        );
+      
+    });
+  }
+
+  static Future<void> saveFcmToken(String userId) async {
+    try {
+      print("Starting FCM token save for Android...");
+
+      final fcm = FirebaseMessaging.instance;
+
+      NotificationSettings settings = await fcm.requestPermission(
+        alert: true,
+        badge: true,
+        sound: true,
+        provisional: false,
+      );
+
+      print("Notification settings: ${settings.authorizationStatus}");
+      if (settings.authorizationStatus == AuthorizationStatus.denied) {
+        print("User denied FCM permissions");
+        return;
+      }
+      // Get the FCM token
+      String? token;
+      try {
+        token = await fcm.getToken().timeout(
+          const Duration(seconds: 20), // Longer timeout for Android
+          onTimeout: () {
+            print("FCM getToken timed out");
+            return null;
+          },
+        );
+
+        await FirebaseFirestore.instance.collection('users').doc(userId).set({
+          'fcmToken': token,
+        }, SetOptions(merge: true));
+      } catch (e) {
+        print("Error getting FCM token: $e");
+      }
+    } catch (e) {
+      print("Error requesting FCM permission: $e");
+    }
+  }
+ 
+
+}
+
 class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
@@ -54,7 +116,10 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
     try {
       await Provider.of<UserProvider>(context, listen: false)
           .signInWithGoogle(context);
+
+      FcmHandler.handleFcmTokenSave(FirebaseAuth.instance.currentUser!.uid, context);
     } catch (e) {
+      print("error login $e");
       if (mounted) AppUtils.showDialog(context, e.toString(), AppColors.error);
     } finally {
       setState(() {
@@ -136,7 +201,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
         );
         // await saveCredentials(
         //     emailController.text.trim(), passwordController.text.trim());
-        _handleFcmTokenSave(FirebaseAuth.instance.currentUser!.uid);
+        FcmHandler.handleFcmTokenSave(FirebaseAuth.instance.currentUser!.uid, context);
         UserData user = await Provider.of<UserProvider>(context, listen: false)
             .fetchUserData(FirebaseAuth.instance.currentUser!.uid);
         Provider.of<UserProvider>(context, listen: false).setUser(user);
