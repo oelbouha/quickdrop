@@ -1809,4 +1809,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get notification_settings => 'Paramètres de notification';
+
+  @override
+  String get push_notification_warning => 'Les notifications push peuvent ne pas fonctionner correctement';
 }

@@ -731,6 +731,7 @@
   "quota_exceeded": "Quota de SMS dépassé pour aujourd'hui. Veuillez réessayer demain ou contacter le support.",
   "missing_phone_number": "Le numéro de téléphone est requis.",
   "phone_verification_failed": "La vérification du téléphone a échoué, veuillez réessayer plus tard.",
+    "push_notification_warning": "Les notifications push peuvent ne pas fonctionner correctement",
   "notification_settings": "Paramètres de notification"
 
 

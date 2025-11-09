@@ -88,7 +88,7 @@ class _HomeScreenState extends State<HomeScreen> {
           }
         }
       } catch(e) {
-        print("Error checking subscription status: $e");
+        print("Error checking subscription status: ");
       }
     //   try {
         // final shipmentProvider =

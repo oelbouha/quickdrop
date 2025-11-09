@@ -12,20 +12,17 @@ class NotificationHandler {
     FirebaseMessaging messaging = FirebaseMessaging.instance;
 
     NotificationSettings settings = await messaging.requestPermission();
-    print('🔐 Permission: ${settings.authorizationStatus}');
 
     try {
       String? token = await messaging.getToken();
-      print("📲 FCM Token: $token");
     } catch (e) {
-      print("❌ Error getting FCM token: $e");
+      print("❌ Error getting FCM token:");
     }
 
     
 
     // Foreground message handler
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      print('📨 Message received: ${message.notification?.title}');
 
       // Show notification
       flutterLocalNotificationsPlugin.show(
@@ -45,7 +42,6 @@ class NotificationHandler {
 
     // When app is opened from background
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-      print('📬 Notification tapped: ${message.data}');
     });
 
     // Initialize local notifications
@@ -59,19 +55,10 @@ class NotificationHandler {
 
     await flutterLocalNotificationsPlugin.initialize(initializationSettings);
   }
-  // @override
-
-  // State<NotificationHandler> createState() => _NotificationHandlerState();
+  
 }
 
-
-// class _NotificationHandlerState extends State<NotificationHandler> {
-
-
-//   @override
-//   Widget build(BuildContext context) {
-//   }
-// }            
+           
               
             
             

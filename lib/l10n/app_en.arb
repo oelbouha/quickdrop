@@ -743,7 +743,8 @@
   "missing_phone_number": "Phone number is required.",
   "phone_verification_failed": "Phone verification failed, please try again later.",
 
-  "notification_settings": "Notification Settings"
+  "notification_settings": "Notification Settings",
+    "push_notification_warning": "Push notifications may not work properly"
 
 
 

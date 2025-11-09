@@ -3672,6 +3672,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Notification Settings'**
   String get notification_settings;
+
+  /// No description provided for @push_notification_warning.
+  ///
+  /// In en, this message translates to:
+  /// **'Push notifications may not work properly'**
+  String get push_notification_warning;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

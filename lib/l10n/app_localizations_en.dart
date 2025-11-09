@@ -1809,4 +1809,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get notification_settings => 'Notification Settings';
+
+  @override
+  String get push_notification_warning => 'Push notifications may not work properly';
 }

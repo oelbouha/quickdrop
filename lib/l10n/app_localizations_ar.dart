@@ -1809,4 +1809,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get notification_settings => 'إعدادات الإشعارات';
+
+  @override
+  String get push_notification_warning => 'قد لا تعمل الإشعارات المنبثقة بشكل صحيح';
 }

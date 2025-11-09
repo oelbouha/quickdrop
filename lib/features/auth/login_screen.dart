@@ -5,7 +5,9 @@ import 'package:quickdrop_app/core/utils/imports.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:quickdrop_app/l10n/app_localizations_ar.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:quickdrop_app/features/notification/notification_handler.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -14,29 +16,26 @@ class LoginPage extends StatefulWidget {
   State<LoginPage> createState() => _LoginPageState();
 }
 
-
 class FcmHandler {
+  static final NotificationHandler _notificationHandler = NotificationHandler();
+
   static void handleFcmTokenSave(String userId, BuildContext context) {
-    // Run FCM token save in background
-    saveFcmToken(userId).then((_) {
-      print("FCM token saved successfully");
+    saveFcmToken(userId, context).then((_) {
     }).catchError((error) {
-      
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text("Push notifications may not work properly"),
-            duration: Duration(seconds: 3),
-            backgroundColor: Colors.orange,
-          ),
-        );
-      
+      ScaffoldMessenger.of(context).showSnackBar(
+         SnackBar(
+          content: Text(AppLocalizations.of(context)!.push_notification_warning),
+          duration: Duration(seconds: 3),
+          backgroundColor: Colors.orange,
+        ),
+      );
     });
   }
 
-  static Future<void> saveFcmToken(String userId) async {
+  static Future<void> saveFcmToken(String userId,
+      [BuildContext? context]) async {
     try {
-      print("Starting FCM token save for Android...");
-
+      print("Starting FCM token save and notification setup...");
       final fcm = FirebaseMessaging.instance;
 
       NotificationSettings settings = await fcm.requestPermission(
@@ -46,16 +45,19 @@ class FcmHandler {
         provisional: false,
       );
 
-      print("Notification settings: ${settings.authorizationStatus}");
       if (settings.authorizationStatus == AuthorizationStatus.denied) {
-        print("User denied FCM permissions");
+       
         return;
       }
+
+      // initialize foreground notification handlers and local notifications
+      _notificationHandler.setupNotifications();
+
       // Get the FCM token
       String? token;
       try {
         token = await fcm.getToken().timeout(
-          const Duration(seconds: 20), // Longer timeout for Android
+          const Duration(seconds: 20),
           onTimeout: () {
             print("FCM getToken timed out");
             return null;
@@ -65,44 +67,33 @@ class FcmHandler {
         await FirebaseFirestore.instance.collection('users').doc(userId).set({
           'fcmToken': token,
         }, SetOptions(merge: true));
+
+        // Listen for token refresh and update Firestore
+        fcm.onTokenRefresh.listen((newToken) async {
+          await FirebaseFirestore.instance.collection('users').doc(userId).set({
+            'fcmToken': newToken,
+          }, SetOptions(merge: true));
+        });
       } catch (e) {
-        print("Error getting FCM token: $e");
+        print("Error getting FCM token: ");
       }
     } catch (e) {
-      print("Error requesting FCM permission: $e");
+      print("Error requesting FCM permission:");
     }
   }
- 
-
 }
 
 class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
-  FirebaseMessaging messaging = FirebaseMessaging.instance;
   bool _isEmailLoading = false;
   bool _isGoogleLoading = false;
-
-  late AnimationController _animationController;
-  late Animation<double> _fadeAnimation;
 
   @override
   void initState() {
     super.initState();
-    _animationController = AnimationController(
-      duration: const Duration(milliseconds: 800),
-      vsync: this,
-    );
-    _fadeAnimation = Tween<double>(
-      begin: 0.0,
-      end: 1.0,
-    ).animate(CurvedAnimation(
-      parent: _animationController,
-      curve: Curves.easeInOut,
-    ));
-    _animationController.forward();
-    _loadSavedCredentials();
+    // _loadSavedCredentials();
   }
 
   void _signInWithGoogle() async {
@@ -117,74 +108,14 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
       await Provider.of<UserProvider>(context, listen: false)
           .signInWithGoogle(context);
 
-      FcmHandler.handleFcmTokenSave(FirebaseAuth.instance.currentUser!.uid, context);
+      FcmHandler.handleFcmTokenSave(
+          FirebaseAuth.instance.currentUser!.uid, context);
     } catch (e) {
-      print("error login $e");
       if (mounted) AppUtils.showDialog(context, e.toString(), AppColors.error);
     } finally {
       setState(() {
         _isGoogleLoading = false;
       });
-    }
-  }
-
-  void _handleFcmTokenSave(String userId) {
-    // Run FCM token save in background
-    saveFcmToken(userId).then((_) {
-      print("FCM token saved successfully");
-    }).catchError((error) {
-      print("FCM token save failed (non-critical): $error");
-
-      // Optional: Show a subtle notification that push notifications might not work
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text("Push notifications may not work properly"),
-            duration: Duration(seconds: 3),
-            backgroundColor: Colors.orange,
-          ),
-        );
-      }
-    });
-  }
-
-  Future<void> saveFcmToken(String userId) async {
-    try {
-      print("Starting FCM token save for Android...");
-
-      final fcm = FirebaseMessaging.instance;
-
-      NotificationSettings settings = await fcm.requestPermission(
-        alert: true,
-        badge: true,
-        sound: true,
-        provisional: false,
-      );
-
-      print("Notification settings: ${settings.authorizationStatus}");
-      if (settings.authorizationStatus == AuthorizationStatus.denied) {
-        print("User denied FCM permissions");
-        return;
-      }
-      // Get the FCM token
-      String? token;
-      try {
-        token = await fcm.getToken().timeout(
-          const Duration(seconds: 20), // Longer timeout for Android
-          onTimeout: () {
-            print("FCM getToken timed out");
-            return null;
-          },
-        );
-
-        await FirebaseFirestore.instance.collection('users').doc(userId).set({
-          'fcmToken': token,
-        }, SetOptions(merge: true));
-      } catch (e) {
-        print("Error getting FCM token: $e");
-      }
-    } catch (e) {
-      print("Error requesting FCM permission: $e");
     }
   }
 
@@ -201,7 +132,8 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
         );
         // await saveCredentials(
         //     emailController.text.trim(), passwordController.text.trim());
-        FcmHandler.handleFcmTokenSave(FirebaseAuth.instance.currentUser!.uid, context);
+        FcmHandler.handleFcmTokenSave(
+            FirebaseAuth.instance.currentUser!.uid, context);
         UserData user = await Provider.of<UserProvider>(context, listen: false)
             .fetchUserData(FirebaseAuth.instance.currentUser!.uid);
         Provider.of<UserProvider>(context, listen: false).setUser(user);
@@ -241,8 +173,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
           if (mounted) {
             AppUtils.showDialog(context, t.network_error, AppColors.error);
           }
-        }
-        else {
+        } else {
           if (mounted) {
             AppUtils.showDialog(context, t.error_login, AppColors.error);
           }
@@ -278,14 +209,13 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
   void dispose() {
     emailController.dispose();
     passwordController.dispose();
-    _animationController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-       appBar: AppBar(
+        appBar: AppBar(
           systemOverlayStyle: SystemUiOverlayStyle.dark,
         ),
         backgroundColor: AppColors.background,
@@ -313,7 +243,6 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
   }
 
   Widget _buildLogInScreen() {
-
     final t = AppLocalizations.of(context)!;
 
     return Form(
@@ -322,26 +251,20 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          FadeTransition(
-            opacity: _fadeAnimation,
-            child:  Text(
-              t.welcome,
-              style: const TextStyle(
-                fontSize: 32,
-                fontWeight: FontWeight.bold,
-                color: AppColors.blue700,
-              ),
+          Text(
+            t.welcome,
+            style: const TextStyle(
+              fontSize: 32,
+              fontWeight: FontWeight.bold,
+              color: AppColors.blue700,
             ),
           ),
           const SizedBox(height: 16),
-          FadeTransition(
-            opacity: _fadeAnimation,
-            child:  Text(
-              t.login_title,
-              style: const TextStyle(
-                fontSize: 16,
-                color: AppColors.shipmentText,
-              ),
+          Text(
+            t.login_title,
+            style: const TextStyle(
+              fontSize: 16,
+              color: AppColors.shipmentText,
             ),
           ),
           const SizedBox(height: 24),
@@ -369,7 +292,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
           ),
           Container(
             margin: const EdgeInsets.only(top: 24, bottom: 24),
-            child:  Row(
+            child: Row(
               children: [
                 const Expanded(
                   child: Divider(
@@ -401,8 +324,8 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
             radius: 60,
           ),
           const SizedBox(height: 24),
-          
-           TextWithLinkButton(
+
+          TextWithLinkButton(
             text: "",
             textLink: t.forgot_password,
             navigatTo: '/forgot-password',

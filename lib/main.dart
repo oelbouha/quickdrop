@@ -22,7 +22,6 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 @pragma('vm:entry-point')
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   await Firebase.initializeApp();
-  print("🔔 Background message: ${message.messageId}");
 }
 
 
@@ -49,8 +48,6 @@ final ColorScheme myColorScheme = const ColorScheme(
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  print("🔍 Starting app initialization...");
-
   await dotenv.load(fileName: ".env");
 
   try {
@@ -58,22 +55,18 @@ void main() async {
       url: dotenv.env['SUPABASE_URL']!,
       anonKey: dotenv.env['SUPABASE_ANON_KEY']!,
     );
-    print("✅ Supabase initialized successfully");
   } catch (e) {
-    print("❌ Supabase initialization error: $e");
   }
 
   try {
     await Firebase.initializeApp(
         options: DefaultFirebaseOptions.currentPlatform);
-    print("✅ Firebase initialized successfully");
     await FirebaseAppCheck.instance.activate(
       androidProvider:
           kDebugMode ? AndroidProvider.debug : AndroidProvider.playIntegrity,
     );
-    print("✅ Firebase App Check activated");
   } catch (e) {
-    print("❌ Firebase initialization error: $e");
+    print("❌ Firebase initialization error");
   }
 
   Stripe.publishableKey = dotenv.env['STRIPE_PUBLISHABLE_KEY'] ?? '';
@@ -81,46 +74,45 @@ void main() async {
   // Set background message handler
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
-  try {
-    print("🔍 Attempting to get FCM token...");
-    FirebaseMessaging messaging = FirebaseMessaging.instance;
+  // try {
+  //   print("🔍 Attempting to get FCM token...");
+  //   FirebaseMessaging messaging = FirebaseMessaging.instance;
 
-    print("🔍 Firebase Messaging instance created");
+  //   print("🔍 Firebase Messaging instance created");
 
-    NotificationSettings settings = await messaging.requestPermission(
-      alert: true,
-      announcement: false,
-      badge: true,
-      carPlay: false,
-      criticalAlert: false,
-      provisional: false,
-      sound: true,
-    );
+  //   NotificationSettings settings = await messaging.requestPermission(
+  //     alert: true,
+  //     announcement: false,
+  //     badge: true,
+  //     carPlay: false,
+  //     criticalAlert: false,
+  //     provisional: false,
+  //     sound: true,
+  //   );
 
-    if (settings.authorizationStatus == AuthorizationStatus.authorized) {
-      print("🔍 Permission granted, getting token...");
-      String? token = await messaging.getToken();
-      if (token != null) {
-        print("✅ FCM Token received: $token");
-      } else {
-        print("❌ FCM Token is null");
-      }
-    } else {
-      print(
-          "❌ Notification permission denied: ${settings.authorizationStatus}");
-    }
-  } catch (e, stackTrace) {
-    print("❌ Direct FCM token error: $e");
-    print("❌ Stack trace: $stackTrace");
-  }
+  //   if (settings.authorizationStatus == AuthorizationStatus.authorized) {
+  //     String? token = await messaging.getToken();
+  //     // if (token != null) {
+  //     //   print("✅ FCM Token received: $token");
+  //     // } else {
+  //     //   print("❌ FCM Token is null");
+  //     // }
+  //   } else {
+  //     print(
+  //         "❌ Notification permission denied: ${settings.authorizationStatus}");
+  //   }
+  // } catch (e, stackTrace) {
+  //   print("❌ Direct FCM token error: $e");
+  //   print("❌ Stack trace: $stackTrace");
+  // }
 
   // Initialize notification handler
-  try {
-    notificationHandler.setupNotifications();
-    print("✅ Notification handler setup completed");
-  } catch (e) {
-    print("❌ Notification handler setup error: $e");
-  }
+  // try {
+  //   notificationHandler.setupNotifications();
+  //   print("✅ Notification handler setup completed");
+  // } catch (e) {
+  //   print("❌ Notification handler setup error: $e");
+  // }
 
   runApp(
     MultiProvider(
