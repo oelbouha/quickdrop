@@ -74,45 +74,9 @@ void main() async {
   // Set background message handler
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
-  // try {
-  //   print("🔍 Attempting to get FCM token...");
-  //   FirebaseMessaging messaging = FirebaseMessaging.instance;
 
-  //   print("🔍 Firebase Messaging instance created");
 
-  //   NotificationSettings settings = await messaging.requestPermission(
-  //     alert: true,
-  //     announcement: false,
-  //     badge: true,
-  //     carPlay: false,
-  //     criticalAlert: false,
-  //     provisional: false,
-  //     sound: true,
-  //   );
 
-  //   if (settings.authorizationStatus == AuthorizationStatus.authorized) {
-  //     String? token = await messaging.getToken();
-  //     // if (token != null) {
-  //     //   print("✅ FCM Token received: $token");
-  //     // } else {
-  //     //   print("❌ FCM Token is null");
-  //     // }
-  //   } else {
-  //     print(
-  //         "❌ Notification permission denied: ${settings.authorizationStatus}");
-  //   }
-  // } catch (e, stackTrace) {
-  //   print("❌ Direct FCM token error: $e");
-  //   print("❌ Stack trace: $stackTrace");
-  // }
-
-  // Initialize notification handler
-  // try {
-  //   notificationHandler.setupNotifications();
-  //   print("✅ Notification handler setup completed");
-  // } catch (e) {
-  //   print("❌ Notification handler setup error: $e");
-  // }
 
   runApp(
     MultiProvider(
@@ -159,7 +123,7 @@ class _MyAppState extends State<MyApp> {
         _stripeInitialized = true;
       });
     } catch (e) {
-      print("❌ Stripe initialization error in MyApp: $e");
+      print("❌ Stripe initialization error in MyApp: ");
  
       // Continue anyway - the app can function without Stripe
       setState(() {
