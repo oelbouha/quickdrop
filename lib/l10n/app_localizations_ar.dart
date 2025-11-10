@@ -1812,4 +1812,13 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get push_notification_warning => 'قد لا تعمل الإشعارات المنبثقة بشكل صحيح';
+
+  @override
+  String get error_page_title => 'صفحة الخطأ';
+
+  @override
+  String get error_occurred => 'حدث خطأ';
+
+  @override
+  String get unexpected_error => 'حدث خطأ غير متوقع. يرجى المحاولة مرة أخرى لاحقًا.';
 }

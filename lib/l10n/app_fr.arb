@@ -732,7 +732,11 @@
   "missing_phone_number": "Le numéro de téléphone est requis.",
   "phone_verification_failed": "La vérification du téléphone a échoué, veuillez réessayer plus tard.",
     "push_notification_warning": "Les notifications push peuvent ne pas fonctionner correctement",
-  "notification_settings": "Paramètres de notification"
+  "notification_settings": "Paramètres de notification",
+   "error_page_title": "Page d'erreur",
+  "error_occurred": "Une erreur s'est produite",
+  "unexpected_error": "Une erreur inattendue s'est produite. Veuillez réessayer plus tard."
+
 
 
 

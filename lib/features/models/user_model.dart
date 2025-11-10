@@ -146,10 +146,8 @@ class UserProvider with ChangeNotifier {
 
   Future<String> getSubscriptionDate(String uid) async {
     try {
-      final doc = await FirebaseFirestore.instance
-          .collection('users')
-          .doc(uid)
-          .get();
+      final doc =
+          await FirebaseFirestore.instance.collection('users').doc(uid).get();
       if (doc.exists) {
         final date = doc.data()?['subscriptionEndsAt'];
         return date ?? "";
@@ -162,10 +160,8 @@ class UserProvider with ChangeNotifier {
 
   Future<bool> doesUserRequestDriverMode(String uid) async {
     try {
-      final doc = await FirebaseFirestore.instance
-          .collection('users')
-          .doc(uid)
-          .get();
+      final doc =
+          await FirebaseFirestore.instance.collection('users').doc(uid).get();
       if (doc.exists) {
         final status = doc.data()?['driverStatus'];
         if (status == 'pending') {
@@ -189,7 +185,7 @@ class UserProvider with ChangeNotifier {
       _user?.subscriptionStatus = 'active';
       _user?.subscriptionEndsAt =
           DateTime.now().add(const Duration(days: 30)).toIso8601String();
-      
+
       notifyListeners();
     } catch (e) {
       // print("Error updating payment date: $e");
@@ -200,7 +196,10 @@ class UserProvider with ChangeNotifier {
   Future<void> updateSubscriptionStatus(String newStatus) async {
     try {
       if (_user == null) return;
-      await FirebaseFirestore.instance.collection('users').doc(_user!.uid).update({
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(_user!.uid)
+          .update({
         'subscriptionStatus': newStatus,
       });
       _user!.subscriptionStatus = newStatus;
@@ -213,10 +212,8 @@ class UserProvider with ChangeNotifier {
 
   Future<String?> getUserRequestDriver(String uid) async {
     try {
-      final doc = await FirebaseFirestore.instance
-          .collection('users')
-          .doc(uid)
-          .get();
+      final doc =
+          await FirebaseFirestore.instance.collection('users').doc(uid).get();
       if (doc.exists) {
         final status = doc.data()?['driverStatus'];
         return status ?? null;
@@ -339,8 +336,6 @@ class UserProvider with ChangeNotifier {
       throw Exception('Error signing out: $e');
     }
   }
-
-
 
   Future<void> signInWithGoogle(BuildContext context) async {
     try {
@@ -473,33 +468,16 @@ class UserProvider with ChangeNotifier {
         notifyListeners();
       }
     } on FirebaseAuthException catch (e) {
-      String errorMessage;
-      switch (e.code) {
-        case 'user-not-found':
-          errorMessage = AppTheme.loginErrorMessage;
-          break;
-        case 'wrong-password':
-          errorMessage = AppTheme.loginErrorMessage;
-          break;
-        case 'invalid-email':
-          errorMessage = 'Invalid email format.';
-          break;
-        case 'invalid-credential':
-          errorMessage = AppTheme.loginErrorMessage;
-          break;
-        default:
-          errorMessage = e.message ?? 'An error occurred during login.';
-      }
-      throw Exception(errorMessage);
+      rethrow;
     }
   }
 
   Future<void> fetchUser(String uid) async {
-    // if (_users.containsKey(uid)) {
-    //   _user = _users[uid];
-    //   notifyListeners();
-    //   return;
-    // }
+    if (_users.containsKey(uid)) {
+      _user = _users[uid];
+      notifyListeners();
+      return;
+    }
     try {
       final userDoc =
           await FirebaseFirestore.instance.collection('users').doc(uid).get();
@@ -510,7 +488,7 @@ class UserProvider with ChangeNotifier {
         notifyListeners();
       }
     } catch (e) {
-      print('Error fetching user data: $e');
+      // print('Error fetching user data: $e');
     }
   }
 }

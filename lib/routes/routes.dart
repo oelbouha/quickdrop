@@ -55,6 +55,8 @@ class AppRouter {
         final user = FirebaseAuth.instance.currentUser;
         final currentPath = state.uri.path;
         final isLoggedIn = await AuthService.isLoggedIn();
+        print("Current Path: $currentPath");
+        print("Is Logged In: $isLoggedIn");
         final publicRoutes = {
           '/',
           '/signup',

@@ -1812,4 +1812,13 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get push_notification_warning => 'Les notifications push peuvent ne pas fonctionner correctement';
+
+  @override
+  String get error_page_title => 'Page d\'erreur';
+
+  @override
+  String get error_occurred => 'Une erreur s\'est produite';
+
+  @override
+  String get unexpected_error => 'Une erreur inattendue s\'est produite. Veuillez réessayer plus tard.';
 }

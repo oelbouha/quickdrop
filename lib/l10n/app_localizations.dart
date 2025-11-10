@@ -3678,6 +3678,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Push notifications may not work properly'**
   String get push_notification_warning;
+
+  /// No description provided for @error_page_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Error Page'**
+  String get error_page_title;
+
+  /// No description provided for @error_occurred.
+  ///
+  /// In en, this message translates to:
+  /// **'Error Occurred'**
+  String get error_occurred;
+
+  /// No description provided for @unexpected_error.
+  ///
+  /// In en, this message translates to:
+  /// **'An unexpected error occurred. Please try again later.'**
+  String get unexpected_error;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

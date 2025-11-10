@@ -93,6 +93,16 @@ class SearchResultsScreenState extends State<SearchResultsScreen>
         }
       }
 
+      // Filter by date
+      if (widget.filters.date != null && widget.filters.date!.isNotEmpty) {
+        final filterDate = DateTime.tryParse(widget.filters.date!);
+        final shipmentDate = DateTime.tryParse(shipment.date);
+        if (filterDate != null &&
+            shipmentDate != null &&
+            shipmentDate.isBefore(filterDate)) {
+          return false;
+        }
+      }
       return true;
     }).toList();
   }
@@ -145,15 +155,15 @@ class SearchResultsScreenState extends State<SearchResultsScreen>
       }
 
       // Filter by date
-      // if (widget.filters.date != null && widget.filters.date!.isNotEmpty) {
-      //   final filterDate = DateTime.tryParse(widget.filters.date!);
-      //   final tripDate = DateTime.tryParse(trip.date);
-      //   if (filterDate != null &&
-      //       tripDate != null &&
-      //       tripDate.isBefore(filterDate)) {
-      //     return false;
-      //   }
-      // }
+      if (widget.filters.date != null && widget.filters.date!.isNotEmpty) {
+        final filterDate = DateTime.tryParse(widget.filters.date!);
+        final tripDate = DateTime.tryParse(trip.date);
+        if (filterDate != null &&
+            tripDate != null &&
+            tripDate.isBefore(filterDate)) {
+          return false;
+        }
+      }
 
       return true;
     }).toList();

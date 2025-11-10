@@ -729,7 +729,11 @@
   "missing_phone_number": "رقم الهاتف مطلوب.",
   "phone_verification_failed": "فشلت عملية التحقق من الهاتف، يرجى المحاولة لاحقًا.",
     "push_notification_warning": "قد لا تعمل الإشعارات المنبثقة بشكل صحيح",
-  "notification_settings": "إعدادات الإشعارات"
+  "notification_settings": "إعدادات الإشعارات",
+   "error_page_title": "صفحة الخطأ",
+  "error_occurred": "حدث خطأ",
+  "unexpected_error": "حدث خطأ غير متوقع. يرجى المحاولة مرة أخرى لاحقًا."
+
 
 
 

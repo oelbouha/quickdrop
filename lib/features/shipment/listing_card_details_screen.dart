@@ -294,6 +294,7 @@ class _ListingCardDetailsState extends State<ListingCardDetails> {
                     to: widget.shipment.to,
                     fontSize: 16,
                     iconSize: 16,
+                    trancate: false,
                   ),
           ),
           _buildDetailItem(
