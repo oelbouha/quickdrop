@@ -29,7 +29,7 @@ class DeliveryRequestProvider with ChangeNotifier {
         await deleteRequest(request.id!);
       }
     } catch (e) {
-      print('Error cleaning up old requests: $e');
+      // print('Error cleaning up old requests: $e');
     }
   }
 
@@ -78,7 +78,7 @@ class DeliveryRequestProvider with ChangeNotifier {
 
     notifyListeners();
   } catch (e) {
-    print('Error fetching requests: $e');
+    // print('Error fetching requests: $e');
     _requests = [];
     notifyListeners();
     rethrow;

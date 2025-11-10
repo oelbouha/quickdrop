@@ -8,3 +8,4 @@ class DeliveryStatus {
   static const expired = "expired";
   static const negotiation = "negotiation";
 }
+

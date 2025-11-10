@@ -1,19 +1,6 @@
 import 'package:quickdrop_app/core/utils/imports.dart';
 
 class AppUtils {
-  // static void showLoading(BuildContext context) {
-  //   showDialog(
-  //       context: context,
-  //       barrierDismissible: false,
-  //       builder: (context) {
-  //         return const Center(
-  //             child: CircularProgressIndicator(
-  //           strokeWidth: 2,
-  //           color: Colors.blue,
-  //         ));
-  //       });
-  // }
-
 
   static void showDialog(
       BuildContext context, String message, Color? backgroundColor ) {
@@ -75,7 +62,6 @@ class AppUtils {
           borderRadius: BorderRadius.circular(12),
         ),
         elevation: 1,
-        // Remove the SnackBarAction as it's causing layout issues
       ),
     );
   }
@@ -87,39 +73,12 @@ String getChatId(String user1, String user2) {
       : '${user2}_$user1';
 }
 
-Widget Message(BuildContext context, String message) {
-  return Text(
-    message,
-    style: TextStyle(color: AppColors.headingText),
-  );
-}
 
-String truncateText(String text, {int maxLength = 10}) {
+
+String truncateText(String text, {int maxLength = 15}) {
   return text.length > maxLength ? '${text.substring(0, maxLength)}...' : text;
 }
 
-Widget buildIconWithText({
-  required String iconPath,
-  required String text,
-  double iconSize = 10,
-  double textSize = 9,
-  Color iconColor = AppColors.shipmentText,
-  Color textColor = AppColors.shipmentText,
-}) {
-  return Row(
-    children: [
-      CustomIcon(
-        iconPath: "assets/icon/" + iconPath,
-        size: iconSize,
-        color: iconColor,
-      ),
-      Text(
-        ' $text',
-        style: TextStyle(
-          color: textColor,
-          fontSize: textSize,
-        ),
-      ),
-    ],
-  );
-}
+
+
+

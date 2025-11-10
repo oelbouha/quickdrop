@@ -10,13 +10,15 @@ class RouteIndicator extends StatelessWidget {
   final double fontSize;
   final Color color;
   final double iconSize;
+  bool trancate ;
 
-  const RouteIndicator({
+   RouteIndicator({
     super.key,
     required this.from,
     required this.to,
     this.fontSize = 12,
     this.iconSize = 12,
+    this.trancate = true,
     this.color = AppColors.headingText,
   });
 
@@ -35,7 +37,7 @@ class RouteIndicator extends StatelessWidget {
           ),
           const SizedBox(width: 10),
           Text(
-            truncateText(from),
+            trancate ? truncateText(from) : (from),
             style: TextStyle(
               color: AppColors.headingText,
               fontSize: fontSize,
@@ -63,7 +65,7 @@ class RouteIndicator extends StatelessWidget {
           ),
           const SizedBox(width: 10),
           Text(
-            truncateText(to),
+            trancate ? truncateText(to) : (to),
             style: TextStyle(
               color: AppColors.headingText,
               fontSize: fontSize,
