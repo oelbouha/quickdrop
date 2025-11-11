@@ -1,0 +1,47 @@
+# Privacy Policy — QuickDrop
+
+## Introduction
+QuickDrop is a modern Flutter application that connects travelers with people who need to ship packages. We collect and process personal data to provide peer-to-peer package delivery, secure payments, notifications, messaging, and support. We comply with Moroccan Law 09-08 and CNDP requirements.
+
+## Data Collected
+- Name, email, phone number
+- Delivery address, profile address
+- Geolocation (GPS coordinates for shipments/trips)
+- Photos (profile, delivery proof; stored on Supabase)
+- Device ID, Firebase UID
+- Payment references (Stripe tokens, subscription status)
+- Vehicle info (plate number, model, driver number for couriers)
+
+## Purposes
+- Account creation and management (senders and couriers)
+- Shipment and trip listings
+- Real-time shipment tracking
+- Secure payment processing via Stripe
+- In-app notifications and messaging
+- Profile management and statistics
+- Customer support
+
+## Storage & Processors
+- Firebase (Google LLC): Authentication, Firestore, Cloud Storage, Cloud Functions, Messaging
+- Supabase: image/photo storage
+- Stripe: payment processing
+
+## Data Transfers
+Data may be transferred outside Morocco to Google Firebase (USA/Europe), Supabase (Europe), and Stripe (USA/Europe) under contractual safeguards and security measures.
+
+## Security Measures
+- TLS/HTTPS encryption in transit
+- Firebase encryption at rest
+- Firebase Authentication
+- Role-based access control and permissions
+- Secure image storage on Supabase
+- Secure payments via Stripe
+- Regular backups and access controls
+
+## Retention
+- Account: until deletion by user
+- Shipments/trips: 5 years
+- Photos: 1 year
+- Logs/statistics: 1 year
+
+

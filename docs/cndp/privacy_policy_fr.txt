@@ -1,0 +1,47 @@
+# Politique de Confidentialité — QuickDrop
+
+## Introduction
+QuickDrop est une application Flutter moderne qui connecte voyageurs et expéditeurs pour la livraison de colis en peer-to-peer. Nous collectons et traitons des données personnelles pour fournir la gestion des expéditions, paiements sécurisés, notifications, messagerie et support. Nous respectons la loi marocaine 09-08 et les exigences de la CNDP.
+
+## Données collectées
+- Nom, email, numéro de téléphone
+- Adresse de livraison, adresse de profil
+- Géolocalisation (coordonnées GPS pour expéditions et trajets)
+- Photos (profil, preuve de livraison; stockées sur Supabase)
+- Identifiants d'appareil, UID Firebase
+- Références de paiement (tokens Stripe, statut d'abonnement)
+- Véhicule: numéro d'immatriculation, modèle, numéro de chauffeur (pour les conducteurs)
+
+## Finalités
+- Création et gestion de compte (expéditeurs et voyageurs)
+- Publication et gestion d'annonces de colis et de trajets
+- Suivi des expéditions en temps réel
+- Paiement sécurisé via Stripe
+- Notifications et messagerie in-app
+- Gestion des profils et statistiques
+- Support client
+
+## Stockage & sous-traitants
+- Firebase (Google LLC): Authentification, Firestore, Cloud Storage, Cloud Functions, Messaging
+- Supabase: stockage des images/photos
+- Stripe: traitement des paiements
+
+## Transferts de données
+Les données peuvent être transférées hors Maroc vers Google Firebase (USA/Europe), Supabase (Europe), Stripe (USA/Europe) avec garanties contractuelles et mesures de sécurité.
+
+## Mesures de sécurité
+- Chiffrement TLS/HTTPS en transit
+- Chiffrement Firebase au repos
+- Authentification Firebase
+- Accès restreint par rôles et permissions
+- Stockage sécurisé des images sur Supabase
+- Paiement sécurisé via Stripe
+- Sauvegardes régulières et contrôle d'accès
+
+## Durée de conservation
+- Compte utilisateur: jusqu'à suppression par l'utilisateur
+- Expéditions et trajets: 5 ans
+- Photos: 1 an
+- Logs et statistiques: 1 an
+
+

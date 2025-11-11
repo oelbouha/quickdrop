@@ -1,0 +1,18 @@
+Objet : Déclaration de traitement de données à caractère personnel — application QuickDrop
+
+Madame, Monsieur,
+
+Je vous transmets la déclaration relative au traitement des données à caractère personnel pour notre application "QuickDrop", plateforme Flutter de livraison collaborative connectant voyageurs et expéditeurs, conforme à la loi 09-08. Les données sont hébergées sur Google Firebase (USA/Europe), images sur Supabase (Europe), et paiements via Stripe (USA/Europe). Vous trouverez en pièces jointes :
+- Formulaire de déclaration complété
+- Politique de confidentialité
+- Inventaire des données
+- Note sur les mesures de sécurité
+
+Responsable du traitement : outman elbouhali
+
+Contact : outmanelbouhali5@gmail.com — +212639316995
+
+Je vous prie de bien vouloir accuser réception et de nous communiquer le numéro d'enregistrement CNDP une fois le traitement effectué.
+
+Cordialement,
+outman elbouhali

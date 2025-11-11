@@ -1,0 +1,4 @@
+QuickDrop collects personal data (name, email, phone, address, geolocation, profile and delivery photos, device ID, payment info) to provide peer-to-peer delivery, 
+secure payments, notifications, and support. Data is stored securely on Google Firebase (USA/Europe), 
+images on Supabase (Europe), and payments processed via Stripe (USA/Europe). You have rights to access, 
+rectify, or delete your data. Contact us for more information. [CNDP registration number will be added after approval].

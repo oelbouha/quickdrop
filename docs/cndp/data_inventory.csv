@@ -1,0 +1,17 @@
+Category,Data Type,Purpose,Storage,Processor,Retention,Access
+Identity,Name,Account creation,Firebase Auth,Google LLC,Until deletion,User/Admin
+Identity,Email,Account creation,Firebase Auth,Google LLC,Until deletion,User/Admin
+Contact,Phone,Account creation,Firebase Auth,Google LLC,Until deletion,User/Admin
+Contact,Address,Delivery,Firebase Firestore,Google LLC,5 years,User/Admin
+Location,Geolocation,Shipment/trip,Firebase Firestore,Google LLC,5 years,User/Admin
+Photo,Profile photo,Profile,Supabase,Europe,1 year,User/Admin
+Photo,Delivery photo,Proof,Supabase,Europe,1 year,User/Admin
+Payment,Stripe token,Payment,Stripe,Stripe,Until deletion,User/Admin
+Payment,Subscription status,Driver account,Firebase Firestore,Google LLC,Until deletion,User/Admin
+Device,Device ID,Security,Firebase Firestore,Google LLC,1 year,User/Admin
+Vehicle,Plate number,Driver registration,Firebase Firestore,Google LLC,Until deletion,User/Admin
+Vehicle,Car model,Driver registration,Firebase Firestore,Google LLC,Until deletion,User/Admin
+Vehicle,Driver number,Driver registration,Firebase Firestore,Google LLC,Until deletion,User/Admin
+Log,Usage log,Security,Firebase Firestore,Google LLC,1 year,Admin
+Statistics,Shipment/trip count,Profile,Firebase Firestore,Google LLC,1 year,User/Admin
+Statistics,Review count,Profile,Firebase Firestore,Google LLC,1 year,User/Admin

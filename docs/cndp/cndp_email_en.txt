@@ -1,0 +1,18 @@
+Subject: Declaration of personal data processing — QuickDrop application
+
+Hello CNDP team,
+
+I am submitting the attached declaration of personal data processing for our Flutter-based collaborative delivery platform "QuickDrop" (connecting travelers and senders), in accordance with Law 09-08. Data is hosted on Google Firebase (USA/Europe), images on Supabase (Europe), and payments processed via Stripe (USA/Europe). Please find attached:
+- Completed CNDP declaration form
+- Privacy policy
+- Data inventory
+- Security measures summary
+
+Controller: outman elbouhali
+Contact email: outmanelbouhali5@gmail.com
+Phone: +212639316995
+
+We kindly request acknowledgment of receipt and, once processed, the CNDP registration number.
+
+Thank you,
+outman elbouhali

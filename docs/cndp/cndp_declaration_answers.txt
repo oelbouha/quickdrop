@@ -1,0 +1,66 @@
+
+Name: outman elbouhali
+Email: outmanelbouhali5@gmail.com
+Phone: +212639316995
+DPO: Not applicable
+
+## Processing
+Processing name: QuickDrop - Collaborative delivery platform
+Description: A modern Flutter application connecting travelers and senders for peer-to-peer package delivery. Includes account management, shipment and trip listings, payment processing, notifications, in-app messaging, statistics, and user profiles.
+
+## Purposes
+- Creation and management of user accounts (senders and travelers)
+- Publishing and managing shipment and trip listings
+- Real-time shipment tracking
+- Secure payment processing via Stripe
+- In-app notifications and messaging
+- Profile management and statistics
+- Customer support
+
+## Categories of personal data collected
+- Identity: name, first name, email, phone number
+- Address: delivery address, profile address
+- Geolocation: GPS coordinates for shipments and trips
+- Photos: profile photos and delivery photos (stored on Supabase)
+- Identifiers: Firebase UID, device ID
+- Payment: Stripe references, subscription status
+- Vehicle data: license plate number, car model, driver number (for drivers)
+- Statistics: counts of shipments/trips, reviews
+
+## Legal basis
+- Consent (acceptance of the privacy policy)
+- Performance of a contract (necessary to provide the service)
+
+## Recipients / Processors
+- Google Firebase (USA/Europe): Authentication, Firestore, Cloud Storage, Cloud Functions, Messaging
+- Supabase (Europe): image/photo storage
+- Stripe (USA/Europe): payment processing
+
+## Transfers outside Morocco
+Yes — data may be transferred to Google Firebase (USA/Europe), Supabase (Europe), and Stripe (USA/Europe) under standard contractual clauses and appropriate safeguards.
+
+## Retention periods
+- User account: retained until deletion by the user
+- Shipments and trips: 5 years
+- Photos: 1 year
+- Logs and statistics: 1 year
+
+## Security measures
+- TLS/HTTPS encryption in transit
+- Firebase encryption at rest
+- Firebase Authentication
+- Role-based access control and permissions
+- Secure image storage on Supabase
+- Secure payment processing via Stripe
+- Regular backups and access controls
+
+## Automated decision-making
+No
+
+## Estimated number of data subjects
+1000+
+
+## Attachments
+- Privacy policy
+- Data inventory
+- Security measures note
