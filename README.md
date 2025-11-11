@@ -45,15 +45,28 @@ QuickDrop is a modern Flutter application that connects travelers with people wh
 
 ### Key Dependencies
 
-- `firebase_core`: ^3.12.1
-- `firebase_auth`: ^5.5.1
-- `cloud_firestore`: ^5.6.5
-- `flutter_stripe`: ^12.0.2
-- `go_router`: ^15.1.1
-- `provider`: ^6.1.1
-- `intl`: ^0.20.2
-- `cached_network_image`: ^3.4.1
-- `flutter_local_notifications`: ^19.3.0
+- cupertino_icons: ^1.0.2
+- firebase_core: ^3.12.1
+- firebase_auth: ^5.5.1
+- google_sign_in: ^6.3.0
+- image_picker: ^1.1.2
+- cloud_firestore: ^5.6.5
+- go_router: ^15.1.1
+- flutter_rating_bar: ^4.0.1
+- intl: ^0.20.2
+- firebase_storage: ^12.4.5
+- intl_phone_field: ^3.2.0
+- pin_code_fields: ^8.0.1
+- shared_preferences: ^2.5.3
+- supabase_flutter: ^2.9.1
+- firebase_messaging: ^15.2.9
+- flutter_local_notifications: ^19.3.0
+- cached_network_image: ^3.4.1
+- loading_animation_widget: ^1.3.0
+- firebase_app_check: ^0.3.2+10
+- flutter_launcher_icons: ^0.14.4
+- flutter_stripe: ^12.0.2
+- cloud_functions: ^5.6.2
 
 ## Getting Started
 
