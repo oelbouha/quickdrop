@@ -46,8 +46,8 @@ class PaymentScreenState extends State<PaymentScreen> {
         'currency': 'usd',
       });
 
-      print(
-          '${AppLocalizations.of(context)!.payment_function_returned}: ${result.data}');
+      // print(
+      //     '${AppLocalizations.of(context)!.payment_function_returned}: ${result.data}');
 
       final clientSecret = result.data['clientSecret'];
 

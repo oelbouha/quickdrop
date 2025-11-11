@@ -30,7 +30,6 @@ import 'package:quickdrop_app/features/help/terms_of_service.dart';
 import 'package:quickdrop_app/features/auth/verify_email_screen.dart';
 import 'package:quickdrop_app/features/auth/verify_phone_number.dart';
 
-
 CustomTransitionPage buildCustomTransitionPage(
   BuildContext context,
   Widget child,
@@ -55,8 +54,8 @@ class AppRouter {
         final user = FirebaseAuth.instance.currentUser;
         final currentPath = state.uri.path;
         final isLoggedIn = await AuthService.isLoggedIn();
-        print("Current Path: $currentPath");
-        print("Is Logged In: $isLoggedIn");
+        // print("Current Path: $currentPath");
+        // print("Is Logged In: $isLoggedIn");
         final publicRoutes = {
           '/',
           '/signup',
@@ -72,22 +71,27 @@ class AppRouter {
         };
 
 
-         // Allow access to verification and account creation
-        if (user != null && (currentPath == '/create-account' ||
-            currentPath == "/verify-number")) {
+        // If user is logged in and tries to access root, redirect to home
+        if (user != null && isLoggedIn && currentPath == '/') {
+            await Provider.of<UserProvider>(context, listen: false).fetchUser(user.uid);
+            // print("already login :::");
+            return "/home";
+        }
+
+        // Allow access to verification and account creation
+        if (user != null &&
+            (currentPath == '/create-account' ||
+                currentPath == "/verify-number")) {
           return null;
         }
 
         // Allow access to public routes
         if (publicRoutes.contains(currentPath)) {
+          print("accessing public route");
           return null;
         }
 
-        // If user is logged in and tries to access root, redirect to home
-        if (user != null && isLoggedIn && currentPath == '/') {
-          Provider.of<UserProvider>(context, listen: false).fetchUser(user.uid);
-          return '/home';
-        }
+  
 
         // If user is not logged in and tries to access protected route
         if (user == null && !publicRoutes.contains(currentPath)) {
@@ -163,7 +167,7 @@ class AppRouter {
                 const LoginPage(),
               );
             }),
-            GoRoute(
+        GoRoute(
             path: '/forgot-password',
             name: 'forgot-password',
             pageBuilder: (context, state) {
