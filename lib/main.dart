@@ -126,7 +126,7 @@ class _MyAppState extends State<MyApp> {
       });
     } catch (e) {
       print("❌ Stripe initialization error in MyApp: ");
- 
+
       // Continue anyway - the app can function without Stripe
       setState(() {
         _stripeInitialized = true;
