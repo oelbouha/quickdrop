@@ -3,7 +3,6 @@ import 'package:quickdrop_app/core/widgets/auth_button.dart';
 import 'package:quickdrop_app/core/widgets/password_text_field.dart';
 import 'package:quickdrop_app/core/utils/imports.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:quickdrop_app/l10n/app_localizations_ar.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -93,7 +92,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
-    // _loadSavedCredentials();
+    _loadSavedCredentials();
   }
 
   void _signInWithGoogle() async {
@@ -115,13 +114,12 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
       if (e.toString().contains('network-request-failed')) {
         if (mounted) {
           AppUtils.showDialog(context,
-              AppLocalizations.of(context)!.network_error, AppColors.error);
+              t.network_error, AppColors.error);
         }
       } else {
-        // Handle other errors
         if (mounted) {
           AppUtils.showDialog(context,
-              AppLocalizations.of(context)!.error_login, AppColors.error);
+              t.error_login, AppColors.error);
         }
       }
     } finally {
@@ -142,18 +140,20 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
           emailController.text.trim(),
           passwordController.text.trim(),
         );
-        // await saveCredentials(
-        //     emailController.text.trim(), passwordController.text.trim());
+        await saveCredentials(
+            emailController.text.trim(), "");
         FcmHandler.handleFcmTokenSave(
             FirebaseAuth.instance.currentUser!.uid, context);
         UserData user = await Provider.of<UserProvider>(context, listen: false)
             .fetchUserData(FirebaseAuth.instance.currentUser!.uid);
         Provider.of<UserProvider>(context, listen: false).setUser(user);
-        // print("Signed in successfully");
+        
 
         await AuthService.setLoggedIn(true);
         // print("user :: ${FirebaseAuth.instance.currentUser}");
-        context.go('/home');
+        if (mounted) {
+          context.go('/home');
+        }
       } catch (e) {
         final message = e.toString();
         if (message.contains('user-not-found')) {
@@ -199,7 +199,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
   Future<void> saveCredentials(String email, String password) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString('email', email);
-    await prefs.setString('password', password);
+    // await prefs.setString('password', password);
   }
 
   Future<Map<String, String>> getSavedCredentials() async {
@@ -315,7 +315,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                 const SizedBox(width: 16),
                 Text(
                   t.or,
-                  style: TextStyle(color: AppColors.shipmentText, fontSize: 12),
+                  style: const TextStyle(color: AppColors.shipmentText, fontSize: 12),
                 ),
                 const SizedBox(width: 16),
                 const Expanded(

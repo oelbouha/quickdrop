@@ -15,17 +15,10 @@ class _IntroScreenState extends State<IntroScreen> with TickerProviderStateMixin
   bool _isLoginLoading = false;
   bool _isSignUpLoading = false;
   bool _isGoogleLoading = false;
-  
-
-
-
- 
 
   void _signInWithGoogle() async {
     if (_isGoogleLoading) return;
-    
-    
-    
+
     setState(() {
       _isGoogleLoading = true;
     });
