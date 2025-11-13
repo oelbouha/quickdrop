@@ -97,6 +97,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
   }
 
   void _signInWithGoogle() async {
+    final t = AppLocalizations.of(context)!;
     if (_isGoogleLoading) return;
     setState(
       () {
@@ -111,7 +112,18 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
       FcmHandler.handleFcmTokenSave(
           FirebaseAuth.instance.currentUser!.uid, context);
     } catch (e) {
-      if (mounted) AppUtils.showDialog(context, e.toString(), AppColors.error);
+      if (e.toString().contains('network-request-failed')) {
+        if (mounted) {
+          AppUtils.showDialog(context,
+              AppLocalizations.of(context)!.network_error, AppColors.error);
+        }
+      } else {
+        // Handle other errors
+        if (mounted) {
+          AppUtils.showDialog(context,
+              AppLocalizations.of(context)!.error_login, AppColors.error);
+        }
+      }
     } finally {
       setState(() {
         _isGoogleLoading = false;

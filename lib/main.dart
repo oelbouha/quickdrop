@@ -18,12 +18,10 @@ import 'package:intl/intl.dart';
 import 'l10n/app_localizations.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
-
 @pragma('vm:entry-point')
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   await Firebase.initializeApp();
 }
-
 
 NotificationHandler notificationHandler = NotificationHandler();
 
@@ -43,8 +41,6 @@ final ColorScheme myColorScheme = const ColorScheme(
   onSurface: Color(0xFF1C1B1F),
 );
 
-
-
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -55,8 +51,7 @@ void main() async {
       url: dotenv.env['SUPABASE_URL']!,
       anonKey: dotenv.env['SUPABASE_ANON_KEY']!,
     );
-  } catch (e) {
-  }
+  } catch (e) {}
 
   try {
     await Firebase.initializeApp(
@@ -64,8 +59,7 @@ void main() async {
     await FirebaseAppCheck.instance.activate(
       androidProvider:
           kDebugMode ? AndroidProvider.debug : AndroidProvider.playIntegrity,
-      appleProvider:
-          kDebugMode ? AppleProvider.debug : AppleProvider.appAttest,
+      appleProvider: kDebugMode ? AppleProvider.debug : AppleProvider.appAttest,
     );
   } catch (e) {
     print("❌ Firebase initialization error");
@@ -75,10 +69,6 @@ void main() async {
 
   // Set background message handler
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
-
-
-
-
 
   runApp(
     MultiProvider(
@@ -156,7 +146,7 @@ class _MyAppState extends State<MyApp> {
           GlobalWidgetsLocalizations.delegate,
           GlobalCupertinoLocalizations.delegate,
         ],
-         localeResolutionCallback: (locale, supportedLocales) {
+        localeResolutionCallback: (locale, supportedLocales) {
           for (var supportedLocale in supportedLocales) {
             if (supportedLocale.languageCode == locale?.languageCode) {
               return supportedLocale;
