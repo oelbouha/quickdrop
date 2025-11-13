@@ -22,8 +22,8 @@ class _OfferScreenState extends State<OfferScreen>
 
   void _deleteOldRequests() async {
     final user = FirebaseAuth.instance.currentUser;
-    
   }
+  
   @override
   void initState() {
     super.initState();

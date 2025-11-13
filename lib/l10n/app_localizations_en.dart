@@ -1821,4 +1821,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get unexpected_error => 'An unexpected error occurred. Please try again later.';
+
+  @override
+  String get error_fetch_shipments => 'Failed to fetch Shipments';
 }

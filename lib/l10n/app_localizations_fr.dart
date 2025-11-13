@@ -1821,4 +1821,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get unexpected_error => 'Une erreur inattendue s\'est produite. Veuillez réessayer plus tard.';
+
+  @override
+  String get error_fetch_shipments => 'Échec du chargement des expéditions';
 }

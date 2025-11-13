@@ -732,7 +732,9 @@
   "notification_settings": "إعدادات الإشعارات",
    "error_page_title": "صفحة الخطأ",
   "error_occurred": "حدث خطأ",
-  "unexpected_error": "حدث خطأ غير متوقع. يرجى المحاولة مرة أخرى لاحقًا."
+  "unexpected_error": "حدث خطأ غير متوقع. يرجى المحاولة مرة أخرى لاحقًا.",
+  "error_fetch_shipments": "فشل في جلب الشحنات"
+
 
 
 

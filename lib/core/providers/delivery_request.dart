@@ -167,7 +167,7 @@ class DeliveryRequestProvider with ChangeNotifier {
     final index = _requests.indexWhere((request) => request.id == id);
     if (index != -1) {
       _requests[index].status = DeliveryStatus.accepted;
-      print("request is accepted ");
+      // print("request is accepted ");
       // _requests.removeWhere((r) => r.id == id);
       notifyListeners();
     }
@@ -175,7 +175,7 @@ class DeliveryRequestProvider with ChangeNotifier {
 
 
 
-  Future<void> sendRequest(Trip trip, Shipment shipment, String senderId , String receiverId) async {
+  Future<void> sendRequest(Trip trip, Shipment shipment, String senderId , String receiverId, String price) async {
     try {
       if (trip.userId == shipment.userId) {
         throw Exception("owner_is_the_same");
@@ -186,7 +186,7 @@ class DeliveryRequestProvider with ChangeNotifier {
         receiverId: receiverId,
         date: DateTime.now().toIso8601String(),
         status: DeliveryStatus.active,
-        price: shipment.price,
+        price: price,
         shipmentId: shipment.id!,
         tripId: trip.id!,
         id: trip.id! + shipment.id!,

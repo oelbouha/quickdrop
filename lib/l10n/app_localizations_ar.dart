@@ -1821,4 +1821,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get unexpected_error => 'حدث خطأ غير متوقع. يرجى المحاولة مرة أخرى لاحقًا.';
+
+  @override
+  String get error_fetch_shipments => 'فشل في جلب الشحنات';
 }

@@ -3696,6 +3696,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'An unexpected error occurred. Please try again later.'**
   String get unexpected_error;
+
+  /// No description provided for @error_fetch_shipments.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to fetch Shipments'**
+  String get error_fetch_shipments;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

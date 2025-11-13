@@ -27,7 +27,7 @@ class _ListingShipmentLoaderState extends State<ListingShipmentLoader> {
   Future<(UserData, TransportItem)> fetchData() async {
     final user = Provider.of<UserProvider>(context, listen: false)
         .getUserById(widget.userId);
-    ;
+    
     final transportItem =
         await Provider.of<ShipmentProvider>(context, listen: false)
             .fetchShipmentById(widget.shipmentId);
@@ -174,7 +174,7 @@ class _ListingCardDetailsState extends State<ListingCardDetails> {
         );
       }
     } catch (e) {
-      print('Failed to precache image: $e');
+      print('Failed to precache image: ');
     }
   }
 
@@ -688,11 +688,11 @@ class _ListingCardDetailsState extends State<ListingCardDetails> {
       if (trip != null) {
         await Provider.of<DeliveryRequestProvider>(context, listen: false)
             .sendRequest(trip, widget.shipment as Shipment, trip.userId,
-                widget.shipment.userId);
+                widget.shipment.userId,  priceController.text.trim());
       } else {
         await Provider.of<DeliveryRequestProvider>(context, listen: false)
             .sendRequest(_selectedTrip!, shipment!, shipment.userId,
-                _selectedTrip!.userId);
+                _selectedTrip!.userId,  priceController.text.trim());
       }
 
       // Stop loading

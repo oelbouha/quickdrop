@@ -331,7 +331,7 @@
   "route": "Route",
   "package_image" : "Package Image",
 
-  "error_fetch_requests": "Failed to fetch requests: {error}",
+"error_fetch_requests": "Failed to fetch requests: {error}",
 "error_loading_conversations": "Error loading conversations",
 "no_active_negotiations": "No active negotiations",
 "no_active_negotiations_subtitle": "Start negotiating on delivery requests to see them here",
@@ -744,11 +744,12 @@
   "phone_verification_failed": "Phone verification failed, please try again later.",
 
   "notification_settings": "Notification Settings",
-    "push_notification_warning": "Push notifications may not work properly",
+  "push_notification_warning": "Push notifications may not work properly",
 
-    "error_page_title": "Error Page",
+  "error_page_title": "Error Page",
   "error_occurred": "Error Occurred",
-  "unexpected_error": "An unexpected error occurred. Please try again later."
+  "unexpected_error": "An unexpected error occurred. Please try again later.",
+  "error_fetch_shipments": "Failed to fetch Shipments"
 
 
 

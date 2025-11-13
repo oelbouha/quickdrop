@@ -43,8 +43,9 @@ class _ShipmentScreenState extends State<ShipmentScreen>
         }
       } catch (e) {
         if (mounted) {
+          final t = AppLocalizations.of(context)!;
           AppUtils.showDialog(
-              context, "Failed to fetch Shipments", AppColors.error);
+              context, t.error_fetch_shipments, AppColors.error);
         }
       } finally {
         if (mounted) {

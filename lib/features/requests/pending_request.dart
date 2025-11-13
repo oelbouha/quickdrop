@@ -146,7 +146,7 @@ class DeliveryRequestState extends State<PendingRequest> {
         const SizedBox(width: 16),
         Expanded(
           child: buildPriceCard(price: widget.request.price,
-           label:  AppLocalizations.of(context)!.offered_price)),
+          label:  AppLocalizations.of(context)!.offered_price)),
       ],
     );
   }
