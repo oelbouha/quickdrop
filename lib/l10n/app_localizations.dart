@@ -3702,6 +3702,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Failed to fetch Shipments'**
   String get error_fetch_shipments;
+
+  /// No description provided for @driver_account_info.
+  ///
+  /// In en, this message translates to:
+  /// **'To post trips and earn money as a driver, you need to create a driver account. It only takes a few minutes!'**
+  String get driver_account_info;
+
+  /// No description provided for @driver_account_required_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Driver Account Required'**
+  String get driver_account_required_title;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

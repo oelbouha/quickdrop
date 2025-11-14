@@ -1824,4 +1824,10 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get error_fetch_shipments => 'Échec du chargement des expéditions';
+
+  @override
+  String get driver_account_info => 'Pour publier des trajets et gagner de l\'argent en tant que conducteur, vous devez créer un compte conducteur. Cela ne prend que quelques minutes !';
+
+  @override
+  String get driver_account_required_title => 'Driver Account Required';
 }

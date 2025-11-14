@@ -749,7 +749,9 @@
   "error_page_title": "Error Page",
   "error_occurred": "Error Occurred",
   "unexpected_error": "An unexpected error occurred. Please try again later.",
-  "error_fetch_shipments": "Failed to fetch Shipments"
+  "error_fetch_shipments": "Failed to fetch Shipments",
+  "driver_account_info": "To post trips and earn money as a driver, you need to create a driver account. It only takes a few minutes!",
+  "driver_account_required_title": "Driver Account Required"
 
 
 

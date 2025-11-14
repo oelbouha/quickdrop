@@ -1824,4 +1824,10 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get error_fetch_shipments => 'Failed to fetch Shipments';
+
+  @override
+  String get driver_account_info => 'To post trips and earn money as a driver, you need to create a driver account. It only takes a few minutes!';
+
+  @override
+  String get driver_account_required_title => 'Driver Account Required';
 }

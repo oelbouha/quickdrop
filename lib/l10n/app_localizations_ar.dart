@@ -1824,4 +1824,10 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get error_fetch_shipments => 'فشل في جلب الشحنات';
+
+  @override
+  String get driver_account_info => 'لنشر الرحلات وكسب المال كسائق، تحتاج إلى إنشاء حساب سائق. لن يستغرق ذلك سوى بضع دقائق!';
+
+  @override
+  String get driver_account_required_title => 'مطلوب حساب سائق';
 }

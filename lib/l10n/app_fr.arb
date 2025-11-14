@@ -736,7 +736,9 @@
    "error_page_title": "Page d'erreur",
   "error_occurred": "Une erreur s'est produite",
   "unexpected_error": "Une erreur inattendue s'est produite. Veuillez réessayer plus tard.",
-  "error_fetch_shipments": "Échec du chargement des expéditions"
+  "error_fetch_shipments": "Échec du chargement des expéditions",
+  "driver_account_info": "Pour publier des trajets et gagner de l'argent en tant que conducteur, vous devez créer un compte conducteur. Cela ne prend que quelques minutes !",
+  "driver_account_required_title": "Driver Account Required"
 
 
 

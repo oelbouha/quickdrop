@@ -733,7 +733,10 @@
    "error_page_title": "صفحة الخطأ",
   "error_occurred": "حدث خطأ",
   "unexpected_error": "حدث خطأ غير متوقع. يرجى المحاولة مرة أخرى لاحقًا.",
-  "error_fetch_shipments": "فشل في جلب الشحنات"
+  "error_fetch_shipments": "فشل في جلب الشحنات",
+  "driver_account_required_title": "مطلوب حساب سائق",
+"driver_account_info": "لنشر الرحلات وكسب المال كسائق، تحتاج إلى إنشاء حساب سائق. لن يستغرق ذلك سوى بضع دقائق!"
+
 
 
 
