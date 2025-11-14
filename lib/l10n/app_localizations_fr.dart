@@ -741,7 +741,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get add_a_note => 'Ajouter une note';
 
   @override
-  String get starting_from => 'À partir de';
+  String get starting_from => 'Prix proposé';
 
   @override
   String get note => 'Note';

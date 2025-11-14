@@ -72,11 +72,11 @@ class AppRouter {
 
 
         // If user is logged in and tries to access root, redirect to home
-        if (user != null && isLoggedIn && currentPath == '/') {
-            await Provider.of<UserProvider>(context, listen: false).fetchUser(user.uid);
-            // print("already login :::");
-            return "/home";
-        }
+        // if (user != null && isLoggedIn && currentPath == '/') {
+        //     await Provider.of<UserProvider>(context, listen: false).fetchUser(user.uid);
+            
+        //     return "/home";
+        // }
 
         // Allow access to verification and account creation
         if (user != null &&

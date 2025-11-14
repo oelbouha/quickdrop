@@ -741,7 +741,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get add_a_note => 'Add a note';
 
   @override
-  String get starting_from => 'Starting from';
+  String get starting_from => 'Offered price';
 
   @override
   String get note => 'Note';

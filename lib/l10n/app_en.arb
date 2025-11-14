@@ -326,7 +326,7 @@
   "choose_a_trip": "Choose a trip",
   "no_active_trips_available": "No active trips match this shipment's destination",
   "add_a_note": "Add a note",
-  "starting_from": "Starting from",
+  "starting_from": "Offered price",
   "note": "Note",
   "route": "Route",
   "package_image" : "Package Image",

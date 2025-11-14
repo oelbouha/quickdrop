@@ -741,7 +741,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get add_a_note => 'إضافة ملاحظة';
 
   @override
-  String get starting_from => 'يبدأ من';
+  String get starting_from => 'السعر المقترح';
 
   @override
   String get note => 'ملاحظة';

@@ -127,7 +127,7 @@
 
   "logout": "تسجيل الخروج",
 
-   "edit_profile": "تعديل الملف الشخصي",
+  "edit_profile": "تعديل الملف الشخصي",
   "update_profile": "تحديث الملف الشخصي",
   "update_profile_subtitle": "حافظ على معلوماتك محدثة",
   "profile_image": "صورة الملف الشخصي",
@@ -156,9 +156,6 @@
   "update_error_message": "فشل في تحديث معلومات الملف الشخصي",
   "image_uploading_message": "الصورة لا تزال قيد التحميل، يرجى الانتظار",
 
-
-
-
   "help_title": "المساعدة",
   "faq_title": "الأسئلة الشائعة",
   "still_have_questions": "هل لا تزال لديك أسئلة؟",
@@ -186,7 +183,7 @@
   "tip_4_title": "ابنِ الثقة",
   "tip_4_description": "اترك تقييمات صادقة وحافظ على تواصل جيد مع الساعي طوال عملية التسليم.",
 
-   "no_ongoing_shipments": "لا توجد شحنات جارية",
+  "no_ongoing_shipments": "لا توجد شحنات جارية",
   "no_ongoing_shipments_subtitle": "بعد قبولك أو إنشاء شحنة جديدة، ستظهر هنا.",
 
   "no_completed_shipments": "لا توجد شحنات مكتملة",
@@ -195,18 +192,13 @@
   "no_active_shipments": "لا توجد شحنات نشطة",
   "no_active_shipments_subtitle": "ستظهر الشحنات النشطة هنا بعد أن تبدأ العملية.",
 
-   "no_ongoing_trips": "لا توجد رحلات جارية",
+  "no_ongoing_trips": "لا توجد رحلات جارية",
   "no_ongoing_trips_subtitle": "بعد إنشاء الرحلة أو قبولها، ستظهر هنا.",
 
   "no_completed_trips": "لا توجد رحلات مكتملة",
   "no_completed_trips_subtitle": "ستظهر رحلاتك المكتملة هنا بعد التسليم.",
-
   "no_active_trips": "لا توجد رحلات نشطة",
   "no_active_trips_subtitle": "ستظهر الرحلات الجارية هنا بمجرد البدء.",
-
-
-
-
 
   "create_trip": "إنشاء رحلة",
   "update_trip": "تحديث الرحلة",
@@ -244,13 +236,9 @@
   "weight_required": "الوزن مطلوب",
   "weight_number": "يجب أن يكون الوزن رقمًا",
   "pickup_date_required": "تاريخ الاستلام مطلوب",
-
-    "tip_1_step": "تفاصيل الطرد",
+  "tip_1_step": "تفاصيل الطرد",
   "tip_2_step": "مواقع التسليم",
   "tip_3_step": "الوقت والصورة",
-
-
-  
   "shipment_list_success_title": "تم نشر الطرد بنجاح!",
   "shipment_list_success_message": "تمت إضافة شحنتك وهي الآن مرئية للسعاة.",
   "shipment_update_success_title": "تم تحديث الشحنة بنجاح!",
@@ -270,8 +258,7 @@
   "timing_image": "الوقت والصورة",
   "update_shipment": "تحديث الشحنة",
   "create_shipment": "إنشاء شحنة",
-"forgot_password": "هل نسيت كلمة المرور؟",
-
+  "forgot_password": "هل نسيت كلمة المرور؟",
   "package_name_required": "اسم الطرد مطلوب",
   "description_required": "الوصف مطلوب",
   "package_type_required": "نوع الطرد مطلوب",
@@ -303,7 +290,6 @@
   "package_type_accessories": "إكسسوارات",
   "dimensions_tip_title": "القياسات الدقيقة تساعد السعاة على التحضير",
   "dimensions_tip_message": "تحديد الأبعاد بدقة يضمن مطابقة أفضل وتأخيرًا أقل.",
-
   "request_sent_success": "تم إرسال الطلب بنجاح",
   "please_complete_all_fields": "يرجى ملء جميع الحقول المطلوبة",
   "please_select_trip": "يرجى اختيار رحلة",
@@ -313,12 +299,10 @@
   "choose_a_trip": "اختر رحلة",
   "no_active_trips_available": "لا توجد رحلات نشطة تطابق وجهة هذه الشحنة",
   "add_a_note": "إضافة ملاحظة",
-  "starting_from": "يبدأ من",
+  "starting_from": "السعر المقترح",
   "note": "ملاحظة",
   "route": "المسار",
-  "package_image": "صورة الطرد",
-
-  
+  "package_image": "صورة الطرد",  
   "error_fetch_requests": "فشل في جلب الطلبات: {error}",
   "error_loading_conversations": "حدث خطأ أثناء تحميل المحادثات",
   "no_active_negotiations": "لا توجد مفاوضات نشطة",
@@ -479,35 +463,35 @@
   "security_delete_account_subtitle": "احذف حسابك نهائيًا",
   "security_change_language_subtitle": "تغيير تفضيلات اللغة",
 
-   "change_language_title": "اللغة",
-    "delete_shipment_title": "حذف الشحنة",
-    "delete": "حذف",
-    "action_cannot_be_undone": "لا يمكن التراجع عن هذا الإجراء. هل أنت متأكد؟",
-    "shipment_deleted": "تم حذف الشحنة بنجاح",
-    "shipment_deleted_failed": "فشل حذف الشحنة",
-    "error_fetch_trips": "فشل في جلب الرحلات: {error}",
-    "trip_deleted": "تم حذف الرحلة بنجاح",
-    "trip_deleted_failed": "فشل حذف الرحلة",
-    "delete_trip_title": "حذف الرحلة",
-    "middle_stop_hint": "أدخل المدينة التي ستتوقف فيها",
-    "add_stop": "إضافة محطة",
-    "stop": "محطة",
-    "add_stop_hint": "يمكنك إضافة المدن التي ستتوقف فيها أثناء الرحلة (اختياري).",
-    "no_result": "لا توجد نتائج",
-    "no_result_message": "لم يتم العثور على نتائج تطابق معايير البحث الخاصة بك",
-    "new_search": "بحث جديد",
-    "max_weight": "الوزن الأقصى",
-    "max_price": "السعر الأقصى",
-    "type": "النوع",
-    "kg": "كلغ",
-    "dirham": "درهم",
-    "search": "بحث",
-    "applied_filtter": "الفلاتر المطبقة",
-    "update_failed": "فشل في تحديث الشحنة",
-    "in_progress": "قيد التقدم",
-    "stops": "محطات",
-    "more": "المزيد",
-    "loading": "جاري التحميل...",
+  "change_language_title": "اللغة",
+  "delete_shipment_title": "حذف الشحنة",
+  "delete": "حذف",
+  "action_cannot_be_undone": "لا يمكن التراجع عن هذا الإجراء. هل أنت متأكد؟",
+  "shipment_deleted": "تم حذف الشحنة بنجاح",
+  "shipment_deleted_failed": "فشل حذف الشحنة",
+  "error_fetch_trips": "فشل في جلب الرحلات: {error}",
+  "trip_deleted": "تم حذف الرحلة بنجاح",
+  "trip_deleted_failed": "فشل حذف الرحلة",
+  "delete_trip_title": "حذف الرحلة",
+  "middle_stop_hint": "أدخل المدينة التي ستتوقف فيها",
+  "add_stop": "إضافة محطة",
+  "stop": "محطة",
+  "add_stop_hint": "يمكنك إضافة المدن التي ستتوقف فيها أثناء الرحلة (اختياري).",
+  "no_result": "لا توجد نتائج",
+  "no_result_message": "لم يتم العثور على نتائج تطابق معايير البحث الخاصة بك",
+  "new_search": "بحث جديد",
+  "max_weight": "الوزن الأقصى",
+  "max_price": "السعر الأقصى",
+  "type": "النوع",
+  "kg": "كلغ",
+  "dirham": "درهم",
+  "search": "بحث",
+  "applied_filtter": "الفلاتر المطبقة",
+  "update_failed": "فشل في تحديث الشحنة",
+  "in_progress": "قيد التقدم",
+  "stops": "محطات",
+  "more": "المزيد",
+  "loading": "جاري التحميل...",
 "noRating": "⭐ لا يوجد تقييم",
 "noRatingYet": "⭐ لا يوجد تقييم بعد",
 "rating": "⭐ تقييم {rating}",
@@ -709,14 +693,16 @@
   
   "terms_modifications_title": "10. التعديلات",
   "terms_modifications_content": "نحتفظ بالحق في تعديل هذه الشروط في أي وقت. سيتم إخطار المستخدمين بالتغييرات الهامة عبر التطبيق أو البريد الإلكتروني. يشكل الاستمرار في الاستخدام بعد التعديلات قبولًا للشروط الجديدة.",
+  
   "forgot_password_title": "هل نسيت كلمة المرور",
-"forgot_password_description": "أدخل بريدك الإلكتروني لإعادة تعيين كلمة المرور الخاصة بك.",
-"forgot_password_empty_email": "يرجى إدخال عنوان بريدك الإلكتروني.",
-"forgot_password_email_sent": "تم إرسال رسالة إعادة تعيين كلمة المرور. يرجى التحقق من بريدك الوارد.",
-"forgot_password_error": "حدث خطأ. يرجى المحاولة مرة أخرى.",
-"forgot_password_sending": "جارٍ الإرسال...",
-"forgot_password_send_email": "إرسال بريد إعادة التعيين",
-"too_many_requests": "عدد كبير جدًا من الطلبات. يرجى المحاولة لاحقًا.",
+  "forgot_password_description": "أدخل بريدك الإلكتروني لإعادة تعيين كلمة المرور الخاصة بك.",
+  "forgot_password_empty_email": "يرجى إدخال عنوان بريدك الإلكتروني.",
+  "forgot_password_email_sent": "تم إرسال رسالة إعادة تعيين كلمة المرور. يرجى التحقق من بريدك الوارد.",
+  "forgot_password_error": "حدث خطأ. يرجى المحاولة مرة أخرى.",
+  "forgot_password_sending": "جارٍ الإرسال...",
+  "forgot_password_send_email": "إرسال بريد إعادة التعيين",
+  
+  "too_many_requests": "عدد كبير جدًا من الطلبات. يرجى المحاولة لاحقًا.",
   "user_not_found": "لم يتم العثور على حساب بهذا البريد الإلكتروني.",
   "email_already_in_use": "هذا البريد الإلكتروني مستخدم بالفعل.",
   "invalid_email": "البريد الإلكتروني أو كلمة المرور غير صحيحة.",
@@ -728,14 +714,14 @@
   "quota_exceeded": "تم تجاوز حد رسائل SMS لليوم. يرجى المحاولة غدًا أو الاتصال بالدعم.",
   "missing_phone_number": "رقم الهاتف مطلوب.",
   "phone_verification_failed": "فشلت عملية التحقق من الهاتف، يرجى المحاولة لاحقًا.",
-    "push_notification_warning": "قد لا تعمل الإشعارات المنبثقة بشكل صحيح",
+  "push_notification_warning": "قد لا تعمل الإشعارات المنبثقة بشكل صحيح",
   "notification_settings": "إعدادات الإشعارات",
-   "error_page_title": "صفحة الخطأ",
+  "error_page_title": "صفحة الخطأ",
   "error_occurred": "حدث خطأ",
   "unexpected_error": "حدث خطأ غير متوقع. يرجى المحاولة مرة أخرى لاحقًا.",
   "error_fetch_shipments": "فشل في جلب الشحنات",
   "driver_account_required_title": "مطلوب حساب سائق",
-"driver_account_info": "لنشر الرحلات وكسب المال كسائق، تحتاج إلى إنشاء حساب سائق. لن يستغرق ذلك سوى بضع دقائق!"
+  "driver_account_info": "لنشر الرحلات وكسب المال كسائق، تحتاج إلى إنشاء حساب سائق. لن يستغرق ذلك سوى بضع دقائق!"
 
 
 

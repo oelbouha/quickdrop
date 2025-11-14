@@ -1552,7 +1552,7 @@ abstract class AppLocalizations {
   /// No description provided for @starting_from.
   ///
   /// In en, this message translates to:
-  /// **'Starting from'**
+  /// **'Offered price'**
   String get starting_from;
 
   /// No description provided for @note.
