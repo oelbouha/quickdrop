@@ -262,7 +262,9 @@ class UserProvider with ChangeNotifier {
           .collection('users')
           .doc(userId)
           .get();
-      await snapshot.reference.delete();
+      // await snapshot.reference.delete();
+      // update user to be deleted
+      snapshot.reference.update({'status': 'deleted'});
       // for (var doc in snapshot.docs) {
       // }
 
