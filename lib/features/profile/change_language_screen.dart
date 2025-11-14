@@ -35,9 +35,15 @@ class ChangeLanguageScreenState extends State<ChangeLanguageScreen> {
     setState(() {
       _selectedLanguage = languageCode;
     });
+  
+  final user = FirebaseAuth.instance.currentUser;
 
    final languageProvider = Provider.of<LocaleProvider>(context, listen: false);
    languageProvider.setLocale(Locale(languageCode));
+   if (user == null) return;
+   print("Changing language to $languageCode for user ${user.uid}");
+   await Provider.of<UserProvider>(context, listen: false)
+        .updateLanguagePreference(user.uid, languageCode);
   }
 
   @override

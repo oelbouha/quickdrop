@@ -79,7 +79,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
       try {
         final user = Provider.of<UserProvider>(context, listen: false).user;
-          final subscriptionEndAt = user?.subscriptionEndsAt;
+        final subscriptionEndAt = user?.subscriptionEndsAt;
         final now = DateTime.now();
         if (subscriptionEndAt != null) {
           final endDate = DateTime.parse(subscriptionEndAt);

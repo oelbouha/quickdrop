@@ -24,8 +24,6 @@ class _SplashRedirectState extends State<SplashRedirect> {
     final seen = prefs.getBool('onboarding_seen') ?? false;
     final user = FirebaseAuth.instance.currentUser;
     final isLoggedIn = await AuthService.isLoggedIn();
-    print(
-        "Splash Redirect - isLoggedIn: $isLoggedIn, seen: $seen, user: $user");
 
     if (user != null) {
       await Provider.of<UserProvider>(context, listen: false)

@@ -28,6 +28,7 @@ class UserData {
   String? carModel;
   String? driverNumber;
   String status;
+  String language;
   String driverStatus;
   String subscriptionStatus;
   String? subscriptionEndsAt;
@@ -47,6 +48,7 @@ class UserData {
     this.carModel,
     this.driverNumber,
     this.subscriptionEndsAt,
+    this.language = "ar",
     this.status = "customer",
     this.driverStatus = "inactive",
     this.subscriptionStatus = "inactive",
@@ -70,6 +72,7 @@ class UserData {
       'driverStatus': driverStatus,
       'subscriptionStatus': subscriptionStatus,
       'subscriptionEndsAt': subscriptionEndsAt,
+      'language' : language,
     };
   }
 
@@ -91,6 +94,7 @@ class UserData {
         driverStatus: map['driverStatus'],
         subscriptionStatus: map['subscriptionStatus'],
         subscriptionEndsAt: map["subscriptionEndsAt"],
+        language: map["language"] ?? "ar",
         createdAt: map["createdAt"]);
   }
 }
@@ -206,6 +210,22 @@ class UserProvider with ChangeNotifier {
       notifyListeners();
     } catch (e) {
       // print("Error updating subscription status: $e");
+      rethrow;
+    }
+  }
+
+  Future<void> updateLanguagePreference(String uid, String language) async {
+    try {
+      await FirebaseFirestore.instance.collection('users').doc(uid).update({
+        'language': language,
+      });
+      if (_user != null && _user!.uid == uid) {
+        _user!.language = language;
+        print("Language updated to $language for user $uid");
+        notifyListeners();
+      }
+    } catch (e) {
+      print("Error updating language preference: $e");
       rethrow;
     }
   }
@@ -473,11 +493,11 @@ class UserProvider with ChangeNotifier {
   }
 
   Future<void> fetchUser(String uid) async {
-    if (_users.containsKey(uid)) {
-      _user = _users[uid];
-      notifyListeners();
-      return;
-    }
+    // if (_users.containsKey(uid)) {
+    //   _user = _users[uid];
+    //   notifyListeners();
+    //   return;
+    // }
     try {
       final userDoc =
           await FirebaseFirestore.instance.collection('users').doc(uid).get();
