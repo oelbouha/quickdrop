@@ -12,6 +12,26 @@ if (!admin.apps.length) {
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 
 
+const translations = {
+  newMessage: {
+    en: "New Message",
+    fr: "Nouveau message",
+    ar: "رسالة جديدة"
+  },
+  newRequest: {
+    en: (name) => `New package request from ${name}`,
+    fr: (name) => `Nouvelle demande de colis de la part de ${name}`,
+    ar: (name) => `طلب طرد جديد من ${name}`
+  },
+   newRequestTitle: {
+    en: (name) => `New package request`,
+    fr: (name) => `Nouvelle demande de colis`,
+    ar: (name) => `طلب طرد جديد`
+  }
+};
+
+
+
 exports.createPaymentIntent = onCall(async (request) => {
   
   if (!request.auth) {
@@ -61,10 +81,13 @@ exports.sendNewMessageNotification = onDocumentCreated({
       return null;
     }
 
+    const lang = userData.language || "en";
     const messageData = snap.data();
     const senderId = messageData.senderId;
     const recipientId = messageData.receiverId;
     const text = messageData.text;
+    const title = translations.newMessage[lang] || translations.newMessage["en"];
+
 
     
 
@@ -90,7 +113,7 @@ exports.sendNewMessageNotification = onDocumentCreated({
     const message = {
       token: token,
       notification: {
-        title: "New Message",
+        title: title,
         body: text.length > 100 ? text.slice(0, 100) + "..." : text,
       },
       data: {
@@ -139,8 +162,9 @@ exports.packageRequestNotification = onDocumentCreated({
     const messageData = snap.data();
     const senderId = messageData.senderId;
     const recipientId = messageData.receiverId;
-   
-
+    const lang = userData.language || "en";
+    
+    
 
     if (!recipientId ) {
       return null;
@@ -152,10 +176,12 @@ exports.packageRequestNotification = onDocumentCreated({
     if (!userDoc.exists) {
       return null;
     }
-
+    
     const userData = senderDoc.data();
     const userName = userData.displayName;
     const text = "New package request from " + userName;
+    const title = translations.newRequestTitle[lang] || translations.newRequest["en"];
+    const body = translations.newRequest[lang](userName) || translations.newRequest["en"];
 
 
     const notificationRef = await admin.firestore().collection("notifications").add({
@@ -174,8 +200,8 @@ exports.packageRequestNotification = onDocumentCreated({
     const message = {
       token: token,
       notification: {
-        title: "New Request",
-        body: text.length > 100 ? text.slice(0, 100) + "..." : text,
+        title: title,
+        body: body.length > 100 ? body.slice(0, 100) + "..." : body,
       },
       data: {
         senderId: senderId,
