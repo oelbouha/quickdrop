@@ -23,8 +23,20 @@ class _SplashRedirectState extends State<SplashRedirect> {
     final prefs = await SharedPreferences.getInstance();
     final seen = prefs.getBool('onboarding_seen') ?? false;
     final user = FirebaseAuth.instance.currentUser;
+    final isLoggedIn = await AuthService.isLoggedIn();
+    print(
+        "Splash Redirect - isLoggedIn: $isLoggedIn, seen: $seen, user: $user");
 
-    await Future.delayed(const Duration(milliseconds: 100));
+    if (user != null) {
+      await Provider.of<UserProvider>(context, listen: false)
+          .fetchUser(user.uid);
+    }
+
+    // await Future.delayed(const Duration(milliseconds: 100));
+    if (isLoggedIn) {
+      context.go('/home');
+      return;
+    }
 
     if (!seen) {
       context.go('/onboarding');

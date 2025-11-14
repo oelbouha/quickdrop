@@ -53,9 +53,6 @@ class AppRouter {
       redirect: (context, state) async {
         final user = FirebaseAuth.instance.currentUser;
         final currentPath = state.uri.path;
-        final isLoggedIn = await AuthService.isLoggedIn();
-        // print("Current Path: $currentPath");
-        // print("Is Logged In: $isLoggedIn");
         final publicRoutes = {
           '/',
           '/signup',
@@ -69,31 +66,22 @@ class AppRouter {
           '/privacy-policy',
           '/terms-of-service',
         };
-
-
-        // If user is logged in and tries to access root, redirect to home
-        // if (user != null && isLoggedIn && currentPath == '/') {
-        //     await Provider.of<UserProvider>(context, listen: false).fetchUser(user.uid);
-            
-        //     return "/home";
-        // }
-
-        // Allow access to verification and account creation
+        
+        // allow access to verification and account creation
         if (user != null &&
             (currentPath == '/create-account' ||
                 currentPath == "/verify-number")) {
           return null;
         }
 
-        // Allow access to public routes
+        // allow access to public routes
         if (publicRoutes.contains(currentPath)) {
-          print("accessing public route");
           return null;
         }
 
   
 
-        // If user is not logged in and tries to access protected route
+        // if user is not logged in and tries to access protected route
         if (user == null && !publicRoutes.contains(currentPath)) {
           return '/login';
         }
@@ -231,8 +219,6 @@ class AppRouter {
               final phoneNumber = state.uri.queryParameters['phoneNumber'];
               final verificationId =
                   state.uri.queryParameters['verificationId'];
-
-              // print("phoneNumber: $phoneNumber");
               return buildCustomTransitionPage(
                 context,
                 VerifyPhoneScreen(
@@ -256,14 +242,7 @@ class AppRouter {
                     email: email ?? "Your Email",
                   ));
             }),
-        // GoRoute(
-        //   name: "verify-phone",
-        //   path: "/verify-phone",
-        //   pageBuilder: (context, state) => buildCustomTransitionPage(
-        //     context,
-        //     const VerifyPhoneScreen(),
-        //   ),
-        // ),
+
         GoRoute(
           name: "privacy-policy",
           path: "/privacy-policy",
