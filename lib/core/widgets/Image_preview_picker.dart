@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:quickdrop_app/l10n/app_localizations.dart';
 import 'package:quickdrop_app/theme/colors.dart';
@@ -13,12 +14,14 @@ class ImagePreviewPicker extends StatelessWidget {
   final bool isLoading;
   final bool isError;
   final String? imagePath;
+  final String? imageUrl;
   final VoidCallback onPressed;
 
-  const ImagePreviewPicker({
+   ImagePreviewPicker({
     super.key,
     required this.controller,
     this.imagePath,
+    this.imageUrl,
     this.isLoading = false,
     this.isError = false,
     required this.hintText,
@@ -47,34 +50,66 @@ class ImagePreviewPicker extends StatelessWidget {
                       child: CircularProgressIndicator(
                         color: AppColors.primary,
                       ),
-                    ) 
-                  : imagePath != null ? ClipRRect(
+                    )
+                  : imagePath != null || imageUrl != null ? 
+                      ClipRRect(
                           // borderRadius: BorderRadius.circular(21),
-                        child: Image.file(
+                        child: 
+                         imagePath != null ? Image.file(
                             File(imagePath!), // path to local file
                             fit: BoxFit.cover,
                             width: double.infinity,
                             height: 150,
-                          )
+                          ) 
+                          : CachedNetworkImage(
+                              imageUrl: imageUrl!,
+                              fit: BoxFit.cover,
+                              placeholder: (context, url) => Container(
+                                decoration: BoxDecoration(
+                                  color: Colors.grey[200],
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                child: const Center(
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 2,
+                                  ),
+                                ),
+                              ),
+                              errorWidget: (context, url, error) => Container(
+                                decoration: BoxDecoration(
+                                  color: Colors.grey[200],
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                child: Image.asset(
+                                  "assets/images/box.jpg",
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                              fadeInDuration: const Duration(milliseconds: 200),
+                              fadeOutDuration: const Duration(milliseconds: 200),
+                            )
                         )
                   
                   :  Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      const CustomIcon(
-                        iconPath: "assets/icon/camera-add.svg",
-                        size: 30,
-                        color: AppColors.lessImportant,
-                      ),
-                      Text(t.upload_photo,
-                          style:const TextStyle(
-                              fontSize: 20, color: AppColors.lessImportant)),
-                      Text(
-                        t.photo_format_hint,
-                        style:  const TextStyle(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          const CustomIcon(
+                            iconPath: "assets/icon/camera-add.svg",
+                            size: 30,
+                            color: AppColors.lessImportant,
+                          ),
+                          Text(t.upload_photo,
+                              style:const TextStyle(
+                                  fontSize: 20, color: AppColors.lessImportant)),
+                          Text(
+                            t.photo_format_hint,
+                            style:  const TextStyle(
                             fontSize: 12, color: AppColors.lessImportant),
                       ),
-                    ]))));
+                    ])
+                    )
+                  )
+                );
   }
 }
