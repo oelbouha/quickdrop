@@ -385,6 +385,8 @@ void _showShouldBeDriverDialog() {
                         context.push('/add-trip?tripId=${trip.id}&isEdit=true')
                       },
                       onViewPressed: () => {
+                        print("Viewing trip details for tripId: ${trip.id}"),
+                        print("Viewing trip details for userId: ${trip.userId}"),
                         context.push(
                             '/trip-details?tripId=${trip.id}&userId=${trip.userId}&viewOnly=true')
                       },

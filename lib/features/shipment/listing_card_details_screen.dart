@@ -82,6 +82,8 @@ class ListingTripLoader extends StatefulWidget {
 
 class _ListingTripLoaderState extends State<ListingTripLoader> {
   Future<(UserData, TransportItem)> fetchData() async {
+    await Provider.of<UserProvider>(context, listen: false)
+        .fetchUserData(widget.userId);
     final user = Provider.of<UserProvider>(context, listen: false)
         .getUserById(widget.userId);
     final transportItem = Provider.of<TripProvider>(context, listen: false)
