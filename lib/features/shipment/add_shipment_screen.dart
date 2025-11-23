@@ -20,6 +20,7 @@ class _AddShipmentScreenState extends State<AddShipmentScreen>
 
   File? _selectedImage;
   String? imagePath;
+  String? _uploadedImageUrl;
   final fromController = TextEditingController();
   final toController = TextEditingController();
   final weightController = TextEditingController();
@@ -44,12 +45,7 @@ class _AddShipmentScreenState extends State<AddShipmentScreen>
   int _currentStep = 0;
   final _pageController = PageController();
 
-  // final List<String> stepTitles = [
-  //   'Package Details',
-  //   'Delivery Locations',
-  //   'Package Dimensions',
-  //   'Timing & Image',
-  // ];
+
 
    List<String> getSteps(BuildContext context) {
     final t = AppLocalizations.of(context)!;
@@ -88,6 +84,8 @@ class _AddShipmentScreenState extends State<AddShipmentScreen>
           widget.existingShipment?.packageQuantity ?? "";
       typeController.text = widget.existingShipment?.type ?? "";
       priceController.text = widget.existingShipment?.price ?? "";
+      _uploadedImageUrl = widget.existingShipment?.imageUrl  ?? null;
+      print("existing shipment image url: $_uploadedImageUrl");
       
     } else {
       packageQuantityController.text = "1";
@@ -384,12 +382,12 @@ class _AddShipmentScreenState extends State<AddShipmentScreen>
                           height: isCurrent ? 36 : 28,
                           decoration: BoxDecoration(
                             color:
-                                isActive ? AppColors.blue700 : Colors.grey[300],
+                                isActive ? AppColors.success : Colors.grey[300],
                             shape: BoxShape.circle,
                             boxShadow: isCurrent
                                 ? [
                                     BoxShadow(
-                                      color: AppColors.blue700.withOpacity(0.3),
+                                      color: AppColors.success.withOpacity(0.3),
                                       blurRadius: 8,
                                       spreadRadius: 2,
                                     ),
@@ -417,7 +415,7 @@ class _AddShipmentScreenState extends State<AddShipmentScreen>
                               margin: const EdgeInsets.symmetric(horizontal: 8),
                               decoration: BoxDecoration(
                                 color: _currentStep > index
-                                    ? AppColors.blue700
+                                    ? AppColors.success
                                     : Colors.grey[300],
                                 borderRadius: BorderRadius.circular(1),
                               ),
@@ -537,7 +535,7 @@ class _AddShipmentScreenState extends State<AddShipmentScreen>
                             : t.cntinue),
                   ),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.blue700,
+                    backgroundColor: AppColors.success,
                     foregroundColor: Colors.white,
                     padding: const EdgeInsets.symmetric(vertical: 16),
                     shape: RoundedRectangleBorder(
@@ -723,8 +721,8 @@ class _AddShipmentScreenState extends State<AddShipmentScreen>
           _buildSectionHeader(
             icon: Icons.inventory_2_outlined,
             title: t.package_details,
-            color: AppColors.blue700,
-            backgroundColor: AppColors.blue700.withOpacity(0.1),
+            color: AppColors.success,
+            backgroundColor: AppColors.success.withOpacity(0.1),
           ),
           const SizedBox(height: 24),
           AppTextField(
@@ -923,9 +921,28 @@ class _AddShipmentScreenState extends State<AddShipmentScreen>
             backgroundColor: AppColors.cardBackground,
             controller: dateController,
             hintText: "",
+            imageUrl: _uploadedImageUrl,
             isLoading: _isImageLoading,
           ),
-          const SizedBox(height: 20),
+           const SizedBox(width: 24),
+            ElevatedButton(
+              onPressed: () async {
+                await _pickImage();
+              },
+              style: ElevatedButton.styleFrom(
+                // color: AppColors.blue,
+                elevation: 0,
+                  backgroundColor: AppColors.blue700.withOpacity(0.8),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+              ),
+              child:  Text(
+                t.change_image,
+                style: const TextStyle(color: Colors.white),
+              ),
+            ),
+          const SizedBox(height: 24),
           RequiredFieldLabel(text: t.pickup_date),
           const SizedBox(height: 8),
           DateTextField(
