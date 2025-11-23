@@ -61,7 +61,7 @@ class ShipmentCardState extends State<ShipmentCard>
           shipment.imageUrl!,
         );
       } catch (e) {
-        print('Failed to precache image: $e');
+        print('Failed to precache image: ');
       }
     }
   }

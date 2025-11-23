@@ -34,7 +34,6 @@ class UpdateUserInfoScreenState extends State<UpdateUserInfoScreen>
 
     user = Provider.of<UserProvider>(context, listen: false).user;
     _initializeFields();
-
   }
 
   void _initializeFields() {

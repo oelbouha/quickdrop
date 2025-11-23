@@ -53,6 +53,8 @@ class AppColors {
   static const Color appBarIcons = white;
 
   static const Color dark = Color(0xFF0d0c22);
+
+  static const Color black = Color(0xFF000000);
   static const Color navTextActive = blue;
   static const Color navTextInactive = Color(0xFF6A6A6A);
   static const Color navBackground = white;

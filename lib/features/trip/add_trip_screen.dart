@@ -279,7 +279,7 @@ class _AddTripScreenState extends State<AddTripScreen>
                   ),
                 ),
 
-                // Enhanced Navigation Buttons
+                //  Navigation Buttons
                 _buildNavigationButtons(),
               ],
             ),
@@ -466,7 +466,7 @@ class _AddTripScreenState extends State<AddTripScreen>
                             : loc.cntinue),
                   ),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.blue700,
+                    backgroundColor: AppColors.succes,
                     foregroundColor: Colors.white,
                     padding: const EdgeInsets.symmetric(vertical: 16),
                     shape: RoundedRectangleBorder(
@@ -521,12 +521,12 @@ class _AddTripScreenState extends State<AddTripScreen>
                           height: isCurrent ? 36 : 28,
                           decoration: BoxDecoration(
                             color:
-                                isActive ? AppColors.blue700 : Colors.grey[300],
+                                isActive ? AppColors.success : Colors.grey[300],
                             shape: BoxShape.circle,
                             boxShadow: isCurrent
                                 ? [
                                     BoxShadow(
-                                      color: AppColors.blue700.withOpacity(0.3),
+                                      color: AppColors.success.withOpacity(0.3),
                                       blurRadius: 8,
                                       spreadRadius: 2,
                                     ),
@@ -554,7 +554,7 @@ class _AddTripScreenState extends State<AddTripScreen>
                               margin: const EdgeInsets.symmetric(horizontal: 8),
                               decoration: BoxDecoration(
                                 color: _currentStep > index
-                                    ? AppColors.blue700
+                                    ? AppColors.success
                                     : Colors.grey[300],
                                 borderRadius: BorderRadius.circular(1),
                               ),
@@ -647,50 +647,50 @@ class _AddTripScreenState extends State<AddTripScreen>
           const SizedBox(height: 16),
 
             // MIDDLE STOPS (dynamically added)
-    ...List.generate(middleStopControllers.length, (index) {
-      return Padding(
-        padding: const EdgeInsets.only(bottom: 16),
-        child: LocationTextField(
-          controller: middleStopControllers[index],
-          hintText: loc.middle_stop_hint, 
-          headerText: "${loc.stop} ${index + 1}", 
-          iconColor: Theme.of(context).colorScheme.secondary,
-        ),
-      );
-    }),
+            ...List.generate(middleStopControllers.length, (index) {
+              return Padding(
+                padding: const EdgeInsets.only(bottom: 16),
+                child: LocationTextField(
+                  controller: middleStopControllers[index],
+                  hintText: loc.middle_stop_hint, 
+                  headerText: "${loc.stop} ${index + 1}", 
+                  iconColor: Theme.of(context).colorScheme.secondary,
+                ),
+              );
+            }),
 
-  TextButton.icon(
-  onPressed: () {
-    setState(() {
-      middleStopControllers.add(TextEditingController());
-    });
-  },
-  icon: const Icon(Icons.add_location_alt_outlined, color: Colors.green),
-  label: Text(
-    loc.add_stop,
-    style: const TextStyle(color: Colors.green),
-  ),
-),
-const SizedBox(height: 8),
-Container(
-  decoration: BoxDecoration(
-    color: const Color(0xFFE0F2F1),
-    borderRadius: BorderRadius.circular(8),
-  ),
-  padding: const EdgeInsets.all(8),
-  child: Row(
-    children: [
-      const Icon(Icons.info_outline, size: 18, color: Colors.teal),
-      const SizedBox(width: 8),
-      Expanded(
-        child: Text(
-          loc.add_stop_hint,
-          style: const TextStyle(fontSize: 13, color: Colors.teal),
+          TextButton.icon(
+          onPressed: () {
+            setState(() {
+              middleStopControllers.add(TextEditingController());
+            });
+          },
+          icon: const Icon(Icons.add_location_alt_outlined, color: Colors.green),
+          label: Text(
+            loc.add_stop,
+            style: const TextStyle(color: Colors.green),
+          ),
         ),
-      ),
-    ],
-  ),
-),
+        const SizedBox(height: 8),
+        Container(
+          decoration: BoxDecoration(
+            color: const Color(0xFFE0F2F1),
+            borderRadius: BorderRadius.circular(8),
+          ),
+          padding: const EdgeInsets.all(8),
+          child: Row(
+            children: [
+              const Icon(Icons.info_outline, size: 18, color: Colors.teal),
+              const SizedBox(width: 8),
+              Expanded(
+                child: Text(
+                  loc.add_stop_hint,
+                  style: const TextStyle(fontSize: 13, color: Colors.teal),
+                ),
+              ),
+            ],
+          ),
+        ),
 
 
 
