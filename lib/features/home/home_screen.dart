@@ -33,8 +33,6 @@ class _HomeScreenState extends State<HomeScreen> {
     ];
   }
 
-
-
   List<Map<String, String>> getFaqs(BuildContext context) {
     final t = AppLocalizations.of(context)!;
 
@@ -47,15 +45,11 @@ class _HomeScreenState extends State<HomeScreen> {
     ];
   }
 
-
-
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     selectedFilter = AppLocalizations.of(context)!.trips;
   }
-
-
 
   @override
   void initState() {
@@ -76,7 +70,6 @@ class _HomeScreenState extends State<HomeScreen> {
     dateController.text = _getCurrentDate();
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-
       try {
         final user = Provider.of<UserProvider>(context, listen: false).user;
         final subscriptionEndAt = user?.subscriptionEndsAt;
@@ -84,29 +77,29 @@ class _HomeScreenState extends State<HomeScreen> {
         if (subscriptionEndAt != null) {
           final endDate = DateTime.parse(subscriptionEndAt);
           if (now.isAfter(endDate)) {
-            Provider.of<UserProvider>(context, listen: false).updateSubscriptionStatus("expired");
+            Provider.of<UserProvider>(context, listen: false)
+                .updateSubscriptionStatus("expired");
           }
         }
-      } catch(e) {
+      } catch (e) {
         print("Error checking subscription status: ");
       }
-    //   try {
-        // final shipmentProvider =
-        //     Provider.of<ShipmentProvider>(context, listen: false);
-        // final tripProvider = Provider.of<TripProvider>(context, listen: false);
+      //   try {
+      // final shipmentProvider =
+      //     Provider.of<ShipmentProvider>(context, listen: false);
+      // final tripProvider = Provider.of<TripProvider>(context, listen: false);
 
-        // await shipmentProvider.fetchShipments();
-        // await tripProvider.fetchTrips();
+      // await shipmentProvider.fetchShipments();
+      // await tripProvider.fetchTrips();
 
-        // final userIds = shipmentProvider.shipments.map((r) => r.userId).toSet().toList();
-        // final tripUserIds =
-        //     tripProvider.trips.map((r) => r.userId).toSet().toList();
+      // final userIds = shipmentProvider.shipments.map((r) => r.userId).toSet().toList();
+      // final tripUserIds =
+      //     tripProvider.trips.map((r) => r.userId).toSet().toList();
 
-        // await Provider.of<UserProvider>(context, listen: false)
-        //     .fetchUsersData(userIds);
-        // await Provider.of<UserProvider>(context, listen: false)
-        //     .fetchUsersData(tripUserIds);
-
+      // await Provider.of<UserProvider>(context, listen: false)
+      //     .fetchUsersData(userIds);
+      // await Provider.of<UserProvider>(context, listen: false)
+      //     .fetchUsersData(tripUserIds);
 
       // } catch (e) {
       //   if (mounted) {
@@ -217,7 +210,6 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void perfumeSearch() async {
-
     final serviceTypes = getServiceTypes(context);
 
     SearchFilters filters = SearchFilters(
@@ -225,9 +217,8 @@ class _HomeScreenState extends State<HomeScreen> {
         to: toController.text.isEmpty ? null : toController.text,
         price: priceController.text.isEmpty ? null : priceController.text,
         weight: weightController.text.isEmpty ? null : weightController.text,
-        type:  serviceTypes[0] ==  selectedFilter ? "Trip" : "Shipment",
-        date: dateController.text.isEmpty ? null : dateController.text
-      );
+        type: serviceTypes[0] == selectedFilter ? "Trip" : "Shipment",
+        date: dateController.text.isEmpty ? null : dateController.text);
 
     context.push(
       '/search',
@@ -245,10 +236,10 @@ class _HomeScreenState extends State<HomeScreen> {
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-              color: Theme.of(context).colorScheme.primary.withOpacity(0.2),
-              blurRadius: 20,
-              offset: Offset(0, 10),
-            ),
+            color: Theme.of(context).colorScheme.primary.withOpacity(0.2),
+            blurRadius: 20,
+            offset: Offset(0, 10),
+          ),
         ],
       ),
       child: Column(
@@ -258,7 +249,6 @@ class _HomeScreenState extends State<HomeScreen> {
             children: [
               Column(
                 children: [
-
                   LocationTextField(
                     controller: fromController,
                     hintText: t.pickup_location,
@@ -267,8 +257,8 @@ class _HomeScreenState extends State<HomeScreen> {
                     displayHeader: false,
                     isRequired: false,
                   ),
-                 
-                  const SizedBox(height: 24), 
+
+                  const SizedBox(height: 24),
 
                   // Destination field
                   LocationTextField(
@@ -279,7 +269,6 @@ class _HomeScreenState extends State<HomeScreen> {
                     displayHeader: false,
                     isRequired: false,
                   ),
-                  
                 ],
               ),
 
@@ -330,7 +319,7 @@ class _HomeScreenState extends State<HomeScreen> {
             backgroundColor: AppColors.cardBackground,
             onTap: () => _selectDate(context),
             hintText: t.select_pickup_date,
-            validator: Validators.notEmpty(context), 
+            validator: Validators.notEmpty(context),
           ),
 
           const SizedBox(height: 20),
@@ -344,7 +333,7 @@ class _HomeScreenState extends State<HomeScreen> {
             backgroundColor: Theme.of(context).colorScheme.primary,
             loadingText: t.saving,
           ),
-          ],
+        ],
       ),
     );
   }
@@ -386,8 +375,6 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-
-
   Widget _buildServiceTypes() {
     final serviceTypes = getServiceTypes(context);
     return SingleChildScrollView(
@@ -428,12 +415,10 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-
   String _getCurrentDate() {
     final date = DateTime.now();
     return "${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}";
   }
-
 
   Future<void> _selectDate(BuildContext context) async {
     DateTime? pickedDate = await showDatePicker(
@@ -459,11 +444,9 @@ class _HomeScreenState extends State<HomeScreen> {
     if (pickedDate != null) {
       setState(() {
         dateController.text = "${pickedDate.toLocal()}".split(' ')[0];
-
       });
     }
   }
-
 
   Widget _buildOurServiceCard(String title, String description, String iconPath,
       String backgroundImageUrl) {
@@ -763,7 +746,7 @@ class _HomeScreenState extends State<HomeScreen> {
       userData: userData,
       onPressed: () {
         context.push(
-          '/shipment-details?shipmentId=${shipment.id}&userId=${shipment.userId}&viewOnly=false');
+            '/shipment-details?shipmentId=${shipment.id}&userId=${shipment.userId}&viewOnly=false');
       },
     );
   }
@@ -778,10 +761,7 @@ class _HomeScreenState extends State<HomeScreen> {
       },
     );
   }
-
-
 }
-
 
 Widget searchTextField({
   required String hintText,

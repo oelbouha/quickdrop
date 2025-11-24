@@ -1,8 +1,6 @@
 import 'package:quickdrop_app/core/utils/imports.dart';
 import 'package:quickdrop_app/features/models/chat_model.dart';
 
-
-
 class ConversationScreen extends StatefulWidget {
   final Map<String, dynamic> user;
 
@@ -50,7 +48,8 @@ class _ConversationScreenState extends State<ConversationScreen> {
     } catch (e) {
       // print("Error sending message: $e");
       if (mounted) {
-        AppUtils.showDialog(context, "Failed to send message ${e.toString()}", AppColors.error);
+        AppUtils.showDialog(
+            context, "Failed to send message ${e.toString()}", AppColors.error);
       }
     }
   }
@@ -60,14 +59,16 @@ class _ConversationScreenState extends State<ConversationScreen> {
     final chatProvider = Provider.of<ChatProvider>(context);
     final chatId =
         getChatId(FirebaseAuth.instance.currentUser!.uid, widget.user['uid']);
-        bool isArabic = Localizations.localeOf(context).languageCode == 'ar';
+    bool isArabic = Localizations.localeOf(context).languageCode == 'ar';
 
     return Scaffold(
         backgroundColor: AppColors.white,
         appBar: AppBar(
           title: UserProfileCard(
             header: widget.user['displayName'],
-            onPressed: () =>  {context.push('/profile/statistics?userId=${widget.user['uid']}')},
+            onPressed: () => {
+              context.push('/profile/statistics?userId=${widget.user['uid']}')
+            },
             photoUrl: widget.user['photoUrl'],
             headerFontSize: 16,
             subHeaderFontSize: 10,
@@ -75,23 +76,21 @@ class _ConversationScreenState extends State<ConversationScreen> {
             borderColor: AppColors.blue700,
             headerColor: AppColors.dark,
           ),
-           iconTheme: const IconThemeData(
+          iconTheme: const IconThemeData(
             color: Colors.black, // Set the arrow back color to black
           ),
-          systemOverlayStyle:
-              SystemUiOverlayStyle.dark,
+          systemOverlayStyle: SystemUiOverlayStyle.dark,
           backgroundColor: AppColors.white,
-           elevation: 0, 
+          elevation: 0,
           bottom: PreferredSize(
             preferredSize: const Size.fromHeight(1.0),
             child: Container(
-              color: Colors.grey, 
+              color: Colors.grey,
               height: 0.6,
             ),
           ),
         ),
-        body: Column(
-          children: [
+        body: Column(children: [
           Expanded(
               child: Padding(
                   padding: const EdgeInsets.only(
@@ -111,12 +110,13 @@ class _ConversationScreenState extends State<ConversationScreen> {
                       }
 
                       if (snapshot.hasError) {
-                        return  Center(
+                        return Center(
                             child: buildEmptyState(
-                              Icons.error, 
-                              AppLocalizations.of(context)!.error_loading_message, 
-                              AppLocalizations.of(context)!.error_loading_message_text
-                        ));
+                                Icons.error,
+                                AppLocalizations.of(context)!
+                                    .error_loading_message,
+                                AppLocalizations.of(context)!
+                                    .error_loading_message_text));
                       }
                       // if (!snapshot.hasData || snapshot.data!.isEmpty) {
                       //   return const Center(child: Text("No messages yet"));
@@ -173,9 +173,9 @@ class _ConversationScreenState extends State<ConversationScreen> {
                                       ),
                                     ),
                                     if (index == 0 && message.seen && isMe) ...[
-                                       Text(
+                                      Text(
                                         AppLocalizations.of(context)!.seen,
-                                        style:const TextStyle(
+                                        style: const TextStyle(
                                             color: AppColors.headingText,
                                             fontSize: 10,
                                             fontWeight: FontWeight.bold),
@@ -205,8 +205,6 @@ class _ConversationScreenState extends State<ConversationScreen> {
                   onChanged: (text) {
                     // Handle text input
                     // print("Text input: $text");
-
-                     
                   },
                   style: const TextStyle(
                     color: AppColors.headingText,
@@ -224,9 +222,11 @@ class _ConversationScreenState extends State<ConversationScreen> {
                               color: AppColors.blue,
                               borderRadius: BorderRadius.circular(30),
                             ),
-                            child:  IconButton(
-                                icon:  CustomIcon(
-                                  iconPath: isArabic ?  "assets/icon/send-left.svg"  :"assets/icon/send.svg",
+                            child: IconButton(
+                                icon: CustomIcon(
+                                  iconPath: isArabic
+                                      ? "assets/icon/send-left.svg"
+                                      : "assets/icon/send.svg",
                                   color: AppColors.white,
                                   size: 34,
                                 ),

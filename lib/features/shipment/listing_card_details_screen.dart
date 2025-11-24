@@ -1,11 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:quickdrop_app/core/providers/notification_provider.dart';
 import 'package:quickdrop_app/core/utils/imports.dart';
 import 'package:quickdrop_app/core/widgets/route_indicator.dart';
 import 'package:collection/collection.dart';
-
 import 'package:share_plus/share_plus.dart';
-import 'package:quickdrop_app/features/models/notification_model.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 
 class ListingShipmentLoader extends StatefulWidget {
@@ -25,14 +22,15 @@ class ListingShipmentLoader extends StatefulWidget {
 
 class _ListingShipmentLoaderState extends State<ListingShipmentLoader> {
   Future<(UserData, TransportItem)> fetchData() async {
+    await Provider.of<UserProvider>(context, listen: false)
+        .fetchUserData(widget.userId);
     final user = Provider.of<UserProvider>(context, listen: false)
         .getUserById(widget.userId);
-    
     final transportItem =
         await Provider.of<ShipmentProvider>(context, listen: false)
             .fetchShipmentById(widget.shipmentId);
     if (user == null || transportItem == null) {
-      return Future.error("Data not found");
+      return Future.error(AppLocalizations.of(context)!.profile_error_fetching_data);
     }
     return (user, transportItem);
   }
@@ -89,7 +87,7 @@ class _ListingTripLoaderState extends State<ListingTripLoader> {
     final transportItem = Provider.of<TripProvider>(context, listen: false)
         .getTrip(widget.shipmentId);
     if (user == null) {
-      return Future.error("Data not found");
+      return Future.error(AppLocalizations.of(context)!.profile_error_fetching_data);
     }
     return (user, transportItem);
   }
@@ -204,7 +202,7 @@ class _ListingCardDetailsState extends State<ListingCardDetails> {
           color: Colors.white,
           borderRadius: BorderRadius.circular(50),
         ),
-        child: BackButton(color: Colors.black),
+        child: const BackButton(color: Colors.black),
       ),
       actions: [
         Container(

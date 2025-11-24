@@ -62,7 +62,7 @@ class _ChatScreenState extends State<ChatScreen>
                     ConnectionState.waiting
                 ? loadingAnimation()
                 : snapshot.hasError
-                    ?  Center(child: Text(t.error_loading_conversations))
+                    ? Center(child: Text(t.error_loading_conversations))
                     : snapshot.hasData && (snapshot.data as List).isNotEmpty
                         ? ListView.builder(
                             itemCount: (snapshot.data as List).length,
@@ -105,11 +105,7 @@ class _ChatScreenState extends State<ChatScreen>
                               ]);
                             },
                           )
-                        : buildEmptyState(
-                          Icons.chat_bubble,
-                          t.no_conversation_yet,
-                          t.chat_empty_message)
-                          )
-                          );
+                        : buildEmptyState(Icons.chat_bubble,
+                            t.no_conversation_yet, t.chat_empty_message)));
   }
 }
