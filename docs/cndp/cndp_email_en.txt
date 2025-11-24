@@ -1,18 +1,91 @@
-Subject: Declaration of personal data processing — QuickDrop application
+Hello CNDP Team,
 
-Hello CNDP team,
+I am submitting the attached declaration of personal data processing related to our peer-to-peer collaborative delivery platform “QuickDrop”, in accordance with Moroccan Law 09-08 on the protection of individuals with regard to the processing of personal data.
 
-I am submitting the attached declaration of personal data processing for our Flutter-based collaborative delivery platform "QuickDrop" (connecting travelers and senders), in accordance with Law 09-08. Data is hosted on Google Firebase (USA/Europe), images on Supabase (Europe), and payments processed via Stripe (USA/Europe). Please find attached:
-- Completed CNDP declaration form
-- Privacy policy
-- Data inventory
-- Security measures summary
+The application connects travelers and senders for package delivery via a Flutter-based mobile platform. Hosting and processing services are provided by Google Firebase (USA/Europe), Supabase (Europe), and Stripe (USA/Europe). Please find attached the following documents:
 
-Controller: outman elbouhali
-Contact email: outmanelbouhali5@gmail.com
-Phone: +212639316995
+Completed CNDP personal data processing declaration form
 
-We kindly request acknowledgment of receipt and, once processed, the CNDP registration number.
+Privacy Policy
 
-Thank you,
+Data inventory
+
+Security measures report
+
+Data Controller:
+Name: outman elbouhali
+Email: outmanelbouhali5@gmail.com
+
+Phone: +212 6 39 31 69 95
+DPO: Not applicable
+
+Processing Information
+
+Processing name: QuickDrop – Collaborative delivery platform
+Description: Management of user accounts, shipment/trip listings, secure payments, notifications, messaging, statistics, and profile data.
+
+Purposes of the processing
+
+User account creation and management
+
+Publishing and managing shipments and trip listings
+
+
+Secure payment processing via Stripe
+
+In-app messaging and notifications
+
+Profile management and customer support
+
+Statistics and performance analysis
+
+Categories of personal data
+
+Identity, email, phone number, addresses, geolocation, profile and delivery photos, Firebase UID/device IDs, Stripe payment identifiers, vehicle information (for drivers), logs and statistics.
+
+Legal basis
+
+User consent
+
+Performance of a contract
+
+Recipients / Processors
+
+Firebase (Google Cloud), Supabase, Stripe
+
+International data transfers
+
+Yes — transfers to the USA/Europe under standard contractual clauses and equivalent protections.
+
+Retention
+
+User accounts: until deletion
+Shipments/trips: 5 years
+Photos: 1 year
+Logs/statistics: 1 year
+
+Security
+
+TLS/HTTPS, encryption at rest, Firebase Authentication, RBAC access controls, secure cloud storage, secure Stripe payment processing, backups and permissions management.
+
+Automated decision-making
+
+None
+
+Estimated number of data subjects
+
+1000+
+
+We kindly request:
+
+Acknowledgement of receipt
+
+Communication of the CNDP authorization / registration number once processed.
+
+Thank you in advance for your assistance.
+Best regards,
+
 outman elbouhali
+📧 Email: outmanelbouhali5@gmail.com
+
+📞 Phone: +212 6 39 31 69 95
