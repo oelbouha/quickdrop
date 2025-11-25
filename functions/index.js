@@ -81,33 +81,39 @@ exports.sendNewMessageNotification = onDocumentCreated({
       return null;
     }
 
-    const lang = userData.language || "en";
     const messageData = snap.data();
     const senderId = messageData.senderId;
     const recipientId = messageData.receiverId;
     const text = messageData.text;
+    
+    const userDoc = await admin.firestore().collection("users").doc(recipientId).get();
+    const senderDoc = await admin.firestore().collection("users").doc(senderId).get();
+
+    if (!userDoc.exists || !senderDoc.exists) {
+      return null;
+    }
+
+    const recipientData = userDoc.data();
+    const senderData = senderDoc.data();
+
+    const lang = recipientData.language || "en";
+   
     const title = translations.newMessage[lang] || translations.newMessage["en"];
 
 
+
+    if (!recipientId ) {
+      return null;
+    }
+
+   
     
-
-    if (!recipientId || !text) {
-      return null;
-    }
-
-    const userDoc = await admin.firestore().collection("users").doc(recipientId).get();
-
-    if (!userDoc.exists) {
-      return null;
-    }
-
-    const userData = userDoc.data();
     
-    if (!userData.fcmToken) {
+    if (!recipientData.fcmToken) {
       return null;
     }
 
-    const token = userData.fcmToken;
+    const token = recipientData.fcmToken;
     
     // Updated payload format for the modern API
     const message = {
@@ -162,24 +168,24 @@ exports.packageRequestNotification = onDocumentCreated({
     const messageData = snap.data();
     const senderId = messageData.senderId;
     const recipientId = messageData.receiverId;
-    const lang = userData.language || "en";
-    
-    
 
     if (!recipientId ) {
       return null;
     }
 
-       const userDoc = await admin.firestore().collection("users").doc(recipientId).get();
+    const userDoc = await admin.firestore().collection("users").doc(recipientId).get();
     const senderDoc = await admin.firestore().collection("users").doc(senderId).get();
 
     if (!userDoc.exists) {
       return null;
     }
     
+    const recipientData = userDoc.data();
+
     const userData = senderDoc.data();
     const userName = userData.displayName;
-    const text = "New package request from " + userName;
+    const lang = recipientData.language || "en";
+    // const text = "New package request from " + userName;
     const title = translations.newRequestTitle[lang] || translations.newRequest["en"];
     const body = translations.newRequest[lang](userName) || translations.newRequest["en"];
 
@@ -187,16 +193,16 @@ exports.packageRequestNotification = onDocumentCreated({
     const notificationRef = await admin.firestore().collection("notifications").add({
       senderId: senderId,
       receiverId: recipientId,
-      message: text,
+      message: body,
       date: admin.firestore.FieldValue.serverTimestamp(),
       read: false, 
     });
     
-    if (!userData.fcmToken) {
+    if (!recipientData.fcmToken) {
       return null;
     }
 
-    const token = userData.fcmToken;
+    const token = recipientData.fcmToken;
     const message = {
       token: token,
       notification: {
